@@ -1,0 +1,3 @@
+console.info('hello');
+
+export {};
