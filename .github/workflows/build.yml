@@ -1,0 +1,42 @@
+name: Build project
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Upload module files
+        uses: actions/upload-artifact@v3
+        with:
+          name: modules
+          path: dist/
