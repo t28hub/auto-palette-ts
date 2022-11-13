@@ -1,6 +1,8 @@
 import { Kmeans } from './kmeans';
 import { Pixel } from './pixel';
 
+const DEFAULT_MAX_COLOR = 5;
+
 export class Extractor {
   private readonly kmeans: Kmeans;
 
@@ -8,7 +10,7 @@ export class Extractor {
     this.kmeans = new Kmeans();
   }
 
-  extract(imageData: ImageData, count: number = 5): string[] {
+  extract(imageData: ImageData, maxColor: number = DEFAULT_MAX_COLOR): string[] {
     const { data } = imageData;
     if (data.length === 0) {
       return [];
@@ -22,7 +24,7 @@ export class Extractor {
       pixels.push([r, g, b]);
     }
 
-    const centers = this.kmeans.predict(pixels, count);
+    const centers = this.kmeans.predict(pixels, maxColor);
     return centers.map((color: Pixel): string => {
       return color.reduce((hex: string, value: number): string => {
         const component = Math.floor(value * 0xff) & 0xff;
