@@ -9,9 +9,19 @@
 <div id="app"></div>
 <script type="module" src="/src/main.ts"></script>
 <script type="module">
-    import {hello} from "./src/main";
+    import {fromImage} from "./src/main";
 
-    hello();
+    const image = new Image();
+    image.src = 'https://images.unsplash.com/photo-1667329829058-ac191ba4a905?ixlib=rb-4.0.3&dl=adam-bartoszewicz-vdkyWisomns-unsplash.jpg&w=640&q=80&fm=jpg&crop=entropy&cs=tinysrgb';
+    // image.src = 'https://images.unsplash.com/photo-1470114716159-e389f8712fda?ixlib=rb-4.0.3&dl=boris-smokrovic-HWwF4OnXAdM-unsplash.jpg&w=640&q=80&fm=jpg&crop=entropy&cs=tinysrgb';
+    // image.src = 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?ixlib=rb-4.0.3&dl=jonas-kakaroto-5JQH9Iqnm9o-unsplash.jpg&w=640&q=80&fm=jpg&crop=entropy&cs=tinysrgb';
+    image.crossOrigin = 'Anonymous';
+    image.onload = (e) => {
+        fromImage(e.target).forEach((color) => {
+            console.info(`%c${color}`, `color: ${color}`);
+        });
+    };
+    document.body.appendChild(image);
 </script>
 </body>
 </html>
