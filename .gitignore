@@ -1,5 +1,6 @@
 # JavaScript or Node.js
 node_modules/
+coverage/
 dist/
 dist-ssr/
 *.local

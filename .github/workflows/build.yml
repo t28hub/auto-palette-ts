@@ -35,6 +35,9 @@ jobs:
       - name: Check code syntax
         run: yarn lint
 
+      - name: Run unit test
+        run: yarn test
+
       - name: Build project
         run: yarn build
 
