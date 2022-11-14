@@ -2,7 +2,7 @@ import { Cluster } from './cluster';
 import { Pixel } from './pixel';
 
 export class Kmeans {
-  constructor(private readonly maxIterations: number = 10, private readonly minDifferences: number = 0.001) {}
+  constructor(private readonly maxIterations: number = 10, private readonly minDifferences: number = 0.05) {}
 
   predict(pixels: Pixel[], count: number): Pixel[] {
     if (pixels.length <= count) {

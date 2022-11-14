@@ -22,7 +22,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest --config jest.config.ts --coverage --passWithNoTests",
+    "test": "jest --config jest.config.ts --coverage",
     "format": "prettier --ignore-path .eslintignore --list-different --write .",
     "build": "tsc && vite build",
     "preview": "vite preview",

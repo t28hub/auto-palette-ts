@@ -1,11 +1,12 @@
+import { Vector3 } from './math';
 import { Pixel } from './pixel';
 
 export class Cluster {
-  private readonly center: Pixel;
+  private readonly center: Vector3;
   private readonly pixels: Pixel[];
 
   constructor(initialCenter: Pixel) {
-    this.center = [...initialCenter];
+    this.center = new Vector3(...initialCenter);
     this.pixels = [];
   }
 
@@ -18,24 +19,19 @@ export class Cluster {
   }
 
   getCenter(): Pixel {
-    return [...this.center];
+    return this.center.toArray() as Pixel;
   }
 
   updateCenter() {
-    this.center.fill(0.0);
-    for (const pixel of this.pixels) {
-      this.center[0] += pixel[0];
-      this.center[1] += pixel[1];
-      this.center[2] += pixel[2];
-    }
-
+    this.center.setZero();
     if (this.isEmpty) {
       return;
     }
 
-    this.center[0] /= this.size;
-    this.center[1] /= this.size;
-    this.center[2] /= this.size;
+    for (const pixel of this.pixels) {
+      this.center.add(pixel);
+    }
+    this.center.scale(1 / this.size);
   }
 
   insert(pixel: Pixel) {
@@ -47,10 +43,6 @@ export class Cluster {
   }
 
   distanceTo(pixel: Pixel): number {
-    const squared = this.center.reduce((totalDistance, component, index): number => {
-      const delta = pixel[index] - component;
-      return totalDistance + delta * delta;
-    }, 0);
-    return Math.sqrt(squared);
+    return this.center.distanceTo(pixel);
   }
 }
