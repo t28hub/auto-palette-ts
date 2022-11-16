@@ -28,7 +28,7 @@ export interface DistanceMeasure {
  * @param value The value to be converted.
  * @return The distance representation.
  */
-function asDistance(value: number): Distance {
+export function toDistance(value: number): Distance {
   if (!Number.isFinite(value)) {
     throw new TypeError(`The given value(${value}) is not valid distance`);
   }
@@ -47,7 +47,7 @@ export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(point
     const delta = point2[index] - value;
     return total + delta * delta;
   }, 0.0);
-  return asDistance(squared);
+  return toDistance(squared);
 };
 
 /**
@@ -59,5 +59,5 @@ export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(point
  */
 export const EuclideanDistance: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
   const squared = SquaredEuclideanDistance<P>(point1, point2);
-  return asDistance(Math.sqrt(squared));
+  return toDistance(Math.sqrt(squared));
 };

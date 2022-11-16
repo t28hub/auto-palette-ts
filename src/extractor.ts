@@ -1,7 +1,7 @@
 import { Kmeans } from './kmeans';
 import { Pixel } from './pixel';
 
-const DEFAULT_MAX_COLOR = 5;
+const DEFAULT_MAX_COLOR = 10;
 
 export class Extractor {
   private readonly kmeans: Kmeans;
