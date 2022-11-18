@@ -2,15 +2,34 @@ import { SquaredEuclideanDistance } from './distance';
 import { Vector3 } from './vector3';
 
 describe('Vector3', () => {
-  it('should instantiate with components', () => {
-    // Act
-    const actual = new Vector3(1, 2, 3);
+  describe('constructor', () => {
+    it('should instantiate with components', () => {
+      // Act
+      const actual = new Vector3(1, 2, 3);
 
-    // Assert
-    expect(actual).toMatchObject({
-      dimension: 3,
-      components: [1, 2, 3],
+      // Assert
+      expect(actual).toMatchObject({
+        dimension: 3,
+        components: [1, 2, 3],
+      });
     });
+
+    it.each([
+      { component1: NaN, component2: 0, component3: 1 },
+      { component1: 0, component2: NaN, component3: 1 },
+      { component1: 0, component2: 0, component3: NaN },
+      { component1: NaN, component2: NaN, component3: 1 },
+      { component1: 0, component2: NaN, component3: NaN },
+      { component1: NaN, component2: NaN, component3: NaN },
+    ])(
+      'should throw TypeError if components === [$component1, $component2, $component3]',
+      ({ component1, component2, component3 }) => {
+        // Assert
+        expect(() => {
+          new Vector3(component1, component2, component3);
+        }).toThrowError(TypeError);
+      },
+    );
   });
 
   describe('toString', () => {

@@ -1,55 +1,63 @@
-import { Distance, DistanceMeasure, EuclideanDistance, Point3, Vector3 } from '../math';
+import { Distance, DistanceMeasure, EuclideanDistance, Point3, toDistance, Vector3 } from '../math';
 
 export class Cluster {
-  private readonly center: Vector3;
-  private readonly points: Point3[];
+  private readonly centroid: Vector3;
+  private readonly children: Point3[];
 
   /**
    * Create a new {@link Cluster} instance
    *
-   * @param initialCenter The initial center point.
+   * @param initialCentroid The initial centroid.
+   * @param distanceMeasure The distance measure.
+   * @throws {TypeError} if the initial centroid is invalid.
    */
-  constructor(initialCenter: Point3) {
-    this.center = new Vector3(...initialCenter);
-    this.points = [];
+  constructor(initialCentroid: Point3, private readonly distanceMeasure: DistanceMeasure = EuclideanDistance) {
+    this.centroid = new Vector3(...initialCentroid);
+    this.children = [];
   }
 
   /**
    * Return the size of this cluster.
    */
   get size(): number {
-    return this.points.length;
+    return this.children.length;
   }
 
   /**
    * Return whether this cluster is empty.
    */
   get isEmpty(): boolean {
-    return this.points.length === 0;
+    return this.children.length === 0;
   }
 
   /**
-   * Return the center of this cluster.
+   * Return the centroid of this cluster.
    *
    * @return The center of this cluster.
    */
-  getCenter(): Point3 {
-    return this.center.toArray();
+  getCentroid(): Point3 {
+    return this.centroid.toArray();
   }
 
   /**
-   * Update the center of this cluster.
+   * Update the centroid of this cluster.
+   *
+   * @return The distance between old centroid and new centroid.
    */
-  updateCenter() {
-    this.center.setZero();
+  updateCentroid(): Distance {
+    this.centroid.setZero();
     if (this.isEmpty) {
-      return;
+      return toDistance(0.0);
     }
 
-    for (const point of this.points) {
-      this.center.add(point);
+    const oldCentroid = this.centroid.toArray();
+    for (const point of this.children) {
+      this.centroid.add(point);
     }
-    this.center.scale(1 / this.size);
+    this.centroid.scale(1 / this.size);
+
+    const newCentroid = this.centroid.toArray();
+    return this.distanceMeasure(oldCentroid, newCentroid);
   }
 
   /**
@@ -58,24 +66,23 @@ export class Cluster {
    * @param point The point to be inserted.
    */
   insert(point: Point3) {
-    this.points.push(point);
+    this.children.push(point);
   }
 
   /**
    * Clear all points of this cluster.
    */
   clear() {
-    this.points.length = 0;
+    this.children.length = 0;
   }
 
   /**
-   * Compute the distance to the center point of this cluster.
+   * Compute the distance to the centroid point of this cluster.
    *
    * @param point The point.
-   * @param distanceMeasure The distance measure.
-   * @return The distance to the center point of this cluster.
+   * @return The distance to the centroid of this cluster.
    */
-  distanceTo(point: Point3, distanceMeasure: DistanceMeasure = EuclideanDistance): Distance {
-    return this.center.distanceTo(point, distanceMeasure);
+  distanceTo(point: Point3): Distance {
+    return this.centroid.distanceTo(point, this.distanceMeasure);
   }
 }

@@ -1,32 +1,36 @@
 import { toDistance, Distance, DistanceMeasure, Point, SquaredEuclideanDistance } from '../math';
 
 /**
- * Interface to initialize center points.
+ * Interface to choose initial centroids.
  */
 export interface Initializer {
   /**
-   * Choose initial center points.
+   * Choose initial centroids.
    *
    * @param points The all points.
    * @param count The number of center points.
-   * @return The initial center points.
+   * @return The initial centroids.
    */
   initialize<P extends Point>(points: P[], count: number): P[];
 }
 
 /**
- * Random center points initializer.
+ * Random centroid initializer.
  */
 export class RandomInitializer implements Initializer {
   initialize<P extends Point>(points: P[], count: number): P[] {
+    if (!Number.isInteger(count) || count <= 0) {
+      throw new TypeError(`Count(${count}) is not positive integer`);
+    }
+
     if (points.length <= count) {
       return [...points];
     }
 
-    const centers = new Map<number, P>();
-    while (centers.size < count) {
+    const centroids = new Map<number, P>();
+    while (centroids.size < count) {
       const index = Math.floor(Math.random() * points.length);
-      if (centers.has(index)) {
+      if (centroids.has(index)) {
         continue;
       }
 
@@ -34,18 +38,25 @@ export class RandomInitializer implements Initializer {
       if (!point) {
         continue;
       }
-      centers.set(index, [...point]);
+      centroids.set(index, [...point]);
     }
-    return Array.from(centers.values());
+    return Array.from(centroids.values());
   }
 }
 
 const NO_INDEX = -1;
 
+/**
+ * Kmeans++ centroid initializer.
+ */
 export class KmeansPlusPlusInitializer implements Initializer {
   constructor(private readonly distanceMeasure: DistanceMeasure = SquaredEuclideanDistance) {}
 
   initialize<P extends Point>(points: P[], count: number): P[] {
+    if (!Number.isInteger(count) || count <= 0) {
+      throw new TypeError(`Count(${count}) is not positive integer`);
+    }
+
     if (points.length <= count) {
       return [...points];
     }
@@ -126,22 +137,25 @@ export class KmeansPlusPlusInitializer implements Initializer {
 /**
  * Map of initialize method name.
  */
-interface MethodNameMap {
+export interface InitializerMap {
   'kmeans++': KmeansPlusPlusInitializer;
   random: RandomInitializer;
 }
 
-export type MethodName = keyof MethodNameMap;
+/**
+ * The name of initializers.
+ */
+export type InitializerName = keyof InitializerMap;
 
 /**
  * Create an {@link Initializer} from method name.
  *
  * @param name The name of method.
- * @return The instance of {@link Initializer} corresponding to the method name.
+ * @return The instance of initializer corresponding to the method name.
  * @throws {TypeError} if the method name is unrecognized.
  */
-export function createInitializer<T extends MethodName>(name: T): MethodNameMap[T];
-export function createInitializer<T extends MethodName>(name: T): Initializer {
+export function createInitializer<T extends InitializerName>(name: T): InitializerMap[T];
+export function createInitializer<T extends InitializerName>(name: T): Initializer {
   switch (name) {
     case 'kmeans++': {
       return new KmeansPlusPlusInitializer();

@@ -1,4 +1,5 @@
 import { Kmeans } from './kmeans';
+import { SquaredEuclideanDistance } from './math';
 import { Pixel } from './pixel';
 
 const DEFAULT_MAX_COLOR = 10;
@@ -7,7 +8,7 @@ export class Extractor {
   private readonly kmeans: Kmeans;
 
   constructor() {
-    this.kmeans = new Kmeans();
+    this.kmeans = new Kmeans('kmeans++', SquaredEuclideanDistance);
   }
 
   extract(imageData: ImageData, maxColor: number = DEFAULT_MAX_COLOR): string[] {
@@ -24,7 +25,7 @@ export class Extractor {
       pixels.push([r, g, b]);
     }
 
-    const centers = this.kmeans.predict(pixels, maxColor);
+    const centers = this.kmeans.classify(pixels, maxColor);
     return centers.map((color: Pixel): string => {
       return color.reduce((hex: string, value: number): string => {
         const component = Math.floor(value * 0xff) & 0xff;

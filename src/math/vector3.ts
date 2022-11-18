@@ -15,6 +15,9 @@ export class Vector3 {
    * @param component3 The 3rd component.
    */
   constructor(component1: number, component2: number, component3: number) {
+    if (!Number.isFinite(component1) || !Number.isFinite(component2) || !Number.isFinite(component3)) {
+      throw new TypeError(`The components contain infinite number: [${component1}, ${component2}, ${component3}]`);
+    }
     this.components = [component1, component2, component3];
   }
 
