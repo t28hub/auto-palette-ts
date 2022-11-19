@@ -1,3 +1,4 @@
+import { colorModel } from './color';
 import { Kmeans } from './kmeans';
 import { SquaredEuclideanDistance } from './math';
 import { Pixel } from './pixel';
@@ -18,17 +19,30 @@ export class Extractor {
     }
 
     const pixels: Pixel[] = [];
+    const rgbModel = colorModel('rgb');
+    const hslModel = colorModel('hsl');
     for (let i = 0; i < data.length; i += 4) {
-      const r = data[i] / 255;
-      const g = data[i + 1] / 255;
-      const b = data[i + 2] / 255;
-      pixels.push([r, g, b]);
+      const packed = rgbModel.pack({
+        r: data[i],
+        g: data[i + 1],
+        b: data[i + 2],
+        opacity: data[i + 3] / 0xff,
+      });
+      const { h, s, l } = hslModel.unpack(packed);
+      pixels.push([h, s, l]);
     }
 
     const centers = this.kmeans.classify(pixels, maxColor);
-    return centers.map((color: Pixel): string => {
-      return color.reduce((hex: string, value: number): string => {
-        const component = Math.floor(value * 0xff) & 0xff;
+    return centers.map((hsl: Pixel): string => {
+      const packed = hslModel.pack({
+        h: hsl[0],
+        s: hsl[1],
+        l: hsl[2],
+        opacity: 1.0,
+      });
+      const { r, g, b } = rgbModel.unpack(packed);
+      return [r, g, b].reduce((hex: string, value: number): string => {
+        const component = value & 0xff;
         const string = component.toString(16).padStart(2, '0');
         return `${hex}${string}`;
       }, '#');

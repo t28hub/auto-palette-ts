@@ -4,7 +4,7 @@ import { Cluster } from './cluster';
 import { createInitializer, Initializer, InitializerName } from './initializer';
 
 const DEFAULT_MAX_ITERATIONS = 10;
-const DEFAULT_MIN_DIFFERENCE = 0.3 * 0.3;
+const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
 
 /**
  * Kmeans clustering algorithm implementation.
