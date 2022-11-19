@@ -39,18 +39,18 @@ export type Opacity = {
  */
 export interface Model<T extends Opacity> {
   /**
-   * Decode the encoded color.
+   * Unpack the packed color.
    *
-   * @param value The encoded color.
-   * @return The decoded color.
+   * @param packed The packed color.
+   * @return The color.
    */
-  decode(value: PackedColor): T;
+  unpack(packed: PackedColor): T;
 
   /**
-   * Encode the decoded color.
+   * Pack the given color.
    *
-   * @param color The decoded color.
-   * @return The encoded color.
+   * @param color The color to be packed.
+   * @return The packed color.
    */
-  encode(color: T): PackedColor;
+  pack(color: T): PackedColor;
 }
