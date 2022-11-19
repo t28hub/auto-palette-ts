@@ -1,6 +1,6 @@
 import { ColorModel, colorModel } from './index';
 
-describe('color/index', () => {
+describe('color/model', () => {
   describe('colorModel', () => {
     it.each([{ name: 'hsl' }, { name: 'rgb' }])('should return color model by name($name)', ({ name }) => {
       // Act

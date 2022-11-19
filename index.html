@@ -19,7 +19,8 @@
       image.crossOrigin = 'Anonymous';
       image.onload = (e) => {
         fromImage(e.target).forEach((color) => {
-          console.info(`%c${color}`, `color: ${color}`);
+          const hex = color.toPackedColor().toString(16).padStart(8, '0');
+          console.info(`%c${color}`, `color: #${hex}`);
         });
       };
       document.body.appendChild(image);

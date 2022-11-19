@@ -1,4 +1,4 @@
-import { clamp } from '../math';
+import { clamp } from '../../math';
 
 import { Model, Opacity, PackedColor } from './model';
 import { RGB } from './rgb';
