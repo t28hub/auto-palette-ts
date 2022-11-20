@@ -1,7 +1,28 @@
 import { asPackedColor } from './model';
-import { RGB } from './rgb';
+import { normalizeComponent, RGB } from './rgb';
 
 describe('rgb', () => {
+  describe('normalizeComponent', () => {
+    it.each([
+      { value: NaN, expected: 0 },
+      { value: -255, expected: 0 },
+      { value: -1, expected: 0 },
+      { value: 0, expected: 0 },
+      { value: 1, expected: 1 },
+      { value: 128, expected: 128 },
+      { value: 254, expected: 254 },
+      { value: 255, expected: 255 },
+      { value: 256, expected: 255 },
+      { value: 1024, expected: 255 },
+    ])('should return normalized value($expected) when the value is $value', ({ value, expected }) => {
+      // Act
+      const actual = normalizeComponent(value);
+
+      // Assert
+      expect(actual).toEqual(expected);
+    });
+  });
+
   const fixtures = [
     { value: 0x00000000, r: 0, g: 0, b: 0, opacity: 0.0 },
     { value: 0x00000080, r: 0, g: 0, b: 0, opacity: 0.5 },

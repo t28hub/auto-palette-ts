@@ -25,6 +25,19 @@ export type RGBColor = {
 const MIN_RGB = 0x00;
 const MAX_RGB = 0xff;
 
+/**
+ * Normalize the value as valid component.
+ *
+ * @param value The value to be normalized.
+ * @return The normalized component value.
+ */
+export function normalizeComponent(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_RGB;
+  }
+  return clamp(value, MIN_RGB, MAX_RGB);
+}
+
 const SHIFT_R = 24;
 const SHIFT_G = 16;
 const SHIFT_B = 8;

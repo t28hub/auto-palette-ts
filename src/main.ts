@@ -35,7 +35,7 @@ export function fromImage(image: HTMLImageElement): Promise<Color[]> {
   try {
     const imageData = context.getImageData(0, 0, width, height, { colorSpace: 'srgb' });
     const generator = new PaletteGenerator();
-    return timed('palette', () => generator.generate(imageData, 10));
+    return timed('palette', () => generator.generate(imageData, 8));
   } catch (e) {
     throw new Error('Failed to get ImageData from an image');
   }
