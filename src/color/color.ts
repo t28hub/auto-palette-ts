@@ -77,4 +77,15 @@ export class Color implements HSLColor {
     const model = colorModel(name);
     return model.unpack(this.toPackedColor());
   }
+
+  /**
+   * Create a new Color from the packed color.
+   *
+   * @param packed The packed color.
+   * @return The color.
+   */
+  static fromPackedColor(packed: PackedColor): Color {
+    const hsl = HSL.unpack(packed);
+    return new Color(hsl.h, hsl.s, hsl.l, hsl.opacity);
+  }
 }

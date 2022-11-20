@@ -4,7 +4,7 @@ declare const validPackedColor: unique symbol;
  * Packed color representation.
  */
 export type PackedColor = number & {
-  [validPackedColor]: true;
+  readonly [validPackedColor]: true;
 };
 
 const MIN_PACKED_COLOR = 0x00000000;

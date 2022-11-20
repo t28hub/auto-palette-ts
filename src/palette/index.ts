@@ -1,0 +1,1 @@
+export { PaletteGenerator } from './generator';

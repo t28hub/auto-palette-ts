@@ -1,6 +1,8 @@
-import { Extractor } from './extractor';
+import { Color } from './color';
+import { PaletteGenerator } from './palette';
+import { timed } from './utils';
 
-export function fromImage(image: HTMLImageElement): string[] {
+export function fromImage(image: HTMLImageElement): Promise<Color[]> {
   if (!image.complete) {
     throw new Error(`Image(src=${image.src}) is not loaded`);
   }
@@ -17,7 +19,7 @@ export function fromImage(image: HTMLImageElement): string[] {
   return fromCanvas(canvas);
 }
 
-export function fromCanvas(canvas: HTMLCanvasElement): string[] {
+export function fromCanvas(canvas: HTMLCanvasElement): Promise<Color[]> {
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Failed to retrieve 2d context from canvas');
@@ -32,7 +34,7 @@ export function fromCanvas(canvas: HTMLCanvasElement): string[] {
   }
 }
 
-export function fromImageData(imageData: ImageData): string[] {
-  const extractor = new Extractor();
-  return extractor.extract(imageData);
+export function fromImageData(imageData: ImageData): Promise<Color[]> {
+  const generator = new PaletteGenerator();
+  return timed('palette', () => generator.generate(imageData, 10));
 }

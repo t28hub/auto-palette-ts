@@ -6,7 +6,7 @@ declare const validDistance: unique symbol;
  * Type representing distance.
  */
 export type Distance = number & {
-  [validDistance]: true;
+  readonly [validDistance]: true;
 };
 
 /**
