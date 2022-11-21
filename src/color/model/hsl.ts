@@ -3,68 +3,6 @@ import { clamp } from '../../math';
 import { Model, Opacity, PackedColor } from './model';
 import { RGB } from './rgb';
 
-const MIN_H = 0;
-const MAX_H = 360;
-
-/**
- * Normalize the given value as hue.
- *
- * @param value The value to be normalized.
- * @return The normalized hue.
- *
- * @see normalizeS
- * @see normalizeL
- */
-export function normalizeH(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_H;
-  }
-
-  let normalized = value;
-  if (normalized < MIN_H) {
-    normalized += MAX_H;
-  }
-  return normalized % MAX_H;
-}
-
-const MIN_S = 0.0;
-const MAX_S = 1.0;
-
-/**
- * Normalize the given value as saturation.
- *
- * @param value The value to be normalized.
- * @return The normalized saturation.
- *
- * @see normalizeH
- * @see normalizeL
- */
-export function normalizeS(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_S;
-  }
-  return clamp(value, MIN_S, MAX_S);
-}
-
-const MIN_L = 0.0;
-const MAX_L = 1.0;
-
-/**
- * Normalize the given value as lightness.
- *
- * @param value The value to be normalized.
- * @return The normalized lightness.
- *
- * @see normalizeH
- * @see normalizeS
- */
-export function normalizeL(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_S;
-  }
-  return clamp(value, MIN_L, MAX_L);
-}
-
 /**
  * The type representing a color in HSL.
  */
@@ -85,14 +23,76 @@ export type HSLColor = {
   readonly l: number;
 } & Opacity;
 
+const MIN_H = 0;
+const MAX_H = 360;
+
+/**
+ * Clamp the given value as hue.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampS
+ * @see clampL
+ */
+export function clampH(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_H;
+  }
+
+  let normalized = value;
+  if (normalized < MIN_H) {
+    normalized += MAX_H;
+  }
+  return normalized % MAX_H;
+}
+
+const MIN_S = 0.0;
+const MAX_S = 1.0;
+
+/**
+ * Clamp the given value as saturation.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampH
+ * @see clampL
+ */
+export function clampS(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_S;
+  }
+  return clamp(value, MIN_S, MAX_S);
+}
+
+const MIN_L = 0.0;
+const MAX_L = 1.0;
+
+/**
+ * Clamp the given value as lightness.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampH
+ * @see clampS
+ */
+export function clampL(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_S;
+  }
+  return clamp(value, MIN_L, MAX_L);
+}
+
 /**
  * The HSL color model implementation.
  */
 export const HSL: Model<HSLColor> = {
   pack(color: HSLColor): PackedColor {
-    const h = normalizeH(color.h);
-    const s = normalizeS(color.s);
-    const l = normalizeL(color.l);
+    const h = clampH(color.h);
+    const s = clampS(color.s);
+    const l = clampL(color.l);
 
     const c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
     const x = (1.0 - Math.abs(((h / 60) % 2) - 1.0)) * c;
@@ -154,9 +154,9 @@ export const HSL: Model<HSLColor> = {
     }
 
     return {
-      h: normalizeH(h),
-      s: normalizeS(s),
-      l: normalizeL(l),
+      h: clampH(h),
+      s: clampS(s),
+      l: clampL(l),
       opacity: rgb.opacity,
     };
   },

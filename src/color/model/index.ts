@@ -4,7 +4,7 @@ import { type Model, type Opacity } from './model';
 import { RGB, type RGBColor } from './rgb';
 import { XYZ, XYZColor } from './xyz';
 
-export { HSL, type HSLColor, normalizeH, normalizeL, normalizeS } from './hsl';
+export { HSL, type HSLColor, clampH, clampL, clampS } from './hsl';
 export { Lab, type LabColor } from './lab';
 export { asPackedColor, type Model, type Opacity, type PackedColor } from './model';
 export { RGB, type RGBColor } from './rgb';

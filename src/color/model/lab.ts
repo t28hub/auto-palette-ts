@@ -3,55 +3,6 @@ import { clamp } from '../../math';
 import { Model, Opacity, PackedColor } from './model';
 import { D65, XYZ } from './xyz';
 
-// [Range of coordinates](https://en.wikipedia.org/wiki/CIELAB_color_space#Range_of_coordinates)
-const MIN_L = 0;
-const MAX_L = 100;
-
-/**
- * Clamp the given value to lightness.
- *
- * @param value The value to be clamped.
- * @return The clamped value.
- */
-export function clampL(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_L;
-  }
-  return clamp(value, MIN_L, MAX_L);
-}
-
-const MIN_A = -128;
-const MAX_A = 127;
-
-/**
- * Clamp the given value to a.
- *
- * @param value The value to be clamped.
- * @return The clamped value.
- */
-export function clampA(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_A;
-  }
-  return clamp(value, MIN_A, MAX_A);
-}
-
-const MIN_B = -128;
-const MAX_B = 127;
-
-/**
- * Clamp the given value to b.
- *
- * @param value The value to be clamped.
- * @return The clamped value.
- */
-export function clampB(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_B;
-  }
-  return clamp(value, MIN_B, MAX_B);
-}
-
 /**
  * The type representing a color in CIE L*a*b*.
  */
@@ -72,12 +23,70 @@ export type LabColor = {
   readonly b: number;
 } & Opacity;
 
+const MIN_L = 0;
+const MAX_L = 100;
+
+/**
+ * Clamp the given value to lightness.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampA
+ * @see clampB
+ */
+export function clampL(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_L;
+  }
+  return clamp(value, MIN_L, MAX_L);
+}
+
+const MIN_A = -128;
+const MAX_A = 127;
+
+/**
+ * Clamp the given value to a.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampL
+ * @see clampB
+ */
+export function clampA(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_A;
+  }
+  return clamp(value, MIN_A, MAX_A);
+}
+
+const MIN_B = -128;
+const MAX_B = 127;
+
+/**
+ * Clamp the given value to b.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped value.
+ *
+ * @see clampA
+ * @see clampB
+ */
+export function clampB(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_B;
+  }
+  return clamp(value, MIN_B, MAX_B);
+}
+
 const DELTA = 6.0 / 29.0;
 
 /**
  * The CIE L*a*b* color model implementation.
  *
  * [CIELAB color space](https://en.wikipedia.org/wiki/CIELAB_color_space#From_CIEXYZ_to_CIELAB)
+ * [Range of coordinates](https://en.wikipedia.org/wiki/CIELAB_color_space#Range_of_coordinates)
  */
 export const Lab: Model<LabColor> = {
   pack(color: LabColor): PackedColor {

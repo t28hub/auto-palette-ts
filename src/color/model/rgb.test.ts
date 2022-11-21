@@ -1,8 +1,8 @@
 import { asPackedColor } from './model';
-import { normalizeComponent, RGB } from './rgb';
+import { clampValue, RGB } from './rgb';
 
 describe('rgb', () => {
-  describe('normalizeComponent', () => {
+  describe('clampComponent', () => {
     it.each([
       { value: NaN, expected: 0 },
       { value: -255, expected: 0 },
@@ -14,9 +14,9 @@ describe('rgb', () => {
       { value: 255, expected: 255 },
       { value: 256, expected: 255 },
       { value: 1024, expected: 255 },
-    ])('should return normalized value($expected) when the value is $value', ({ value, expected }) => {
+    ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = normalizeComponent(value);
+      const actual = clampValue(value);
 
       // Assert
       expect(actual).toEqual(expected);

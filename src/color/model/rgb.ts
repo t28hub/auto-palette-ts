@@ -26,12 +26,12 @@ const MIN_RGB = 0x00;
 const MAX_RGB = 0xff;
 
 /**
- * Normalize the value as valid component.
+ * Clamp the value as valid value of RGB.
  *
- * @param value The value to be normalized.
- * @return The normalized component value.
+ * @param value The value to be clamped.
+ * @return The clamped value.
  */
-export function normalizeComponent(value: number): number {
+export function clampValue(value: number): number {
   if (!Number.isFinite(value)) {
     return MIN_RGB;
   }

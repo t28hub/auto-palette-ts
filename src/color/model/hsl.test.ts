@@ -1,8 +1,8 @@
-import { HSL, normalizeH, normalizeL, normalizeS } from './hsl';
+import { HSL, clampH, clampL, clampS } from './hsl';
 import { asPackedColor } from './model';
 
 describe('hsl', () => {
-  describe('normalizeH', () => {
+  describe('clampH', () => {
     it.each([
       { value: 0, expected: 0 },
       { value: 60, expected: 60 },
@@ -15,16 +15,16 @@ describe('hsl', () => {
       { value: -1, expected: 359 },
       { value: -60, expected: 300 },
       { value: NaN, expected: 0 },
-    ])('should normalize the value($value) to valid hue($expected)', ({ value, expected }) => {
+    ])('should clamp the value($value) to valid hue($expected)', ({ value, expected }) => {
       // Act
-      const actual = normalizeH(value);
+      const actual = clampH(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('normalizeS', () => {
+  describe('clampS', () => {
     it.each([
       { value: 0.0, expected: 0.0 },
       { value: 0.5, expected: 0.5 },
@@ -32,16 +32,16 @@ describe('hsl', () => {
       { value: 1.5, expected: 1.0 },
       { value: -0.5, expected: 0.0 },
       { value: NaN, expected: 0.0 },
-    ])('should normalize the value($value) to valid saturation($expected)', ({ value, expected }) => {
+    ])('should clamp the value($value) to valid saturation($expected)', ({ value, expected }) => {
       // Act
-      const actual = normalizeS(value);
+      const actual = clampS(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('normalizeL', () => {
+  describe('clampL', () => {
     it.each([
       { value: 0.0, expected: 0.0 },
       { value: 0.5, expected: 0.5 },
@@ -49,9 +49,9 @@ describe('hsl', () => {
       { value: 1.5, expected: 1.0 },
       { value: -0.5, expected: 0.0 },
       { value: NaN, expected: 0.0 },
-    ])('should normalize the value($value) to valid lightness($expected)', ({ value, expected }) => {
+    ])('should clamp the value($value) to valid lightness($expected)', ({ value, expected }) => {
       // Act
-      const actual = normalizeL(value);
+      const actual = clampL(value);
 
       // Assert
       expect(actual).toEqual(expected);

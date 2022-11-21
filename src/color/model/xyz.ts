@@ -1,55 +1,7 @@
 import { clamp } from '../../math';
 
 import { Model, Opacity, PackedColor } from './model';
-import { normalizeComponent, RGB } from './rgb';
-
-const MIN_X = 0.0;
-const MAX_X = 0.950456;
-
-/**
- * Normalize the value as X.
- *
- * @param value The value to be normalized.
- * @return The normalized X value.
- */
-export function normalizeX(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_X;
-  }
-  return clamp(value, MIN_X, MAX_X);
-}
-
-const MIN_Y = 0.0;
-const MAX_Y = 1.0;
-
-/**
- * Normalize the value as Y.
- *
- * @param value The value to be normalized.
- * @return The normalized Y value.
- */
-export function normalizeY(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_Y;
-  }
-  return clamp(value, MIN_Y, MAX_Y);
-}
-
-const MIN_Z = 0.0;
-const MAX_Z = 1.088644;
-
-/**
- * Normalize the value as Z.
- *
- * @param value The value to be normalized.
- * @return The normalized Z value.
- */
-export function normalizeZ(value: number): number {
-  if (!Number.isFinite(value)) {
-    return MIN_Z;
-  }
-  return clamp(value, MIN_Z, MAX_Z);
-}
+import { clampValue, RGB } from './rgb';
 
 /**
  * The type representing a color in CIE XYZ.
@@ -89,14 +41,71 @@ export const D65: WhitePoint = {
   z: 1.08906,
 } as const;
 
+const MIN_X = 0.0;
+const MAX_X = 0.950456;
+
+/**
+ * Clamp the value as X.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped X value.
+ *
+ * @see clampY
+ * @see clampZ
+ */
+export function clampX(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_X;
+  }
+  return clamp(value, MIN_X, MAX_X);
+}
+
+const MIN_Y = 0.0;
+const MAX_Y = 1.0;
+
+/**
+ * Clamp the value as Y.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped Y value.
+ *
+ * @see clampX
+ * @see clampZ
+ */
+export function clampY(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_Y;
+  }
+  return clamp(value, MIN_Y, MAX_Y);
+}
+
+const MIN_Z = 0.0;
+const MAX_Z = 1.088644;
+
+/**
+ * Clamp the value as Z.
+ *
+ * @param value The value to be clamped.
+ * @return The clamped Z value.
+ *
+ * @see clampX
+ * @see clampY
+ */
+export function clampZ(value: number): number {
+  if (!Number.isFinite(value)) {
+    return MIN_Z;
+  }
+  return clamp(value, MIN_Z, MAX_Z);
+}
+
 /**
  * The CIE XYZ color model implementation.
  */
 export const XYZ: Model<XYZColor> = {
   pack(color: XYZColor): PackedColor {
-    const x = normalizeX(color.x);
-    const y = normalizeX(color.y);
-    const z = normalizeX(color.z);
+    const x = clampX(color.x);
+    const y = clampY(color.y);
+    const z = clampZ(color.z);
 
     const f = (value: number): number => {
       if (value <= 0.0031308) {
@@ -109,9 +118,9 @@ export const XYZ: Model<XYZColor> = {
     const fg = f(-0.969244 * x + 1.875968 * y + 0.041555 * z);
     const fb = f(0.05563 * x - 0.203977 * y + 1.056972 * z);
 
-    const r = normalizeComponent(Math.round(fr * 0xff));
-    const g = normalizeComponent(Math.round(fg * 0xff));
-    const b = normalizeComponent(Math.round(fb * 0xff));
+    const r = clampValue(Math.round(fr * 0xff));
+    const g = clampValue(Math.round(fg * 0xff));
+    const b = clampValue(Math.round(fb * 0xff));
     return RGB.pack({ r, g, b, opacity: color.opacity });
   },
   unpack(packed: PackedColor): XYZColor {
@@ -127,9 +136,9 @@ export const XYZ: Model<XYZColor> = {
     const fg = f(rgb.g / 0xff);
     const fb = f(rgb.b / 0xff);
 
-    const x = normalizeX(0.412391 * fr + 0.357584 * fg + 0.180481 * fb);
-    const y = normalizeY(0.212639 * fr + 0.715169 * fg + 0.072192 * fb);
-    const z = normalizeZ(0.019331 * fr + 0.119195 * fg + 0.950532 * fb);
+    const x = clampX(0.412391 * fr + 0.357584 * fg + 0.180481 * fb);
+    const y = clampY(0.212639 * fr + 0.715169 * fg + 0.072192 * fb);
+    const z = clampZ(0.019331 * fr + 0.119195 * fg + 0.950532 * fb);
     return { x, y, z, opacity: rgb.opacity };
   },
 };

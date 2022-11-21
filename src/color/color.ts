@@ -1,14 +1,4 @@
-import {
-  colorModel,
-  ColorModel,
-  HSL,
-  HSLColor,
-  normalizeH,
-  normalizeL,
-  normalizeS,
-  PackedColor,
-  SupportedColor,
-} from './model';
+import { colorModel, ColorModel, HSL, HSLColor, clampH, clampL, clampS, PackedColor, SupportedColor } from './model';
 
 /**
  * Class representing a color in HSL model.
@@ -38,9 +28,9 @@ export class Color implements HSLColor {
    * @param opacity The opacity value.
    */
   constructor(h: number, s: number, l: number, readonly opacity: number) {
-    this.h = normalizeH(h);
-    this.s = normalizeS(s);
-    this.l = normalizeL(l);
+    this.h = clampH(h);
+    this.s = clampS(s);
+    this.l = clampL(l);
   }
 
   /**
