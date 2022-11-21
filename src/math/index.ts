@@ -5,6 +5,6 @@ export {
   EuclideanDistance,
   SquaredEuclideanDistance,
 } from './distance';
-export { type Point, type Point2, type Point3 } from './point';
+export { type Point, type Point2, type Point3, type Point5 } from './point';
 export { clamp } from './utils';
-export { Vector3 } from './vector3';
+export { Vector } from './vector';

@@ -1,8 +1,8 @@
-import { Distance, DistanceMeasure, EuclideanDistance, Point3, toDistance, Vector3 } from '../math';
+import { Distance, DistanceMeasure, EuclideanDistance, Point, toDistance, Vector } from '../math';
 
-export class Cluster {
-  private readonly centroid: Vector3;
-  private readonly children: Point3[];
+export class Cluster<P extends Point> {
+  private readonly centroid: Vector<P>;
+  private readonly children: P[];
 
   /**
    * Create a new {@link Cluster} instance
@@ -11,8 +11,8 @@ export class Cluster {
    * @param distanceMeasure The distance measure.
    * @throws {TypeError} if the initial centroid is invalid.
    */
-  constructor(initialCentroid: Point3, private readonly distanceMeasure: DistanceMeasure = EuclideanDistance) {
-    this.centroid = new Vector3(...initialCentroid);
+  constructor(initialCentroid: P, private readonly distanceMeasure: DistanceMeasure = EuclideanDistance) {
+    this.centroid = new Vector(initialCentroid);
     this.children = [];
   }
 
@@ -35,7 +35,7 @@ export class Cluster {
    *
    * @return The center of this cluster.
    */
-  getCentroid(): Point3 {
+  getCentroid(): P {
     return this.centroid.toArray();
   }
 
@@ -65,7 +65,7 @@ export class Cluster {
    *
    * @param point The point to be inserted.
    */
-  insert(point: Point3) {
+  insert(point: P) {
     this.children.push(point);
   }
 
@@ -82,7 +82,7 @@ export class Cluster {
    * @param point The point.
    * @return The distance to the centroid of this cluster.
    */
-  distanceTo(point: Point3): Distance {
+  distanceTo(point: P): Distance {
     return this.centroid.distanceTo(point, this.distanceMeasure);
   }
 }

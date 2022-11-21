@@ -1,23 +1,23 @@
 import { Color, colorModel } from '../color';
 import { Kmeans } from '../kmeans';
-import { Pixel } from '../pixel';
+import { Point5 } from '../math';
 
 import { Extractor } from './extractor';
 
-const NORMALIZE_FACTOR = 128;
+const COLOR_NORMALIZE_FACTOR = 128;
+const COLOR_COMPONENT_WEIGHT = 16;
 
 export class KmeansExtractor implements Extractor {
-  constructor(private readonly kmeans: Kmeans) {}
+  constructor(private readonly kmeans: Kmeans<Point5>) {}
 
   extract(imageData: ImageData, maxColors: number): Color[] {
-    const { data } = imageData;
+    const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
     }
 
-    const pixels: Pixel[] = [];
+    const pixels: Point5[] = [];
     const rgbModel = colorModel('rgb');
-    const hslModel = colorModel('hsl');
     const labModel = colorModel('lab');
     for (let i = 0; i < data.length; i += 4) {
       const packed = rgbModel.pack({
@@ -27,17 +27,26 @@ export class KmeansExtractor implements Extractor {
         opacity: data[i + 3] / 0xff,
       });
       const { l, a, b } = labModel.unpack(packed);
-      pixels.push([l / NORMALIZE_FACTOR, a / NORMALIZE_FACTOR, b / NORMALIZE_FACTOR]);
+      const x = Math.floor((i / 4) % width);
+      const y = Math.floor((i / 4 / width) % height);
+
+      // Weight the components corresponding to colors to prioritize color information.
+      pixels.push([
+        (l / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
+        (a / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
+        (b / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
+        x / width,
+        y / height,
+      ]);
     }
 
     const centers = this.kmeans.classify(pixels, maxColors);
-    return centers.map((lab: Pixel): Color => {
-      const l = lab[0] * NORMALIZE_FACTOR;
-      const a = lab[1] * NORMALIZE_FACTOR;
-      const b = lab[2] * NORMALIZE_FACTOR;
+    return centers.map((point: Point5): Color => {
+      const l = (point[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
+      const a = (point[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
+      const b = (point[2] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const packed = labModel.pack({ l, a, b, opacity: 1.0 });
-      const hslColor = hslModel.unpack(packed);
-      return new Color(hslColor.h, hslColor.s, hslColor.l, hslColor.opacity);
+      return Color.fromPackedColor(packed);
     });
   }
 }

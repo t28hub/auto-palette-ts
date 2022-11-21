@@ -1,28 +1,27 @@
 import { Distance, DistanceMeasure, EuclideanDistance } from './distance';
-import { Point3 } from './point';
+import { Point } from './point';
 
-/**
- * Class representing 3D vector.
- */
-export class Vector3 {
-  private readonly components: Point3;
+const NO_INDEX = -1;
+
+export class Vector<P extends Point> {
+  private readonly components: P;
 
   /**
-   * Instantiate a new {@link Vector3} with initial components.
+   * Create a new Vector.
    *
-   * @param component1 The 1st component.
-   * @param component2 The 2nd component.
-   * @param component3 The 3rd component.
+   * @param source The source point.
+   * @throws {TypeError} if source contain invalid component.
    */
-  constructor(component1: number, component2: number, component3: number) {
-    if (!Number.isFinite(component1) || !Number.isFinite(component2) || !Number.isFinite(component3)) {
-      throw new TypeError(`The components contain infinite number: [${component1}, ${component2}, ${component3}]`);
+  constructor(source: P) {
+    const invalidIndex = source.findIndex((value: number): boolean => !Number.isFinite(value));
+    if (invalidIndex !== NO_INDEX) {
+      throw new TypeError(`The source contain infinite number at ${invalidIndex}`);
     }
-    this.components = [component1, component2, component3];
+    this.components = [...source];
   }
 
   /**
-   * The number of dimensions of this vector.
+   * Return the dimension of this vector.
    */
   get dimension(): number {
     return this.components.length;
@@ -42,7 +41,7 @@ export class Vector3 {
    *
    * @return The array representation.
    */
-  toArray(): Point3 {
+  toArray(): P {
     return [...this.components];
   }
 
@@ -64,8 +63,8 @@ export class Vector3 {
    * @param other The other vector or point.
    * @return The current vector.
    */
-  add(other: Vector3 | Point3): this {
-    const components = other instanceof Vector3 ? other.components : other;
+  add(other: Vector<P> | P): this {
+    const components = other instanceof Vector ? other.components : other;
     for (let i = 0; i < this.dimension; i++) {
       if (!Number.isFinite(components[i])) {
         throw new TypeError(`Component(${components[i]}) at ${i} is not finite number`);
@@ -97,11 +96,11 @@ export class Vector3 {
    * Compute the distance to the other vector or point.
    *
    * @param other The other vector or point.
-   * @param distanceMeasure The {@link DistanceMeasure} to be used.
+   * @param distanceMeasure The distance measure to be used.
    * @return The distance to the other vector or point.
    */
-  distanceTo(other: Vector3 | Point3, distanceMeasure: DistanceMeasure = EuclideanDistance): Distance {
-    const components = other instanceof Vector3 ? other.components : other;
-    return distanceMeasure<Point3>(this.components, components);
+  distanceTo(other: Vector<P> | P, distanceMeasure: DistanceMeasure = EuclideanDistance): Distance {
+    const components = other instanceof Vector ? other.components : other;
+    return distanceMeasure<P>(this.components, components);
   }
 }

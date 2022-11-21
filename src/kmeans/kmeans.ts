@@ -1,4 +1,4 @@
-import { DistanceMeasure, EuclideanDistance, Point3 } from '../math';
+import { DistanceMeasure, EuclideanDistance, Point } from '../math';
 
 import { Cluster } from './cluster';
 import { createInitializer, Initializer, InitializerName } from './initializer';
@@ -9,7 +9,7 @@ const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
 /**
  * Kmeans clustering algorithm implementation.
  */
-export class Kmeans {
+export class Kmeans<P extends Point> {
   private readonly initializer: Initializer;
 
   /**
@@ -43,7 +43,7 @@ export class Kmeans {
    * @param size The size of clusters.
    * @throws {TypeError} if the size is not positive integer.
    */
-  classify(points: Point3[], size: number): Point3[] {
+  classify(points: P[], size: number): P[] {
     if (!Number.isInteger(size) || size <= 0) {
       throw new TypeError(`The size(${size}) of cluster must be positive integer`);
     }
@@ -52,8 +52,8 @@ export class Kmeans {
       return [...points];
     }
 
-    const centroids = this.initializer.initialize<Point3>(points, size);
-    const clusters = centroids.map((centroid: Point3): Cluster => {
+    const centroids = this.initializer.initialize<P>(points, size);
+    const clusters = centroids.map((centroid: P): Cluster<P> => {
       return new Cluster(centroid, this.distanceMeasure);
     });
     for (let i = 0; i < this.maxIterations; i++) {
@@ -62,19 +62,19 @@ export class Kmeans {
         break;
       }
     }
-    return clusters.map((cluster: Cluster): Point3 => cluster.getCentroid());
+    return clusters.map((cluster: Cluster<P>): P => cluster.getCentroid());
   }
 
-  private iterate(clusters: Cluster[], points: Point3[]): boolean {
-    clusters.forEach((cluster: Cluster) => cluster.clear());
+  private iterate(clusters: Cluster<P>[], points: P[]): boolean {
+    clusters.forEach((cluster: Cluster<P>) => cluster.clear());
 
-    points.forEach((point: Point3) => {
+    points.forEach((point: P) => {
       const nearestCluster = Kmeans.findNearestCluster(clusters, point);
       nearestCluster.insert(point);
     });
 
     let updated = true;
-    clusters.forEach((cluster: Cluster) => {
+    clusters.forEach((cluster: Cluster<P>) => {
       const difference = cluster.updateCentroid();
       if (difference < this.minDifference) {
         updated = false;
@@ -83,8 +83,8 @@ export class Kmeans {
     return updated;
   }
 
-  private static findNearestCluster(clusters: Cluster[], point: Point3): Cluster {
-    let nearestCluster: Cluster = clusters[0];
+  private static findNearestCluster<P extends Point>(clusters: Cluster<P>[], point: P): Cluster<P> {
+    let nearestCluster: Cluster<P> = clusters[0];
     let minDistance = nearestCluster.distanceTo(point);
     for (let i = 1; i < clusters.length; i++) {
       const cluster = clusters[i];
