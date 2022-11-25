@@ -41,15 +41,20 @@ export class Kmeans<P extends Point> {
    *
    * @param points The points to be classified.
    * @param size The size of clusters.
+   * @return The set of clusters.
    * @throws {TypeError} if the size is not positive integer.
    */
-  classify(points: P[], size: number): P[] {
+  classify(points: P[], size: number): Cluster<P>[] {
     if (!Number.isInteger(size) || size <= 0) {
       throw new TypeError(`The size(${size}) of cluster must be positive integer`);
     }
 
     if (points.length <= size) {
-      return [...points];
+      return points.map((point: P): Cluster<P> => {
+        const cluster = new Cluster(point);
+        cluster.insert(point);
+        return cluster;
+      });
     }
 
     const centroids = this.initializer.initialize<P>(points, size);
@@ -62,7 +67,7 @@ export class Kmeans<P extends Point> {
         break;
       }
     }
-    return clusters.map((cluster: Cluster<P>): P => cluster.getCentroid());
+    return clusters;
   }
 
   private iterate(clusters: Cluster<P>[], points: P[]): boolean {

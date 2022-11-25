@@ -1,4 +1,5 @@
-import { Color, PackedColor } from '../../color';
+import { PackedColor } from '../../color';
+import { Result } from '../../extractor/extractor';
 import { KmeansExtractor } from '../../extractor/kmeans';
 import { Kmeans } from '../../kmeans';
 import { CompleteMessage, ErrorMessage, Message } from '../message';
@@ -19,9 +20,14 @@ self.addEventListener('message', (event: MessageEvent<Message>) => {
       imageData.data.set(new Uint8ClampedArray(image.pixels));
 
       const extractor = new KmeansExtractor(new Kmeans());
-      const colors = extractor.extract(imageData, maxColors).map((color: Color): PackedColor => {
-        return color.toPackedColor();
-      });
+      const colors = extractor
+        .extract(imageData, maxColors)
+        .sort((result1: Result, result2: Result): number => {
+          return result2.population - result1.population;
+        })
+        .map((result: Result): PackedColor => {
+          return result.color.toPackedColor();
+        });
 
       const event: CompleteMessage = {
         type: 'complete',
