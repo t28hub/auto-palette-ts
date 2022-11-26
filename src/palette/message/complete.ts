@@ -1,4 +1,5 @@
 import { PackedColor } from '../../color';
+import { ExtractionResult } from '../../extractor';
 import { ID } from '../../utils';
 
 /**
@@ -19,8 +20,8 @@ export type CompleteMessage = {
     readonly id: ID;
 
     /**
-     * The extracted packed colors.
+     * The extraction results.
      */
-    readonly result: ReadonlyArray<PackedColor>;
+    readonly results: ExtractionResult<PackedColor>[];
   };
 };

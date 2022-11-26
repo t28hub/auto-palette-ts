@@ -1,7 +1,9 @@
 import { Color, PackedColor } from '../color';
+import { ExtractionResult } from '../extractor';
 import { id, ID } from '../utils';
 
 import { ExtractMessage, Message } from './message';
+import { Palette } from './palette';
 import Worker from './worker?worker&inline';
 
 const defaultWorker = new Worker();
@@ -26,9 +28,9 @@ export class PaletteGenerator {
    *
    * @param imageData The image data.
    * @param maxColors The max colors.
-   * @return {Promise}
+   * @return {Promise<Palette>}
    */
-  generate(imageData: ImageData, maxColors: number): Promise<Color[]> {
+  generate(imageData: ImageData, maxColors: number): Promise<Palette> {
     return new Promise((resolve, reject) => {
       const message = this.buildMessage(imageData, maxColors);
       this.worker.postMessage(message, [message.payload.image.pixels]);
@@ -41,10 +43,13 @@ export class PaletteGenerator {
 
         switch (type) {
           case 'complete': {
-            const colors = payload.result.map((packed: PackedColor): Color => {
-              return Color.fromPackedColor(packed);
+            const colors = payload.results.map((result: ExtractionResult<PackedColor>): ExtractionResult<Color> => {
+              return {
+                color: Color.fromPackedColor(result.color),
+                population: result.population,
+              };
             });
-            resolve(colors);
+            resolve(new Palette(colors));
             break;
           }
           case 'error': {

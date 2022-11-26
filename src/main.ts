@@ -1,10 +1,9 @@
-import { Color } from './color';
-import { PaletteGenerator } from './palette';
+import { Palette, PaletteGenerator } from './palette';
 import { timed } from './utils';
 
 const MAX_IMAGE_SIZE = 192 * 192;
 
-export function fromImage(image: HTMLImageElement): Promise<Color[]> {
+export function fromImage(image: HTMLImageElement): Promise<Palette> {
   if (!image.complete) {
     throw new TypeError(`Image(src=${image.src}) is not loaded`);
   }

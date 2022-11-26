@@ -2,15 +2,18 @@ import { Color, colorModel } from '../color';
 import { Cluster, Kmeans } from '../kmeans';
 import { Point5 } from '../math';
 
-import { Extractor, Result } from './extractor';
+import { Extractor, ExtractionResult } from './extractor';
 
 const COLOR_NORMALIZE_FACTOR = 128;
 const COLOR_COMPONENT_WEIGHT = 16;
 
+/**
+ * Implementation of {@link Extractor} using Kmeans algorithm.
+ */
 export class KmeansExtractor implements Extractor {
   constructor(private readonly kmeans: Kmeans<Point5>) {}
 
-  extract(imageData: ImageData, maxColors: number): Result[] {
+  extract(imageData: ImageData, maxColors: number): ExtractionResult<Color>[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
@@ -41,7 +44,7 @@ export class KmeansExtractor implements Extractor {
     }
 
     const clusters = this.kmeans.classify(pixels, maxColors);
-    return clusters.map((cluster: Cluster<Point5>): Result => {
+    return clusters.map((cluster: Cluster<Point5>): ExtractionResult<Color> => {
       const pixel = cluster.getCentroid();
       const l = (pixel[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const a = (pixel[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
