@@ -46,6 +46,15 @@ export class Vector<P extends Point> {
   }
 
   /**
+   * Clone this vector.
+   *
+   * @return The cloned vector.
+   */
+  clone(): Vector<P> {
+    return new Vector<P>(this.components);
+  }
+
+  /**
    * Set this vector to zero vector.
    *
    * @return The current vector.

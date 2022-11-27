@@ -48,6 +48,18 @@ describe('Vector', () => {
     });
   });
 
+  describe('clone', () => {
+    it('should return cloned vector', () => {
+      // Act
+      const vector = new Vector([2, 3, 5, 7, 11]);
+      const actual = vector.clone();
+
+      // Assert
+      expect(actual).toEqual(vector);
+      expect(actual).not.toBe(vector);
+    });
+  });
+
   describe('setZero', () => {
     it('should set vector to zero vector', () => {
       // Act
