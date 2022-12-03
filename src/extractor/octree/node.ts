@@ -26,9 +26,9 @@ const CHILD_NODE_SIZE = 8;
  * Class representing a node of Octree.
  */
 export class Node {
-  private bucketCount: number;
-  private readonly bucket: Vector<Point3>;
-  private readonly childNodes: Node[];
+  private dataSize: number;
+  private readonly data: Vector<Point3>;
+  private readonly children: Node[];
 
   constructor(
     readonly bounds: Bounds,
@@ -36,37 +36,37 @@ export class Node {
     readonly depth: number,
     private readonly maxDepth: number,
   ) {
-    this.bucketCount = 0;
-    this.bucket = new Vector<Point3>([0, 0, 0]);
-    this.childNodes = [];
+    this.dataSize = 0;
+    this.data = new Vector<Point3>([0, 0, 0]);
+    this.children = [];
   }
 
-  get childNodesSize(): number {
-    return this.childNodes.length;
+  get childrenSize(): number {
+    return this.children.length;
   }
 
   get isLeafNode(): boolean {
-    return this.childNodes.length === 0;
+    return this.children.length === 0;
   }
 
   get isEmpty(): boolean {
-    return this.bucketCount === 0;
+    return this.dataSize === 0;
   }
 
   get size(): number {
-    return this.bucketCount;
+    return this.dataSize;
   }
 
   getCenter(): Point3 {
-    if (this.bucketCount === 0) {
+    if (this.dataSize === 0) {
       const center = new Vector(this.bounds.getMinPoint());
       center.add(this.bounds.getMaxPoint());
       center.scale(1 / 2);
       return center.toArray();
     }
 
-    const center = this.bucket.clone();
-    center.scale(1 / this.bucketCount);
+    const center = this.data.clone();
+    center.scale(1 / this.dataSize);
     return center.toArray();
   }
 
@@ -80,12 +80,12 @@ export class Node {
     }
 
     if (this.isLeafNode) {
-      this.bucket.add(point);
-      this.bucketCount++;
+      this.data.add(point);
+      this.dataSize++;
       return true;
     }
 
-    for (const childNode of this.childNodes) {
+    for (const childNode of this.children) {
       if (childNode.insert(point)) {
         return true;
       }
@@ -95,8 +95,8 @@ export class Node {
 
   deleteChildNodes(): number {
     let deleted = 0;
-    while (this.childNodes.length !== 0) {
-      const childNode = this.childNodes.shift();
+    while (this.children.length !== 0) {
+      const childNode = this.children.shift();
       if (!childNode) {
         break;
       }
@@ -107,8 +107,8 @@ export class Node {
         deleted += childNode.deleteChildNodes();
       }
 
-      this.bucket.add(childNode.bucket);
-      this.bucketCount += childNode.bucketCount;
+      this.data.add(childNode.data);
+      this.dataSize += childNode.dataSize;
     }
     return deleted;
   }
@@ -129,7 +129,7 @@ export class Node {
       const result = walker(node);
       switch (result) {
         case 'continue': {
-          queue.enqueue(...node.childNodes);
+          queue.enqueue(...node.children);
           break;
         }
         case 'terminate': {
@@ -149,7 +149,7 @@ export class Node {
 
   private split() {
     for (let i = 0; i < CHILD_NODE_SIZE; i++) {
-      this.childNodes[i] = this.createChildNodeAt(i);
+      this.children[i] = this.createChildNodeAt(i);
     }
   }
 

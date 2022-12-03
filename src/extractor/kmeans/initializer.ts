@@ -1,4 +1,4 @@
-import { toDistance, Distance, DistanceMeasure, Point, SquaredEuclideanDistance } from '../math';
+import { toDistance, Distance, DistanceMeasure, Point, SquaredEuclideanDistance } from '../../math';
 
 /**
  * Interface to choose initial centroids.

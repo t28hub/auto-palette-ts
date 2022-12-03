@@ -1,10 +1,7 @@
-import { DistanceMeasure, EuclideanDistance, Point } from '../math';
+import { DistanceMeasure, Point } from '../../math';
 
 import { Cluster } from './cluster';
 import { createInitializer, Initializer, InitializerName } from './initializer';
-
-const DEFAULT_MAX_ITERATIONS = 10;
-const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
 
 /**
  * Kmeans clustering algorithm implementation.
@@ -23,9 +20,9 @@ export class Kmeans<P extends Point> {
    */
   constructor(
     initializationMethod: InitializerName = 'kmeans++',
-    private readonly distanceMeasure: DistanceMeasure = EuclideanDistance,
-    private readonly maxIterations: number = DEFAULT_MAX_ITERATIONS,
-    private readonly minDifference: number = DEFAULT_MIN_DIFFERENCE,
+    private readonly distanceMeasure: DistanceMeasure,
+    private readonly maxIterations: number,
+    private readonly minDifference: number,
   ) {
     if (!Number.isInteger(maxIterations) || maxIterations <= 0) {
       throw new TypeError(`The max iteration(${maxIterations}) is not positive integer`);

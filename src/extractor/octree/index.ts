@@ -6,13 +6,28 @@ import { Bounds } from './bounds';
 import { Node } from './node';
 import { Octree } from './octree';
 
-const DEFAULT_DEPTH = 5;
 const MAX_DEPTH = 8;
+
+/**
+ * The options of {@link OctreeExtractor}.
+ */
+export type Options = {
+  readonly kind: 'octree';
+  readonly maxDepth: number;
+};
+
+const defaultOptions: Options = {
+  kind: 'octree',
+  maxDepth: 5,
+};
 
 export class OctreeExtractor implements Extractor {
   private readonly bounds: Bounds;
+  private readonly maxDepth: number;
 
-  constructor(private readonly maxDepth: number = DEFAULT_DEPTH) {
+  constructor(options: Partial<Options> = {}) {
+    const merged: Options = { ...options, ...defaultOptions };
+    const maxDepth = merged.maxDepth;
     if (!Number.isInteger(maxDepth) || maxDepth < 1 || maxDepth > MAX_DEPTH) {
       throw new TypeError(`The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`);
     }
@@ -21,6 +36,7 @@ export class OctreeExtractor implements Extractor {
     const minPixel: Point3 = [0, 0, 0];
     const maxPixel: Point3 = [max, max, max];
     this.bounds = new Bounds(minPixel, maxPixel);
+    this.maxDepth = maxDepth;
   }
 
   extract(imageData: ImageData, maxColors: number): ExtractionResult<Color>[] {
@@ -49,7 +65,7 @@ export class OctreeExtractor implements Extractor {
           return;
         }
 
-        if (leafCount - found.childNodesSize < maxColors) {
+        if (leafCount - found.childrenSize < maxColors) {
           return;
         }
 
@@ -68,12 +84,10 @@ export class OctreeExtractor implements Extractor {
     const rgbModel = colorModel('rgb');
     return leafNodes.map((leaf: Node): ExtractionResult<Color> => {
       const center = leaf.getCenter();
-      const packed = rgbModel.pack({
-        r: center[0] << colorShift,
-        g: center[1] << colorShift,
-        b: center[2] << colorShift,
-        opacity: 1.0,
-      });
+      const r = center[0] << colorShift;
+      const g = center[1] << colorShift;
+      const b = center[2] << colorShift;
+      const packed = rgbModel.pack({ r, g, b, opacity: 1.0 });
       return {
         color: Color.fromPackedColor(packed),
         population: leaf.size,

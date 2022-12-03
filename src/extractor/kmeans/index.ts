@@ -1,17 +1,56 @@
-import { Color, colorModel } from '../color';
-import { Cluster, Kmeans } from '../kmeans';
-import { Point5 } from '../math';
+import { Color, colorModel } from '../../color';
+import { DistanceMeasure, Point5, SquaredEuclideanDistance } from '../../math';
+import { Extractor, ExtractionResult } from '../extractor';
 
-import { Extractor, ExtractionResult } from './extractor';
+import { Cluster } from './cluster';
+import { InitializerName } from './initializer';
+import { Kmeans } from './kmeans';
 
 const COLOR_NORMALIZE_FACTOR = 128;
 const COLOR_COMPONENT_WEIGHT = 16;
 
 /**
+ * Options for {@link KmeansExtractor}.
+ */
+export type Options = {
+  readonly kind: 'kmeans';
+  readonly initializationMethod: InitializerName;
+  readonly distanceMeasure: DistanceMeasure;
+  readonly maxIterations: number;
+  readonly minDifference: number;
+};
+
+/**
+ * The default options of {@link KmeansExtractor}.
+ */
+const defaultOptions: Options = {
+  kind: 'kmeans',
+  initializationMethod: 'kmeans++',
+  distanceMeasure: SquaredEuclideanDistance,
+  maxIterations: 10,
+  minDifference: 0.25 * 0.25,
+};
+
+/**
  * Implementation of {@link Extractor} using Kmeans algorithm.
  */
 export class KmeansExtractor implements Extractor {
-  constructor(private readonly kmeans: Kmeans<Point5>) {}
+  private readonly kmeans: Kmeans<Point5>;
+
+  /**
+   * Create a new {@link KmeansExtractor}.
+   *
+   * @param options The options of extractor.
+   */
+  constructor(options: Partial<Options> = {}) {
+    const merged = { ...options, ...defaultOptions };
+    this.kmeans = new Kmeans<Point5>(
+      merged.initializationMethod,
+      merged.distanceMeasure,
+      merged.maxIterations,
+      merged.minDifference,
+    );
+  }
 
   extract(imageData: ImageData, maxColors: number): ExtractionResult<Color>[] {
     const { data, width, height } = imageData;

@@ -1,4 +1,4 @@
-import { Point2 } from '../math';
+import { Point2 } from '../../math';
 
 import { createInitializer, InitializerName } from './initializer';
 

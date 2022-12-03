@@ -1,4 +1,4 @@
-import { Distance, DistanceMeasure, EuclideanDistance, Point, toDistance, Vector } from '../math';
+import { Distance, DistanceMeasure, EuclideanDistance, Point, toDistance, Vector } from '../../math';
 
 export class Cluster<P extends Point> {
   private readonly centroid: Vector<P>;

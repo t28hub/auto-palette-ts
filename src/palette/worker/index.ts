@@ -1,5 +1,5 @@
 import { Color, PackedColor } from '../../color';
-import { ExtractionResult, OctreeExtractor } from '../../extractor';
+import { ExtractionResult, createExtractor } from '../../extractor';
 import { CompleteMessage, ErrorMessage, Message } from '../message';
 
 /**
@@ -17,8 +17,7 @@ self.addEventListener('message', (event: MessageEvent<Message>) => {
       const imageData = new ImageData(image.width, image.height);
       imageData.data.set(new Uint8ClampedArray(image.pixels));
 
-      // const extractor = new KmeansExtractor(new Kmeans());
-      const extractor = new OctreeExtractor(4);
+      const extractor = createExtractor({ kind: 'octree', maxDepth: 4 });
       const results = extractor
         .extract(imageData, maxColors)
         .sort((result1: ExtractionResult<Color>, result2: ExtractionResult<Color>): number => {

@@ -1,18 +1,10 @@
-import { Point3, SquaredEuclideanDistance } from '../math';
+import { Point3, SquaredEuclideanDistance } from '../../math';
 
 import { Kmeans } from './kmeans';
 
 describe('kmeans', () => {
   describe('constructor', () => {
     it('should create a new Kmeans', () => {
-      // Act
-      const actual = new Kmeans();
-
-      // Assert
-      expect(actual).toBeDefined();
-    });
-
-    it('should create a new Kmeans with optional parameters', () => {
       // Act
       const actual = new Kmeans('random', SquaredEuclideanDistance, 15, Number.EPSILON);
 
@@ -44,7 +36,7 @@ describe('kmeans', () => {
       [4, 4, 5],
       [3, 4, 5],
     ];
-    const kmeans = new Kmeans('kmeans++', SquaredEuclideanDistance);
+    const kmeans = new Kmeans('kmeans++', SquaredEuclideanDistance, 10, 0.01);
 
     it.each([
       { count: 1, expected: 1 },
