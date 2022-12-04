@@ -17,6 +17,45 @@ describe('color', () => {
     });
   });
 
+  describe('isLight', () => {
+    it('should return true if lightness is greater than 0.5', () => {
+      // Act
+      const color = new Color(120, 0.8, 0.51, 1.0);
+      const actual = color.isLight;
+
+      // Assert
+      expect(actual).toEqual(true);
+    });
+
+    it('should return false if lightness is less than 0.5', () => {
+      // Act
+      const color = new Color(120, 0.8, 0.49, 1.0);
+      const actual = color.isLight;
+
+      // Assert
+      expect(actual).toEqual(false);
+    });
+  });
+
+  describe('isDark', () => {
+    it('should return true if lightness is less than 0.5', () => {
+      // Act
+      const color = new Color(120, 0.8, 0.49, 1.0);
+      const actual = color.isDark;
+
+      // Assert
+      expect(actual).toEqual(true);
+    });
+
+    it('should return false if lightness is greater than 0.5', () => {
+      // Act
+      const color = new Color(120, 0.8, 0.51, 1.0);
+      const actual = color.isDark;
+
+      // Assert
+      expect(actual).toEqual(false);
+    });
+  });
   describe('toString', () => {
     it('should return the string representation of this color', () => {
       // Act
@@ -24,7 +63,7 @@ describe('color', () => {
       const actual = color.toString();
 
       // Assert
-      expect(actual).toEqual('Color(0xffff0080)');
+      expect(actual).toEqual('#ffff0080');
     });
   });
 

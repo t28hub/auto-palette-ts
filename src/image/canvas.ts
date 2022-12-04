@@ -1,8 +1,17 @@
 import { Image } from './image';
 
+/**
+ * Image implementation using Canvas.
+ */
 export class CanvasImage implements Image {
   private readonly context: CanvasRenderingContext2D;
 
+  /**
+   * Create a new {@link CanvasImage}.
+   *
+   * @param canvas The source canvas element.
+   * @throws {Error} if context 2D cannot be ensured.
+   */
   constructor(private readonly canvas: HTMLCanvasElement) {
     this.context = CanvasImage.ensureContext2D(canvas);
   }
@@ -25,6 +34,9 @@ export class CanvasImage implements Image {
     }
 
     const imageSize = this.width * this.height;
+    if (imageSize === 0) {
+      throw new Error(`Failed to resize image since either width(${this.width}) or height(${this.height}) is 0`);
+    }
     const scale = Math.sqrt(size / imageSize);
     const resizedWidth = Math.floor(this.width * scale);
     const resizedHeight = Math.floor(this.height * scale);
@@ -36,15 +48,28 @@ export class CanvasImage implements Image {
     return new CanvasImage(resizedCanvas);
   }
 
-  static fromImageElement(image: HTMLImageElement): Image {
-    if (!image.complete) {
-      throw new TypeError(`Image(src=${image.src}) is not loaded`);
-    }
+  static fromImageElement(imageElement: HTMLImageElement): Promise<Image> {
+    return new Promise<Image>((resolve, reject) => {
+      if (imageElement.complete) {
+        const image = CanvasImage.createImage(imageElement);
+        resolve(image);
+        return;
+      }
 
+      imageElement.addEventListener('load', () => {
+        const image = CanvasImage.createImage(imageElement);
+        resolve(image);
+      });
+      imageElement.addEventListener('error', () => {
+        reject(`Failed to load image from ${imageElement.src}`);
+      });
+    });
+  }
+
+  private static createImage(image: HTMLImageElement): CanvasImage {
     const canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
-
     this.ensureContext2D(canvas).drawImage(image, 0, 0);
     return new CanvasImage(canvas);
   }

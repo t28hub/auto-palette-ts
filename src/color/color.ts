@@ -34,13 +34,31 @@ export class Color implements HSLColor {
   }
 
   /**
-   * Return string representation.
+   * Return whether this color is light.
    *
-   * @return The string representation.
+   * @return true if this color is light.
+   */
+  get isLight(): boolean {
+    return this.l > 0.5;
+  }
+
+  /**
+   * Return whether this color is dark.
+   *
+   * @return true if this color is dark.
+   */
+  get isDark(): boolean {
+    return !this.isLight;
+  }
+
+  /**
+   * Return hex string representation.
+   *
+   * @return The hex string representation.
    */
   toString(): string {
-    const string = this.toPackedColor().toString(16).padStart(8, '0');
-    return `Color(0x${string})`;
+    const hex = this.toPackedColor().toString(16).padStart(8, '0');
+    return `#${hex}`;
   }
 
   /**

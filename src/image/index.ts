@@ -9,6 +9,6 @@ export { type Image } from './image';
  * @param source The image source.
  * @return The loaded image.
  */
-export function load(source: HTMLImageElement): Image {
+export function load(source: HTMLImageElement): Promise<Image> {
   return CanvasImage.fromImageElement(source);
 }
