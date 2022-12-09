@@ -1,9 +1,9 @@
 import { ID } from '../../utils';
 
 /**
- * Type representing error message.
+ * Type representing error response message.
  */
-export type ErrorMessage = {
+export type ErrorResponseMessage = {
   /**
    * The type of this event.
    */

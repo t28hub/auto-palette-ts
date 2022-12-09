@@ -1,55 +1,15 @@
-import { Color, PackedColor } from '../../color';
-import { ExtractionResult, createExtractor } from '../../extractor';
-import { CompleteMessage, ErrorMessage, Message } from '../message';
+import Worker from './worker?worker&inline';
+
+let worker: Worker | undefined;
 
 /**
- * Declare the property of the {@link WorkerGlobalScope} for TypeScript
+ * Return the default worker.
  *
- * @see [WorkerGlobalScope.self](https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self)
+ * @return The default worker.
  */
-declare const self: DedicatedWorkerGlobalScope;
-
-self.addEventListener('message', (event: MessageEvent<Message>) => {
-  const { type, payload } = event.data;
-  switch (type) {
-    case 'extract': {
-      const { image, maxColors } = payload;
-      const imageData = new ImageData(image.width, image.height);
-      imageData.data.set(new Uint8ClampedArray(image.pixels));
-
-      const extractor = createExtractor({ kind: 'octree', maxDepth: 4 });
-      const results = extractor
-        .extract(imageData, maxColors)
-        .sort((result1: ExtractionResult<Color>, result2: ExtractionResult<Color>): number => {
-          return result2.population - result1.population;
-        })
-        .map((result: ExtractionResult<Color>): ExtractionResult<PackedColor> => {
-          return {
-            color: result.color.toPackedColor(),
-            population: result.population,
-          };
-        });
-
-      const event: CompleteMessage = {
-        type: 'complete',
-        payload: {
-          id: payload.id,
-          results,
-        },
-      };
-      self.postMessage(event);
-      break;
-    }
-    default: {
-      const message: ErrorMessage = {
-        type: 'error',
-        payload: {
-          id: payload.id,
-          message: `Unrecognized event type: ${type}`,
-        },
-      };
-      self.postMessage(message);
-      break;
-    }
+export function defaultWorker(): Worker {
+  if (!worker) {
+    return (worker = new Worker());
   }
-});
+  return worker;
+}

@@ -1,4 +1,5 @@
 import { Color, PackedColor } from '../color';
+import { ImageData } from '../types';
 
 /**
  * Type representing the result of extraction.

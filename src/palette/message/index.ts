@@ -1,9 +1,7 @@
-import { CompleteMessage } from './complete';
-import { ErrorMessage } from './error';
-import { ExtractMessage } from './extract';
+import { ErrorResponseMessage } from './error';
+import { RequestMessage } from './request';
+import { ResponseMessage } from './response';
 
-export { type CompleteMessage } from './complete';
-export { type ErrorMessage } from './error';
-export { type ExtractMessage } from './extract';
-
-export type Message = CompleteMessage | ErrorMessage | ExtractMessage;
+export type Request = RequestMessage;
+export type Response = ErrorResponseMessage | ResponseMessage;
+export type { ErrorResponseMessage, RequestMessage, ResponseMessage };

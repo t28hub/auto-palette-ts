@@ -1,2 +1,2 @@
-export { PaletteGenerator } from './generator';
+export { PaletteBuilder } from './builder';
 export { Palette } from './palette';
