@@ -1,5 +1,6 @@
 import { Color, colorModel } from '../../color';
 import { DistanceMeasure, Point5, SquaredEuclideanDistance } from '../../math';
+import { ImageData } from '../../types';
 import { Extractor, ExtractionResult } from '../extractor';
 
 import { Cluster } from './cluster';
@@ -52,7 +53,7 @@ export class KmeansExtractor implements Extractor {
     );
   }
 
-  extract(imageData: ImageData, maxColors: number): ExtractionResult<Color>[] {
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): ExtractionResult<Color>[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];

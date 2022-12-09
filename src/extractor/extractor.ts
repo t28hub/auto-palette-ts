@@ -27,5 +27,5 @@ export interface Extractor {
    * @param maxColors The max colors.
    * @return The extracted results.
    */
-  extract(imageData: ImageData, maxColors: number): ExtractionResult<Color>[];
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): ExtractionResult<Color>[];
 }
