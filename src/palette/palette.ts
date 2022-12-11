@@ -1,11 +1,11 @@
 import { Color } from '../color';
-import { ExtractionResult } from '../extractor';
+import { FeatureColor } from '../extractor';
 
 /**
  * Color palette class.
  */
 export class Palette {
-  private readonly results: ExtractionResult<Color>[];
+  private readonly results: FeatureColor<Color>[];
 
   /**
    * Create a new Palette from colors.
@@ -13,12 +13,12 @@ export class Palette {
    * @param results The extracted results.
    * @throws {TypeError} if colors is empty.
    */
-  constructor(results: ExtractionResult<Color>[]) {
+  constructor(results: FeatureColor<Color>[]) {
     if (results.length === 0) {
       throw new TypeError('The array of results is empty');
     }
 
-    this.results = [...results].sort((color1: ExtractionResult<Color>, color2: ExtractionResult<Color>): number => {
+    this.results = [...results].sort((color1: FeatureColor<Color>, color2: FeatureColor<Color>): number => {
       return color2.population - color1.population;
     });
   }
@@ -38,6 +38,6 @@ export class Palette {
    * @return The colors.
    */
   getColors(): Color[] {
-    return this.results.map((featureColor: ExtractionResult<Color>): Color => featureColor.color);
+    return this.results.map((featureColor: FeatureColor<Color>): Color => featureColor.color);
   }
 }

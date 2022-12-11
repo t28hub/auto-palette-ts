@@ -75,6 +75,15 @@ export class Color implements HSLColor {
     });
   }
 
+  delta(other: Color): number {
+    const lab1 = this.convertTo('lab');
+    const lab2 = other.convertTo('lab');
+    const deltaL = lab1.l - lab2.l;
+    const deltaA = lab1.a - lab2.a;
+    const deltaB = lab1.b - lab2.b;
+    return Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB);
+  }
+
   /**
    * Convert this color by the name of color model.
    *

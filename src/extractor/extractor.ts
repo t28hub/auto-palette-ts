@@ -2,16 +2,16 @@ import { Color, PackedColor } from '../color';
 import { ImageData } from '../types';
 
 /**
- * Type representing the result of extraction.
+ * Type representing the feature color of extraction.
  */
-export type ExtractionResult<T extends Color | PackedColor> = {
+export type FeatureColor<T extends Color | PackedColor> = {
   /**
-   * The extracted color.
+   * The feature color.
    */
   readonly color: T;
 
   /**
-   * The population of the color.
+   * The population of the feature color.
    */
   readonly population: number;
 };
@@ -27,5 +27,5 @@ export interface Extractor {
    * @param maxColors The max colors.
    * @return The extracted results.
    */
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): ExtractionResult<Color>[];
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): FeatureColor<Color>[];
 }

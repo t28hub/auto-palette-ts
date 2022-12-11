@@ -1,10 +1,10 @@
 import { Color } from '../color';
-import { ExtractionResult } from '../extractor';
+import { FeatureColor } from '../extractor';
 
 import { Palette } from './palette';
 
 describe('palette', () => {
-  const results: ExtractionResult<Color>[] = [
+  const results: FeatureColor<Color>[] = [
     {
       color: new Color(120, 0.8, 0.5, 1.0),
       population: 64,

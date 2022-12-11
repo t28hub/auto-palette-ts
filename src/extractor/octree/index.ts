@@ -1,7 +1,7 @@
 import { Color, colorModel } from '../../color';
 import { Point3 } from '../../math';
 import { ImageData } from '../../types';
-import { ExtractionResult, Extractor } from '../extractor';
+import { FeatureColor, Extractor } from '../extractor';
 
 import { Bounds } from './bounds';
 import { Node } from './node';
@@ -40,7 +40,7 @@ export class OctreeExtractor implements Extractor {
     this.maxDepth = maxDepth;
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): ExtractionResult<Color>[] {
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): FeatureColor<Color>[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];
@@ -83,7 +83,7 @@ export class OctreeExtractor implements Extractor {
     });
 
     const rgbModel = colorModel('rgb');
-    return leafNodes.map((leaf: Node): ExtractionResult<Color> => {
+    return leafNodes.map((leaf: Node): FeatureColor<Color> => {
       const center = leaf.getCenter();
       const r = center[0] << colorShift;
       const g = center[1] << colorShift;

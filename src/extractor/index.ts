@@ -3,7 +3,7 @@ import { KmeansExtractor, Options as KmeansOptions } from './kmeans';
 import { OctreeExtractor, Options as OctreeOptions } from './octree';
 
 export type Options = KmeansOptions | OctreeOptions;
-export { type ExtractionResult, type Extractor } from './extractor';
+export { type FeatureColor, type Extractor } from './extractor';
 
 /**
  * Create a new {@link Extractor} with options.

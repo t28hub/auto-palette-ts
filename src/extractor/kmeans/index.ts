@@ -1,7 +1,7 @@
 import { Color, colorModel } from '../../color';
 import { DistanceMeasure, Point5, SquaredEuclideanDistance } from '../../math';
 import { ImageData } from '../../types';
-import { Extractor, ExtractionResult } from '../extractor';
+import { Extractor, FeatureColor } from '../extractor';
 
 import { Cluster } from './cluster';
 import { InitializerName } from './initializer';
@@ -53,7 +53,7 @@ export class KmeansExtractor implements Extractor {
     );
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): ExtractionResult<Color>[] {
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): FeatureColor<Color>[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
@@ -84,7 +84,7 @@ export class KmeansExtractor implements Extractor {
     }
 
     const clusters = this.kmeans.classify(pixels, maxColors);
-    return clusters.map((cluster: Cluster<Point5>): ExtractionResult<Color> => {
+    return clusters.map((cluster: Cluster<Point5>): FeatureColor<Color> => {
       const pixel = cluster.getCentroid();
       const l = (pixel[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const a = (pixel[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;

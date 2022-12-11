@@ -1,5 +1,5 @@
 import { Color, PackedColor } from '../color';
-import { ExtractionResult } from '../extractor';
+import { FeatureColor } from '../extractor';
 import { ImageData } from '../types';
 import { id, ID } from '../utils';
 
@@ -57,7 +57,7 @@ export class PaletteBuilder {
     const { type, payload } = event.data;
     switch (type) {
       case 'response': {
-        const colors = payload.results.map((result: ExtractionResult<PackedColor>): ExtractionResult<Color> => {
+        const colors = payload.results.map((result: FeatureColor<PackedColor>): FeatureColor<Color> => {
           return {
             color: Color.fromPackedColor(result.color),
             population: result.population,
