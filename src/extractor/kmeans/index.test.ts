@@ -14,8 +14,11 @@ describe('kmeans/index', () => {
   });
 
   describe('extract', () => {
-    const extractor = new KmeansExtractor();
+    beforeAll(() => {
+      jest.retryTimes(3, { logErrorsBeforeRetry: true });
+    });
 
+    const extractor = new KmeansExtractor();
     it('should extract 2 colors from an image consisting of 2 colors', async () => {
       // Arrange
       const imageData = await loadImageData('flag_gr.png');
