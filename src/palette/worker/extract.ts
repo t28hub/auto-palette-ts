@@ -1,6 +1,5 @@
-import { Color, PackedColor } from '../../color';
-import { createExtractor, FeatureColor } from '../../extractor';
-import { ImageData } from '../../types';
+import { createExtractor } from '../../extractor';
+import { Color, ImageData, PackedColor, Swatch } from '../../types';
 
 /**
  * Extract colors from the given image.
@@ -10,7 +9,7 @@ import { ImageData } from '../../types';
  * @return The array of feature color.
  * @throws {Error} if extraction is failed.
  */
-export function extract(imageData: ImageData<ArrayBuffer>, maxColors: number): FeatureColor<PackedColor>[] {
+export function extract(imageData: ImageData<ArrayBuffer>, maxColors: number): Swatch<PackedColor>[] {
   const { height, width, data } = imageData;
   const image: ImageData<Uint8ClampedArray> = {
     height,
@@ -23,9 +22,9 @@ export function extract(imageData: ImageData<ArrayBuffer>, maxColors: number): F
     .sort((result1, result2): number => {
       return result2.population - result1.population;
     })
-    .map((result: FeatureColor<Color>): FeatureColor<PackedColor> => {
+    .map((result: Swatch<Color>): Swatch<PackedColor> => {
       return {
-        color: result.color.toPackedColor(),
+        color: result.color.pack(),
         population: result.population,
       };
     });

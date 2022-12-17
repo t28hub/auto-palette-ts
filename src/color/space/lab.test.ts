@@ -1,5 +1,5 @@
-import { clampA, clampB, clampL, Lab } from './lab';
-import { asPackedColor } from './model';
+import { clampA, clampB, clampL, LabColorSpace } from './lab';
+import { asPackedColor } from './utils';
 
 describe('lab', () => {
   describe('clampL', () => {
@@ -68,12 +68,12 @@ describe('lab', () => {
     { value: 0xffffffff, l: 100.0, a: 0.01, b: -0.01, opacity: 1.0 },
   ];
 
-  describe('pack', () => {
+  describe('encode', () => {
     it.each(fixtures)(
-      'should pack Lab($l, $a, $b, $opacity) to packed value($value)',
+      'should encode Lab($l, $a, $b, $opacity) to packed value($value)',
       ({ l, a, b, opacity, value }) => {
         // Act
-        const actual = Lab.pack({ l, a, b, opacity });
+        const actual = LabColorSpace.encode({ l, a, b, opacity });
 
         // Assert
         expect(actual).toEqual(value);
@@ -81,20 +81,17 @@ describe('lab', () => {
     );
   });
 
-  describe('unpack', () => {
-    it.each(fixtures)(
-      'should unpack packed value($value) to Lab($l, $a, $b, $opacity)',
-      ({ value, l, a, b, opacity }) => {
-        // Act
-        const packed = asPackedColor(value);
-        const actual = Lab.unpack(packed);
+  describe('decode', () => {
+    it.each(fixtures)('should decode $value to Lab($l, $a, $b, $opacity)', ({ value, l, a, b, opacity }) => {
+      // Act
+      const packed = asPackedColor(value);
+      const actual = LabColorSpace.decode(packed);
 
-        // Assert
-        expect(actual.l).toBeCloseTo(l, 1);
-        expect(actual.a).toBeCloseTo(a, 1);
-        expect(actual.b).toBeCloseTo(b, 1);
-        expect(actual.opacity).toBeCloseTo(opacity);
-      },
-    );
+      // Assert
+      expect(actual.l).toBeCloseTo(l, 1);
+      expect(actual.a).toBeCloseTo(a, 1);
+      expect(actual.b).toBeCloseTo(b, 1);
+      expect(actual.opacity).toBeCloseTo(opacity);
+    });
   });
 });

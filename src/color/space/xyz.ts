@@ -1,34 +1,14 @@
 import { clamp } from '../../math';
+import { ColorSpace, XYZ, PackedColor } from '../../types';
 
-import { Model, Opacity, PackedColor } from './model';
-import { clampValue, RGB } from './rgb';
-
-/**
- * The type representing a color in CIE XYZ.
- */
-export type XYZColor = {
-  /**
-   * The x value.
-   */
-  readonly x: number;
-
-  /**
-   * The y value.
-   */
-  readonly y: number;
-
-  /**
-   * The z value.
-   */
-  readonly z: number;
-} & Opacity;
+import { clampValue, RGBColorSpace } from './rgb';
 
 /**
  * White point.
  *
  * @see [White point](https://en.wikipedia.org/wiki/White_point)
  */
-export type WhitePoint = Omit<XYZColor, 'opacity'>;
+export type WhitePoint = Omit<XYZ, 'opacity'>;
 
 /**
  * CIE standard illuminant D65.
@@ -99,10 +79,10 @@ export function clampZ(value: number): number {
 }
 
 /**
- * The CIE XYZ color model implementation.
+ * The CIE XYZ color space implementation.
  */
-export const XYZ: Model<XYZColor> = {
-  pack(color: XYZColor): PackedColor {
+export const XYZColorSpace: ColorSpace<XYZ> = {
+  encode(color: XYZ): PackedColor {
     const x = clampX(color.x);
     const y = clampY(color.y);
     const z = clampZ(color.z);
@@ -121,9 +101,9 @@ export const XYZ: Model<XYZColor> = {
     const r = clampValue(Math.round(fr * 0xff));
     const g = clampValue(Math.round(fg * 0xff));
     const b = clampValue(Math.round(fb * 0xff));
-    return RGB.pack({ r, g, b, opacity: color.opacity });
+    return RGBColorSpace.encode({ r, g, b, opacity: color.opacity });
   },
-  unpack(packed: PackedColor): XYZColor {
+  decode(packed: PackedColor): XYZ {
     const f = (value: number): number => {
       if (value <= 0.04045) {
         return value / 12.92;
@@ -131,7 +111,7 @@ export const XYZ: Model<XYZColor> = {
       return Math.pow((value + 0.055) / 1.055, 2.4);
     };
 
-    const rgb = RGB.unpack(packed);
+    const rgb = RGBColorSpace.decode(packed);
     const fr = f(rgb.r / 0xff);
     const fg = f(rgb.g / 0xff);
     const fb = f(rgb.b / 0xff);

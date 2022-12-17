@@ -1,9 +1,11 @@
-import { colorModel, ColorModel, HSL, HSLColor, clampH, clampL, clampS, PackedColor, SupportedColor } from './model';
+import { Color, DeltaE, PackedColor, SupportedColor, ColorSpaceName } from '../types';
+
+import { HSLColorSpace, clampH, clampL, clampS, colorSpace } from './space';
 
 /**
- * Class representing a color in HSL model.
+ * Class representing a color in HSL color space.
  */
-export class Color implements HSLColor {
+export class HSLColor implements Color {
   /**
    * The hue value.
    */
@@ -57,17 +59,21 @@ export class Color implements HSLColor {
    * @return The hex string representation.
    */
   toString(): string {
-    const hex = this.toPackedColor().toString(16).padStart(8, '0');
+    const hex = this.pack().toString(16).padStart(8, '0');
     return `#${hex}`;
   }
 
+  clone(): Color {
+    return new HSLColor(this.h, this.s, this.l, this.opacity);
+  }
+
   /**
-   * Return packed color.
+   * Pack this color.
    *
    * @return The packed color.
    */
-  toPackedColor(): PackedColor {
-    return HSL.pack({
+  pack(): PackedColor {
+    return HSLColorSpace.encode({
       h: this.h,
       s: this.s,
       l: this.l,
@@ -75,34 +81,16 @@ export class Color implements HSLColor {
     });
   }
 
-  delta(other: Color): number {
+  convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T] {
+    return colorSpace(name).decode(this.pack());
+  }
+
+  differenceTo(other: Color): DeltaE {
     const lab1 = this.convertTo('lab');
     const lab2 = other.convertTo('lab');
     const deltaL = lab1.l - lab2.l;
     const deltaA = lab1.a - lab2.a;
     const deltaB = lab1.b - lab2.b;
-    return Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB);
-  }
-
-  /**
-   * Convert this color by the name of color model.
-   *
-   * @param name The name of color model.
-   * @return The converted color.
-   */
-  convertTo<T extends ColorModel>(name: T): SupportedColor[T] {
-    const model = colorModel(name);
-    return model.unpack(this.toPackedColor());
-  }
-
-  /**
-   * Create a new Color from the packed color.
-   *
-   * @param packed The packed color.
-   * @return The color.
-   */
-  static fromPackedColor(packed: PackedColor): Color {
-    const hsl = HSL.unpack(packed);
-    return new Color(hsl.h, hsl.s, hsl.l, hsl.opacity);
+    return Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB) as DeltaE;
   }
 }

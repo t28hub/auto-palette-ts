@@ -1,6 +1,5 @@
-import { Color, PackedColor } from '../color';
-import { FeatureColor } from '../extractor';
-import { ImageData } from '../types';
+import { color } from '../color';
+import { Color, ImageData, PackedColor, Swatch } from '../types';
 import { id, ID } from '../utils';
 
 import { RequestMessage, Response } from './message';
@@ -57,9 +56,9 @@ export class PaletteBuilder {
     const { type, payload } = event.data;
     switch (type) {
       case 'response': {
-        const colors = payload.results.map((result: FeatureColor<PackedColor>): FeatureColor<Color> => {
+        const colors = payload.results.map((result: Swatch<PackedColor>): Swatch<Color> => {
           return {
-            color: Color.fromPackedColor(result.color),
+            color: color(result.color),
             population: result.population,
           };
         });

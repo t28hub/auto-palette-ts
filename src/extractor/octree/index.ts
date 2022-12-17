@@ -1,7 +1,7 @@
-import { Color, colorModel } from '../../color';
+import { color, colorSpace } from '../../color';
 import { Point3 } from '../../math';
-import { ImageData } from '../../types';
-import { FeatureColor, Extractor } from '../extractor';
+import { Color, ImageData, Swatch } from '../../types';
+import { Extractor } from '../extractor';
 
 import { Bounds } from './bounds';
 import { Node } from './node';
@@ -40,7 +40,7 @@ export class OctreeExtractor implements Extractor {
     this.maxDepth = maxDepth;
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): FeatureColor<Color>[] {
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];
@@ -82,15 +82,15 @@ export class OctreeExtractor implements Extractor {
       return !node.isEmpty;
     });
 
-    const rgbModel = colorModel('rgb');
-    return leafNodes.map((leaf: Node): FeatureColor<Color> => {
+    const rgbSpace = colorSpace('rgb');
+    return leafNodes.map((leaf: Node): Swatch<Color> => {
       const center = leaf.getCenter();
       const r = center[0] << colorShift;
       const g = center[1] << colorShift;
       const b = center[2] << colorShift;
-      const packed = rgbModel.pack({ r, g, b, opacity: 1.0 });
+      const packed = rgbSpace.encode({ r, g, b, opacity: 1.0 });
       return {
-        color: Color.fromPackedColor(packed),
+        color: color(packed),
         population: leaf.size,
       };
     });

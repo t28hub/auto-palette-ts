@@ -1,27 +1,7 @@
 import { clamp } from '../../math';
+import { ColorSpace, HSL, PackedColor } from '../../types';
 
-import { Model, Opacity, PackedColor } from './model';
-import { RGB } from './rgb';
-
-/**
- * The type representing a color in HSL.
- */
-export type HSLColor = {
-  /**
-   * The hue value.
-   */
-  readonly h: number;
-
-  /**
-   * The saturation value.
-   */
-  readonly s: number;
-
-  /**
-   * The lightness value.
-   */
-  readonly l: number;
-} & Opacity;
+import { RGBColorSpace } from './rgb';
 
 const MIN_H = 0;
 const MAX_H = 360;
@@ -86,10 +66,10 @@ export function clampL(value: number): number {
 }
 
 /**
- * The HSL color model implementation.
+ * The RGB color space implementation.
  */
-export const HSL: Model<HSLColor> = {
-  pack(color: HSLColor): PackedColor {
+export const HSLColorSpace: ColorSpace<HSL> = {
+  encode(color: HSL): PackedColor {
     const h = clampH(color.h);
     const s = clampS(color.s);
     const l = clampL(color.l);
@@ -118,15 +98,15 @@ export const HSL: Model<HSLColor> = {
       r = c;
       b = x;
     }
-    return RGB.pack({
+    return RGBColorSpace.encode({
       r: Math.round((r + m) * 0xff),
       g: Math.round((g + m) * 0xff),
       b: Math.round((b + m) * 0xff),
       opacity: color.opacity,
     });
   },
-  unpack(packed: PackedColor): HSLColor {
-    const rgb = RGB.unpack(packed);
+  decode(packed: PackedColor): HSL {
+    const rgb = RGBColorSpace.decode(packed);
     const r = rgb.r / 0xff;
     const g = rgb.g / 0xff;
     const b = rgb.b / 0xff;

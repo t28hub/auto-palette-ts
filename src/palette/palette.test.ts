@@ -1,20 +1,20 @@
-import { Color } from '../color';
-import { FeatureColor } from '../extractor';
+import { HSLColor } from '../color/hsl';
+import { Color, Swatch } from '../types';
 
 import { Palette } from './palette';
 
 describe('palette', () => {
-  const results: FeatureColor<Color>[] = [
+  const results: Swatch<Color>[] = [
     {
-      color: new Color(120, 0.8, 0.5, 1.0),
+      color: new HSLColor(120, 0.8, 0.5, 1.0),
       population: 64,
     },
     {
-      color: new Color(90, 0.6, 0.3, 1.0),
+      color: new HSLColor(90, 0.6, 0.3, 1.0),
       population: 128,
     },
     {
-      color: new Color(60, 0.4, 0.3, 1.0),
+      color: new HSLColor(60, 0.4, 0.3, 1.0),
       population: 48,
     },
   ];

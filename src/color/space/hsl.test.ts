@@ -1,5 +1,5 @@
-import { HSL, clampH, clampL, clampS } from './hsl';
-import { asPackedColor } from './model';
+import { HSLColorSpace, clampH, clampL, clampS } from './hsl';
+import { asPackedColor } from './utils';
 
 describe('hsl', () => {
   describe('clampH', () => {
@@ -80,21 +80,21 @@ describe('hsl', () => {
     { value: 0xffffffff, h: 0, s: 0.0, l: 1.0, opacity: 1.0 },
   ];
 
-  describe('pack', () => {
-    it.each(fixtures)('should pack HSL($h, $s, $l, $opacity) to $value', ({ value, h, s, l, opacity }) => {
+  describe('encode', () => {
+    it.each(fixtures)('should encode HSL($h, $s, $l, $opacity) to $value', ({ value, h, s, l, opacity }) => {
       // Act
-      const actual = HSL.pack({ h, s, l, opacity });
+      const actual = HSLColorSpace.encode({ h, s, l, opacity });
 
       // Assert
       expect(actual).toEqual(value);
     });
   });
 
-  describe('unpack', () => {
-    it.each(fixtures)('should unpack $value to HSL($h, $s, $l, $opacity)', ({ value, h, s, l, opacity }) => {
+  describe('decode', () => {
+    it.each(fixtures)('should decode $value to HSL($h, $s, $l, $opacity)', ({ value, h, s, l, opacity }) => {
       // Act
       const packed = asPackedColor(value);
-      const actual = HSL.unpack(packed);
+      const actual = HSLColorSpace.decode(packed);
 
       // Assert
       expect(actual.h).toBeCloseTo(h);

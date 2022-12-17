@@ -1,25 +1,24 @@
-import { Color } from '../color';
-import { FeatureColor } from '../extractor';
+import { Color, Swatch } from '../types';
 
 /**
  * Color palette class.
  */
 export class Palette {
-  private readonly results: FeatureColor<Color>[];
+  private readonly swatches: Swatch<Color>[];
 
   /**
    * Create a new Palette from colors.
    *
-   * @param results The extracted results.
+   * @param swatches The list of swatches.
    * @throws {TypeError} if colors is empty.
    */
-  constructor(results: FeatureColor<Color>[]) {
-    if (results.length === 0) {
+  constructor(swatches: Swatch<Color>[]) {
+    if (swatches.length === 0) {
       throw new TypeError('The array of results is empty');
     }
 
-    this.results = [...results].sort((color1: FeatureColor<Color>, color2: FeatureColor<Color>): number => {
-      return color2.population - color1.population;
+    this.swatches = [...swatches].sort((swatch1: Swatch<Color>, swatch2: Swatch<Color>): number => {
+      return swatch2.population - swatch1.population;
     });
   }
 
@@ -29,7 +28,7 @@ export class Palette {
    * @return The dominant color.
    */
   getDominantColor(): Color {
-    return this.results[0].color;
+    return this.swatches[0].color;
   }
 
   /**
@@ -38,6 +37,6 @@ export class Palette {
    * @return The colors.
    */
   getColors(): Color[] {
-    return this.results.map((featureColor: FeatureColor<Color>): Color => featureColor.color);
+    return this.swatches.map((featureColor: Swatch<Color>): Color => featureColor.color);
   }
 }

@@ -1,4 +1,4 @@
-import { PackedColor } from '../../color';
+import { PackedColor } from '../../types';
 import { ID } from '../../utils';
 
 /**

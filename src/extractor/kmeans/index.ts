@@ -1,7 +1,7 @@
-import { Color, colorModel } from '../../color';
+import { color, colorSpace } from '../../color';
 import { DistanceMeasure, Point5, SquaredEuclideanDistance } from '../../math';
-import { ImageData } from '../../types';
-import { Extractor, FeatureColor } from '../extractor';
+import { Color, ImageData, Swatch } from '../../types';
+import { Extractor } from '../extractor';
 
 import { Cluster } from './cluster';
 import { InitializerName } from './initializer';
@@ -53,23 +53,23 @@ export class KmeansExtractor implements Extractor {
     );
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): FeatureColor<Color>[] {
+  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
     }
 
     const pixels: Point5[] = [];
-    const rgbModel = colorModel('rgb');
-    const labModel = colorModel('lab');
+    const rgbSpace = colorSpace('rgb');
+    const labSpace = colorSpace('lab');
     for (let i = 0; i < data.length; i += 4) {
-      const packed = rgbModel.pack({
+      const packed = rgbSpace.encode({
         r: data[i],
         g: data[i + 1],
         b: data[i + 2],
         opacity: data[i + 3] / 0xff,
       });
-      const { l, a, b } = labModel.unpack(packed);
+      const { l, a, b } = labSpace.decode(packed);
       const x = Math.floor((i / 4) % width);
       const y = Math.floor((i / 4 / width) % height);
 
@@ -84,15 +84,15 @@ export class KmeansExtractor implements Extractor {
     }
 
     const clusters = this.kmeans.classify(pixels, maxColors);
-    return clusters.map((cluster: Cluster<Point5>): FeatureColor<Color> => {
+    return clusters.map((cluster: Cluster<Point5>): Swatch<Color> => {
       const pixel = cluster.getCentroid();
       const l = (pixel[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const a = (pixel[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const b = (pixel[2] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
-      const packed = labModel.pack({ l, a, b, opacity: 1.0 });
+      const packed = labSpace.encode({ l, a, b, opacity: 1.0 });
       return {
         population: cluster.size,
-        color: Color.fromPackedColor(packed),
+        color: color(packed),
       };
     });
   }

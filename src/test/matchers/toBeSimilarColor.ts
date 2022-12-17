@@ -7,8 +7,8 @@ import {
   printWithType,
 } from 'jest-matcher-utils';
 
-import { Color } from '../../color';
-import { asPackedColor } from '../../color/model';
+import { color } from '../../color';
+import { Color } from '../../types';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -27,19 +27,6 @@ declare global {
   }
 }
 
-function parse(value: unknown): Color | undefined {
-  if (value instanceof Color) {
-    return value;
-  }
-
-  if (typeof value === 'string') {
-    const string = value.substring(1);
-    const packed = asPackedColor(Number.parseInt(string, 16));
-    return Color.fromPackedColor(packed);
-  }
-  return undefined;
-}
-
 /**
  * Check whether the received color is similar to the expected color.
  *
@@ -49,7 +36,7 @@ function parse(value: unknown): Color | undefined {
  * @return The matcher result.
  */
 export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): jest.CustomMatcherResult {
-  const expectedColor = parse(expected);
+  const expectedColor = color(expected);
   if (!expectedColor) {
     const errorMessage = matcherErrorMessage(
       matcherHint('toBeSimilarColor', 'received', 'expected'),
@@ -59,7 +46,7 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
     throw new Error(errorMessage);
   }
 
-  const difference = received.delta(expectedColor);
+  const difference = received.differenceTo(expectedColor);
   const pass = difference < threshold;
 
   const passMessage =

@@ -1,5 +1,5 @@
-import { asPackedColor } from './model';
-import { clampValue, RGB } from './rgb';
+import { clampValue, RGBColorSpace } from './rgb';
+import { asPackedColor } from './utils';
 
 describe('rgb', () => {
   describe('clampComponent', () => {
@@ -39,21 +39,21 @@ describe('rgb', () => {
     { value: 0xffffffff, r: 255, g: 255, b: 255, opacity: 1.0 },
   ];
 
-  describe('pack', () => {
-    it.each(fixtures)('should pack RGB($r, $g, $b, $opacity) to $value', ({ value, r, g, b, opacity }) => {
+  describe('encode', () => {
+    it.each(fixtures)('should encode RGB($r, $g, $b, $opacity) to $value', ({ value, r, g, b, opacity }) => {
       // Act
-      const actual = RGB.pack({ r, g, b, opacity });
+      const actual = RGBColorSpace.encode({ r, g, b, opacity });
 
       // Assert
       expect(actual).toEqual(value);
     });
   });
 
-  describe('unpack', () => {
-    it.each(fixtures)('should unpack $value to RGB($r, $g, $b, $opacity)', ({ value, r, g, b, opacity }) => {
+  describe('decode', () => {
+    it.each(fixtures)('should decode $value to RGB($r, $g, $b, $opacity)', ({ value, r, g, b, opacity }) => {
       // Act
       const packed = asPackedColor(value);
-      const actual = RGB.unpack(packed);
+      const actual = RGBColorSpace.decode(packed);
 
       // Assert
       expect(actual).toMatchObject({ r, g, b });

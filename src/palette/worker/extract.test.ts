@@ -1,4 +1,4 @@
-import { colorModel } from '../../color';
+import { colorSpace } from '../../color';
 import { ImageData } from '../../types';
 
 import { extract } from './extract';
@@ -33,11 +33,11 @@ describe('extract', () => {
     // Assert
     expect(actual).toBeArrayOfSize(2);
     expect(actual[0]).toMatchObject({
-      color: colorModel('rgb').pack({ r: 0, g: 248, b: 0, opacity: 1.0 }),
+      color: colorSpace('rgb').encode({ r: 0, g: 248, b: 0, opacity: 1.0 }),
       population: 2,
     });
     expect(actual[1]).toMatchObject({
-      color: colorModel('rgb').pack({ r: 248, g: 0, b: 0, opacity: 1.0 }),
+      color: colorSpace('rgb').encode({ r: 248, g: 0, b: 0, opacity: 1.0 }),
       population: 1,
     });
   });

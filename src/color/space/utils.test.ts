@@ -1,6 +1,6 @@
-import { asPackedColor } from './model';
+import { asPackedColor } from './utils';
 
-describe('model', () => {
+describe('utils', () => {
   describe('asPackedColor', () => {
     it.each([
       { value: 0x00000000 },

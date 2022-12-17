@@ -1,5 +1,5 @@
-import { asPackedColor } from './model';
-import { clampX, clampY, clampZ, XYZ } from './xyz';
+import { asPackedColor } from './utils';
+import { clampX, clampY, clampZ, XYZColorSpace } from './xyz';
 
 describe('xyz', () => {
   describe('clampX', () => {
@@ -70,12 +70,12 @@ describe('xyz', () => {
     { value: 0xffffffff, x: 0.95047, y: 1.0, z: 1.08883, opacity: 1.0 },
   ];
 
-  describe('pack', () => {
+  describe('encode', () => {
     it.each(fixtures)(
-      'should pack XYZ($x, $y, $z, $opacity) to packed value($value)',
+      'should encode XYZ($x, $y, $z, $opacity) to packed value($value)',
       ({ x, y, z, opacity, value }) => {
         // Act
-        const actual = XYZ.pack({ x, y, z, opacity });
+        const actual = XYZColorSpace.encode({ x, y, z, opacity });
 
         // Assert
         expect(actual).toEqual(value);
@@ -83,20 +83,17 @@ describe('xyz', () => {
     );
   });
 
-  describe('unpack', () => {
-    it.each(fixtures)(
-      'should unpack packed value($value) to XYZ($x, $y, $z, $opacity)',
-      ({ value, x, y, z, opacity }) => {
-        // Act
-        const packed = asPackedColor(value);
-        const actual = XYZ.unpack(packed);
+  describe('decode', () => {
+    it.each(fixtures)('should decode $value to XYZ($x, $y, $z, $opacity)', ({ value, x, y, z, opacity }) => {
+      // Act
+      const packed = asPackedColor(value);
+      const actual = XYZColorSpace.decode(packed);
 
-        // Assert
-        expect(actual.x).toBeCloseTo(x);
-        expect(actual.y).toBeCloseTo(y);
-        expect(actual.z).toBeCloseTo(z);
-        expect(actual.opacity).toBeCloseTo(opacity);
-      },
-    );
+      // Assert
+      expect(actual.x).toBeCloseTo(x);
+      expect(actual.y).toBeCloseTo(y);
+      expect(actual.z).toBeCloseTo(z);
+      expect(actual.opacity).toBeCloseTo(opacity);
+    });
   });
 });

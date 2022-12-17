@@ -1,12 +1,14 @@
-import { ColorModel, colorModel } from './index';
+import { ColorSpaceName } from '../../types';
 
-describe('color/model', () => {
+import { colorSpace } from './index';
+
+describe('color/space', () => {
   describe('colorModel', () => {
     it.each([{ name: 'lab' }, { name: 'hsl' }, { name: 'rgb' }, { name: 'xyz' }])(
-      'should return color model by name($name)',
+      'should return color space by name($name)',
       ({ name }) => {
         // Act
-        const actual = colorModel(name as ColorModel);
+        const actual = colorSpace(name as ColorSpaceName);
 
         // Assert
         expect(actual).toBeDefined();
@@ -17,7 +19,7 @@ describe('color/model', () => {
       // Assert
       expect(() => {
         // Act
-        colorModel('unrecognized' as ColorModel);
+        colorSpace('unrecognized' as ColorSpaceName);
       }).toThrowError(TypeError);
     });
   });
