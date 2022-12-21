@@ -105,9 +105,9 @@ export type DeltaE = number & {
 };
 
 /**
- * Function to compute the color delta.
+ * Interface to compute the color delta.
  */
-export interface DeltaEFunction {
+export interface DeltaEMeasure {
   /**
    * Compute the color delta between 2 colors.
    *
@@ -132,9 +132,9 @@ export interface Color extends AlphaChannel {
 
   convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T];
 
-  differenceTo(other: Color): DeltaE;
+  distanceTo(other: Color): DeltaE;
 
-  differenceTo(other: Color, deltaFunction: DeltaEFunction): DeltaE;
+  distanceTo(other: Color, measure: DeltaEMeasure): DeltaE;
 }
 
 /**

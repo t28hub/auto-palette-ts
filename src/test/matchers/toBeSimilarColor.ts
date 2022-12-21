@@ -46,7 +46,7 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
     throw new Error(errorMessage);
   }
 
-  const difference = received.differenceTo(expectedColor);
+  const difference = received.distanceTo(expectedColor);
   const pass = difference < threshold;
 
   const passMessage =

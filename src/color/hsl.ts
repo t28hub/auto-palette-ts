@@ -1,5 +1,6 @@
-import { Color, DeltaE, PackedColor, SupportedColor, ColorSpaceName } from '../types';
+import { Color, DeltaE, PackedColor, SupportedColor, ColorSpaceName, DeltaEMeasure } from '../types';
 
+import { cie76 } from './delta';
 import { HSLColorSpace, clampH, clampL, clampS, colorSpace } from './space';
 
 /**
@@ -85,12 +86,7 @@ export class HSLColor implements Color {
     return colorSpace(name).decode(this.pack());
   }
 
-  differenceTo(other: Color): DeltaE {
-    const lab1 = this.convertTo('lab');
-    const lab2 = other.convertTo('lab');
-    const deltaL = lab1.l - lab2.l;
-    const deltaA = lab1.a - lab2.a;
-    const deltaB = lab1.b - lab2.b;
-    return Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB) as DeltaE;
+  distanceTo(other: Color, measure: DeltaEMeasure = cie76): DeltaE {
+    return measure(this, other);
   }
 }
