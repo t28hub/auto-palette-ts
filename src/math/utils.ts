@@ -19,3 +19,23 @@ export function clamp(value: number, min: number, max: number): number {
   }
   return Math.max(Math.min(value, max), min);
 }
+
+/**
+ * Convert the given value from degrees to radians.
+ *
+ * @param degree The value in degrees.
+ * @return The converted value in radians.
+ */
+export function degreeToRadian(degree: number): number {
+  return degree * (Math.PI / 180.0);
+}
+
+/**
+ * Convert the given value from radians to degrees.
+ *
+ * @param radian The value in radians.
+ * @return The converted value in degrees.
+ */
+export function radianToDegree(radian: number): number {
+  return radian * (180.0 / Math.PI);
+}

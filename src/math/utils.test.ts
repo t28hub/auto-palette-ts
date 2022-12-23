@@ -1,4 +1,4 @@
-import { clamp } from './utils';
+import { clamp, degreeToRadian, radianToDegree } from './utils';
 
 describe('utils', () => {
   describe('clamp', () => {
@@ -30,6 +30,40 @@ describe('utils', () => {
         // Act
         clamp(value, min, max);
       }).toThrowError(TypeError);
+    });
+  });
+
+  describe('degreeToRadian', () => {
+    it.each([
+      { degree: 0, radian: 0 },
+      { degree: 30, radian: 0.5236 },
+      { degree: 90, radian: 1.5708 },
+      { degree: 180, radian: 3.1415 },
+      { degree: 330, radian: 5.7596 },
+      { degree: 360, radian: 6.2832 },
+    ])('should convert from degree($degree) to radian($radian)', ({ degree, radian }) => {
+      // Act
+      const actual = degreeToRadian(degree);
+
+      // Assert
+      expect(actual).toBeCloseTo(radian);
+    });
+  });
+
+  describe('radianToDegree', () => {
+    it.each([
+      { degree: 0, radian: 0 },
+      { degree: 30, radian: 0.5236 },
+      { degree: 90, radian: 1.5708 },
+      { degree: 180, radian: 3.1415 },
+      { degree: 330, radian: 5.7596 },
+      { degree: 360, radian: 6.2832 },
+    ])('should convert from radian($radian) to degree($degree)', ({ degree, radian }) => {
+      // Act
+      const actual = radianToDegree(radian);
+
+      // Assert
+      expect(actual).toBeCloseTo(degree, 1);
     });
   });
 });
