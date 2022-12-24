@@ -3,10 +3,10 @@ import { Palette, PaletteBuilder } from './palette';
 
 const MAX_IMAGE_SIZE = 192 * 192;
 
-export async function fromImage(imageElement: HTMLImageElement): Promise<Palette> {
+export async function fromImage(imageElement: HTMLImageElement, maxColors = 5): Promise<Palette> {
   const image = await load(imageElement);
   const resized = image.resize(MAX_IMAGE_SIZE);
   const imageData = resized.getImageData();
-  const generator = new PaletteBuilder();
-  return await generator.generate(imageData, 8);
+  const builder = new PaletteBuilder();
+  return await builder.builder(imageData, maxColors);
 }

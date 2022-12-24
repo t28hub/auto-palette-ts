@@ -1,5 +1,6 @@
 import { createExtractor } from '../../extractor';
 import { Color, ImageData, PackedColor, Swatch } from '../../types';
+import { filter } from '../filter';
 
 /**
  * Extract colors from the given image.
@@ -17,8 +18,8 @@ export function extract(imageData: ImageData<ArrayBuffer>, maxColors: number): S
     data: new Uint8ClampedArray(data),
   };
 
-  return createExtractor({ kind: 'octree', maxDepth: 8 })
-    .extract(image, maxColors)
+  const swatches = createExtractor({ kind: 'kmeans' }).extract(image, maxColors * 3);
+  return filter(swatches, maxColors)
     .sort((result1, result2): number => {
       return result2.population - result1.population;
     })

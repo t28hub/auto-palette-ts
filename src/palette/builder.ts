@@ -28,7 +28,7 @@ export class PaletteBuilder {
    * @param maxColors The max colors.
    * @return {Promise<Palette>}
    */
-  generate(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Promise<Palette> {
+  builder(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Promise<Palette> {
     return new Promise((resolve, reject) => {
       const message = this.buildRequest(imageData, maxColors);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
