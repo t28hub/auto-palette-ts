@@ -3,7 +3,9 @@ import { Color, Swatch } from '../../types';
 import { Node } from './node';
 
 export function filter(swatches: Swatch<Color>[], count: number): Swatch<Color>[] {
-  const nodes = swatches.map((swatch: Swatch<Color>): Node => Node.create(swatch));
+  const nodes = swatches.map((swatch: Swatch<Color>): Node => {
+    return new Node(swatch.color, swatch.population);
+  });
   return merge(nodes, count);
 }
 
@@ -37,6 +39,6 @@ function merge(nodes: Node[], count: number): Node[] {
   const filtered = nodes.filter((node: Node): boolean => {
     return node !== nearestNode1 && node !== nearestNode2;
   });
-  filtered.push(Node.merge(nearestNode1, nearestNode2));
+  filtered.push(nearestNode1.merge(nearestNode2));
   return merge(filtered, count);
 }

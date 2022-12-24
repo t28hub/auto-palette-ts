@@ -64,6 +64,11 @@ export class HSLColor implements Color {
     return `#${hex}`;
   }
 
+  /**
+   * Clone this color instance.
+   *
+   * @return The cloned color.
+   */
   clone(): Color {
     return new HSLColor(this.h, this.s, this.l, this.opacity);
   }
@@ -82,10 +87,46 @@ export class HSLColor implements Color {
     });
   }
 
+  /**
+   * Mix with the given color.
+   *
+   * @param other The other color.
+   * @param fraction The fraction.
+   * @return The mixed color.
+   */
+  mix(other: Color, fraction = 0.5): Color {
+    const hsl1 = this.convertTo('hsl');
+    const hsl2 = other.convertTo('hsl');
+
+    // Find shortest path along the hue circle.
+    const [hue1, hue2] = [
+      [hsl1.h, hsl2.h],
+      [hsl1.h, hsl2.h + 360],
+      [hsl1.h + 360, hsl2.h],
+    ].sort((path1, path2): number => {
+      const delta1 = Math.abs(path1[0] - path1[1]);
+      const delta2 = Math.abs(path2[0] - path2[1]);
+      return delta1 - delta2;
+    })[0];
+
+    const h = hue1 + fraction * (hue2 - hue1);
+    const s = hsl1.s + fraction * (hsl2.s - hsl1.s);
+    const l = hsl1.l + fraction * (hsl2.l - hsl1.l);
+    const opacity = hsl1.opacity + fraction * (hsl2.opacity - hsl1.opacity);
+
+    return new HSLColor(h, s, l, opacity);
+  }
+
   convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T] {
     return colorSpace(name).decode(this.pack());
   }
 
+  /**
+   * Compute the color difference with the given color.
+   *
+   * @param other The other color.
+   * @return The color difference.
+   */
   distanceTo(other: Color): DeltaE {
     const lab1 = this.convertTo('lab');
     const lab2 = other.convertTo('lab');

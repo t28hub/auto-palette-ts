@@ -130,6 +130,8 @@ export interface Color extends AlphaChannel {
 
   pack(): PackedColor;
 
+  mix(other: Color, fraction: number): Color;
+
   convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T];
 
   distanceTo(other: Color): DeltaE;

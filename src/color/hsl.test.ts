@@ -55,6 +55,7 @@ describe('hsl', () => {
       expect(actual).toEqual(false);
     });
   });
+
   describe('toString', () => {
     it('should return the string representation of this color', () => {
       // Act
@@ -63,6 +64,18 @@ describe('hsl', () => {
 
       // Assert
       expect(actual).toEqual('#ffff0080');
+    });
+  });
+
+  describe('clone', () => {
+    it('should return cloned instance', () => {
+      // Act
+      const color = new HSLColor(270, 1.0, 0.5, 0.5);
+      const actual = color.clone();
+
+      // Assert
+      expect(actual).toEqual(color);
+      expect(actual).not.toBe(color);
     });
   });
 
@@ -75,6 +88,49 @@ describe('hsl', () => {
       // Assert
       expect(actual).toEqual(0x8000ff80);
     });
+  });
+
+  describe('mix', () => {
+    it.each([
+      {
+        hsl1: { h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
+        hsl2: { h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
+        fraction: 0.5,
+        expected: { h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
+      },
+      {
+        hsl1: { h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
+        hsl2: { h: 360, s: 1.0, l: 0.5, opacity: 1.0 },
+        fraction: 0.5,
+        expected: { h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
+      },
+      {
+        hsl1: { h: 120, s: 1.0, l: 0.5, opacity: 1.0 },
+        hsl2: { h: 240, s: 0.4, l: 0.7, opacity: 0.2 },
+        fraction: 0.5,
+        expected: { h: 180, s: 0.7, l: 0.6, opacity: 0.6 },
+      },
+      {
+        hsl1: { h: 120, s: 1.0, l: 0.5, opacity: 1.0 },
+        hsl2: { h: 240, s: 0.4, l: 0.7, opacity: 0.2 },
+        fraction: 0.25,
+        expected: { h: 150, s: 0.85, l: 0.55, opacity: 0.8 },
+      },
+    ])(
+      'should mix HSL($hsl1) and HSL($hsl2) with fraction($fraction) and return HSL($expected)',
+      ({ hsl1, hsl2, fraction, expected }) => {
+        // Act
+        const color1 = new HSLColor(hsl1.h, hsl1.s, hsl1.l, hsl1.opacity);
+        const color2 = new HSLColor(hsl2.h, hsl2.s, hsl2.l, hsl2.opacity);
+        const actual = color1.mix(color2, fraction) as HSLColor;
+
+        // Assert
+        expect(actual.h).toBeCloseTo(expected.h);
+        expect(actual.s).toBeCloseTo(expected.s);
+        expect(actual.l).toBeCloseTo(expected.l);
+        expect(actual.opacity).toBeCloseTo(expected.opacity);
+      },
+    );
   });
 
   describe('convertTo', () => {
