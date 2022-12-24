@@ -1,4 +1,4 @@
-import { Color, DeltaE, PackedColor, SupportedColor, ColorSpaceName } from '../types';
+import { Color, ColorDifference, PackedColor, SupportedColor, ColorSpaceName, ColorDifferenceMeasure } from '../types';
 
 import { ciede2000 } from './delta';
 import { HSLColorSpace, clampH, clampL, clampS, colorSpace } from './space';
@@ -125,11 +125,12 @@ export class HSLColor implements Color {
    * Compute the color difference with the given color.
    *
    * @param other The other color.
+   * @param measure The color difference formula.
    * @return The color difference.
    */
-  distanceTo(other: Color): DeltaE {
+  difference(other: Color, measure: ColorDifferenceMeasure = ciede2000): ColorDifference {
     const lab1 = this.convertTo('lab');
     const lab2 = other.convertTo('lab');
-    return ciede2000(lab1, lab2);
+    return measure(lab1, lab2);
   }
 }

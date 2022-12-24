@@ -1,7 +1,7 @@
-import { asDeltaE, isDeltaE } from './utils';
+import { asColorDifference, isColorDifference } from './utils';
 
 describe('utils', () => {
-  describe('isDeltaE', () => {
+  describe('isColorDifference', () => {
     it.each([
       { value: 0, expected: true },
       { value: 1, expected: true },
@@ -18,17 +18,17 @@ describe('utils', () => {
       { value: Number.POSITIVE_INFINITY, expected: false },
     ])('should return $expected when value == $value', ({ value, expected }) => {
       // Act
-      const actual = isDeltaE(value);
+      const actual = isColorDifference(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('asDeltaE', () => {
-    it('should convert value as DeltaE', () => {
+  describe('asColorDifference', () => {
+    it('should convert value as color difference', () => {
       // Act
-      const actual = asDeltaE(15);
+      const actual = asColorDifference(15);
 
       // Assert
       expect(actual).toEqual(15);
@@ -38,7 +38,7 @@ describe('utils', () => {
       // Assert
       expect(() => {
         // Act
-        asDeltaE(-1);
+        asColorDifference(-1);
       }).toThrowError(TypeError);
     });
   });

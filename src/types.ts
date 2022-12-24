@@ -95,27 +95,27 @@ export interface ColorSpace<T extends AlphaChannel> {
   encode(color: T): PackedColor;
 }
 
-declare const validDeltaE: unique symbol;
+declare const validColorDifference: unique symbol;
 
 /**
- * Type representing the deltaE of color.
+ * Type representing the color difference.
  */
-export type DeltaE = number & {
-  readonly [validDeltaE]: true;
+export type ColorDifference = number & {
+  readonly [validColorDifference]: true;
 };
 
 /**
- * Interface to compute the color delta.
+ * Interface to compute the color difference.
  */
-export interface DeltaEMeasure {
+export interface ColorDifferenceMeasure {
   /**
-   * Compute the color delta between 2 colors.
+   * Compute the color difference between 2 colors.
    *
-   * @param color1 The 1st color.
-   * @param color2 The 2nd color.
+   * @param lab1 The 1st CIE L*a*b* color.
+   * @param lab2 The 2nd CIE L*a*b* color.
    * @return The color delta between 2 colors.
    */
-  (color1: Color, color2: Color): DeltaE;
+  (lab1: Lab, lab2: Lab): ColorDifference;
 }
 
 /**
@@ -134,9 +134,7 @@ export interface Color extends AlphaChannel {
 
   convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T];
 
-  distanceTo(other: Color): DeltaE;
-
-  distanceTo(other: Color, measure: DeltaEMeasure): DeltaE;
+  difference(other: Color, measure: ColorDifferenceMeasure): ColorDifference;
 }
 
 /**

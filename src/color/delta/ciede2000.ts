@@ -1,7 +1,7 @@
 import { degreeToRadian, radianToDegree } from '../../math';
-import { DeltaE, Lab } from '../../types';
+import { ColorDifference, ColorDifferenceMeasure, Lab } from '../../types';
 
-import { asDeltaE } from './utils';
+import { asColorDifference } from './utils';
 
 const POW7_25 = Math.pow(25, 7);
 
@@ -49,7 +49,7 @@ function toDeltaHPrime(c1: number, c2: number, h1: number, h2: number): number {
  * @return The CIEDE2000 color difference.
  * @see [The CIEDE2000 Color-Difference Formula](https://hajim.rochester.edu/ece/sites/gsharma/papers/CIEDE2000CRNAFeb05.pdf)
  */
-export const ciede2000 = (lab1: Lab, lab2: Lab): DeltaE => {
+export const ciede2000: ColorDifferenceMeasure = (lab1: Lab, lab2: Lab): ColorDifference => {
   const deltaLPrime = lab2.l - lab1.l;
   const lBar = (lab1.l + lab2.l) / 2.0;
 
@@ -99,5 +99,5 @@ export const ciede2000 = (lab1: Lab, lab2: Lab): DeltaE => {
   const h = deltaHPrime / (kH * sH);
 
   const distance = Math.sqrt(l * l + c * c + h * h + rT * c * h);
-  return asDeltaE(distance);
+  return asColorDifference(distance);
 };

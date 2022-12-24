@@ -1,7 +1,7 @@
 import { load } from './image';
 import { Palette, PaletteBuilder } from './palette';
 
-const MAX_IMAGE_SIZE = 192 * 192;
+const MAX_IMAGE_SIZE = 128 * 128;
 
 export async function fromImage(imageElement: HTMLImageElement, maxColors = 5): Promise<Palette> {
   const image = await load(imageElement);

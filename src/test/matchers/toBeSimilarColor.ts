@@ -8,6 +8,7 @@ import {
 } from 'jest-matcher-utils';
 
 import { color } from '../../color';
+import { ciede2000 } from '../../color/delta';
 import { Color } from '../../types';
 
 declare global {
@@ -46,7 +47,7 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
     throw new Error(errorMessage);
   }
 
-  const difference = received.distanceTo(expectedColor);
+  const difference = received.difference(expectedColor, ciede2000);
   const pass = difference < threshold;
 
   const passMessage =

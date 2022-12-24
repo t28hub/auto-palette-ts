@@ -1,24 +1,24 @@
-import { DeltaE } from '../../types';
+import { ColorDifference } from '../../types';
 
 /**
- * Check whether the given number is valid DeltaE.
+ * Check whether the given number is valid color difference.
  *
  * @param value The value to be checked.
- * @return true if the given number is valid DeltaE.
+ * @return true if the given number is valid color difference.
  */
-export function isDeltaE(value: number): value is DeltaE {
+export function isColorDifference(value: number): value is ColorDifference {
   return Number.isFinite(value) && value >= 0;
 }
 
 /**
- * Convert the given number to DeltaE.
+ * Convert the given number to valid color difference.
  *
  * @param value The value to be converted.
- * @return The valid DeltaE.
+ * @return The valid color difference.
  * @throws {TypeError} if the given number is invalid.
  */
-export function asDeltaE(value: number): DeltaE {
-  if (!isDeltaE(value)) {
+export function asColorDifference(value: number): ColorDifference {
+  if (!isColorDifference(value)) {
     throw new TypeError(`The value(${value}) is not valid DeltaE`);
   }
   return value;

@@ -1,3 +1,4 @@
+import { ciede2000 } from '../../color/delta';
 import { Color } from '../../types';
 
 /**
@@ -26,7 +27,7 @@ export class Node {
    * @return The distance to the other node.
    */
   distanceTo(other: Node): number {
-    return this.color.distanceTo(other.color);
+    return this.color.difference(other.color, ciede2000);
   }
 
   /**
