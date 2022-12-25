@@ -25,8 +25,8 @@ describe('kmeans/index', () => {
 
       // Act
       const actual = extractor.extract(imageData, 2).sort((color1, color2): number => {
-        const hsl1 = color1.color.convertTo('hsl');
-        const hsl2 = color2.color.convertTo('hsl');
+        const hsl1 = color1.color.toHSL();
+        const hsl2 = color2.color.toHSL();
         return hsl2.h - hsl1.h;
       });
 
@@ -42,8 +42,8 @@ describe('kmeans/index', () => {
 
       // Act
       const actual = extractor.extract(imageData, 3).sort((color1, color2): number => {
-        const hsl1 = color1.color.convertTo('hsl');
-        const hsl2 = color2.color.convertTo('hsl');
+        const hsl1 = color1.color.toHSL();
+        const hsl2 = color2.color.toHSL();
         return hsl2.h - hsl1.h;
       });
 
@@ -60,8 +60,8 @@ describe('kmeans/index', () => {
 
       // Act
       const actual = extractor.extract(imageData, 4).sort((color1, color2): number => {
-        const hsl1 = color1.color.convertTo('hsl');
-        const hsl2 = color2.color.convertTo('hsl');
+        const hsl1 = color1.color.toHSL();
+        const hsl2 = color2.color.toHSL();
         return hsl2.h - hsl1.h;
       });
 
@@ -79,8 +79,8 @@ describe('kmeans/index', () => {
 
       // Act
       const actual = extractor.extract(imageData, 5).sort((color1, color2): number => {
-        const hsl1 = color1.color.convertTo('hsl');
-        const hsl2 = color2.color.convertTo('hsl');
+        const hsl1 = color1.color.toHSL();
+        const hsl2 = color2.color.toHSL();
         return hsl2.h - hsl1.h;
       });
 
@@ -99,8 +99,8 @@ describe('kmeans/index', () => {
 
       // Act
       const actual = extractor.extract(imageData, 6).sort((color1, color2): number => {
-        const hsl1 = color1.color.convertTo('hsl');
-        const hsl2 = color2.color.convertTo('hsl');
+        const hsl1 = color1.color.toHSL();
+        const hsl2 = color2.color.toHSL();
         return hsl2.h - hsl1.h;
       });
 

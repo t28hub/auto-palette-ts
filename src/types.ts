@@ -50,21 +50,6 @@ export type XYZ = {
   readonly z: number;
 } & AlphaChannel;
 
-/**
- * Interface representing supported colors.
- */
-export interface SupportedColor {
-  readonly hsl: HSL;
-  readonly lab: Lab;
-  readonly rgb: RGB;
-  readonly xyz: XYZ;
-}
-
-/**
- * String representation of supported color spaces.
- */
-export type ColorSpaceName = keyof SupportedColor;
-
 declare const validPackedColor: unique symbol;
 
 /**
@@ -126,13 +111,17 @@ export interface Color extends AlphaChannel {
 
   isLight: boolean;
 
+  toHSL(): HSL;
+
+  toLab(): Lab;
+
+  toRGB(): RGB;
+
   clone(): Color;
 
   pack(): PackedColor;
 
   mix(other: Color, fraction: number): Color;
-
-  convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T];
 
   difference(other: Color, measure: ColorDifferenceMeasure): ColorDifference;
 }

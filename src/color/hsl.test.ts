@@ -137,7 +137,7 @@ describe('hsl', () => {
     it('should convert this color by name of the given color space', () => {
       // Act
       const color = new HSLColor(180, 1.0, 0.5, 0.5);
-      const actual = color.convertTo('rgb');
+      const actual = color.toRGB();
 
       // Assert
       expect(actual.r).toEqual(0);

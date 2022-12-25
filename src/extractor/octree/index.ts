@@ -1,4 +1,4 @@
-import { color, colorSpace } from '../../color';
+import { color, rgb } from '../../color';
 import { Point3 } from '../../math';
 import { Color, ImageData, Swatch } from '../../types';
 import { Extractor } from '../extractor';
@@ -82,13 +82,12 @@ export class OctreeExtractor implements Extractor {
       return !node.isEmpty;
     });
 
-    const rgbSpace = colorSpace('rgb');
     return leafNodes.map((leaf: Node): Swatch<Color> => {
       const center = leaf.getCenter();
       const r = center[0] << colorShift;
       const g = center[1] << colorShift;
       const b = center[2] << colorShift;
-      const packed = rgbSpace.encode({ r, g, b, opacity: 1.0 });
+      const packed = rgb().encode({ r, g, b, opacity: 1.0 });
       return {
         color: color(packed),
         population: leaf.size,

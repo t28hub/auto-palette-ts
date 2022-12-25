@@ -1,7 +1,7 @@
-import { Color, ColorDifference, PackedColor, SupportedColor, ColorSpaceName, ColorDifferenceMeasure } from '../types';
+import { Color, ColorDifference, PackedColor, ColorDifferenceMeasure, HSL, Lab, RGB } from '../types';
 
 import { ciede2000 } from './delta';
-import { HSLColorSpace, clampH, clampL, clampS, colorSpace } from './space';
+import { clampH, clampL, clampS, hsl, lab, rgb } from './space';
 
 /**
  * Class representing a color in HSL color space.
@@ -65,6 +65,38 @@ export class HSLColor implements Color {
   }
 
   /**
+   * Convert this color in HSL color space.
+   *
+   * @return The converted color in HSL.
+   */
+  toHSL(): HSL {
+    return {
+      h: this.h,
+      s: this.s,
+      l: this.l,
+      opacity: this.opacity,
+    };
+  }
+
+  /**
+   * Convert this color in CIE L*a*b* color space.
+   *
+   * @return The converted color in CIE L*a*b*.
+   */
+  toLab(): Lab {
+    return lab().decode(this.pack());
+  }
+
+  /**
+   * Convert this color in RGB color space.
+   *
+   * @return The converted color in RGB.
+   */
+  toRGB(): RGB {
+    return rgb().decode(this.pack());
+  }
+
+  /**
    * Clone this color instance.
    *
    * @return The cloned color.
@@ -79,7 +111,7 @@ export class HSLColor implements Color {
    * @return The packed color.
    */
   pack(): PackedColor {
-    return HSLColorSpace.encode({
+    return hsl().encode({
       h: this.h,
       s: this.s,
       l: this.l,
@@ -95,8 +127,8 @@ export class HSLColor implements Color {
    * @return The mixed color.
    */
   mix(other: Color, fraction = 0.5): Color {
-    const hsl1 = this.convertTo('hsl');
-    const hsl2 = other.convertTo('hsl');
+    const hsl1 = this.toHSL();
+    const hsl2 = other.toHSL();
 
     // Find shortest path along the hue circle.
     const [hue1, hue2] = [
@@ -113,12 +145,7 @@ export class HSLColor implements Color {
     const s = hsl1.s + fraction * (hsl2.s - hsl1.s);
     const l = hsl1.l + fraction * (hsl2.l - hsl1.l);
     const opacity = hsl1.opacity + fraction * (hsl2.opacity - hsl1.opacity);
-
     return new HSLColor(h, s, l, opacity);
-  }
-
-  convertTo<T extends ColorSpaceName>(name: T): SupportedColor[T] {
-    return colorSpace(name).decode(this.pack());
   }
 
   /**
@@ -129,8 +156,6 @@ export class HSLColor implements Color {
    * @return The color difference.
    */
   difference(other: Color, measure: ColorDifferenceMeasure = ciede2000): ColorDifference {
-    const lab1 = this.convertTo('lab');
-    const lab2 = other.convertTo('lab');
-    return measure(lab1, lab2);
+    return measure(this.toLab(), other.toLab());
   }
 }
