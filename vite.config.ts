@@ -6,10 +6,10 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/main.ts'),
-      name: 'c10e',
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'AutoPalette',
       formats: ['es', 'umd'],
-      fileName: (format) => `c10e.${format}.js`,
+      fileName: (format) => `index.${format}.js`,
     },
   },
   plugins: [dts()],
