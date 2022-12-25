@@ -37,7 +37,13 @@ declare global {
  * @return The matcher result.
  */
 export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): jest.CustomMatcherResult {
-  const expectedColor = color(expected);
+  let expectedColor: Color | undefined;
+  try {
+    expectedColor = color(expected);
+  } catch (e) {
+    expectedColor = undefined;
+  }
+
   if (!expectedColor) {
     const errorMessage = matcherErrorMessage(
       matcherHint('toBeSimilarColor', 'received', 'expected'),

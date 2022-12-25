@@ -24,5 +24,8 @@ export function color(value: unknown): Color {
   if (typeof value === 'string') {
     return parseString(value);
   }
+  if (value instanceof HSLColor) {
+    return value.clone();
+  }
   throw new TypeError(`Unrecognized type of value(${value})`);
 }
