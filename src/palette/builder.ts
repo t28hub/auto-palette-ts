@@ -1,5 +1,5 @@
 import { color } from '../color';
-import { Color, ImageData, PackedColor, Swatch } from '../types';
+import { Algorithm, Color, ImageData, PackedColor, Swatch } from '../types';
 import { id, ID } from '../utils';
 
 import { RequestMessage, Response } from './message';
@@ -25,12 +25,13 @@ export class PaletteBuilder {
    * Generate a palette from the image data.
    *
    * @param imageData The image data.
+   * @param algorithm The color extraction algorithm.
    * @param maxColors The max colors.
    * @return {Promise<Palette>}
    */
-  builder(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Promise<Palette> {
+  build(imageData: ImageData<Uint8ClampedArray>, algorithm: Algorithm, maxColors: number): Promise<Palette> {
     return new Promise((resolve, reject) => {
-      const message = this.buildRequest(imageData, maxColors);
+      const message = this.buildRequest(imageData, algorithm, maxColors);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
         if (event.data.payload.id !== this.id) {
           return;
@@ -76,7 +77,11 @@ export class PaletteBuilder {
     }
   }
 
-  private buildRequest(imageData: ImageData<Uint8ClampedArray>, maxColors: number): RequestMessage {
+  private buildRequest(
+    imageData: ImageData<Uint8ClampedArray>,
+    algorithm: Algorithm,
+    maxColors: number,
+  ): RequestMessage {
     const { height, width, data } = imageData;
     const image: ImageData<ArrayBuffer> = {
       height,
@@ -89,6 +94,7 @@ export class PaletteBuilder {
       payload: {
         id: this.id,
         imageData: image,
+        algorithm,
         maxColors,
       },
     };

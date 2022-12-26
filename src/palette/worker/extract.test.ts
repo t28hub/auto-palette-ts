@@ -28,16 +28,16 @@ describe('extract', () => {
     const imageData: ImageData<Uint8ClampedArray> = { height: 1, width: 3, data: view };
 
     // Act
-    const actual = extract(imageData, 3);
+    const actual = extract(imageData, 'octree', 3);
 
     // Assert
-    expect(actual).toBeArrayOfSize(3);
+    expect(actual).toBeArrayOfSize(2);
     expect(actual[0]).toMatchObject({
-      color: rgb().encode({ r: 255, g: 0, b: 0, opacity: 1.0 }),
-      population: 1,
+      color: rgb().encode({ r: 0, g: 248, b: 0, opacity: 1.0 }),
+      population: 2,
     });
     expect(actual[1]).toMatchObject({
-      color: rgb().encode({ r: 0, g: 255, b: 0, opacity: 1.0 }),
+      color: rgb().encode({ r: 248, g: 0, b: 0, opacity: 1.0 }),
       population: 1,
     });
   });

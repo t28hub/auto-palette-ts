@@ -133,3 +133,17 @@ export type Swatch<T extends Color | PackedColor> = {
   readonly color: T;
   readonly population: number;
 };
+
+/**
+ * Supported color extraction algorithm.
+ */
+export type Algorithm = 'kmeans' | 'octree';
+
+/**
+ * Type representing options for Auto Palette.
+ */
+export type Options = {
+  readonly algorithm: Algorithm;
+  readonly maxColors: number;
+  readonly maxImageSize: number;
+};

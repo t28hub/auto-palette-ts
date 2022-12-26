@@ -1,20 +1,28 @@
+import { Algorithm } from '../types';
+
 import { KmeansExtractor } from './kmeans';
 import { OctreeExtractor } from './octree';
 
-import { createExtractor, Options } from './index';
+import { createExtractor } from './index';
 
 describe('extractor/index', () => {
   describe('createExtractor', () => {
     it.each([
-      { options: {}, expected: KmeansExtractor },
-      { options: { kind: 'kmeans' }, expected: KmeansExtractor },
-      { options: { kind: 'octree' }, expected: OctreeExtractor },
-    ])('should create $expected from option($options)', ({ options, expected }) => {
+      { algorithm: 'kmeans', expected: KmeansExtractor },
+      { algorithm: 'octree', expected: OctreeExtractor },
+    ])('should create $expected from option($options)', ({ algorithm, expected }) => {
       // Act
-      const actual = createExtractor(options as Options);
+      const actual = createExtractor(algorithm as Algorithm);
 
       // Assert
       expect(actual).toBeInstanceOf(expected);
+    });
+
+    it('should throw Error when algorithm is unrecognized', () => {
+      // Assert
+      expect(() => {
+        createExtractor('unrecognized' as Algorithm);
+      }).toThrowError(TypeError);
     });
   });
 });

@@ -1,23 +1,24 @@
-import { type Extractor } from './extractor';
-import { KmeansExtractor, Options as KmeansOptions } from './kmeans';
-import { OctreeExtractor, Options as OctreeOptions } from './octree';
+import { Algorithm } from '../types';
 
-export type Options = KmeansOptions | OctreeOptions;
+import { type Extractor } from './extractor';
+import { KmeansExtractor } from './kmeans';
+import { OctreeExtractor } from './octree';
+
 export { type Extractor } from './extractor';
 
 /**
  * Create a new {@link Extractor} with options.
  *
- * @param options The options for the extractor.
+ * @param algorithm The color extraction algorithm.
  * @return The created extractor.
  */
-export function createExtractor(options: Partial<Options> = {}): Extractor {
-  switch (options.kind) {
+export function createExtractor(algorithm: Algorithm): Extractor {
+  switch (algorithm) {
     case 'kmeans':
-      return new KmeansExtractor(options);
-    case 'octree':
-      return new OctreeExtractor(options);
-    default:
       return new KmeansExtractor();
+    case 'octree':
+      return new OctreeExtractor();
+    default:
+      throw new TypeError(`Unrecognized algorithm(${algorithm})`);
   }
 }

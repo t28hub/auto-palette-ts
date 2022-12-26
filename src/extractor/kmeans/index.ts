@@ -1,36 +1,16 @@
 import { color, lab, rgb } from '../../color';
-import { DistanceMeasure, Point5, SquaredEuclideanDistance } from '../../math';
+import { Point5, SquaredEuclideanDistance } from '../../math';
 import { Color, ImageData, Swatch } from '../../types';
 import { Extractor } from '../extractor';
 
 import { Cluster } from './cluster';
-import { InitializerName } from './initializer';
 import { Kmeans } from './kmeans';
 
 const COLOR_NORMALIZE_FACTOR = 128;
 const COLOR_COMPONENT_WEIGHT = 16;
 
-/**
- * Options for {@link KmeansExtractor}.
- */
-export type Options = {
-  readonly kind: 'kmeans';
-  readonly initializationMethod: InitializerName;
-  readonly distanceMeasure: DistanceMeasure;
-  readonly maxIterations: number;
-  readonly minDifference: number;
-};
-
-/**
- * The default options of {@link KmeansExtractor}.
- */
-const defaultOptions: Options = {
-  kind: 'kmeans',
-  initializationMethod: 'kmeans++',
-  distanceMeasure: SquaredEuclideanDistance,
-  maxIterations: 10,
-  minDifference: 0.25 * 0.25,
-};
+const DEFAULT_MAX_ITERATIONS = 10;
+const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
 
 /**
  * Implementation of {@link Extractor} using Kmeans algorithm.
@@ -40,17 +20,9 @@ export class KmeansExtractor implements Extractor {
 
   /**
    * Create a new {@link KmeansExtractor}.
-   *
-   * @param options The options of extractor.
    */
-  constructor(options: Partial<Options> = {}) {
-    const merged = { ...options, ...defaultOptions };
-    this.kmeans = new Kmeans<Point5>(
-      merged.initializationMethod,
-      merged.distanceMeasure,
-      merged.maxIterations,
-      merged.minDifference,
-    );
+  constructor(maxIterations: number = DEFAULT_MAX_ITERATIONS, minDifference: number = DEFAULT_MIN_DIFFERENCE) {
+    this.kmeans = new Kmeans<Point5>('kmeans++', SquaredEuclideanDistance, maxIterations, minDifference);
   }
 
   extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {

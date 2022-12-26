@@ -1,4 +1,4 @@
-import { ImageData } from '../../types';
+import { Algorithm, ImageData } from '../../types';
 import { ID } from '../../utils';
 
 /**
@@ -18,6 +18,11 @@ export type RequestMessage = {
      * The ID of caller.
      */
     readonly id: ID;
+
+    /**
+     * The algorithm to be used.
+     */
+    readonly algorithm: Algorithm;
 
     /**
      * The image to extract.

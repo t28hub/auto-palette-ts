@@ -9,26 +9,11 @@ import { Octree } from './octree';
 
 const MAX_DEPTH = 8;
 
-/**
- * The options of {@link OctreeExtractor}.
- */
-export type Options = {
-  readonly kind: 'octree';
-  readonly maxDepth: number;
-};
-
-const defaultOptions: Options = {
-  kind: 'octree',
-  maxDepth: 5,
-};
-
 export class OctreeExtractor implements Extractor {
   private readonly bounds: Bounds;
   private readonly maxDepth: number;
 
-  constructor(options: Partial<Options> = {}) {
-    const merged: Options = { ...options, ...defaultOptions };
-    const maxDepth = merged.maxDepth;
+  constructor(maxDepth = 5) {
     if (!Number.isInteger(maxDepth) || maxDepth < 1 || maxDepth > MAX_DEPTH) {
       throw new TypeError(`The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`);
     }
