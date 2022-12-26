@@ -1,7 +1,6 @@
-import { HSLColor } from '../color/hsl';
-import { Color, Swatch } from '../types';
-
+import { HSLColor } from './color/hsl';
 import { Palette } from './palette';
+import { Color, Swatch } from './types';
 
 describe('palette', () => {
   const results: Swatch<Color>[] = [

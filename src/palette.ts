@@ -1,4 +1,4 @@
-import { Color, Swatch } from '../types';
+import { Color, Swatch } from './types';
 
 /**
  * Color palette class.

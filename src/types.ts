@@ -1,3 +1,5 @@
+import { Palette } from './palette';
+
 /**
  * Interface representing ImageData.
  */
@@ -147,3 +149,9 @@ export type Options = {
   readonly maxColors: number;
   readonly maxImageSize: number;
 };
+
+export interface Builder {
+  build(): Promise<Palette>;
+
+  build(options: Partial<Options>): Promise<Palette>;
+}

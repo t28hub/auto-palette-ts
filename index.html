@@ -7,9 +7,8 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
     <script type="module">
-      import { fromImage } from './src';
+      import { from } from './src';
 
       const image = new Image();
       image.crossOrigin = 'Anonymous';
@@ -21,7 +20,8 @@
       // image.src = 'https://images.unsplash.com/photo-1668741932680-5e8c88401bb4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8aTNqNENKVVFSU1V8fGVufDB8fHx8&dpr=2&auto=format&fit=crop&w=294&q=60';
 
       console.time('palette');
-      fromImage(image)
+      from(image)
+        .build({ maxColors: 6 })
         .finally(() => console.timeEnd('palette'))
         .then((palette) => {
           const list = document.createElement('ul');

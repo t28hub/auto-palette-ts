@@ -1,18 +1,15 @@
-import { load } from './image';
-import { Palette, PaletteBuilder } from './palette';
-import { Options } from './types';
+import { fromCanvasElement, fromImageData, fromImageElement, Image } from './image';
+import { PaletteBuilder } from './palette/builder';
+import { Builder } from './types';
 
-const defaults: Options = {
-  algorithm: 'kmeans',
-  maxColors: 5,
-  maxImageSize: 128 * 128,
-} as const;
-
-export async function fromImage(imageElement: HTMLImageElement, options: Partial<Options> = {}): Promise<Palette> {
-  const { algorithm, maxColors, maxImageSize } = { ...defaults, ...options };
-  const image = await load(imageElement);
-  const resized = image.resize(maxImageSize);
-  const imageData = resized.getImageData();
-  const builder = new PaletteBuilder();
-  return await builder.build(imageData, algorithm, maxColors);
+export function from(source: HTMLCanvasElement | HTMLImageElement | ImageData): Builder {
+  let image: Image;
+  if (source instanceof HTMLCanvasElement) {
+    image = fromCanvasElement(source);
+  } else if (source instanceof HTMLImageElement) {
+    image = fromImageElement(source);
+  } else {
+    image = fromImageData(source);
+  }
+  return new PaletteBuilder(image);
 }
