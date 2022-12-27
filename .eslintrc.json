@@ -7,8 +7,8 @@
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2022
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "import", "unused-imports"],
   "globals": {},
@@ -24,7 +24,8 @@
       "error",
       {
         "argsIgnorePattern": "_",
-        "varsIgnorePattern": "_"
+        "varsIgnorePattern": "_",
+        "destructuredArrayIgnorePattern": "_"
       }
     ],
     "import/order": [

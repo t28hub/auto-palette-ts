@@ -5,5 +5,5 @@ interface Props {
 }
 
 export default function Container({ children }: Props): ReactElement {
-  return <div className={'flex flex-col'}>{children}</div>;
+  return <div className="flex flex-col">{children}</div>;
 }

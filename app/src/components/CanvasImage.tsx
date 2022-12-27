@@ -45,9 +45,9 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
       return;
     }
 
-    const context = canvasRef.current.getContext('2d');
-    if (context) {
-      setContext(context);
+    const newContext = canvasRef.current.getContext('2d');
+    if (newContext) {
+      setContext(newContext);
     }
   }, [canvasRef]);
 
