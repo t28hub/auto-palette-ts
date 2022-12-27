@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
-export default function useImage(src: string, crossOrigin: string | null = null) {
+export default function useImage(src: string, crossOrigin: string | undefined = undefined) {
   const imageRef = useRef<HTMLImageElement>();
-  // For firing events
-  const [_, setState] = useState(Math.random());
+  const [_, setState] = useState(Math.random()); // For firing events
 
   useLayoutEffect(() => {
     const image = document.createElement('img');
@@ -19,7 +18,7 @@ export default function useImage(src: string, crossOrigin: string | null = null)
 
     image.addEventListener('load', onLoad);
     image.addEventListener('error', onError);
-    image.crossOrigin = crossOrigin;
+    image.crossOrigin = crossOrigin || null;
     image.src = src;
 
     return () => {

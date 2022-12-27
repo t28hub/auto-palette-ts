@@ -25,8 +25,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "test": "jest --config jest.config.ts --coverage",
     "format": "prettier --ignore-path .eslintignore --list-different --write .",
     "prebuild": "yarn clean",

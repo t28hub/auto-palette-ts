@@ -1,5 +1,5 @@
 import { decode } from 'blurhash';
-import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 
 import useImage from '../hooks/useImage';
 
@@ -18,12 +18,8 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
   const [image] = useImage(src, 'anonymous');
   const [context, setContext] = useState<CanvasRenderingContext2D>();
 
-  useLayoutEffect(() => {
-    if (!image) {
-      return;
-    }
-
-    if (!context) {
+  useEffect(() => {
+    if (!image || !context) {
       return;
     }
 
@@ -52,6 +48,11 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
   }, [canvasRef]);
 
   useEffect(() => {
+    // Skip drawing the blurhash, if the image has been already loaded.
+    if (image) {
+      return;
+    }
+
     if (!context) {
       return;
     }
