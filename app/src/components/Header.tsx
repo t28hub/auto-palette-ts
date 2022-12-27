@@ -3,11 +3,9 @@ import { FaGithub } from 'react-icons/all';
 
 export default function Header(): ReactElement {
   return (
-    <header className={'py-2'}>
+    <header className={'py-2 bg-opacity-50'}>
       <div className={'flex flex-row items-center justify-between'}>
-        <div className={'prose prose-2xl font-bold'}>
-          Auto Palette
-        </div>
+        <div className={'prose prose-2xl font-bold select-none'}>Auto Palette</div>
 
         <ul className={'flex flex-row'}>
           <li className={'hover:opacity-20 duration-300'}>
@@ -19,4 +17,4 @@ export default function Header(): ReactElement {
       </div>
     </header>
   );
-};
+}
