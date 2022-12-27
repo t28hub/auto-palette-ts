@@ -23,7 +23,7 @@ export default function BackgroundImage({ src, blurhash }: Props): ReactElement 
   }, [ref]);
 
   return (
-    <div ref={ref} className="w-screen h-screen absolute top-0 left-0 -z-20">
+    <div ref={ref} className="w-screen h-screen absolute top-0 left-0 -z-50">
       <CanvasImage src={src} width={width} height={height} blurhash={blurhash} />
     </div>
   );
