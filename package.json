@@ -19,6 +19,9 @@
     "name": "Tatsuya Maki",
     "url": "https://github.com/t28hub"
   },
+  "workspaces": [
+    "app"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
@@ -62,5 +65,6 @@
     "*.{json,yml,md,html,css}": [
       "yarn format"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }
