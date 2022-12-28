@@ -24,7 +24,7 @@ export default defineConfig({
       all: true,
       include: ['src/**', 'src/types.ts'],
       reportsDirectory: 'coverage',
-      reporter: ['clover', 'lcov', 'html'],
+      reporter: ['clover', 'lcov'],
       lines: 70,
       functions: 70,
       branches: 70,
