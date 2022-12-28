@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { HSLColorSpace, clampH, clampL, clampS } from './hsl';
 import { asPackedColor } from './utils';
 

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { HSLColor } from '../../color/hsl';
 
 describe('.toBeSimilarColor', () => {

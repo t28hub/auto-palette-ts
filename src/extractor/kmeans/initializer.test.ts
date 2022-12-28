@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Point2 } from '../../math';
 
 import { createInitializer, InitializerName } from './initializer';

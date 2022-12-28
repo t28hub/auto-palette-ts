@@ -3,6 +3,7 @@ node_modules/
 coverage/
 dist/
 dist-ssr/
+html/
 *.local
 .yarn/*
 

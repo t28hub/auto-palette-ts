@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { clamp, degreeToRadian, radianToDegree } from './utils';
 
 describe('utils', () => {

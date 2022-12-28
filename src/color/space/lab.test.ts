@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { clampA, clampB, clampL, LabColorSpace } from './lab';
 import { asPackedColor } from './utils';
 

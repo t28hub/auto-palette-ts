@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Point3 } from '../../math';
 
 import { Bounds } from './bounds';

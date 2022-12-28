@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { HSLColor } from './color/hsl';
 import { Palette } from './palette';
 import { Color, Swatch } from './types';

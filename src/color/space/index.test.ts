@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { HSLColorSpace } from './hsl';
 import { LabColorSpace } from './lab';
 import { RGBColorSpace } from './rgb';

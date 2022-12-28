@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { resolve } from 'path';
 
 import { defineConfig } from 'vite';
@@ -13,4 +14,21 @@ export default defineConfig({
     },
   },
   plugins: [dts({ include: 'src', rollupTypes: true })],
+  test: {
+    globals: true,
+    include: ['src/**/*.test.(ts|tsx)'],
+    reporters: ['html', 'verbose'],
+    setupFiles: ['vitest.setup.ts'],
+    testTimeout: 3000,
+    coverage: {
+      all: true,
+      include: ['src/**', 'src/types.ts'],
+      reportsDirectory: 'coverage',
+      reporter: ['clover', 'lcov', 'html'],
+      lines: 70,
+      functions: 70,
+      branches: 70,
+      statements: 70,
+    },
+  },
 });

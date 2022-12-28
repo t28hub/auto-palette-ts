@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { clampValue, RGBColorSpace } from './rgb';
 import { asPackedColor } from './utils';
 

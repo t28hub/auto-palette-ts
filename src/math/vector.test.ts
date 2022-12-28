@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { SquaredEuclideanDistance } from './distance';
 import { Point } from './point';
 import { Vector } from './vector';

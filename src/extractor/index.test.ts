@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Algorithm } from '../types';
 
 import { KmeansExtractor } from './kmeans';

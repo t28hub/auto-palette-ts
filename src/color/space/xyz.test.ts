@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { asPackedColor } from './utils';
 import { clampX, clampY, clampZ, XYZColorSpace } from './xyz';
 
