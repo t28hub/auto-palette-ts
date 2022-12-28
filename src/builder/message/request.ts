@@ -1,4 +1,4 @@
-import { Algorithm, ImageData } from '../../types';
+import { Algorithm, ImageObject } from '../../types';
 import { ID } from '../../utils';
 
 /**
@@ -27,7 +27,7 @@ export type RequestMessage = {
     /**
      * The image to extract.
      */
-    readonly imageData: ImageData<ArrayBuffer>;
+    readonly imageData: ImageObject<ArrayBuffer>;
 
     /**
      * The maximum colors to be extracted.

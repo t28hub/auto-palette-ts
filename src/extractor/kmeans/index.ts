@@ -1,6 +1,6 @@
 import { color, lab, rgb } from '../../color';
 import { Point5, SquaredEuclideanDistance } from '../../math';
-import { Color, ImageData, Swatch } from '../../types';
+import { Color, ImageObject, Swatch } from '../../types';
 import { Extractor } from '../extractor';
 
 import { Cluster } from './cluster';
@@ -25,7 +25,7 @@ export class KmeansExtractor implements Extractor {
     this.kmeans = new Kmeans<Point5>('kmeans++', SquaredEuclideanDistance, maxIterations, minDifference);
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];

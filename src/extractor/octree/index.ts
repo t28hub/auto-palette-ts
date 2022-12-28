@@ -1,6 +1,6 @@
 import { color, rgb } from '../../color';
 import { Point3 } from '../../math';
-import { Color, ImageData, Swatch } from '../../types';
+import { Color, ImageObject, Swatch } from '../../types';
 import { Extractor } from '../extractor';
 
 import { Bounds } from './bounds';
@@ -25,7 +25,7 @@ export class OctreeExtractor implements Extractor {
     this.maxDepth = maxDepth;
   }
 
-  extract(imageData: ImageData<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];

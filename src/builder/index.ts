@@ -1,7 +1,7 @@
 import { color } from '../color';
 import { Image } from '../image';
 import { Palette } from '../palette';
-import { Algorithm, Builder, Color, ImageData, Options, PackedColor, Swatch } from '../types';
+import { Algorithm, Builder, Color, ImageObject, Options, PackedColor, Swatch } from '../types';
 import { id, ID } from '../utils';
 
 import { RequestMessage, Response } from './message';
@@ -41,7 +41,7 @@ export class PaletteBuilder implements Builder {
     return await this.execute(imageData, merged);
   }
 
-  private execute(imageData: ImageData<Uint8ClampedArray>, options: Options): Promise<Palette> {
+  private execute(imageData: ImageObject<Uint8ClampedArray>, options: Options): Promise<Palette> {
     return new Promise((resolve, reject) => {
       const message = this.buildRequest(imageData, options.algorithm, options.maxColors);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
@@ -90,12 +90,12 @@ export class PaletteBuilder implements Builder {
   }
 
   private buildRequest(
-    imageData: ImageData<Uint8ClampedArray>,
+    imageData: ImageObject<Uint8ClampedArray>,
     algorithm: Algorithm,
     maxColors: number,
   ): RequestMessage {
     const { height, width, data } = imageData;
-    const image: ImageData<ArrayBuffer> = {
+    const image: ImageObject<ArrayBuffer> = {
       height,
       width,
       data: data.buffer,

@@ -1,8 +1,14 @@
+import { PaletteBuilder } from './builder';
 import { fromCanvasElement, fromImageData, fromImageElement, Image } from './image';
-import { PaletteBuilder } from './palette/builder';
-import { Builder } from './types';
+import { Builder, ImageSource } from './types';
 
-export function from(source: HTMLCanvasElement | HTMLImageElement | ImageData): Builder {
+/**
+ * Create a new builder from the given image source.
+ *
+ * @param source The image source.
+ * @return The new palette builder.
+ */
+export function palette(source: ImageSource): Builder {
   let image: Image;
   if (source instanceof HTMLCanvasElement) {
     image = fromCanvasElement(source);

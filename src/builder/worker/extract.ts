@@ -1,5 +1,5 @@
 import { createExtractor } from '../../extractor';
-import { Algorithm, Color, ImageData, PackedColor, Swatch } from '../../types';
+import { Algorithm, Color, ImageObject, PackedColor, Swatch } from '../../types';
 import { filter } from '../filter';
 
 /**
@@ -12,12 +12,12 @@ import { filter } from '../filter';
  * @throws {Error} if extraction is failed.
  */
 export function extract(
-  imageData: ImageData<ArrayBuffer>,
+  imageData: ImageObject<ArrayBuffer>,
   algorithm: Algorithm,
   maxColors: number,
 ): Swatch<PackedColor>[] {
   const { height, width, data } = imageData;
-  const image: ImageData<Uint8ClampedArray> = {
+  const image: ImageObject<Uint8ClampedArray> = {
     height,
     width,
     data: new Uint8ClampedArray(data),

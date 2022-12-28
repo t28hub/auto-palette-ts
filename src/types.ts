@@ -1,9 +1,16 @@
 import { Palette } from './palette';
 
+export { Palette } from './palette';
+
+/**
+ * Type representing supported image source.
+ */
+export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
+
 /**
  * Interface representing ImageData.
  */
-export interface ImageData<T extends Uint8ClampedArray | ArrayBuffer> {
+export interface ImageObject<T extends Uint8ClampedArray | ArrayBuffer> {
   readonly height: number;
   readonly width: number;
   readonly data: T;
@@ -112,6 +119,8 @@ export interface Color extends AlphaChannel {
   isDark: boolean;
 
   isLight: boolean;
+
+  toString(): string;
 
   toHSL(): HSL;
 

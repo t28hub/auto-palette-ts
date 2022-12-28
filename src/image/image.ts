@@ -1,7 +1,7 @@
 import { ensureContext2D, resizeCanvasElement } from './utils';
 
 /**
- * The image class.
+ * The image interface.
  */
 export interface Image {
   /**
@@ -30,6 +30,9 @@ export interface Image {
   resize(size: number): Promise<Image>;
 }
 
+/**
+ * Canvas element based image class.
+ */
 export class CanvasElementImage implements Image {
   private readonly context: CanvasRenderingContext2D;
 
@@ -55,6 +58,9 @@ export class CanvasElementImage implements Image {
   }
 }
 
+/**
+ * Image element based image class.
+ */
 export class ImageElementImage implements Image {
   constructor(private readonly imageElement: HTMLImageElement) {}
 
