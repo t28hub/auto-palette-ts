@@ -2,6 +2,7 @@ import { decode } from 'blurhash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 
 import useImage from '../hooks/useImage';
+import usePalette from '../hooks/usePalette';
 
 interface Props {
   readonly src: string;
@@ -17,6 +18,8 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image] = useImage(src, 'anonymous');
   const [context, setContext] = useState<CanvasRenderingContext2D>();
+
+  usePalette(image);
 
   useEffect(() => {
     if (!image || !context) {
@@ -48,7 +51,7 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
   }, [canvasRef]);
 
   useEffect(() => {
-    // Skip drawing the blurhash, if the image has been already loaded.
+    // Prevent drawing the blurhash, if the image has been already loaded.
     if (image) {
       return;
     }

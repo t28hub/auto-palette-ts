@@ -2,6 +2,9 @@ import { PaletteBuilder } from './builder';
 import { fromCanvasElement, fromImageData, fromImageElement, Image } from './image';
 import { Builder, ImageSource } from './types';
 
+export { Palette } from './palette';
+export type { Builder, Color, ImageSource, Options, Swatch } from './types';
+
 /**
  * Create a new builder from the given image source.
  *

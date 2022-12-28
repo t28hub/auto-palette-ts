@@ -12,5 +12,5 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
   },
-  plugins: [dts()],
+  plugins: [dts({ include: 'src', rollupTypes: true })],
 });
