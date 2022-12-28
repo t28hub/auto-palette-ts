@@ -1,6 +1,7 @@
 # Auto Palette
 
 [![Build project](https://github.com/t28hub/auto-palette/actions/workflows/build.yml/badge.svg)](https://github.com/t28hub/c10e/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/t28hub/auto-palette/branch/main/graph/badge.svg?token=F5obdWWvEt)](https://codecov.io/gh/t28hub/auto-palette)
 
 ## Usage
 
