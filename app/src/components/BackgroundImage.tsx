@@ -1,6 +1,6 @@
 import { ReactElement, useLayoutEffect, useRef, useState } from 'react';
 
-import CanvasImage from './CanvasImage';
+import CanvasImage from '@/components/CanvasImage';
 
 interface Props {
   readonly src: string;

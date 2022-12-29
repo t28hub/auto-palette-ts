@@ -1,6 +1,6 @@
 {
   "name": "auto-palette",
-  "description": "Extract color palette from image automatically",
+  "description": "Extract color palette from your image automatically",
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
@@ -33,8 +33,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run --coverage",
     "test:ui": "vitest run --coverage --ui",
     "format": "prettier --ignore-path .eslintignore --list-different --write .",

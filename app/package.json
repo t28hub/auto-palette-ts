@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --ignore-path ../.eslintignore --list-different --write .",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
+    "format": "prettier --ignore-path .eslintignore --list-different --write .",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -17,7 +17,8 @@
     "blurhash": "^2.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.7.1"
+    "react-icons": "^4.7.1",
+    "recoil": "^0.7.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
@@ -25,10 +26,11 @@
     "@types/react-dom": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
-    "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitejs/plugin-react-swc": "^3.0.1",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.30.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.11",

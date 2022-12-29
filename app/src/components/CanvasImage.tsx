@@ -1,8 +1,8 @@
 import { decode } from 'blurhash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 
-import useImage from '../hooks/useImage';
-import usePalette from '../hooks/usePalette';
+import useImage from '@/hooks/useImage';
+import usePalette from '@/hooks/usePalette';
 
 interface Props {
   readonly src: string;
