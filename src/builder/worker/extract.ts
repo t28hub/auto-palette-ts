@@ -1,6 +1,7 @@
 import { createExtractor } from '../../extractor';
-import { Algorithm, Color, ImageObject, PackedColor, Swatch } from '../../types';
+import { Method, ImageObject, Swatch } from '../../types';
 import { filter } from '../filter';
+import { ExtractionResult } from '../types';
 
 /**
  * Extract colors from the given image.
@@ -11,11 +12,7 @@ import { filter } from '../filter';
  * @return The array of feature color.
  * @throws {Error} if extraction is failed.
  */
-export function extract(
-  imageData: ImageObject<ArrayBuffer>,
-  algorithm: Algorithm,
-  maxColors: number,
-): Swatch<PackedColor>[] {
+export function extract(imageData: ImageObject<ArrayBuffer>, algorithm: Method, maxColors: number): ExtractionResult[] {
   const { height, width, data } = imageData;
   const image: ImageObject<Uint8ClampedArray> = {
     height,
@@ -25,13 +22,14 @@ export function extract(
 
   const swatches = createExtractor(algorithm).extract(image, maxColors * 3);
   return filter(swatches, maxColors)
-    .sort((result1, result2): number => {
-      return result2.population - result1.population;
+    .sort((swatch1: Swatch, swatch2: Swatch): number => {
+      return swatch2.population - swatch1.population;
     })
-    .map((result: Swatch<Color>): Swatch<PackedColor> => {
+    .map((result: Swatch): ExtractionResult => {
       return {
         color: result.color.pack(),
         population: result.population,
+        coordinate: { ...result.coordinate },
       };
     });
 }

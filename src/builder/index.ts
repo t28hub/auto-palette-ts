@@ -1,14 +1,14 @@
 import { color } from '../color';
 import { Image } from '../image';
 import { Palette } from '../palette';
-import { Algorithm, Builder, Color, ImageObject, Options, PackedColor, Swatch } from '../types';
+import { Method, Builder, ImageObject, Options, Swatch } from '../types';
 import { id, ID } from '../utils';
 
-import { RequestMessage, Response } from './message';
+import { ExtractionResult, RequestMessage, Response } from './types';
 import { defaultWorker } from './worker';
 
 const defaults: Options = {
-  algorithm: 'kmeans',
+  method: 'kmeans',
   maxColors: 5,
   maxImageSize: 128 * 128,
 } as const;
@@ -43,15 +43,26 @@ export class PaletteBuilder implements Builder {
 
   private execute(imageData: ImageObject<Uint8ClampedArray>, options: Options): Promise<Palette> {
     return new Promise((resolve, reject) => {
-      const message = this.buildRequest(imageData, options.algorithm, options.maxColors);
+      const message = this.buildRequestMessage(imageData, options.method, options.maxColors);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
         if (event.data.payload.id !== this.id) {
           return;
         }
 
         try {
-          const palette = this.onMessage(event);
-          resolve(palette);
+          const swatches = this.onMessage(event).map((result: ExtractionResult): Swatch => {
+            const scaleX = this.image.width / imageData.width;
+            const scaleY = this.image.height / imageData.height;
+            return {
+              color: color(result.color),
+              population: result.population,
+              coordinate: {
+                x: Math.round(result.coordinate.x * scaleX),
+                y: Math.round(result.coordinate.x * scaleY),
+              },
+            };
+          });
+          resolve(new Palette(swatches));
         } catch (e) {
           reject(e);
         }
@@ -61,41 +72,33 @@ export class PaletteBuilder implements Builder {
         reject(new Error(event.message));
       });
 
-      this.worker.postMessage(message, [message.payload.imageData.data]);
+      this.worker.postMessage(message, [message.payload.imageObject.data]);
     });
   }
 
-  private onMessage(event: MessageEvent<Response>): Palette {
+  private onMessage(event: MessageEvent<Response>): ExtractionResult[] {
     const { type, payload } = event.data;
     switch (type) {
       case 'response': {
-        const colors = payload.results.map((result: Swatch<PackedColor>): Swatch<Color> => {
-          return {
-            color: color(result.color),
-            population: result.population,
-          };
-        });
-        return new Palette(colors);
+        return payload.results;
       }
-
       case 'error': {
         const message = payload.message;
         throw new Error(message);
       }
-
       default: {
         throw new Error(`Unrecognized type of data is received: ${event}`);
       }
     }
   }
 
-  private buildRequest(
+  private buildRequestMessage(
     imageData: ImageObject<Uint8ClampedArray>,
-    algorithm: Algorithm,
+    method: Method,
     maxColors: number,
   ): RequestMessage {
     const { height, width, data } = imageData;
-    const image: ImageObject<ArrayBuffer> = {
+    const imageObject: ImageObject<ArrayBuffer> = {
       height,
       width,
       data: data.buffer,
@@ -105,8 +108,8 @@ export class PaletteBuilder implements Builder {
       type: 'request',
       payload: {
         id: this.id,
-        imageData: image,
-        algorithm,
+        imageObject,
+        method,
         maxColors,
       },
     };

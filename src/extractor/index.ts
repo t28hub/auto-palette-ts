@@ -1,4 +1,4 @@
-import { Algorithm } from '../types';
+import { Method } from '../types';
 
 import { type Extractor } from './extractor';
 import { KmeansExtractor } from './kmeans';
@@ -12,7 +12,7 @@ export { type Extractor } from './extractor';
  * @param algorithm The color extraction algorithm.
  * @return The created extractor.
  */
-export function createExtractor(algorithm: Algorithm): Extractor {
+export function createExtractor(algorithm: Method): Extractor {
   switch (algorithm) {
     case 'kmeans':
       return new KmeansExtractor();

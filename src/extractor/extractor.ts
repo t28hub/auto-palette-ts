@@ -1,4 +1,4 @@
-import { Color, ImageObject, Swatch } from '../types';
+import { ImageObject, Swatch } from '../types';
 
 /**
  * Interface of color extraction.
@@ -11,5 +11,5 @@ export interface Extractor {
    * @param maxColors The max colors.
    * @return The extracted results.
    */
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch<Color>[];
+  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[];
 }

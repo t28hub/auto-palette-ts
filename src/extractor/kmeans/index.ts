@@ -1,13 +1,13 @@
 import { color, lab, rgb } from '../../color';
 import { Point5, SquaredEuclideanDistance } from '../../math';
-import { Color, ImageObject, Swatch } from '../../types';
+import { ImageObject, Swatch } from '../../types';
 import { Extractor } from '../extractor';
 
 import { Cluster } from './cluster';
 import { Kmeans } from './kmeans';
 
-const COLOR_NORMALIZE_FACTOR = 128;
-const COLOR_COMPONENT_WEIGHT = 16;
+const COLOR_NORMALIZE_FACTOR = 0x80;
+const COLOR_COMPONENT_WEIGHT = 4;
 
 const DEFAULT_MAX_ITERATIONS = 10;
 const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
@@ -25,7 +25,7 @@ export class KmeansExtractor implements Extractor {
     this.kmeans = new Kmeans<Point5>('kmeans++', SquaredEuclideanDistance, maxIterations, minDifference);
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
@@ -54,15 +54,19 @@ export class KmeansExtractor implements Extractor {
     }
 
     const clusters = this.kmeans.classify(pixels, maxColors);
-    return clusters.map((cluster: Cluster<Point5>): Swatch<Color> => {
+    return clusters.map((cluster: Cluster<Point5>): Swatch => {
       const pixel = cluster.getCentroid();
       const l = (pixel[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const a = (pixel[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const b = (pixel[2] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
       const packed = lab().encode({ l, a, b, opacity: 1.0 });
+
+      const x = pixel[3] * width;
+      const y = pixel[4] * height;
       return {
-        population: cluster.size,
         color: color(packed),
+        population: cluster.size,
+        coordinate: { x, y },
       };
     });
   }

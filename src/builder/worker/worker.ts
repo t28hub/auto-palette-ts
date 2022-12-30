@@ -1,4 +1,4 @@
-import { ErrorResponseMessage, Request, ResponseMessage } from '../message';
+import { ErrorResponseMessage, Request, ResponseMessage } from '../types';
 
 import { extract } from './extract';
 
@@ -14,7 +14,7 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
   switch (type) {
     case 'request': {
       try {
-        const results = extract(payload.imageData, payload.algorithm, payload.maxColors);
+        const results = extract(payload.imageObject, payload.method, payload.maxColors);
         const message: ResponseMessage = {
           type: 'response',
           payload: { id: payload.id, results },

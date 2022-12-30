@@ -1,7 +1,5 @@
 import { Palette } from './palette';
 
-export { Palette } from './palette';
-
 /**
  * Type representing supported image source.
  */
@@ -138,27 +136,39 @@ export interface Color extends AlphaChannel {
 }
 
 /**
- * Type representing the swatch of palette.
+ * Type representing the position of the swatch.
  */
-export type Swatch<T extends Color | PackedColor> = {
-  readonly color: T;
-  readonly population: number;
+export type Coordinate = {
+  readonly x: number;
+  readonly y: number;
 };
 
 /**
- * Supported color extraction algorithm.
+ * Type representing the swatch of palette.
  */
-export type Algorithm = 'kmeans' | 'octree';
+export type Swatch = {
+  readonly color: Color;
+  readonly population: number;
+  readonly coordinate: Coordinate;
+};
+
+/**
+ * Supported color extraction method.
+ */
+export type Method = 'kmeans' | 'octree';
 
 /**
  * Type representing options for Auto Palette.
  */
 export type Options = {
-  readonly algorithm: Algorithm;
+  readonly method: Method;
   readonly maxColors: number;
   readonly maxImageSize: number;
 };
 
+/**
+ * Interface representing a builder of the palette.
+ */
 export interface Builder {
   build(): Promise<Palette>;
 

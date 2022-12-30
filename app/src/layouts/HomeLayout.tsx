@@ -1,5 +1,5 @@
-import { Color } from 'auto-palette';
-import { ReactElement, useEffect } from 'react';
+import { Swatch } from 'auto-palette';
+import { ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import BackgroundImage from '@/components/BackgroundImage';
@@ -20,7 +20,10 @@ export default function HomeLayout(): ReactElement {
       {palette &&
         (
           <div className="flex flex-row items-center">
-            {palette.getColors().map((color: Color): ReactElement => {
+            {palette.getSwatches().map((swatch: Swatch): ReactElement => {
+              const color = swatch.color;
+              const coordinate = swatch.coordinate;
+              console.info({ coordinate });
               const hexColor = color.toString().toUpperCase();
               return (
                 <div key={hexColor} className="p-4 flex-1" style={{ backgroundColor: hexColor }}>

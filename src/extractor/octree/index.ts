@@ -1,6 +1,6 @@
 import { color, rgb } from '../../color';
 import { Point3 } from '../../math';
-import { Color, ImageObject, Swatch } from '../../types';
+import { ImageObject, Swatch } from '../../types';
 import { Extractor } from '../extractor';
 
 import { Bounds } from './bounds';
@@ -25,7 +25,7 @@ export class OctreeExtractor implements Extractor {
     this.maxDepth = maxDepth;
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch<Color>[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];
@@ -67,7 +67,7 @@ export class OctreeExtractor implements Extractor {
       return !node.isEmpty;
     });
 
-    return leafNodes.map((leaf: Node): Swatch<Color> => {
+    return leafNodes.map((leaf: Node): Swatch => {
       const center = leaf.getCenter();
       const r = center[0] << colorShift;
       const g = center[1] << colorShift;
@@ -76,6 +76,7 @@ export class OctreeExtractor implements Extractor {
       return {
         color: color(packed),
         population: leaf.size,
+        coordinate: { x: 0, y: 0 }, // OctreeExtractor does not support the coordinate property.
       };
     });
   }

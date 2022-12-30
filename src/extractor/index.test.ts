@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Algorithm } from '../types';
+import { Method } from '../types';
 
 import { KmeansExtractor } from './kmeans';
 import { OctreeExtractor } from './octree';
@@ -14,7 +14,7 @@ describe('extractor/index', () => {
       { algorithm: 'octree', expected: OctreeExtractor },
     ])('should create $expected from option($options)', ({ algorithm, expected }) => {
       // Act
-      const actual = createExtractor(algorithm as Algorithm);
+      const actual = createExtractor(algorithm as Method);
 
       // Assert
       expect(actual).toBeInstanceOf(expected);
@@ -23,7 +23,7 @@ describe('extractor/index', () => {
     it('should throw Error when algorithm is unrecognized', () => {
       // Assert
       expect(() => {
-        createExtractor('unrecognized' as Algorithm);
+        createExtractor('unrecognized' as Method);
       }).toThrowError(TypeError);
     });
   });

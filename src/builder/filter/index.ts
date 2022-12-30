@@ -1,12 +1,10 @@
-import { Color, Swatch } from '../../types';
+import { Swatch } from '../../types';
 
 import { Node } from './node';
 
-export function filter(swatches: Swatch<Color>[], count: number): Swatch<Color>[] {
-  const nodes = swatches.map((swatch: Swatch<Color>): Node => {
-    return new Node(swatch.color, swatch.population);
-  });
-  return merge(nodes, count);
+export function filter(swatches: Swatch[], count: number): Swatch[] {
+  const nodes = swatches.map((swatch: Swatch): Node => new Node(swatch));
+  return merge(nodes, count).map((node: Node) => node.swatch);
 }
 
 function merge(nodes: Node[], count: number): Node[] {

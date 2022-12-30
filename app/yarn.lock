@@ -530,8 +530,12 @@ ast-types-flow@^0.0.7:
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
   integrity sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==
 
-"auto-palette@file:..":
+auto-palette@../:
   version "1.0.0"
+
+"auto-palette@link:../":
+  version "0.0.0"
+  uid ""
 
 autoprefixer@^10.4.13:
   version "10.4.13"

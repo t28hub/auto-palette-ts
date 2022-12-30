@@ -1,42 +1,42 @@
-import { Color, Swatch } from './types';
+import { Swatch } from './types';
 
 /**
  * Color palette class.
  */
 export class Palette {
-  private readonly swatches: Swatch<Color>[];
+  private readonly swatches: Swatch[];
 
   /**
-   * Create a new Palette from colors.
+   * Create a new Palette.
    *
    * @param swatches The list of swatches.
-   * @throws {TypeError} if colors is empty.
+   * @throws {TypeError} if swatches is empty.
    */
-  constructor(swatches: Swatch<Color>[]) {
+  constructor(swatches: Swatch[]) {
     if (swatches.length === 0) {
-      throw new TypeError('The array of results is empty');
+      throw new TypeError('The array of swatches is empty');
     }
 
-    this.swatches = [...swatches].sort((swatch1: Swatch<Color>, swatch2: Swatch<Color>): number => {
+    this.swatches = [...swatches].sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
     });
   }
 
   /**
-   * Return the dominant color of this palette.
+   * Return the dominant swatch of this palette.
    *
-   * @return The dominant color.
+   * @return The dominant swatch.
    */
-  getDominantColor(): Color {
-    return this.swatches[0].color;
+  getDominantSwatch(): Swatch {
+    return { ...this.swatches[0] };
   }
 
   /**
-   * Return the all colors.
+   * Return the all swatches of this palette.
    *
-   * @return The colors.
+   * @return The all swatches.
    */
-  getColors(): Color[] {
-    return this.swatches.map((featureColor: Swatch<Color>): Color => featureColor.color);
+  getSwatches(): Swatch[] {
+    return [...this.swatches];
   }
 }

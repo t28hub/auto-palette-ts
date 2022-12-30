@@ -37,10 +37,12 @@ describe('extract', () => {
     expect(actual[0]).toMatchObject({
       color: rgb().encode({ r: 0, g: 248, b: 0, opacity: 1.0 }),
       population: 2,
+      coordinate: { x: 0, y: 0 },
     });
     expect(actual[1]).toMatchObject({
       color: rgb().encode({ r: 248, g: 0, b: 0, opacity: 1.0 }),
       population: 1,
+      coordinate: { x: 0, y: 0 },
     });
   });
 });

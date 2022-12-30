@@ -1,5 +1,5 @@
-import { atom, RecoilState, RecoilValueReadOnly, selector } from 'recoil';
 import { ImageSource, palette, Palette } from 'auto-palette';
+import { atom, RecoilState, RecoilValueReadOnly, selector } from 'recoil';
 
 export const imageSourceState: RecoilState<ImageSource | undefined> = atom<ImageSource | undefined>({
   key: 'paletteImageSourceState',
