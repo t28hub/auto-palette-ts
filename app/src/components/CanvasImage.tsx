@@ -2,7 +2,9 @@ import { decode } from 'blurhash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 
 import useImage from '@/hooks/useImage';
-import usePalette from '@/hooks/usePalette';
+import { useSetRecoilState } from 'recoil';
+import { imageSourceState } from '@/store/palette';
+import { ImageSource } from 'auto-palette';
 
 interface Props {
   readonly src: string;
@@ -18,8 +20,7 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image] = useImage(src, 'anonymous');
   const [context, setContext] = useState<CanvasRenderingContext2D>();
-
-  usePalette(image);
+  const setImageSource = useSetRecoilState<ImageSource | undefined>(imageSourceState);
 
   useEffect(() => {
     if (!image || !context) {
@@ -37,6 +38,7 @@ export default function CanvasImage({ src, width, height, blurhash }: Props): Re
     const positionX = Math.round(width - scaledWidth) / 2.0;
     const positionY = Math.round(height - scaledHeight) / 2.0;
     context.drawImage(image, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
+    setImageSource(canvasRef.current || undefined);
   }, [image, src]);
 
   useEffect(() => {

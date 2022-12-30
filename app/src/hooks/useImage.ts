@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export default function useImage(src: string, crossOrigin: string | undefined = undefined) {
   const imageRef = useRef<HTMLImageElement>();
-  const [_, setState] = useState(Math.random()); // For firing events
+  const [_state, setState] = useState(Math.random()); // For firing events
 
   useLayoutEffect(() => {
     const image = document.createElement('img');
