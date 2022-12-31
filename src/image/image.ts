@@ -1,4 +1,4 @@
-import { ensureContext2D, resizeCanvasElement } from './utils';
+import { ensureContext2D, resizeCanvas } from './utils';
 
 /**
  * The image interface.
@@ -40,12 +40,12 @@ export class CanvasElementImage implements Image {
     this.context = ensureContext2D(canvas);
   }
 
-  get height(): number {
-    return this.canvas.height;
-  }
-
   get width(): number {
     return this.canvas.width;
+  }
+
+  get height(): number {
+    return this.canvas.height;
   }
 
   async getImageData(): Promise<ImageData> {
@@ -53,7 +53,7 @@ export class CanvasElementImage implements Image {
   }
 
   async resize(size: number): Promise<Image> {
-    const resizedCanvas = resizeCanvasElement(this.canvas, size);
+    const resizedCanvas = resizeCanvas(this.canvas, size);
     return new CanvasElementImage(resizedCanvas);
   }
 }
@@ -62,20 +62,19 @@ export class CanvasElementImage implements Image {
  * Image element based image class.
  */
 export class ImageElementImage implements Image {
-  constructor(private readonly imageElement: HTMLImageElement) {}
+  constructor(private readonly image: HTMLImageElement) {}
 
   get isLoaded(): boolean {
-    return this.imageElement.complete;
-  }
-
-  get height(): number {
-    return this.imageElement.naturalHeight;
+    return this.image.complete;
   }
 
   get width(): number {
-    return this.imageElement.naturalWidth;
+    return this.image.naturalWidth;
   }
 
+  get height(): number {
+    return this.image.naturalHeight;
+  }
   async getImageData(): Promise<ImageData> {
     const canvas = await this.loadCanvasElement();
     return ensureContext2D(canvas).getImageData(0, 0, canvas.width, canvas.height);
@@ -83,32 +82,32 @@ export class ImageElementImage implements Image {
 
   async resize(size: number): Promise<Image> {
     const canvas = await this.loadCanvasElement();
-    const resizedCanvas = resizeCanvasElement(canvas, size);
+    const resizedCanvas = resizeCanvas(canvas, size);
     return new CanvasElementImage(resizedCanvas);
   }
 
   private loadCanvasElement(): Promise<HTMLCanvasElement> {
     return new Promise<HTMLCanvasElement>((resolve, reject) => {
-      if (this.imageElement.complete) {
+      if (this.image.complete) {
         resolve(this.drawImageElement());
         return;
       }
 
-      this.imageElement.addEventListener('load', () => {
+      this.image.addEventListener('load', () => {
         resolve(this.drawImageElement());
       });
 
-      this.imageElement.addEventListener('error', () => {
-        reject(new Error(`Failed to load image from ${this.imageElement.src}`));
+      this.image.addEventListener('error', () => {
+        reject(new Error(`Failed to load image from ${this.image.src}`));
       });
     });
   }
 
   private drawImageElement(): HTMLCanvasElement {
-    const canvasElement = document.createElement('canvas');
-    canvasElement.width = this.imageElement.naturalWidth;
-    canvasElement.height = this.imageElement.naturalHeight;
-    ensureContext2D(canvasElement).drawImage(this.imageElement, 0, 0);
-    return canvasElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = this.image.naturalWidth;
+    canvas.height = this.image.naturalHeight;
+    ensureContext2D(canvas).drawImage(this.image, 0, 0);
+    return canvas;
   }
 }

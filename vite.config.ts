@@ -16,6 +16,7 @@ export default defineConfig({
   plugins: [dts({ include: 'src', rollupTypes: true })],
   test: {
     globals: true,
+    threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740
     include: ['src/**/*.test.(ts|tsx)'],
     environment: 'jsdom',
     reporters: ['html', 'verbose'],

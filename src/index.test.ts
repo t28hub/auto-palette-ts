@@ -1,32 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { PaletteBuilder } from './builder';
+import { ensureContext2D } from './image/utils';
 
 import { palette } from './index';
 
-const StubImageData = vi.fn((sw: number, sh: number, settings?: ImageDataSettings) => ({
-  colorSpace: settings?.colorSpace,
-  width: sw,
-  height: sh,
-  data: new Uint8ClampedArray(sw * sh),
-}));
-vi.stubGlobal('ImageData', StubImageData);
-
-const StubCanvasRenderingContext2D = vi.fn(() => ({
-  putImageData: vi.fn(),
-}));
-vi.stubGlobal('CanvasRenderingContext2D', StubCanvasRenderingContext2D);
-
 describe('index', () => {
-  beforeEach(() => {
-    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => {
-      return new CanvasRenderingContext2D();
-    });
-  });
-
   it('should create a Builder from an HTMLCanvasElement', () => {
     // Act
-    const canvasElement = window.document.createElement('canvas');
+    const canvasElement = document.createElement('canvas');
     const actual = palette(canvasElement);
 
     // Assert
@@ -35,7 +17,7 @@ describe('index', () => {
 
   it('should create a Builder from an HTMLImageElement', () => {
     // Act
-    const imageElement = window.document.createElement('img');
+    const imageElement = document.createElement('img');
     const actual = palette(imageElement);
 
     // Assert
@@ -44,7 +26,9 @@ describe('index', () => {
 
   it('should create a Builder from an ImageData', () => {
     // Act
-    const imageData = new ImageData(10, 10, { colorSpace: 'srgb' });
+    const canvasElement = document.createElement('canvas');
+    const { width, height } = canvasElement;
+    const imageData = ensureContext2D(canvasElement).getImageData(0, 0, width, height);
     const actual = palette(imageData);
 
     // Assert
