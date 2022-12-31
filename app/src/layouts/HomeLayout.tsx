@@ -23,7 +23,7 @@ export default function HomeLayout(): ReactElement {
             {palette.getSwatches().map((swatch: Swatch): ReactElement => {
               const color = swatch.color;
               const coordinate = swatch.coordinate;
-              console.info({ coordinate });
+              console.info(coordinate);
               const hexColor = color.toString().toUpperCase();
               return (
                 <div key={hexColor} className="p-4 flex-1" style={{ backgroundColor: hexColor }}>

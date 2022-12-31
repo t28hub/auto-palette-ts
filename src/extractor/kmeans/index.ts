@@ -7,10 +7,9 @@ import { Cluster } from './cluster';
 import { Kmeans } from './kmeans';
 
 const COLOR_NORMALIZE_FACTOR = 0x80;
-const COLOR_COMPONENT_WEIGHT = 4;
 
 const DEFAULT_MAX_ITERATIONS = 10;
-const DEFAULT_MIN_DIFFERENCE = 0.25 * 0.25;
+const DEFAULT_MIN_DIFFERENCE = 0.25;
 
 /**
  * Implementation of {@link Extractor} using Kmeans algorithm.
@@ -45,9 +44,9 @@ export class KmeansExtractor implements Extractor {
 
       // Weight the components corresponding to colors to prioritize color information.
       pixels.push([
-        (l / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
-        (a / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
-        (b / COLOR_NORMALIZE_FACTOR) * COLOR_COMPONENT_WEIGHT,
+        l / COLOR_NORMALIZE_FACTOR,
+        a / COLOR_NORMALIZE_FACTOR,
+        b / COLOR_NORMALIZE_FACTOR,
         x / width,
         y / height,
       ]);
@@ -56,9 +55,9 @@ export class KmeansExtractor implements Extractor {
     const clusters = this.kmeans.classify(pixels, maxColors);
     return clusters.map((cluster: Cluster<Point5>): Swatch => {
       const pixel = cluster.getCentroid();
-      const l = (pixel[0] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
-      const a = (pixel[1] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
-      const b = (pixel[2] * COLOR_NORMALIZE_FACTOR) / COLOR_COMPONENT_WEIGHT;
+      const l = pixel[0] * COLOR_NORMALIZE_FACTOR;
+      const a = pixel[1] * COLOR_NORMALIZE_FACTOR;
+      const b = pixel[2] * COLOR_NORMALIZE_FACTOR;
       const packed = lab().encode({ l, a, b, opacity: 1.0 });
 
       const x = pixel[3] * width;

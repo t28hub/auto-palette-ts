@@ -49,16 +49,16 @@ export class PaletteBuilder implements Builder {
           return;
         }
 
+        const scaleX = this.image.width / imageData.width;
+        const scaleY = this.image.height / imageData.height;
         try {
-          const swatches = this.onMessage(event).map((result: ExtractionResult): Swatch => {
-            const scaleX = this.image.width / imageData.width;
-            const scaleY = this.image.height / imageData.height;
+          const swatches = this.onMessage(event).map((result): Swatch => {
             return {
               color: color(result.color),
               population: result.population,
               coordinate: {
                 x: Math.round(result.coordinate.x * scaleX),
-                y: Math.round(result.coordinate.x * scaleY),
+                y: Math.round(result.coordinate.y * scaleY),
               },
             };
           });
