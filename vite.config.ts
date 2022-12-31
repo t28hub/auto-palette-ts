@@ -17,12 +17,14 @@ export default defineConfig({
   test: {
     globals: true,
     include: ['src/**/*.test.(ts|tsx)'],
+    environment: 'jsdom',
     reporters: ['html', 'verbose'],
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 3000,
     coverage: {
       all: true,
-      include: ['src/**', 'src/types.ts'],
+      include: ['src/**'],
+      exclude: ['src/**/*.d.ts', 'types.ts'],
       reportsDirectory: 'coverage',
       reporter: ['clover', 'lcov'],
       lines: 70,
