@@ -1,0 +1,10 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 70%
+    patch:
+      enabled: false
+
+codecov:
+  require_ci_to_pass: true
