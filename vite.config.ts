@@ -25,9 +25,9 @@ export default defineConfig({
     coverage: {
       all: true,
       include: ['src/**'],
-      exclude: ['src/**/*.d.ts', 'types.ts'],
+      exclude: ['src/**/*.d.ts', 'src/**/types.ts'],
       reportsDirectory: 'coverage',
-      reporter: ['clover', 'lcov'],
+      reporter: ['clover', 'lcov', 'html'],
       lines: 70,
       functions: 70,
       branches: 70,
