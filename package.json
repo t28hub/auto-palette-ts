@@ -1,9 +1,8 @@
 {
   "name": "auto-palette",
   "description": "Extract color palette from your image automatically",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "MIT",
-  "private": true,
   "module": "dist/index.es.js",
   "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
@@ -30,6 +29,14 @@
     "name": "Tatsuya Maki",
     "url": "https://github.com/t28hub"
   },
+  "keywords": [
+    "frontend",
+    "color",
+    "color-palette",
+    "palette",
+    "canvas",
+    "image"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
