@@ -1,4 +1,4 @@
-name: Build project
+name: Test and build project
 
 on:
   push:
@@ -11,15 +11,16 @@ on:
       - '*.md'
       - '*.txt'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     strategy:
       matrix:
         node-version: [18.x]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
