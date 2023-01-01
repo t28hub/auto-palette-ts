@@ -17,17 +17,15 @@ export default defineConfig({
   test: {
     globals: true,
     threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740
-    include: ['src/**/*.test.(ts|tsx)'],
+    include: ['src/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
-    reporters: ['html', 'verbose'],
+    reporters: ['default', 'html'],
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 3000,
     coverage: {
-      all: true,
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/**/*.test.ts', 'src/**/types.ts'],
+      include: ['src/**/'],
+      reporter: ['clover', 'html'],
       reportsDirectory: 'coverage',
-      reporter: ['clover', 'lcov', 'html'],
       lines: 70,
       functions: 70,
       branches: 70,
