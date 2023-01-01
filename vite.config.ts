@@ -24,8 +24,8 @@ export default defineConfig({
     testTimeout: 3000,
     coverage: {
       all: true,
-      include: ['src/**'],
-      exclude: ['src/**/*.d.ts', 'src/**/types.ts'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.d.ts', 'src/**/*.test.ts', 'src/**/types.ts'],
       reportsDirectory: 'coverage',
       reporter: ['clover', 'lcov', 'html'],
       lines: 70,
