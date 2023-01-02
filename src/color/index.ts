@@ -17,6 +17,13 @@ function parseString(value: string): Color {
   return parseNumber(number);
 }
 
+/**
+ * Parse the given value as a color.
+ *
+ * @param value The value to be parsed.
+ * @return The parsed color.
+ * @throws {TypeError} if the value is not supported type.
+ */
 export function color(value: unknown): Color {
   if (typeof value === 'number') {
     return parseNumber(value);

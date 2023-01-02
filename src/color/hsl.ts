@@ -1,7 +1,8 @@
 import { Color, ColorDifference, PackedColor, ColorDifferenceMeasure, HSL, Lab, RGB } from '../types';
 
 import { ciede2000 } from './deltae';
-import { clampH, clampL, clampS, hsl, lab, rgb } from './space';
+import { hsl, lab, rgb } from './space';
+import { HSLColorSpace } from './space/hsl';
 
 /**
  * Class representing a color in HSL color space.
@@ -31,9 +32,9 @@ export class HSLColor implements Color {
    * @param opacity The opacity value.
    */
   constructor(h: number, s: number, l: number, readonly opacity: number) {
-    this.h = clampH(h);
-    this.s = clampS(s);
-    this.l = clampL(l);
+    this.h = HSLColorSpace.clampH(h);
+    this.s = HSLColorSpace.clampS(s);
+    this.l = HSLColorSpace.clampL(l);
   }
 
   /**
@@ -155,7 +156,7 @@ export class HSLColor implements Color {
    * @param measure The color difference formula.
    * @return The color difference.
    */
-  difference(other: Color, measure: ColorDifferenceMeasure = ciede2000): ColorDifference {
-    return measure(this.toLab(), other.toLab());
+  difference(other: Color, measure: ColorDifferenceMeasure = ciede2000()): ColorDifference {
+    return measure.compute(this.toLab(), other.toLab());
   }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ciede2000 } from './ciede2000';
+import { CIEDE2000 } from './ciede2000';
 
 describe('ciede2000', () => {
   /**
@@ -180,7 +180,8 @@ describe('ciede2000', () => {
     },
   ])('should compute color difference($expected) from Lab($lab1) and Lab($lab2)', ({ lab1, lab2, expected }) => {
     // Act
-    const actual = ciede2000({ ...lab1, opacity: 1.0 }, { ...lab2, opacity: 1.0 });
+    const measure = new CIEDE2000();
+    const actual = measure.compute({ ...lab1, opacity: 1.0 }, { ...lab2, opacity: 1.0 });
 
     // Assert
     expect(actual).toBeCloseTo(expected, 4);

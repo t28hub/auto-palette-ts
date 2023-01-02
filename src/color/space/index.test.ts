@@ -8,35 +8,35 @@ import { XYZColorSpace } from './xyz';
 import { hsl, lab, rgb, xyz } from './index';
 
 describe('color/space', () => {
-  it('should return HSLColorSpace', () => {
+  it('should create HSL color space', () => {
     // Act
     const actual = hsl();
 
     // Assert
-    expect(actual).toEqual(HSLColorSpace);
+    expect(actual).toBeInstanceOf(HSLColorSpace);
   });
 
-  it('should return LabColorSpace', () => {
+  it('should create CIE L*a*b* color space', () => {
     // Act
     const actual = lab();
 
     // Assert
-    expect(actual).toEqual(LabColorSpace);
+    expect(actual).toBeInstanceOf(LabColorSpace);
   });
 
-  it('should return RGBColorSpace', () => {
+  it('should create RGB color space', () => {
     // Act
     const actual = rgb();
 
     // Assert
-    expect(actual).toEqual(RGBColorSpace);
+    expect(actual).toBeInstanceOf(RGBColorSpace);
   });
 
-  it('should return XYZColorSpace', () => {
+  it('should create CIE XYZ color space', () => {
     // Act
     const actual = xyz();
 
     // Assert
-    expect(actual).toEqual(XYZColorSpace);
+    expect(actual).toBeInstanceOf(XYZColorSpace);
   });
 });

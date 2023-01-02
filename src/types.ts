@@ -107,7 +107,7 @@ export interface ColorDifferenceMeasure {
    * @param lab2 The 2nd CIE L*a*b* color.
    * @return The color delta between 2 colors.
    */
-  (lab1: Lab, lab2: Lab): ColorDifference;
+  compute(lab1: Lab, lab2: Lab): ColorDifference;
 }
 
 /**

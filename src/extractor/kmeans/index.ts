@@ -42,7 +42,7 @@ export class KmeansExtractor implements Extractor {
       const x = Math.floor((i / 4) % width);
       const y = Math.floor((i / 4 / width) % height);
 
-      // Weight the components corresponding to colors to prioritize color information.
+      // Normalize each value to a range of [0, 1].
       pixels.push([
         l / COLOR_NORMALIZE_FACTOR,
         a / COLOR_NORMALIZE_FACTOR,
