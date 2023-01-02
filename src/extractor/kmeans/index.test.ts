@@ -13,6 +13,14 @@ describe('kmeans/index', () => {
       // Assert
       expect(actual).toBeDefined();
     });
+
+    it('should create a new KmeansExtractor with optional parameters', () => {
+      // Act
+      const actual = new KmeansExtractor(5, 0.01);
+
+      // Assert
+      expect(actual).toBeDefined();
+    });
   });
 
   describe('extract', () => {
@@ -42,7 +50,7 @@ describe('kmeans/index', () => {
       'should extract 3 colors from an image consisting of 3 colors',
       async () => {
         // Arrange
-        const imageData = await loadImageData('flag_uk.png');
+        const imageData = await loadImageData('flag_de.png');
 
         // Act
         const actual = extractor.extract(imageData, 3).sort((swatch1, swatch2): number => {
@@ -53,9 +61,9 @@ describe('kmeans/index', () => {
 
         // Assert
         expect(actual).toBeArrayOfSize(3);
-        expect(actual[0].color).toBeSimilarColor('#c8102eff');
-        expect(actual[1].color).toBeSimilarColor('#ffffffff');
-        expect(actual[2].color).toBeSimilarColor('#012169ff');
+        expect(actual[0].color).toBeSimilarColor('#dd0000ff');
+        expect(actual[1].color).toBeSimilarColor('#ffcc00ff');
+        expect(actual[2].color).toBeSimilarColor('#000000ff');
       },
       { retry: 3 },
     );

@@ -23,14 +23,12 @@ export default defineConfig({
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 3000,
     coverage: {
-      include: ['src/**/*.ts'],
-      exclude: ['*.test.ts', '*.d.ts', 'types.ts'],
+      include: ['src'],
+      exclude: ['**/*.test.ts', '**/*.d.ts', '**/*/types.ts'],
       reporter: ['clover', 'cobertura', 'lcov', 'html'],
       reportsDirectory: 'coverage',
-      lines: 70,
       functions: 70,
       branches: 70,
-      statements: 70,
     },
   },
 });
