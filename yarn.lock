@@ -1180,12 +1180,12 @@
     sirv "^2.0.2"
 
 "@vitest/web-worker@^0.26.2":
-  version "0.26.2"
-  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.26.2.tgz#89aaab902dd86396372980f7676815970e8d47cd"
-  integrity sha512-Cq4StoaE2ITIXigJCOant22idI5X4udgQluLCmGmoUPQKZrDmHGVAcZB9KP+iQ1ckvk0sPemAUIWn0oMGGXu+g==
+  version "0.26.3"
+  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.26.3.tgz#efdbc55919947f6cb124d8b6accfbf389267d87b"
+  integrity sha512-qvgUf0Bn9cFgEH79u3dmrd2VDvRho/i3nu0+hfvfFm7seSwBWTkRkfrsPV+voZgC/vLrv7iqVC7tf6294EhkVA==
   dependencies:
     debug "^4.3.4"
-    vite-node "0.26.2"
+    vite-node "0.26.3"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -4690,6 +4690,18 @@ vite-node@0.26.2:
   version "0.26.2"
   resolved "https://registry.yarnpkg.com/vite-node/-/vite-node-0.26.2.tgz#2624236b9d68ea62c753572ee465fe4fa0657572"
   integrity sha512-4M/zlatItZAyvrQG+82zQBhgDjRZRhVJYFW4T9wcAKh7eMmSiPOVSeI5zsV9UzHXgCcIDKX0o0r3s4OxExTHqg==
+  dependencies:
+    debug "^4.3.4"
+    mlly "^1.0.0"
+    pathe "^0.2.0"
+    source-map "^0.6.1"
+    source-map-support "^0.5.21"
+    vite "^3.0.0 || ^4.0.0"
+
+vite-node@0.26.3:
+  version "0.26.3"
+  resolved "https://registry.yarnpkg.com/vite-node/-/vite-node-0.26.3.tgz#164fbaf449d5bd382b44b736653ba800397b5ebd"
+  integrity sha512-Te2bq0Bfvq6XiO718I+1EinMjpNYKws6SNHKOmVbILAQimKoZKDd+IZLlkaYcBXPpK3HFe2U80k8Zw+m3w/a2w==
   dependencies:
     debug "^4.3.4"
     mlly "^1.0.0"
