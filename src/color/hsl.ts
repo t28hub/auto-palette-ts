@@ -1,6 +1,6 @@
 import { Color, ColorDifference, PackedColor, ColorDifferenceMeasure, HSL, Lab, RGB } from '../types';
 
-import { ciede2000 } from './delta';
+import { ciede2000 } from './deltae';
 import { clampH, clampL, clampS, hsl, lab, rgb } from './space';
 
 /**

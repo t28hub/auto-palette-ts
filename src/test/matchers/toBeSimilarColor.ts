@@ -8,7 +8,7 @@ import {
 } from 'jest-matcher-utils';
 
 import { color } from '../../color';
-import { ciede2000 } from '../../color/delta';
+import { ciede2000 } from '../../color/deltae';
 import { Color } from '../../types';
 
 declare global {

@@ -1,4 +1,3 @@
-import { ciede2000 } from '../../color/delta';
 import { Coordinate, Swatch } from '../../types';
 
 /**
@@ -27,7 +26,7 @@ export class Node {
   distanceTo(other: Node): number {
     const color1 = this.swatch.color;
     const color2 = other.swatch.color;
-    return color1.difference(color2, ciede2000);
+    return color1.difference(color2);
   }
 
   /**

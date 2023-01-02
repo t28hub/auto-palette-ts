@@ -132,6 +132,8 @@ export interface Color extends AlphaChannel {
 
   mix(other: Color, fraction: number): Color;
 
+  difference(other: Color): ColorDifference;
+
   difference(other: Color, measure: ColorDifferenceMeasure): ColorDifference;
 }
 
