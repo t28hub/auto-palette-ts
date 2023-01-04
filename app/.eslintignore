@@ -1,6 +1,0 @@
-*.d.ts
-.yarn
-package.json
-node_modules
-coverage
-dist
