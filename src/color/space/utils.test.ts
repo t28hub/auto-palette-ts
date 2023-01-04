@@ -10,13 +10,16 @@ describe('utils', () => {
       { value: 0xffffffff, expected: true },
       { value: 'string', expected: false },
       { value: 0.001, expected: false },
-    ])('should return $expected when value === $value', ({ value, expected }) => {
-      // Act
-      const actual = isPackedColor(value);
+    ])(
+      'should return $expected when value === $value',
+      ({ value, expected }) => {
+        // Act
+        const actual = isPackedColor(value);
 
-      // Assert
-      expect(actual).toEqual(expected);
-    });
+        // Assert
+        expect(actual).toEqual(expected);
+      },
+    );
   });
 
   describe('asPackedColor', () => {

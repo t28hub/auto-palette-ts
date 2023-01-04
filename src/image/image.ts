@@ -49,7 +49,13 @@ export class CanvasElementImage implements Image {
   }
 
   async getImageData(): Promise<ImageData> {
-    return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height, { colorSpace: 'srgb' });
+    return this.context.getImageData(
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height,
+      { colorSpace: 'srgb' },
+    );
   }
 
   async resize(size: number): Promise<Image> {
@@ -77,7 +83,12 @@ export class ImageElementImage implements Image {
   }
   async getImageData(): Promise<ImageData> {
     const canvas = await this.loadCanvasElement();
-    return ensureContext2D(canvas).getImageData(0, 0, canvas.width, canvas.height);
+    return ensureContext2D(canvas).getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
   }
 
   async resize(size: number): Promise<Image> {

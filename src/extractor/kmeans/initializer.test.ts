@@ -77,13 +77,16 @@ describe('initializer', () => {
   });
 
   describe('createInitializer', () => {
-    it.each([{ name: 'kmeans++' }, { name: 'random' }])('should return $name initializer', ({ name }) => {
-      // Act
-      const actual = createInitializer(name as InitializerName);
+    it.each([{ name: 'kmeans++' }, { name: 'random' }])(
+      'should return $name initializer',
+      ({ name }) => {
+        // Act
+        const actual = createInitializer(name as InitializerName);
 
-      // Assert
-      expect(actual).toBeDefined();
-    });
+        // Assert
+        expect(actual).toBeDefined();
+      },
+    );
 
     it('should throw TypeError if name is unrecognized', () => {
       // Assert

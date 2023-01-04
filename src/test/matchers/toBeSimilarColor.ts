@@ -35,7 +35,11 @@ declare global {
  * @param threshold The allowed threshold.
  * @return The matcher result.
  */
-export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): jest.CustomMatcherResult {
+export function toBeSimilarColor(
+  received: Color,
+  expected: unknown,
+  threshold = 40.0,
+): jest.CustomMatcherResult {
   let expectedColor: Color | undefined;
   try {
     expectedColor = color(expected);

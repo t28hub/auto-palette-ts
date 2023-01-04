@@ -27,7 +27,11 @@ describe('extract', () => {
     view[9] = 0xff;
     view[10] = 0x00;
     view[11] = 0xff;
-    const imageData: ImageObject<Uint8ClampedArray> = { height: 1, width: 3, data: view };
+    const imageData: ImageObject<Uint8ClampedArray> = {
+      height: 1,
+      width: 3,
+      data: view,
+    };
 
     // Act
     const actual = extract(imageData, 'octree', 3);

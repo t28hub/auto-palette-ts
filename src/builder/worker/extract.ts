@@ -12,7 +12,11 @@ import { ExtractionResult } from '../types';
  * @return The array of feature color.
  * @throws {Error} if extraction is failed.
  */
-export function extract(imageData: ImageObject<ArrayBuffer>, method: Method, maxColors: number): ExtractionResult[] {
+export function extract(
+  imageData: ImageObject<ArrayBuffer>,
+  method: Method,
+  maxColors: number,
+): ExtractionResult[] {
   const { height, width, data } = imageData;
   const image: ImageObject<Uint8ClampedArray> = {
     height,

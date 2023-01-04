@@ -13,13 +13,16 @@ describe('id', () => {
       { value: '1882d24', expected: false },
       { value: '1882d24g', expected: false },
       { value: '1882d243c', expected: false },
-    ])('should return $expected when value === $value', ({ value, expected }) => {
-      // Act
-      const actual = isID(value);
+    ])(
+      'should return $expected when value === $value',
+      ({ value, expected }) => {
+        // Act
+        const actual = isID(value);
 
-      // Assert
-      expect(actual).toEqual(expected);
-    });
+        // Assert
+        expect(actual).toEqual(expected);
+      },
+    );
   });
 
   describe('asID', () => {

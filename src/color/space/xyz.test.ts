@@ -106,17 +106,20 @@ describe('xyz', () => {
   });
 
   describe('decode', () => {
-    it.each(fixtures)('should decode $value to XYZ($x, $y, $z, $opacity)', ({ value, x, y, z, opacity }) => {
-      // Act
-      const packed = asPackedColor(value);
-      const colorSpace = new XYZColorSpace();
-      const actual = colorSpace.decode(packed);
+    it.each(fixtures)(
+      'should decode $value to XYZ($x, $y, $z, $opacity)',
+      ({ value, x, y, z, opacity }) => {
+        // Act
+        const packed = asPackedColor(value);
+        const colorSpace = new XYZColorSpace();
+        const actual = colorSpace.decode(packed);
 
-      // Assert
-      expect(actual.x).toBeCloseTo(x);
-      expect(actual.y).toBeCloseTo(y);
-      expect(actual.z).toBeCloseTo(z);
-      expect(actual.opacity).toBeCloseTo(opacity);
-    });
+        // Assert
+        expect(actual.x).toBeCloseTo(x);
+        expect(actual.y).toBeCloseTo(y);
+        expect(actual.z).toBeCloseTo(z);
+        expect(actual.opacity).toBeCloseTo(opacity);
+      },
+    );
   });
 });

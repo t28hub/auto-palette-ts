@@ -15,7 +15,9 @@ export class OctreeExtractor implements Extractor {
 
   constructor(maxDepth = 5) {
     if (!Number.isInteger(maxDepth) || maxDepth < 1 || maxDepth > MAX_DEPTH) {
-      throw new TypeError(`The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`);
+      throw new TypeError(
+        `The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`,
+      );
     }
 
     const max = 1 << maxDepth;
@@ -25,7 +27,10 @@ export class OctreeExtractor implements Extractor {
     this.maxDepth = maxDepth;
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
+  extract(
+    imageData: ImageObject<Uint8ClampedArray>,
+    maxColors: number,
+  ): Swatch[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];

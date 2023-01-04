@@ -13,9 +13,13 @@ export class Vector<P extends Point> {
    * @throws {TypeError} if source contain invalid component.
    */
   constructor(source: P) {
-    const invalidIndex = source.findIndex((value: number): boolean => !Number.isFinite(value));
+    const invalidIndex = source.findIndex(
+      (value: number): boolean => !Number.isFinite(value),
+    );
     if (invalidIndex !== NO_INDEX) {
-      throw new TypeError(`The source contain infinite number at ${invalidIndex}`);
+      throw new TypeError(
+        `The source contain infinite number at ${invalidIndex}`,
+      );
     }
     this.components = [...source];
   }
@@ -76,7 +80,9 @@ export class Vector<P extends Point> {
     const components = other instanceof Vector ? other.components : other;
     for (let i = 0; i < this.dimension; i++) {
       if (!Number.isFinite(components[i])) {
-        throw new TypeError(`Component(${components[i]}) at ${i} is not finite number`);
+        throw new TypeError(
+          `Component(${components[i]}) at ${i} is not finite number`,
+        );
       }
       this.components[i] += components[i];
     }
@@ -108,7 +114,10 @@ export class Vector<P extends Point> {
    * @param distanceMeasure The distance measure to be used.
    * @return The distance to the other vector or point.
    */
-  distanceTo(other: Vector<P> | P, distanceMeasure: DistanceMeasure = EuclideanDistance): Distance {
+  distanceTo(
+    other: Vector<P> | P,
+    distanceMeasure: DistanceMeasure = EuclideanDistance,
+  ): Distance {
     const components = other instanceof Vector ? other.components : other;
     return distanceMeasure<P>(this.components, components);
   }

@@ -40,9 +40,12 @@ export function asID(value: string): ID {
  * @return The generated ID.
  */
 export function id(): ID {
-  const generated = Array.from({ length: 8 }).reduce((previous: string): string => {
-    const value = Math.round(Math.random() * 0xf);
-    return `${previous}${value.toString(16)}`;
-  }, '');
+  const generated = Array.from({ length: 8 }).reduce(
+    (previous: string): string => {
+      const value = Math.round(Math.random() * 0xf);
+      return `${previous}${value.toString(16)}`;
+    },
+    '',
+  );
   return asID(generated);
 }

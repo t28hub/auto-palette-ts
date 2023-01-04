@@ -1,5 +1,10 @@
 import { PaletteBuilder } from './builder';
-import { fromCanvasElement, fromImageData, fromImageElement, Image } from './image';
+import {
+  fromCanvasElement,
+  fromImageData,
+  fromImageElement,
+  Image,
+} from './image';
 import { Builder, ImageSource } from './types';
 
 export { Palette } from './palette';

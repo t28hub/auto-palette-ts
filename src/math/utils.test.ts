@@ -14,25 +14,31 @@ describe('utils', () => {
       { value: 101, min: 0, max: 100, expected: 100 },
       { value: Number.MIN_VALUE, min: 0, max: 100, expected: Number.MIN_VALUE },
       { value: Number.MAX_VALUE, min: 0, max: 100, expected: 100 },
-    ])('should clamp the given value($value) in [$min, $max]', ({ value, min, max, expected }) => {
-      // Act
-      const actual = clamp(value, min, max);
+    ])(
+      'should clamp the given value($value) in [$min, $max]',
+      ({ value, min, max, expected }) => {
+        // Act
+        const actual = clamp(value, min, max);
 
-      // Assert
-      expect(actual).toEqual(expected);
-    });
+        // Assert
+        expect(actual).toEqual(expected);
+      },
+    );
 
     it.each([
       { value: NaN, min: 0, max: 100 },
       { value: 50, min: NaN, max: 100 },
       { value: 50, min: 0, max: NaN },
-    ])('should throw TypeError if value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
-      // Assert
-      expect(() => {
-        // Act
-        clamp(value, min, max);
-      }).toThrowError(TypeError);
-    });
+    ])(
+      'should throw TypeError if value($value), min($min) or max($max) is invalid',
+      ({ value, min, max }) => {
+        // Assert
+        expect(() => {
+          // Act
+          clamp(value, min, max);
+        }).toThrowError(TypeError);
+      },
+    );
   });
 
   describe('degreeToRadian', () => {
@@ -43,13 +49,16 @@ describe('utils', () => {
       { degree: 180, radian: 3.1415 },
       { degree: 330, radian: 5.7596 },
       { degree: 360, radian: 6.2832 },
-    ])('should convert from degree($degree) to radian($radian)', ({ degree, radian }) => {
-      // Act
-      const actual = degreeToRadian(degree);
+    ])(
+      'should convert from degree($degree) to radian($radian)',
+      ({ degree, radian }) => {
+        // Act
+        const actual = degreeToRadian(degree);
 
-      // Assert
-      expect(actual).toBeCloseTo(radian);
-    });
+        // Assert
+        expect(actual).toBeCloseTo(radian);
+      },
+    );
   });
 
   describe('radianToDegree', () => {
@@ -60,12 +69,15 @@ describe('utils', () => {
       { degree: 180, radian: 3.1415 },
       { degree: 330, radian: 5.7596 },
       { degree: 360, radian: 6.2832 },
-    ])('should convert from radian($radian) to degree($degree)', ({ degree, radian }) => {
-      // Act
-      const actual = radianToDegree(radian);
+    ])(
+      'should convert from radian($radian) to degree($degree)',
+      ({ degree, radian }) => {
+        // Act
+        const actual = radianToDegree(radian);
 
-      // Assert
-      expect(actual).toBeCloseTo(degree, 1);
-    });
+        // Assert
+        expect(actual).toBeCloseTo(degree, 1);
+      },
+    );
   });
 });

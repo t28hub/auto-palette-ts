@@ -8,7 +8,12 @@ describe('kmeans', () => {
   describe('constructor', () => {
     it('should create a new Kmeans', () => {
       // Act
-      const actual = new Kmeans('random', SquaredEuclideanDistance, 15, Number.EPSILON);
+      const actual = new Kmeans(
+        'random',
+        SquaredEuclideanDistance,
+        15,
+        Number.EPSILON,
+      );
 
       // Assert
       expect(actual).toBeDefined();
@@ -19,12 +24,20 @@ describe('kmeans', () => {
       { maxIterations: 0, minDifference: 0.01 },
       { maxIterations: 10, minDifference: NaN },
       { maxIterations: 10, minDifference: -1.0 },
-    ])('should throw TypeError if parameters are invalid %p', ({ maxIterations, minDifference }) => {
-      // Assert
-      expect(() => {
-        new Kmeans('random', SquaredEuclideanDistance, maxIterations, minDifference);
-      }).toThrowError(TypeError);
-    });
+    ])(
+      'should throw TypeError if parameters are invalid %p',
+      ({ maxIterations, minDifference }) => {
+        // Assert
+        expect(() => {
+          new Kmeans(
+            'random',
+            SquaredEuclideanDistance,
+            maxIterations,
+            minDifference,
+          );
+        }).toThrowError(TypeError);
+      },
+    );
   });
 
   describe('classify', () => {

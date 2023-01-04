@@ -70,13 +70,16 @@ describe('bounds', () => {
       { point: [1, 2, 4], expected: true },
       { point: [2, 3, 4], expected: true },
       { point: [2, 4, 8], expected: true },
-    ])('should return $expected when point === $point', ({ point, expected }) => {
-      // Act
-      const bounds = new Bounds([1, 2, 4], [2, 4, 8]);
-      const actual = bounds.contains(point as Point3);
+    ])(
+      'should return $expected when point === $point',
+      ({ point, expected }) => {
+        // Act
+        const bounds = new Bounds([1, 2, 4], [2, 4, 8]);
+        const actual = bounds.contains(point as Point3);
 
-      // Assert
-      expect(actual).toEqual(expected);
-    });
+        // Assert
+        expect(actual).toEqual(expected);
+      },
+    );
   });
 });

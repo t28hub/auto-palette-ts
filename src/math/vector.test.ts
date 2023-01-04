@@ -134,7 +134,11 @@ describe('Vector', () => {
       });
     });
 
-    it.each([{ scalar: NaN }, { scalar: Number.POSITIVE_INFINITY }, { scalar: Number.NEGATIVE_INFINITY }])(
+    it.each([
+      { scalar: NaN },
+      { scalar: Number.POSITIVE_INFINITY },
+      { scalar: Number.NEGATIVE_INFINITY },
+    ])(
       'should throw TypeError if the given scalar(%d) is not finite number',
       ({ scalar }) => {
         const vector = new Vector([1, 2, 3]);

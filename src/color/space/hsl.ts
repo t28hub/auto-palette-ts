@@ -20,7 +20,9 @@ export class HSLColorSpace implements ColorSpace<HSL> {
    *
    * @param rgbColorSpace The rgb color space.
    */
-  constructor(private readonly rgbColorSpace: ColorSpace<RGB> = new RGBColorSpace()) {}
+  constructor(
+    private readonly rgbColorSpace: ColorSpace<RGB> = new RGBColorSpace(),
+  ) {}
 
   encode(color: HSL): PackedColor {
     const h = HSLColorSpace.clampH(color.h);

@@ -104,17 +104,20 @@ describe('lab', () => {
   });
 
   describe('decode', () => {
-    it.each(fixtures)('should decode $value to Lab($l, $a, $b, $opacity)', ({ value, l, a, b, opacity }) => {
-      // Act
-      const packed = asPackedColor(value);
-      const colorSpace = new LabColorSpace(D65);
-      const actual = colorSpace.decode(packed);
+    it.each(fixtures)(
+      'should decode $value to Lab($l, $a, $b, $opacity)',
+      ({ value, l, a, b, opacity }) => {
+        // Act
+        const packed = asPackedColor(value);
+        const colorSpace = new LabColorSpace(D65);
+        const actual = colorSpace.decode(packed);
 
-      // Assert
-      expect(actual.l).toBeCloseTo(l, 1);
-      expect(actual.a).toBeCloseTo(a, 1);
-      expect(actual.b).toBeCloseTo(b, 1);
-      expect(actual.opacity).toBeCloseTo(opacity);
-    });
+        // Assert
+        expect(actual.l).toBeCloseTo(l, 1);
+        expect(actual.a).toBeCloseTo(a, 1);
+        expect(actual.b).toBeCloseTo(b, 1);
+        expect(actual.opacity).toBeCloseTo(opacity);
+      },
+    );
   });
 });

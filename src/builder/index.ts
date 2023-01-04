@@ -25,7 +25,10 @@ export class PaletteBuilder implements Builder {
    * @param image The image object.
    * @param worker The worker instance.
    */
-  constructor(private readonly image: Image, private readonly worker: Worker = defaultWorker()) {
+  constructor(
+    private readonly image: Image,
+    private readonly worker: Worker = defaultWorker(),
+  ) {
     this.id = id();
   }
 
@@ -41,32 +44,42 @@ export class PaletteBuilder implements Builder {
     return await this.execute(imageData, merged);
   }
 
-  private execute(imageData: ImageObject<Uint8ClampedArray>, options: Options): Promise<Palette> {
+  private execute(
+    imageData: ImageObject<Uint8ClampedArray>,
+    options: Options,
+  ): Promise<Palette> {
     return new Promise((resolve, reject) => {
-      const message = this.buildRequestMessage(imageData, options.method, options.maxColors);
-      this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
-        if (event.data.payload.id !== this.id) {
-          return;
-        }
+      const message = this.buildRequestMessage(
+        imageData,
+        options.method,
+        options.maxColors,
+      );
+      this.worker.addEventListener(
+        'message',
+        (event: MessageEvent<Response>) => {
+          if (event.data.payload.id !== this.id) {
+            return;
+          }
 
-        const scaleX = this.image.width / imageData.width;
-        const scaleY = this.image.height / imageData.height;
-        try {
-          const swatches = this.onMessage(event).map((result): Swatch => {
-            return {
-              color: color(result.color),
-              population: result.population,
-              coordinate: {
-                x: Math.round(result.coordinate.x * scaleX),
-                y: Math.round(result.coordinate.y * scaleY),
-              },
-            };
-          });
-          resolve(new Palette(swatches));
-        } catch (e) {
-          reject(e);
-        }
-      });
+          const scaleX = this.image.width / imageData.width;
+          const scaleY = this.image.height / imageData.height;
+          try {
+            const swatches = this.onMessage(event).map((result): Swatch => {
+              return {
+                color: color(result.color),
+                population: result.population,
+                coordinate: {
+                  x: Math.round(result.coordinate.x * scaleX),
+                  y: Math.round(result.coordinate.y * scaleY),
+                },
+              };
+            });
+            resolve(new Palette(swatches));
+          } catch (e) {
+            reject(e);
+          }
+        },
+      );
 
       this.worker.addEventListener('error', (event: ErrorEvent) => {
         reject(new Error(event.message));

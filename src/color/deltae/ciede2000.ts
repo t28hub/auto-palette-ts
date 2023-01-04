@@ -54,7 +54,11 @@ export class CIEDE2000 implements ColorDifferenceMeasure {
    * @param kH The kH value.
    * @see [Wikipedia](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000).
    */
-  constructor(private readonly kL = 1.0, private readonly kC = 1.0, private readonly kH = 1.0) {}
+  constructor(
+    private readonly kL = 1.0,
+    private readonly kC = 1.0,
+    private readonly kH = 1.0,
+  ) {}
   compute(lab1: Lab, lab2: Lab): ColorDifference {
     const deltaLPrime = lab2.l - lab1.l;
     const lBar = (lab1.l + lab2.l) / 2.0;
@@ -75,7 +79,10 @@ export class CIEDE2000 implements ColorDifferenceMeasure {
     const hPrime1 = toHPrime(lab1.b, aPrime1);
     const hPrime2 = toHPrime(lab2.b, aPrime2);
     let deltaHPrime = toDeltaHPrime(c1, c2, hPrime1, hPrime2);
-    deltaHPrime = 2.0 * Math.sqrt(cPrime1 * cPrime2) * Math.sin(degreeToRadian(deltaHPrime) / 2.0);
+    deltaHPrime =
+      2.0 *
+      Math.sqrt(cPrime1 * cPrime2) *
+      Math.sin(degreeToRadian(deltaHPrime) / 2.0);
 
     const hBarPrime = toHBarPrime(hPrime1, hPrime2);
     const t =
@@ -85,7 +92,10 @@ export class CIEDE2000 implements ColorDifferenceMeasure {
       0.32 * Math.cos(degreeToRadian(3.0 * hBarPrime + 6.0)) -
       0.2 * Math.cos(degreeToRadian(4.0 * hBarPrime - 63.0));
 
-    const sL = 1.0 + (0.015 * Math.pow(lBar - 50.0, 2)) / Math.sqrt(20.0 + Math.pow(lBar - 50.0, 2));
+    const sL =
+      1.0 +
+      (0.015 * Math.pow(lBar - 50.0, 2)) /
+        Math.sqrt(20.0 + Math.pow(lBar - 50.0, 2));
     const sC = 1.0 + 0.045 * cBarPrime;
     const sH = 1.0 + 0.015 * cBarPrime * t;
 
@@ -93,7 +103,11 @@ export class CIEDE2000 implements ColorDifferenceMeasure {
     const rT =
       -2.0 *
       Math.sqrt(pow7CBarPrime / (pow7CBarPrime + POW7_25)) *
-      Math.sin(degreeToRadian(60.0 * Math.exp(-1.0 * Math.pow((hBarPrime - 275.0) / 25.0, 2))));
+      Math.sin(
+        degreeToRadian(
+          60.0 * Math.exp(-1.0 * Math.pow((hBarPrime - 275.0) / 25.0, 2)),
+        ),
+      );
 
     const l = deltaLPrime / (this.kL * sL);
     const c = deltaCPrime / (this.kC * sC);

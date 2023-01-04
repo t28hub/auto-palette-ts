@@ -178,12 +178,18 @@ describe('ciede2000', () => {
       lab2: { l: 0.9033, a: -0.0636, b: -0.5514 },
       expected: 0.9082,
     },
-  ])('should compute color difference($expected) from Lab($lab1) and Lab($lab2)', ({ lab1, lab2, expected }) => {
-    // Act
-    const measure = new CIEDE2000();
-    const actual = measure.compute({ ...lab1, opacity: 1.0 }, { ...lab2, opacity: 1.0 });
+  ])(
+    'should compute color difference($expected) from Lab($lab1) and Lab($lab2)',
+    ({ lab1, lab2, expected }) => {
+      // Act
+      const measure = new CIEDE2000();
+      const actual = measure.compute(
+        { ...lab1, opacity: 1.0 },
+        { ...lab2, opacity: 1.0 },
+      );
 
-    // Assert
-    expect(actual).toBeCloseTo(expected, 4);
-  });
+      // Assert
+      expect(actual).toBeCloseTo(expected, 4);
+    },
+  );
 });

@@ -42,11 +42,17 @@ export function toDistance(value: number): Distance {
  * @param point2 The 2nd point.
  * @return The squared euclidean distance.
  */
-export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
-  const squared = point1.reduce((total: number, value: number, index: number): number => {
-    const delta = point2[index] - value;
-    return total + delta * delta;
-  }, 0.0);
+export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(
+  point1: P,
+  point2: P,
+): Distance => {
+  const squared = point1.reduce(
+    (total: number, value: number, index: number): number => {
+      const delta = point2[index] - value;
+      return total + delta * delta;
+    },
+    0.0,
+  );
   return toDistance(squared);
 };
 
@@ -57,7 +63,10 @@ export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(point
  * @param point2 The 2nd point.
  * @return The euclidean distance.
  */
-export const EuclideanDistance: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
+export const EuclideanDistance: DistanceMeasure = <P extends Point>(
+  point1: P,
+  point2: P,
+): Distance => {
   const squared = SquaredEuclideanDistance<P>(point1, point2);
   return toDistance(Math.sqrt(squared));
 };

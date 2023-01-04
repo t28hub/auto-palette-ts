@@ -35,7 +35,12 @@ describe('index', () => {
       // Act
       const canvasElement = document.createElement('canvas');
       const { width, height } = canvasElement;
-      const imageData = ensureContext2D(canvasElement).getImageData(0, 0, width, height);
+      const imageData = ensureContext2D(canvasElement).getImageData(
+        0,
+        0,
+        width,
+        height,
+      );
       const actual = fromImageData(imageData);
 
       // Assert

@@ -17,9 +17,11 @@ export class Palette {
       throw new TypeError('The array of swatches is empty');
     }
 
-    this.swatches = [...swatches].sort((swatch1: Swatch, swatch2: Swatch): number => {
-      return swatch2.population - swatch1.population;
-    });
+    this.swatches = [...swatches].sort(
+      (swatch1: Swatch, swatch2: Swatch): number => {
+        return swatch2.population - swatch1.population;
+      },
+    );
   }
 
   /**

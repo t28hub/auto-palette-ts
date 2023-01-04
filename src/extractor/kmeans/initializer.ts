@@ -1,4 +1,10 @@
-import { toDistance, Distance, DistanceMeasure, Point, SquaredEuclideanDistance } from '../../math';
+import {
+  toDistance,
+  Distance,
+  DistanceMeasure,
+  Point,
+  SquaredEuclideanDistance,
+} from '../../math';
 
 /**
  * Interface to choose initial centroids.
@@ -50,7 +56,9 @@ const NO_INDEX = -1;
  * Kmeans++ centroid initializer.
  */
 export class KmeansPlusPlusInitializer implements Initializer {
-  constructor(private readonly distanceMeasure: DistanceMeasure = SquaredEuclideanDistance) {}
+  constructor(
+    private readonly distanceMeasure: DistanceMeasure = SquaredEuclideanDistance,
+  ) {}
 
   initialize<P extends Point>(points: P[], count: number): P[] {
     if (!Number.isInteger(count) || count <= 0) {
@@ -66,7 +74,11 @@ export class KmeansPlusPlusInitializer implements Initializer {
     return Array.from(selected.values());
   }
 
-  private selectRecursively<P extends Point>(data: P[], k: number, selected: Map<number, P>) {
+  private selectRecursively<P extends Point>(
+    data: P[],
+    k: number,
+    selected: Map<number, P>,
+  ) {
     if (selected.size === k) {
       return;
     }
@@ -114,7 +126,10 @@ export class KmeansPlusPlusInitializer implements Initializer {
     selected.set(targetIndex, data[targetIndex]);
   }
 
-  private computeNearestDistance<P extends Point>(point: P, selected: Map<number, P>): Distance {
+  private computeNearestDistance<P extends Point>(
+    point: P,
+    selected: Map<number, P>,
+  ): Distance {
     let minDistance: Distance = toDistance(Number.MAX_VALUE);
     for (const selectedPoint of selected.values()) {
       const distance = this.distanceMeasure<P>(point, selectedPoint);
@@ -125,7 +140,10 @@ export class KmeansPlusPlusInitializer implements Initializer {
     return minDistance;
   }
 
-  private static selectRandomly<P extends Point>(data: P[], selected: Map<number, P>) {
+  private static selectRandomly<P extends Point>(
+    data: P[],
+    selected: Map<number, P>,
+  ) {
     let index = NO_INDEX;
     do {
       index = Math.floor(Math.random() * data.length);
@@ -154,8 +172,12 @@ export type InitializerName = keyof InitializerMap;
  * @return The instance of initializer corresponding to the method name.
  * @throws {TypeError} if the method name is unrecognized.
  */
-export function createInitializer<T extends InitializerName>(name: T): InitializerMap[T];
-export function createInitializer<T extends InitializerName>(name: T): Initializer {
+export function createInitializer<T extends InitializerName>(
+  name: T,
+): InitializerMap[T];
+export function createInitializer<T extends InitializerName>(
+  name: T,
+): Initializer {
   switch (name) {
     case 'kmeans++': {
       return new KmeansPlusPlusInitializer();

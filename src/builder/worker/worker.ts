@@ -14,7 +14,11 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
   switch (type) {
     case 'request': {
       try {
-        const results = extract(payload.imageObject, payload.method, payload.maxColors);
+        const results = extract(
+          payload.imageObject,
+          payload.method,
+          payload.maxColors,
+        );
         const message: ResponseMessage = {
           type: 'response',
           payload: { id: payload.id, results },
@@ -23,7 +27,10 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
       } catch (e) {
         const message: ErrorResponseMessage = {
           type: 'error',
-          payload: { id: payload.id, message: `Failed to extract colors: ${e}` },
+          payload: {
+            id: payload.id,
+            message: `Failed to extract colors: ${e}`,
+          },
         };
         self.postMessage(message);
       }

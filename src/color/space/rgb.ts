@@ -24,7 +24,8 @@ export class RGBColorSpace implements ColorSpace<RGB> {
     const a = Math.round(opacity * MAX_RGB);
 
     // Force conversion to uint32.
-    const packed = ((r << SHIFT_R) | (g << SHIFT_G) | (b << SHIFT_B) | (a << SHIFT_A)) >>> 0;
+    const packed =
+      ((r << SHIFT_R) | (g << SHIFT_G) | (b << SHIFT_B) | (a << SHIFT_A)) >>> 0;
     return asPackedColor(packed);
   }
 
