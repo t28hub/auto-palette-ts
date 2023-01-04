@@ -1,4 +1,4 @@
-name: Find license compliance and security issues
+name: FOSSA
 
 on:
   schedule:
