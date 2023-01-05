@@ -26,11 +26,19 @@
   "globals": {},
   "overrides": [
     {
-      "files": ["*.svelte"],
+      "files": ["**/*.svelte"],
       "processor": "svelte3/svelte3"
     }
   ],
   "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".ts"
+        ]
+      }
+    },
     "svelte3/typescript": true
   },
   "rules": {
@@ -56,7 +64,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["vite.config.ts", "**/*.test.ts"]
+        "devDependencies": true
       }
     ],
     "no-unused-vars": [
