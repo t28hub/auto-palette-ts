@@ -42,7 +42,6 @@
     ctx: CanvasRenderingContext2D,
     imageElement: HTMLImageElement,
   ) {
-    console.info({ ctx, imageElement });
     if (!ctx || !imageElement) {
       return;
     }
@@ -77,5 +76,5 @@
 </script>
 
 <div>
-  <canvas bind:this={canvas} {width} {height} />
+  <canvas data-testid="canvas" bind:this={canvas} {width} {height} />
 </div>
