@@ -12,16 +12,13 @@ describe('extractor/index', () => {
     it.each([
       { algorithm: 'kmeans', expected: KmeansExtractor },
       { algorithm: 'octree', expected: OctreeExtractor },
-    ])(
-      'should create $expected from option($options)',
-      ({ algorithm, expected }) => {
-        // Act
-        const actual = createExtractor(algorithm as Method);
+    ])('should create $expected from option($options)', ({ algorithm, expected }) => {
+      // Act
+      const actual = createExtractor(algorithm as Method);
 
-        // Assert
-        expect(actual).toBeInstanceOf(expected);
-      },
-    );
+      // Assert
+      expect(actual).toBeInstanceOf(expected);
+    });
 
     it('should throw Error when algorithm is unrecognized', () => {
       // Assert

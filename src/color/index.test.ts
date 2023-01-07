@@ -34,12 +34,7 @@ describe('index', () => {
     expect(actual).toMatchObject(hsl);
   });
 
-  it.each([
-    { value: null },
-    { value: undefined },
-    { value: [] },
-    { value: {} },
-  ])(
+  it.each([{ value: null }, { value: undefined }, { value: [] }, { value: {} }])(
     'should throw TypeError if the value($value) is not supported',
     ({ value }) => {
       // Assert

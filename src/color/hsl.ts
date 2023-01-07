@@ -1,12 +1,4 @@
-import {
-  Color,
-  ColorDifference,
-  PackedColor,
-  ColorDifferenceMeasure,
-  HSL,
-  Lab,
-  RGB,
-} from '../types';
+import { Color, ColorDifference, PackedColor, ColorDifferenceMeasure, HSL, Lab, RGB } from '../types';
 
 import { ciede2000 } from './deltae';
 import { hsl, lab, rgb } from './space';
@@ -164,10 +156,7 @@ export class HSLColor implements Color {
    * @param measure The color difference formula.
    * @return The color difference.
    */
-  difference(
-    other: Color,
-    measure: ColorDifferenceMeasure = ciede2000(),
-  ): ColorDifference {
+  difference(other: Color, measure: ColorDifferenceMeasure = ciede2000()): ColorDifference {
     return measure.compute(this.toLab(), other.toLab());
   }
 }

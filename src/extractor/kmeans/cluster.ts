@@ -1,11 +1,4 @@
-import {
-  Distance,
-  DistanceMeasure,
-  EuclideanDistance,
-  Point,
-  toDistance,
-  Vector,
-} from '../../math';
+import { Distance, DistanceMeasure, EuclideanDistance, Point, toDistance, Vector } from '../../math';
 
 export class Cluster<P extends Point> {
   private readonly centroid: Vector<P>;
@@ -18,10 +11,7 @@ export class Cluster<P extends Point> {
    * @param distanceMeasure The distance measure.
    * @throws {TypeError} if the initial centroid is invalid.
    */
-  constructor(
-    initialCentroid: P,
-    private readonly distanceMeasure: DistanceMeasure = EuclideanDistance,
-  ) {
+  constructor(initialCentroid: P, private readonly distanceMeasure: DistanceMeasure = EuclideanDistance) {
     this.centroid = new Vector(initialCentroid);
     this.children = [];
   }

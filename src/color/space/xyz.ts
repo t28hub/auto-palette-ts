@@ -38,9 +38,7 @@ export class XYZColorSpace implements ColorSpace<XYZ> {
    *
    * @param rgbColorSpace The rgb color space.
    */
-  constructor(
-    private readonly rgbColorSpace: ColorSpace<RGB> = new RGBColorSpace(),
-  ) {}
+  constructor(private readonly rgbColorSpace: ColorSpace<RGB> = new RGBColorSpace()) {}
 
   encode(color: XYZ): PackedColor {
     const x = XYZColorSpace.clampX(color.x);
@@ -77,15 +75,9 @@ export class XYZColorSpace implements ColorSpace<XYZ> {
     const fg = f(rgb.g / 0xff);
     const fb = f(rgb.b / 0xff);
 
-    const x = XYZColorSpace.clampX(
-      0.412391 * fr + 0.357584 * fg + 0.180481 * fb,
-    );
-    const y = XYZColorSpace.clampY(
-      0.212639 * fr + 0.715169 * fg + 0.072192 * fb,
-    );
-    const z = XYZColorSpace.clampZ(
-      0.019331 * fr + 0.119195 * fg + 0.950532 * fb,
-    );
+    const x = XYZColorSpace.clampX(0.412391 * fr + 0.357584 * fg + 0.180481 * fb);
+    const y = XYZColorSpace.clampY(0.212639 * fr + 0.715169 * fg + 0.072192 * fb);
+    const z = XYZColorSpace.clampZ(0.019331 * fr + 0.119195 * fg + 0.950532 * fb);
     return { x, y, z, opacity: rgb.opacity };
   }
 

@@ -18,16 +18,13 @@ describe('utils', () => {
       { value: Number.MIN_SAFE_INTEGER, expected: false },
       { value: Number.NEGATIVE_INFINITY, expected: false },
       { value: Number.POSITIVE_INFINITY, expected: false },
-    ])(
-      'should return $expected when value == $value',
-      ({ value, expected }) => {
-        // Act
-        const actual = isColorDifference(value);
+    ])('should return $expected when value == $value', ({ value, expected }) => {
+      // Act
+      const actual = isColorDifference(value);
 
-        // Assert
-        expect(actual).toEqual(expected);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('asColorDifference', () => {

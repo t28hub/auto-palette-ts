@@ -1,0 +1,11 @@
+.DS_Store
+node_modules
+/build
+/coverage
+/demo
+/dist
+/package
+.env
+.env.*
+!.env.example
+yarn.lock

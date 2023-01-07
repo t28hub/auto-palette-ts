@@ -25,14 +25,10 @@ export class Kmeans<P extends Point> {
     private readonly minDifference: number,
   ) {
     if (!Number.isInteger(maxIterations) || maxIterations <= 0) {
-      throw new TypeError(
-        `The max iteration(${maxIterations}) is not positive integer`,
-      );
+      throw new TypeError(`The max iteration(${maxIterations}) is not positive integer`);
     }
     if (!Number.isFinite(minDifference) || minDifference < 0) {
-      throw new TypeError(
-        `The min difference(${minDifference}) is not positive number`,
-      );
+      throw new TypeError(`The min difference(${minDifference}) is not positive number`);
     }
     this.initializer = createInitializer(initializationMethod);
   }
@@ -47,9 +43,7 @@ export class Kmeans<P extends Point> {
    */
   classify(points: P[], size: number): Cluster<P>[] {
     if (!Number.isInteger(size) || size <= 0) {
-      throw new TypeError(
-        `The size(${size}) of cluster must be positive integer`,
-      );
+      throw new TypeError(`The size(${size}) of cluster must be positive integer`);
     }
 
     if (points.length <= size) {
@@ -91,10 +85,7 @@ export class Kmeans<P extends Point> {
     return updated;
   }
 
-  private static findNearestCluster<P extends Point>(
-    clusters: Cluster<P>[],
-    point: P,
-  ): Cluster<P> {
+  private static findNearestCluster<P extends Point>(clusters: Cluster<P>[], point: P): Cluster<P> {
     let nearestCluster: Cluster<P> = clusters[0];
     let minDistance = nearestCluster.distanceTo(point);
     for (let i = 1; i < clusters.length; i++) {

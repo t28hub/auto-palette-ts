@@ -32,13 +32,11 @@ describe('kmeans/index', () => {
         const imageData = await loadImageData('flag_gr.png');
 
         // Act
-        const actual = extractor
-          .extract(imageData, 2)
-          .sort((swatch1, swatch2): number => {
-            const hsl1 = swatch1.color.toHSL();
-            const hsl2 = swatch2.color.toHSL();
-            return hsl2.h - hsl1.h;
-          });
+        const actual = extractor.extract(imageData, 2).sort((swatch1, swatch2): number => {
+          const hsl1 = swatch1.color.toHSL();
+          const hsl2 = swatch2.color.toHSL();
+          return hsl2.h - hsl1.h;
+        });
 
         // Assert
         expect(actual).toBeArrayOfSize(2);
@@ -55,13 +53,11 @@ describe('kmeans/index', () => {
         const imageData = await loadImageData('flag_de.png');
 
         // Act
-        const actual = extractor
-          .extract(imageData, 3)
-          .sort((swatch1, swatch2): number => {
-            const hsl1 = swatch1.color.toHSL();
-            const hsl2 = swatch2.color.toHSL();
-            return hsl2.h - hsl1.h;
-          });
+        const actual = extractor.extract(imageData, 3).sort((swatch1, swatch2): number => {
+          const hsl1 = swatch1.color.toHSL();
+          const hsl2 = swatch2.color.toHSL();
+          return hsl2.h - hsl1.h;
+        });
 
         // Assert
         expect(actual).toBeArrayOfSize(3);
@@ -79,13 +75,11 @@ describe('kmeans/index', () => {
         const imageData = await loadImageData('flag_br.png');
 
         // Act
-        const actual = extractor
-          .extract(imageData, 4)
-          .sort((swatch1, swatch2): number => {
-            const hsl1 = swatch1.color.toHSL();
-            const hsl2 = swatch2.color.toHSL();
-            return hsl2.h - hsl1.h;
-          });
+        const actual = extractor.extract(imageData, 4).sort((swatch1, swatch2): number => {
+          const hsl1 = swatch1.color.toHSL();
+          const hsl2 = swatch2.color.toHSL();
+          return hsl2.h - hsl1.h;
+        });
 
         // Assert
         expect(actual).toBeArrayOfSize(4);
@@ -104,13 +98,11 @@ describe('kmeans/index', () => {
         const imageData = await loadImageData('flag_sc.png');
 
         // Act
-        const actual = extractor
-          .extract(imageData, 5)
-          .sort((swatch1, swatch2): number => {
-            const hsl1 = swatch1.color.toHSL();
-            const hsl2 = swatch2.color.toHSL();
-            return hsl2.h - hsl1.h;
-          });
+        const actual = extractor.extract(imageData, 5).sort((swatch1, swatch2): number => {
+          const hsl1 = swatch1.color.toHSL();
+          const hsl2 = swatch2.color.toHSL();
+          return hsl2.h - hsl1.h;
+        });
 
         // Assert
         expect(actual).toBeArrayOfSize(5);
@@ -130,13 +122,11 @@ describe('kmeans/index', () => {
         const imageData = await loadImageData('flag_za.png');
 
         // Act
-        const actual = extractor
-          .extract(imageData, 6)
-          .sort((swatch1, swatch2): number => {
-            const hsl1 = swatch1.color.toHSL();
-            const hsl2 = swatch2.color.toHSL();
-            return hsl2.h - hsl1.h;
-          });
+        const actual = extractor.extract(imageData, 6).sort((swatch1, swatch2): number => {
+          const hsl1 = swatch1.color.toHSL();
+          const hsl2 = swatch2.color.toHSL();
+          return hsl2.h - hsl1.h;
+        });
 
         // Assert
         expect(actual).toBeArrayOfSize(6);

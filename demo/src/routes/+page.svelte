@@ -10,7 +10,7 @@
 </svelte:head>
 
 <section class="prose">
-  <h1>Hello, world!</h1>
+  <h1>Auto Palette</h1>
   <Background photo={$currentPhoto} />
   <Canvas src={$currentPhoto.url} width="600" height="500" />
 </section>

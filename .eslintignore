@@ -1,8 +1,8 @@
 *.d.ts
+.DS_Store
 .yarn
 package.json
 node_modules
-
 coverage
 demo
 dist

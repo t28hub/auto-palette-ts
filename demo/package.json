@@ -10,9 +10,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint './src/**/*.{ts,svelte}'",
     "test": "vitest run --coverage",
-    "format": "prettier --ignore-path .eslintignore --write ./src/**/*.{ts,svelte}"
+    "lint": "prettier --plugin-search-dir . --check . && eslint .",
+    "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
     "blurhash": "^2.0.4"
@@ -29,13 +29,14 @@
     "autoprefixer": "^10.4.13",
     "canvas": "^2.11.0",
     "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "eslint-plugin-tailwindcss": "^3.8.0",
     "jsdom": "^20.0.3",
     "postcss": "^8.4.20",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.2",
     "prettier-plugin-svelte": "^2.9.0",
     "svelte": "^3.54.0",
     "svelte-check": "^2.10.0",

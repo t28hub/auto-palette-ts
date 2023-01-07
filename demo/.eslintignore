@@ -1,6 +1,16 @@
 *.d.ts
+.DS_Store
 .yarn
+.svelte-kit
 package.json
 node_modules
+build
 coverage
 dist
+package
+
+.env
+.env.*
+!.env.example
+
+yarn.lock

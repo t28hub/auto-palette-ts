@@ -1,7 +1,8 @@
 <script lang="ts">
   import { decode } from 'blurhash';
   import { onMount, tick } from 'svelte';
-  import type { Photo } from '../stores/photo';
+
+  import type { Photo } from '$lib/stores/photo';
 
   export let photo: Photo;
 
@@ -45,10 +46,5 @@
 <svelte:window on:resize|passive={resize} />
 
 <div class="w-full h-full absolute top-0 left-0 -z-50">
-  <canvas
-    bind:this={canvas}
-    width="{screenWidth}"
-    height="{screenHeight}"
-  >
-  </canvas>
+  <canvas bind:this={canvas} width={screenWidth} height={screenHeight} />
 </div>

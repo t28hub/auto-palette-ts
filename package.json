@@ -40,11 +40,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint": "eslint .",
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
     "test": "vitest run --coverage",
     "test:ui": "vitest run --coverage --ui",
-    "format": "prettier --ignore-path .eslintignore --list-different --write .",
+    "format": "prettier --plugin-search-dir . --list-different --write .",
     "prebuild": "yarn clean",
     "build": "tsc && vite build",
     "prepare": "husky install"

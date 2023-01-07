@@ -32,16 +32,13 @@ describe('rgb', () => {
       { value: 255, expected: 255 },
       { value: 256, expected: 255 },
       { value: 1024, expected: 255 },
-    ])(
-      'should return clamped value($expected) when the value is $value',
-      ({ value, expected }) => {
-        // Act
-        const actual = RGBColorSpace.clampValue(value);
+    ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
+      // Act
+      const actual = RGBColorSpace.clampValue(value);
 
-        // Assert
-        expect(actual).toEqual(expected);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('constructor', () => {
@@ -55,32 +52,26 @@ describe('rgb', () => {
   });
 
   describe('encode', () => {
-    it.each(fixtures)(
-      'should encode RGB($r, $g, $b, $opacity) to $value',
-      ({ value, r, g, b, opacity }) => {
-        // Act
-        const colorSpace = new RGBColorSpace();
-        const actual = colorSpace.encode({ r, g, b, opacity });
+    it.each(fixtures)('should encode RGB($r, $g, $b, $opacity) to $value', ({ value, r, g, b, opacity }) => {
+      // Act
+      const colorSpace = new RGBColorSpace();
+      const actual = colorSpace.encode({ r, g, b, opacity });
 
-        // Assert
-        expect(actual).toEqual(value);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(value);
+    });
   });
 
   describe('decode', () => {
-    it.each(fixtures)(
-      'should decode $value to RGB($r, $g, $b, $opacity)',
-      ({ value, r, g, b, opacity }) => {
-        // Act
-        const packed = asPackedColor(value);
-        const colorSpace = new RGBColorSpace();
-        const actual = colorSpace.decode(packed);
+    it.each(fixtures)('should decode $value to RGB($r, $g, $b, $opacity)', ({ value, r, g, b, opacity }) => {
+      // Act
+      const packed = asPackedColor(value);
+      const colorSpace = new RGBColorSpace();
+      const actual = colorSpace.decode(packed);
 
-        // Assert
-        expect(actual).toMatchObject({ r, g, b });
-        expect(actual.opacity).toBeCloseTo(opacity);
-      },
-    );
+      // Assert
+      expect(actual).toMatchObject({ r, g, b });
+      expect(actual.opacity).toBeCloseTo(opacity);
+    });
   });
 });

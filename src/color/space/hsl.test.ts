@@ -40,16 +40,13 @@ describe('hsl', () => {
       { value: -1, expected: 359 },
       { value: -60, expected: 300 },
       { value: NaN, expected: 0 },
-    ])(
-      'should clamp the value($value) to valid hue($expected)',
-      ({ value, expected }) => {
-        // Act
-        const actual = HSLColorSpace.clampH(value);
+    ])('should clamp the value($value) to valid hue($expected)', ({ value, expected }) => {
+      // Act
+      const actual = HSLColorSpace.clampH(value);
 
-        // Assert
-        expect(actual).toEqual(expected);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('clampS', () => {
@@ -60,16 +57,13 @@ describe('hsl', () => {
       { value: 1.5, expected: 1.0 },
       { value: -0.5, expected: 0.0 },
       { value: NaN, expected: 0.0 },
-    ])(
-      'should clamp the value($value) to valid saturation($expected)',
-      ({ value, expected }) => {
-        // Act
-        const actual = HSLColorSpace.clampS(value);
+    ])('should clamp the value($value) to valid saturation($expected)', ({ value, expected }) => {
+      // Act
+      const actual = HSLColorSpace.clampS(value);
 
-        // Assert
-        expect(actual).toEqual(expected);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('clampL', () => {
@@ -80,16 +74,13 @@ describe('hsl', () => {
       { value: 1.5, expected: 1.0 },
       { value: -0.5, expected: 0.0 },
       { value: NaN, expected: 0.0 },
-    ])(
-      'should clamp the value($value) to valid lightness($expected)',
-      ({ value, expected }) => {
-        // Act
-        const actual = HSLColorSpace.clampL(value);
+    ])('should clamp the value($value) to valid lightness($expected)', ({ value, expected }) => {
+      // Act
+      const actual = HSLColorSpace.clampL(value);
 
-        // Assert
-        expect(actual).toEqual(expected);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(expected);
+    });
   });
 
   describe('constructor', () => {
@@ -111,34 +102,28 @@ describe('hsl', () => {
   });
 
   describe('encode', () => {
-    it.each(fixtures)(
-      'should encode HSL($h, $s, $l, $opacity) to $value',
-      ({ value, h, s, l, opacity }) => {
-        // Act
-        const colorSpace = new HSLColorSpace();
-        const actual = colorSpace.encode({ h, s, l, opacity });
+    it.each(fixtures)('should encode HSL($h, $s, $l, $opacity) to $value', ({ value, h, s, l, opacity }) => {
+      // Act
+      const colorSpace = new HSLColorSpace();
+      const actual = colorSpace.encode({ h, s, l, opacity });
 
-        // Assert
-        expect(actual).toEqual(value);
-      },
-    );
+      // Assert
+      expect(actual).toEqual(value);
+    });
   });
 
   describe('decode', () => {
-    it.each(fixtures)(
-      'should decode $value to HSL($h, $s, $l, $opacity)',
-      ({ value, h, s, l, opacity }) => {
-        // Act
-        const packed = asPackedColor(value);
-        const colorSpace = new HSLColorSpace();
-        const actual = colorSpace.decode(packed);
+    it.each(fixtures)('should decode $value to HSL($h, $s, $l, $opacity)', ({ value, h, s, l, opacity }) => {
+      // Act
+      const packed = asPackedColor(value);
+      const colorSpace = new HSLColorSpace();
+      const actual = colorSpace.decode(packed);
 
-        // Assert
-        expect(actual.h).toBeCloseTo(h);
-        expect(actual.s).toBeCloseTo(s);
-        expect(actual.l).toBeCloseTo(l);
-        expect(actual.opacity).toBeCloseTo(opacity);
-      },
-    );
+      // Assert
+      expect(actual.h).toBeCloseTo(h);
+      expect(actual.s).toBeCloseTo(s);
+      expect(actual.l).toBeCloseTo(l);
+      expect(actual.opacity).toBeCloseTo(opacity);
+    });
   });
 });

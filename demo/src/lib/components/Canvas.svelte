@@ -4,7 +4,6 @@
   export let src: string = '';
   export let width: number = 300;
   export let height: number = 150;
-  export let settings: CanvasRenderingContext2DSettings = {};
 
   let image: HTMLImageElement;
 
@@ -12,7 +11,7 @@
   let context: CanvasRenderingContext2D;
 
   onMount(() => {
-    context = canvas.getContext('2d', settings);
+    context = canvas.getContext('2d', { colorSpace: 'srgb' });
     loadImage(src);
   });
 
@@ -38,10 +37,7 @@
 
   $: loadImage(src);
 
-  function drawImage(
-    ctx: CanvasRenderingContext2D,
-    imageElement: HTMLImageElement
-  ) {
+  function drawImage(ctx: CanvasRenderingContext2D, imageElement: HTMLImageElement) {
     if (!ctx || !imageElement) {
       return;
     }
@@ -59,17 +55,7 @@
     const scaledHeight = Math.round(imageHeight * scale);
     const positionX = Math.round((width - scaledWidth) / 2.0);
     const positionY = Math.round((height - scaledHeight) / 2.0);
-    context.drawImage(
-      imageElement,
-      0,
-      0,
-      imageWidth,
-      imageHeight,
-      positionX,
-      positionY,
-      scaledWidth,
-      scaledHeight
-    );
+    context.drawImage(imageElement, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
   }
 
   $: drawImage(context, image);

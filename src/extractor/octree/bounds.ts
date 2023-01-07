@@ -21,18 +21,14 @@ export class Bounds {
   constructor(min: Point3, max: Point3) {
     this.min = min.map((value: number, index: number): number => {
       if (!Number.isFinite(value)) {
-        throw new TypeError(
-          `The min point contains invalid value(${value}) at ${index}`,
-        );
+        throw new TypeError(`The min point contains invalid value(${value}) at ${index}`);
       }
       return value;
     }) as Point3;
 
     this.max = max.map((value: number, index: number): number => {
       if (!Number.isFinite(value)) {
-        throw new TypeError(
-          `The max point contains invalid value(${value}) at ${index}`,
-        );
+        throw new TypeError(`The max point contains invalid value(${value}) at ${index}`);
       }
       return value;
     }) as Point3;
