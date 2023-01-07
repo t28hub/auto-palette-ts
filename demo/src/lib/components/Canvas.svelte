@@ -13,30 +13,30 @@
 
   onMount(() => {
     context = canvas.getContext('2d', settings);
+    loadImage(src);
   });
 
-  function loadImage(src: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = window.document.createElement('img');
-      image.onload = () => {
-        resolve(image);
-      };
+  function loadImage(url: string) {
+    if (typeof window === 'undefined') {
+      return;
+    }
 
-      image.onerror = (cause) => {
-        reject(cause);
-      };
+    const img = window.document.createElement('img');
+    img.onload = () => {
+      image = img;
+    };
+    img.onerror = (cause) => {
+      console.warn(cause);
+    };
 
-      image.crossOrigin = 'Anonymous';
-      image.src = src;
-      if (image.complete) {
-        resolve(image);
-      }
-    });
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+    if (img.complete) {
+      image = img;
+    }
   }
 
-  $: loadImage(src).then((img) => {
-    image = img;
-  });
+  $: loadImage(src);
 
   function drawImage(
     ctx: CanvasRenderingContext2D,

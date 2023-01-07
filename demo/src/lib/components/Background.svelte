@@ -5,13 +5,16 @@
 
   export let photo: Photo;
 
-  let screenWidth: number = window.innerWidth;
-  let screenHeight: number = window.innerHeight;
-  let devicePixelRatio: number = window.devicePixelRatio;
+  let screenWidth: number;
+  let screenHeight: number;
+  let devicePixelRatio: number;
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D | undefined;
   onMount(() => {
+    screenWidth = window.innerWidth;
+    screenHeight = window.innerHeight;
+    devicePixelRatio = window.devicePixelRatio;
     context = canvas.getContext('2d', { colorSpace: 'srgb', willReadFrequently: true });
   });
 
@@ -41,11 +44,11 @@
 
 <svelte:window on:resize|passive={resize} />
 
-<div class="w-full h-full position-absolute top-0 left-0 -z-50 bg-slate-200">
+<div class="w-full h-full absolute top-0 left-0 -z-50">
   <canvas
     bind:this={canvas}
-    width="{screenWidth * devicePixelRatio}"
-    height="{screenHeight * devicePixelRatio}"
+    width="{screenWidth}"
+    height="{screenHeight}"
   >
   </canvas>
 </div>

@@ -1,9 +1,12 @@
 # JavaScript or Node.js
+.svelte-kit/
 node_modules/
+build/
 coverage/
 dist/
 dist-ssr/
 html/
+package/
 *.local
 .yarn/*
 
