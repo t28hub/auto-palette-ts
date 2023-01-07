@@ -27,7 +27,7 @@ module.exports = {
     'import/order': [
       'error',
       {
-        'newlines-between': 'always',
+        'newlines-between': 'never',
         alphabetize: {
           order: 'asc',
           caseInsensitive: true
@@ -36,56 +36,3 @@ module.exports = {
     ]
   }
 };
-// {
-//   "globals": {},
-//   "overrides": [
-//     {
-//       "files": ["**/*.svelte"],
-//       "processor": "svelte3/svelte3"
-//     }
-//   ],
-//   "settings": {
-//     "import/resolver": {
-//       "node": {
-//         "extensions": [".js", ".ts"]
-//       }
-//     },
-//     "svelte3/typescript": true
-//   },
-//   "rules": {
-//     "import/extensions": [
-//       "error",
-//       "ignorePackages",
-//       {
-//         "js": "never",
-//         "ts": "never",
-//         "svelte": "never"
-//       }
-//     ],
-//     "import/order": [
-//       "error",
-//       {
-//         "newlines-between": "always",
-//         "alphabetize": {
-//           "order": "asc",
-//           "caseInsensitive": true
-//         }
-//       }
-//     ],
-//     "import/no-extraneous-dependencies": [
-//       "error",
-//       {
-//         "devDependencies": true
-//       }
-//     ],
-//     "no-unused-vars": [
-//       "error",
-//       {
-//         "argsIgnorePattern": "^_",
-//         "varsIgnorePattern": "^_",
-//         "destructuredArrayIgnorePattern": "^_"
-//       }
-//     ],
-//     "unused-imports/no-unused-imports": ["error"]
-//   }
-// }

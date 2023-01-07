@@ -1,4 +1,5 @@
 *.d.ts
+*.cjs
 .DS_Store
 .yarn
 .svelte-kit

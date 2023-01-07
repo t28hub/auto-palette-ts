@@ -35,7 +35,7 @@ export const photos = readable<Photo[]>([
 ]);
 
 export const currentPhoto = derived<typeof photos, Photo | undefined>(photos, ($photos): Photo | undefined => {
-  const index = Math.round(Math.random() * $photos.length);
+  const index = Math.floor(Math.random() * $photos.length);
   const photo = $photos.at(index);
   if (!photo) {
     return undefined;

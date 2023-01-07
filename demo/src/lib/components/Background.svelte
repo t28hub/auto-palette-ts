@@ -30,7 +30,6 @@
     const pixels = decode(photo.blurhash, width, height);
     const imageData = context.createImageData(width, height, { colorSpace: 'srgb' });
     imageData.data.set(pixels);
-    context.clearRect(0, 0, width, height);
     context.putImageData(imageData, 0, 0);
   }
 

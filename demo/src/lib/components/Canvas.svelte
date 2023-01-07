@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { palette } from 'auto-palette';
   import { onMount } from 'svelte';
+  import { swatches } from '$lib/stores/palette';
 
   export let src: string = '';
   export let width: number = 300;
@@ -9,10 +11,8 @@
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D;
-
   onMount(() => {
     context = canvas.getContext('2d', { colorSpace: 'srgb' });
-    loadImage(src);
   });
 
   function loadImage(url: string) {
@@ -37,15 +37,15 @@
 
   $: loadImage(src);
 
-  function drawImage(ctx: CanvasRenderingContext2D, imageElement: HTMLImageElement) {
-    if (!ctx || !imageElement) {
+  function drawImage(ctx: CanvasRenderingContext2D, img: HTMLImageElement) {
+    if (!ctx || !img) {
       return;
     }
 
     context.clearRect(0, 0, width, height);
 
-    const imageWidth = imageElement.naturalWidth;
-    const imageHeight = imageElement.naturalHeight;
+    const imageWidth = img.naturalWidth;
+    const imageHeight = img.naturalHeight;
     if (imageWidth === 0 || imageHeight === 0) {
       return;
     }
@@ -55,7 +55,14 @@
     const scaledHeight = Math.round(imageHeight * scale);
     const positionX = Math.round((width - scaledWidth) / 2.0);
     const positionY = Math.round((height - scaledHeight) / 2.0);
-    context.drawImage(imageElement, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
+    context.drawImage(img, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
+    console.info('draw');
+
+    const imageData = context.getImageData(positionY, positionY, scaledWidth, scaledHeight);
+    palette(imageData)
+      .build()
+      .then((result) => swatches.set(result.getSwatches()))
+      .catch((cause) => console.warn({ cause }));
   }
 
   $: drawImage(context, image);

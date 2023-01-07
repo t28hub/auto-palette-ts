@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "description": "Demo web application using 'auto-palette'",
+  "description": "Demo application using 'auto-palette'",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -15,6 +15,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
+    "auto-palette": "file:../",
     "blurhash": "^2.0.4"
   },
   "devDependencies": {
