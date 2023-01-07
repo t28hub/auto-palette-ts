@@ -40,7 +40,7 @@
 
   function drawImage(
     ctx: CanvasRenderingContext2D,
-    imageElement: HTMLImageElement,
+    imageElement: HTMLImageElement
   ) {
     if (!ctx || !imageElement) {
       return;
@@ -68,13 +68,11 @@
       positionX,
       positionY,
       scaledWidth,
-      scaledHeight,
+      scaledHeight
     );
   }
 
   $: drawImage(context, image);
 </script>
 
-<div>
-  <canvas data-testid="canvas" bind:this={canvas} {width} {height} />
-</div>
+<canvas data-testid="canvas" bind:this={canvas} {width} {height} />
