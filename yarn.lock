@@ -1179,13 +1179,13 @@
     flatted "^3.2.7"
     sirv "^2.0.2"
 
-"@vitest/web-worker@^0.26.2":
-  version "0.26.3"
-  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.26.3.tgz#efdbc55919947f6cb124d8b6accfbf389267d87b"
-  integrity sha512-qvgUf0Bn9cFgEH79u3dmrd2VDvRho/i3nu0+hfvfFm7seSwBWTkRkfrsPV+voZgC/vLrv7iqVC7tf6294EhkVA==
+"@vitest/web-worker@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.27.0.tgz#dcd8ec056b93b7bc45be10b0ec96a040e5fed7da"
+  integrity sha512-rFCVfJ2g0hIYIHMh0KuwYFMlLPCHPRsYWoSxuRHVnhli0wd5Cc0h65HLYBgg9K9PorSPDhM1rsEvPLPBraikFA==
   dependencies:
     debug "^4.3.4"
-    vite-node "0.26.3"
+    vite-node "0.27.0"
 
 abab@^2.0.6:
   version "2.0.6"
