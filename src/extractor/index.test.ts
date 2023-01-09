@@ -5,16 +5,59 @@ import { Method } from '../types';
 import { KmeansExtractor } from './kmeans';
 import { OctreeExtractor } from './octree';
 
-import { createExtractor } from './index';
+import { createExtractor, kmeans, octree } from './index';
 
 describe('extractor/index', () => {
+  describe('kmeans', () => {
+    it('should create a KmeansExtractor', () => {
+      // Act
+      const actual = kmeans();
+
+      // Assert
+      expect(actual).toBeInstanceOf(KmeansExtractor);
+    });
+
+    it('should create a KmeansExtractor with options', () => {
+      // Act
+      const actual = kmeans({
+        maxIterations: 5,
+        minDifference: 0.01,
+        colorFilters: [],
+      });
+
+      // Assert
+      expect(actual).toBeInstanceOf(KmeansExtractor);
+    });
+  });
+
+  describe('octree', () => {
+    it('should create a OctreeExtractor', () => {
+      // Act
+      const actual = octree();
+
+      // Assert
+      expect(actual).toBeInstanceOf(OctreeExtractor);
+    });
+
+    it('should create a OctreeExtractor with options', () => {
+      // Act
+      const actual = octree({
+        maxDepth: 6,
+        colorFilters: [],
+      });
+
+      // Assert
+      expect(actual).toBeInstanceOf(OctreeExtractor);
+    });
+  });
+
   describe('createExtractor', () => {
     it.each([
-      { algorithm: 'kmeans', expected: KmeansExtractor },
-      { algorithm: 'octree', expected: OctreeExtractor },
-    ])('should create $expected from option($options)', ({ algorithm, expected }) => {
+      { method: 'kmeans', expected: KmeansExtractor },
+      { method: 'octree', expected: OctreeExtractor },
+    ])('should create $expected from option($options)', ({ method, expected }) => {
       // Act
-      const actual = createExtractor(algorithm as Method);
+      const actual = createExtractor(method as Method);
 
       // Assert
       expect(actual).toBeInstanceOf(expected);

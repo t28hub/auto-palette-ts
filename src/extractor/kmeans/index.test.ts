@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { loadImageData } from '../../test';
+import { opacity } from '../filter';
 
 import { KmeansExtractor } from './index';
 
@@ -8,15 +9,7 @@ describe('kmeans/index', () => {
   describe('constructor', () => {
     it('should create a new KmeansExtractor', () => {
       // Act
-      const actual = new KmeansExtractor();
-
-      // Assert
-      expect(actual).toBeDefined();
-    });
-
-    it('should create a new KmeansExtractor with optional parameters', () => {
-      // Act
-      const actual = new KmeansExtractor(5, 0.01);
+      const actual = new KmeansExtractor(5, 0.01, [opacity()]);
 
       // Assert
       expect(actual).toBeDefined();
@@ -24,7 +17,7 @@ describe('kmeans/index', () => {
   });
 
   describe('extract', () => {
-    const extractor = new KmeansExtractor();
+    const extractor = new KmeansExtractor(5, 0.25, [opacity()]);
     it(
       'should extract 2 colors from an image consisting of 2 colors',
       async () => {

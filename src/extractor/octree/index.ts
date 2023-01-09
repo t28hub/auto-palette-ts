@@ -9,13 +9,12 @@ import { Node } from './node';
 import { Octree } from './octree';
 
 const MAX_DEPTH = 8;
-const DEFAULT_MAX_DEPTH = 5;
 
 export class OctreeExtractor implements Extractor {
   private readonly bounds: Bounds;
   private readonly filter: ColorFilter<RGB>;
 
-  constructor(private readonly maxDepth = DEFAULT_MAX_DEPTH, colorFilters: ColorFilter<RGB>[]) {
+  constructor(private readonly maxDepth: number, colorFilters: ColorFilter<RGB>[]) {
     if (!Number.isInteger(maxDepth) || maxDepth < 1 || maxDepth > MAX_DEPTH) {
       throw new TypeError(`The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`);
     }
