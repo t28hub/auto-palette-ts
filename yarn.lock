@@ -1179,13 +1179,13 @@
     flatted "^3.2.7"
     sirv "^2.0.2"
 
-"@vitest/web-worker@^0.26.2":
-  version "0.26.3"
-  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.26.3.tgz#efdbc55919947f6cb124d8b6accfbf389267d87b"
-  integrity sha512-qvgUf0Bn9cFgEH79u3dmrd2VDvRho/i3nu0+hfvfFm7seSwBWTkRkfrsPV+voZgC/vLrv7iqVC7tf6294EhkVA==
+"@vitest/web-worker@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.27.0.tgz#dcd8ec056b93b7bc45be10b0ec96a040e5fed7da"
+  integrity sha512-rFCVfJ2g0hIYIHMh0KuwYFMlLPCHPRsYWoSxuRHVnhli0wd5Cc0h65HLYBgg9K9PorSPDhM1rsEvPLPBraikFA==
   dependencies:
     debug "^4.3.4"
-    vite-node "0.26.3"
+    vite-node "0.27.0"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -1496,6 +1496,11 @@ c8@^7.12.0:
     v8-to-istanbul "^9.0.0"
     yargs "^16.2.0"
     yargs-parser "^20.2.9"
+
+cac@^6.7.14:
+  version "6.7.14"
+  resolved "https://registry.yarnpkg.com/cac/-/cac-6.7.14.tgz#804e1e6f506ee363cb0e3ccbb09cad5dd9870959"
+  integrity sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==
 
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
@@ -4699,6 +4704,20 @@ vite-node@0.26.3:
     debug "^4.3.4"
     mlly "^1.0.0"
     pathe "^0.2.0"
+    source-map "^0.6.1"
+    source-map-support "^0.5.21"
+    vite "^3.0.0 || ^4.0.0"
+
+vite-node@0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/vite-node/-/vite-node-0.27.0.tgz#26ec5895565fce43b501ea53ba905bb5b62318e1"
+  integrity sha512-O1o9joT0qCGx5Om6W0VNLr7M00ttrnFlfZX2d+oxt2T9oZ9DvYSv8kDRhNJDVhAgNgUm3Tc0h/+jppNf3mVKbA==
+  dependencies:
+    cac "^6.7.14"
+    debug "^4.3.4"
+    mlly "^1.0.0"
+    pathe "^0.2.0"
+    picocolors "^1.0.0"
     source-map "^0.6.1"
     source-map-support "^0.5.21"
     vite "^3.0.0 || ^4.0.0"
