@@ -7,7 +7,7 @@ import {
   printWithType,
 } from 'jest-matcher-utils';
 
-import { color } from '../../color';
+import { parse } from '../../color';
 import { Color } from '../../types';
 
 declare global {
@@ -38,7 +38,7 @@ declare global {
 export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): jest.CustomMatcherResult {
   let expectedColor: Color | undefined;
   try {
-    expectedColor = color(expected);
+    expectedColor = parse(expected);
   } catch (e) {
     expectedColor = undefined;
   }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { parse } from '../../color';
 import { loadImageData } from '../../test';
+import { Swatch } from '../../types';
 import { opacity } from '../filter';
 
 import { KmeansExtractor } from './index';
@@ -17,118 +19,46 @@ describe('kmeans/index', () => {
   });
 
   describe('extract', () => {
-    const extractor = new KmeansExtractor(5, 0.25, [opacity()]);
-    it(
-      'should extract 2 colors from an image consisting of 2 colors',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData('flag_gr.png');
-
-        // Act
-        const actual = extractor.extract(imageData, 2).sort((swatch1, swatch2): number => {
-          const hsl1 = swatch1.color.toHSL();
-          const hsl2 = swatch2.color.toHSL();
-          return hsl2.h - hsl1.h;
-        });
-
-        // Assert
-        expect(actual).toBeArrayOfSize(2);
-        expect(actual[0].color).toBeSimilarColor('#005baeff');
-        expect(actual[1].color).toBeSimilarColor('#ffffffff');
+    const extractor = new KmeansExtractor(10, 0.01, [opacity()]);
+    it.each([
+      {
+        filename: 'flag_gr.png',
+        maxColors: 2,
+        expected: ['#005baeff', '#ffffffff'],
       },
-      { retry: 3 },
-    );
-
-    it(
-      'should extract 3 colors from an image consisting of 3 colors',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData('flag_de.png');
-
-        // Act
-        const actual = extractor.extract(imageData, 3).sort((swatch1, swatch2): number => {
-          const hsl1 = swatch1.color.toHSL();
-          const hsl2 = swatch2.color.toHSL();
-          return hsl2.h - hsl1.h;
-        });
-
-        // Assert
-        expect(actual).toBeArrayOfSize(3);
-        expect(actual[0].color).toBeSimilarColor('#dd0000ff');
-        expect(actual[1].color).toBeSimilarColor('#ffcc00ff');
-        expect(actual[2].color).toBeSimilarColor('#000000ff');
+      {
+        filename: 'flag_de.png',
+        maxColors: 3,
+        expected: ['#dd0000ff', '#ffcc00ff', '#000000ff'],
       },
-      { retry: 3 },
-    );
-
-    it(
-      'should extract 4 colors from an image consisting of 4 colors',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData('flag_br.png');
-
-        // Act
-        const actual = extractor.extract(imageData, 4).sort((swatch1, swatch2): number => {
-          const hsl1 = swatch1.color.toHSL();
-          const hsl2 = swatch2.color.toHSL();
-          return hsl2.h - hsl1.h;
-        });
-
-        // Assert
-        expect(actual).toBeArrayOfSize(4);
-        expect(actual[0].color).toBeSimilarColor('#012169ff');
-        expect(actual[1].color).toBeSimilarColor('#ffffffff');
-        expect(actual[2].color).toBeSimilarColor('#009739ff');
-        expect(actual[3].color).toBeSimilarColor('#fedD00ff');
+      {
+        filename: 'flag_ae.png',
+        maxColors: 4,
+        expected: ['#ef3340ff', '#009739ff', '#ffffffff', '#000000ff'],
       },
-      { retry: 3 },
-    );
-
-    it(
-      'should extract 5 colors from an image consisting of 5 colors',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData('flag_sc.png');
-
-        // Act
-        const actual = extractor.extract(imageData, 5).sort((swatch1, swatch2): number => {
-          const hsl1 = swatch1.color.toHSL();
-          const hsl2 = swatch2.color.toHSL();
-          return hsl2.h - hsl1.h;
-        });
-
-        // Assert
-        expect(actual).toBeArrayOfSize(5);
-        expect(actual[0].color).toBeSimilarColor('#d92323ff');
-        expect(actual[1].color).toBeSimilarColor('#003d88ff');
-        expect(actual[2].color).toBeSimilarColor('#007a3aff');
-        expect(actual[3].color).toBeSimilarColor('#fcd955ff');
-        expect(actual[4].color).toBeSimilarColor('#ffffffff');
+      {
+        filename: 'flag_sc.png',
+        maxColors: 5,
+        expected: ['#d92323ff', '#003d88ff', '#007a3aff', '#fcd955ff', '#ffffffff'],
       },
-      { retry: 3 },
-    );
-
-    it.skip(
-      'should extract 6 colors from an image consisting of 6 colors',
-      async () => {
+    ])(
+      'should extract $maxColors colors from $filename',
+      async ({ filename, maxColors, expected }) => {
         // Arrange
-        const imageData = await loadImageData('flag_za.png');
+        const imageData = await loadImageData(filename);
 
         // Act
-        const actual = extractor.extract(imageData, 6).sort((swatch1, swatch2): number => {
-          const hsl1 = swatch1.color.toHSL();
-          const hsl2 = swatch2.color.toHSL();
-          return hsl2.h - hsl1.h;
-        });
+        const actual = extractor.extract(imageData, maxColors);
 
         // Assert
-        expect(actual).toBeArrayOfSize(6);
-        expect(actual[0].color).toBeSimilarColor('#000c8aff');
-        expect(actual[1].color).toBeSimilarColor('#007847ff');
-        expect(actual[2].color).toBeSimilarColor('#ffffffff');
-        expect(actual[3].color).toBeSimilarColor('#ffb915ff');
-        expect(actual[4].color).toBeSimilarColor('#000000ff');
-        expect(actual[5].color).toBeSimilarColor('#e1392dff');
+        expect(actual).toBeArrayOfSize(maxColors);
+        expected.forEach((hexColor) => {
+          expect(actual).toSatisfyAny((swatch: Swatch): boolean => {
+            const expected = parse(hexColor);
+            const distance = swatch.color.difference(expected);
+            return distance < 25.0;
+          });
+        });
       },
       { retry: 3 },
     );

@@ -2,9 +2,9 @@ import { describe, it } from 'vitest';
 
 import { HSLColor } from './hsl';
 
-import { color } from './index';
+import { parse } from './index';
 
-describe('index', () => {
+describe('color/parse', () => {
   it.each([
     {
       value: 0x00000000,
@@ -28,7 +28,7 @@ describe('index', () => {
     },
   ])('should return $hsl from $value', ({ value, hsl }) => {
     // Act
-    const actual = color(value);
+    const actual = parse(value);
 
     // Assert
     expect(actual).toMatchObject(hsl);
@@ -39,7 +39,7 @@ describe('index', () => {
     ({ value }) => {
       // Assert
       expect(() => {
-        color(value);
+        parse(value);
       }).toThrowError(TypeError);
     },
   );

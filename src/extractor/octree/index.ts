@@ -1,4 +1,4 @@
-import { color, rgb } from '../../color';
+import { parse, rgb } from '../../color';
 import { Point3 } from '../../math';
 import { ImageObject, RGB, Swatch } from '../../types';
 import { composite } from '../filter';
@@ -79,7 +79,7 @@ export class OctreeExtractor implements Extractor {
       const b = center[2] << colorShift;
       const packed = rgb().encode({ r, g, b, opacity: 1.0 });
       return {
-        color: color(packed),
+        color: parse(packed),
         population: leaf.size,
         coordinate: { x: 0, y: 0 }, // OctreeExtractor does not support the coordinate property.
       };

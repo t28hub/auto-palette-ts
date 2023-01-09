@@ -4,6 +4,7 @@ node_modules
 /coverage
 /demo
 /dist
+/html
 /package
 .env
 .env.*

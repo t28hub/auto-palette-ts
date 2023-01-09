@@ -1,4 +1,4 @@
-import { color, lab, rgb } from '../../color';
+import { lab, parse, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
 import { Point5, SquaredEuclideanDistance } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
@@ -73,7 +73,7 @@ export class KmeansExtractor implements Extractor {
       const x = pixel[3] * width;
       const y = pixel[4] * height;
       return {
-        color: color(packed),
+        color: parse(packed),
         population: cluster.size,
         coordinate: { x, y },
       };

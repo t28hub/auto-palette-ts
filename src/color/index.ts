@@ -24,7 +24,7 @@ function parseString(value: string): Color {
  * @return The parsed color.
  * @throws {TypeError} if the value is not supported type.
  */
-export function color(value: unknown): Color {
+export function parse(value: unknown): Color {
   if (typeof value === 'number') {
     return parseNumber(value);
   }

@@ -1,4 +1,4 @@
-import { color } from '../color';
+import { parse } from '../color';
 import { Image } from '../image';
 import { Palette } from '../palette';
 import { Method, Builder, ImageObject, Options, Swatch } from '../types';
@@ -54,7 +54,7 @@ export class PaletteBuilder implements Builder {
         try {
           const swatches = this.onMessage(event).map((result): Swatch => {
             return {
-              color: color(result.color),
+              color: parse(result.color),
               population: result.population,
               coordinate: {
                 x: Math.round(result.coordinate.x * scaleX),
