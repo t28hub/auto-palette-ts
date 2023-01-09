@@ -56,9 +56,8 @@
     const positionX = Math.round((width - scaledWidth) / 2.0);
     const positionY = Math.round((height - scaledHeight) / 2.0);
     context.drawImage(img, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
-    console.info('draw');
 
-    const imageData = context.getImageData(positionY, positionY, scaledWidth, scaledHeight);
+    const imageData = context.getImageData(positionX, positionY, scaledWidth, scaledHeight);
     palette(imageData)
       .build()
       .then((result) => swatches.set(result.getSwatches()))

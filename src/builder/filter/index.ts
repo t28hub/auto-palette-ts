@@ -1,42 +1,57 @@
 import { Swatch } from '../../types';
 
-import { Node } from './node';
+import { FilterFunction } from './types';
 
-export function filter(swatches: Swatch[], count: number): Swatch[] {
-  const nodes = swatches.map((swatch: Swatch): Node => new Node(swatch));
-  return merge(nodes, count).map((node: Node) => node.swatch);
-}
+const NO_INDEX = -1;
 
-function merge(nodes: Node[], count: number): Node[] {
-  if (nodes.length <= count) {
-    return nodes;
-  }
+function findBestIndex(swatches: Swatch[], selected: Map<number, Swatch>): number {
+  let bestIndex = NO_INDEX;
+  let maxDistance = Number.MIN_VALUE;
+  for (let i = 0; i < swatches.length; i++) {
+    if (selected.has(i)) {
+      continue;
+    }
 
-  let nearestNode1: Node | undefined;
-  let nearestNode2: Node | undefined;
-  let minDistance = Number.MAX_VALUE;
-  // Find pair of nearest nodes
-  for (let i = 0; i < nodes.length; i++) {
-    const node1 = nodes[i];
-    for (let j = i + 1; j < nodes.length; j++) {
-      const node2 = nodes[j];
-      const distance = node1.distanceTo(node2);
-      if (distance < minDistance) {
-        nearestNode1 = node1;
-        nearestNode2 = node2;
-        minDistance = distance;
-      }
+    const candidate = swatches[i];
+    const totalDistance = Array.from(selected.values()).reduce((previous: number, swatch: Swatch): number => {
+      const distance = candidate.color.difference(swatch.color);
+      return previous + distance;
+    }, 0.0);
+
+    if (maxDistance < totalDistance) {
+      bestIndex = i;
+      maxDistance = totalDistance;
     }
   }
+  return bestIndex;
+}
 
-  if (!nearestNode1 || !nearestNode2) {
-    throw new Error('Cannot find pair of nearest nodes');
-  }
+export function swatchFilter(): FilterFunction {
+  return {
+    apply(swatches: Swatch[], size: number): Swatch[] {
+      if (size < 1) {
+        throw new RangeError(`The given size(${size}) is negative number`);
+      }
 
-  // Merge nodes
-  const filtered = nodes.filter((node: Node): boolean => {
-    return node !== nearestNode1 && node !== nearestNode2;
-  });
-  filtered.push(nearestNode1.merge(nearestNode2));
-  return merge(filtered, count);
+      if (swatches.length <= size) {
+        return swatches;
+      }
+
+      // Sort by population in descending order.
+      swatches.sort((swatch1: Swatch, swatch2: Swatch): number => {
+        return swatch2.population - swatch1.population;
+      });
+
+      const selected = new Map<number, Swatch>();
+      selected.set(0, swatches[0]); // Set index of dominant swatch as the initial value;
+      while (selected.size < size) {
+        const bestIndex = findBestIndex(swatches, selected);
+        if (bestIndex < 0) {
+          break;
+        }
+        selected.set(bestIndex, swatches[bestIndex]);
+      }
+      return Array.from(selected.values());
+    },
+  };
 }

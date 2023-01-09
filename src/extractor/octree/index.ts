@@ -1,19 +1,21 @@
 import { color, rgb } from '../../color';
 import { Point3 } from '../../math';
-import { ImageObject, Swatch } from '../../types';
-import { Extractor } from '../extractor';
+import { ImageObject, RGB, Swatch } from '../../types';
+import { composite } from '../filter';
+import { ColorFilter, Extractor } from '../types';
 
 import { Bounds } from './bounds';
 import { Node } from './node';
 import { Octree } from './octree';
 
 const MAX_DEPTH = 8;
+const DEFAULT_MAX_DEPTH = 5;
 
 export class OctreeExtractor implements Extractor {
   private readonly bounds: Bounds;
-  private readonly maxDepth: number;
+  private readonly filter: ColorFilter<RGB>;
 
-  constructor(maxDepth = 5) {
+  constructor(private readonly maxDepth = DEFAULT_MAX_DEPTH, colorFilters: ColorFilter<RGB>[]) {
     if (!Number.isInteger(maxDepth) || maxDepth < 1 || maxDepth > MAX_DEPTH) {
       throw new TypeError(`The maxDepth(${maxDepth}) is not from 1 to ${MAX_DEPTH}`);
     }
@@ -22,7 +24,7 @@ export class OctreeExtractor implements Extractor {
     const minPixel: Point3 = [0, 0, 0];
     const maxPixel: Point3 = [max, max, max];
     this.bounds = new Bounds(minPixel, maxPixel);
-    this.maxDepth = maxDepth;
+    this.filter = composite(...colorFilters);
   }
 
   extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
@@ -37,6 +39,10 @@ export class OctreeExtractor implements Extractor {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
+      const opacity = data[i + 3] / 0xff;
+      if (!this.filter.test({ r, g, b, opacity })) {
+        continue;
+      }
       octree.insert([r >> colorShift, g >> colorShift, b >> colorShift]);
     }
 

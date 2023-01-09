@@ -1,6 +1,6 @@
 import { createExtractor } from '../../extractor';
 import { Method, ImageObject, Swatch } from '../../types';
-import { filter } from '../filter';
+import { swatchFilter } from '../filter';
 import { ExtractionResult } from '../types';
 
 /**
@@ -21,7 +21,8 @@ export function extract(imageData: ImageObject<ArrayBuffer>, method: Method, max
   };
 
   const swatches = createExtractor(method).extract(image, maxColors * 3);
-  return filter(swatches, maxColors)
+  return swatchFilter()
+    .apply(swatches, maxColors)
     .sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
     })

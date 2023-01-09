@@ -2,7 +2,8 @@ import { color, lab, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
 import { Point5, SquaredEuclideanDistance } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
-import { Extractor } from '../extractor';
+import { composite, opacity } from '../filter';
+import { ColorFilter, Extractor } from '../types';
 
 import { Cluster } from './cluster';
 import { Kmeans } from './kmeans';
@@ -17,14 +18,20 @@ export class KmeansExtractor implements Extractor {
   private readonly rgb: ColorSpace<RGB>;
   private readonly lab: ColorSpace<Lab>;
   private readonly kmeans: Kmeans<Point5>;
+  private readonly filter: ColorFilter<RGB>;
 
   /**
    * Create a new {@link KmeansExtractor}.
    */
-  constructor(maxIterations: number = DEFAULT_MAX_ITERATIONS, minDifference: number = DEFAULT_MIN_DIFFERENCE) {
+  constructor(
+    maxIterations: number = DEFAULT_MAX_ITERATIONS,
+    minDifference: number = DEFAULT_MIN_DIFFERENCE,
+    colorFilters: ColorFilter<RGB>[] = [opacity()],
+  ) {
     this.rgb = rgb();
     this.lab = lab();
     this.kmeans = new Kmeans<Point5>('kmeans++', SquaredEuclideanDistance, maxIterations, minDifference);
+    this.filter = composite(...colorFilters);
   }
 
   extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
@@ -35,12 +42,19 @@ export class KmeansExtractor implements Extractor {
 
     const pixels: Point5[] = [];
     for (let i = 0; i < data.length; i += 4) {
-      const packed = this.rgb.encode({
+      const color = {
         r: data[i],
         g: data[i + 1],
         b: data[i + 2],
         opacity: data[i + 3] / 0xff,
-      });
+      };
+
+      // Exclude colors with high opacity
+      if (!this.filter.test(color)) {
+        continue;
+      }
+
+      const packed = this.rgb.encode(color);
       const { l, a, b } = this.lab.decode(packed);
       const x = Math.floor((i / 4) % width);
       const y = Math.floor((i / 4 / width) % height);

@@ -1,10 +1,10 @@
 import { Method } from '../types';
 
-import { type Extractor } from './extractor';
 import { KmeansExtractor } from './kmeans';
 import { OctreeExtractor } from './octree';
+import { type Extractor } from './types';
 
-export { type Extractor } from './extractor';
+export { type Extractor } from './types';
 
 /**
  * Create a new {@link Extractor} with options.

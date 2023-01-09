@@ -31,6 +31,21 @@ export const photos = readable<Photo[]>([
     id: 'sN4vUso_ncs',
     url: 'https://images.unsplash.com/photo-1672676831425-207e5d4a0c41?ixid=MnwzNDM0Mjd8MHwxfGFsbHwxMHx8fHx8fDJ8fDE2NzI5MDMwNzA&ixlib=rb-4.0.3',
     blurhash: 'L38X5,8^9uVstko}R5NG9]ae$+M{'
+  },
+  {
+    id: 'mqO0Rf-PUMs',
+    url: 'https://images.unsplash.com/photo-1475694867812-f82b8696d610?ixid=MnwzNDM0Mjd8MHwxfGFsbHw5fHx8fHx8MXx8MTY3MzIzOTk3NQ&ixlib=rb-4.0.3',
+    blurhash: 'LM6wyhozWXa}?wofV@bI-:jYbbjY'
+  },
+  {
+    id: '4oovIxttThA',
+    url: 'https://images.unsplash.com/photo-1560850038-f95de6e715b3?ixid=MnwzNDM0Mjd8MHwxfGFsbHw3fHx8fHx8MXx8MTY3MzIzOTk3NQ&ixlib=rb-4.0.3',
+    blurhash: 'LaCt8}~BwNIpozoLofofWBWBaef6',
+  },
+  {
+    id: 'V_Q25mLo6c8',
+    url: 'https://images.unsplash.com/photo-1495379572396-5f27a279ee91?ixid=MnwzNDM0Mjd8MHwxfGFsbHw0fHx8fHx8MXx8MTY3MzIzOTk3NQ&ixlib=rb-4.0.3',
+    blurhash: 'L5B:pjI90KRPDhxvS5M{_2?vD%IT'
   }
 ]);
 
