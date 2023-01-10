@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { SquaredEuclideanDistance } from './distance';
+import { squaredEuclidean } from './distance';
 import { Point } from './point';
 import { Vector } from './vector';
 
@@ -167,10 +167,10 @@ describe('Vector', () => {
       expect(actual).toEqual(Math.sqrt(12));
     });
 
-    it('should compute distance with the distance measure to the other point', () => {
+    it('should compute distance with the distance function to the other point', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
-      const actual = vector.distanceTo([3, 4, 5], SquaredEuclideanDistance);
+      const actual = vector.distanceTo([3, 4, 5], squaredEuclidean());
 
       // Assert
       expect(actual).toEqual(12);

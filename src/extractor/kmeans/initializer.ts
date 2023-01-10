@@ -1,4 +1,4 @@
-import { toDistance, Distance, DistanceMeasure, Point, SquaredEuclideanDistance } from '../../math';
+import { toDistance, Distance, DistanceFunction, Point, squaredEuclidean } from '../../math';
 
 /**
  * Interface to choose initial centroids.
@@ -50,7 +50,7 @@ const NO_INDEX = -1;
  * Kmeans++ centroid initializer.
  */
 export class KmeansPlusPlusInitializer implements Initializer {
-  constructor(private readonly distanceMeasure: DistanceMeasure = SquaredEuclideanDistance) {}
+  constructor(private readonly distanceMeasure: DistanceFunction) {}
 
   initialize<P extends Point>(points: P[], count: number): P[] {
     if (!Number.isInteger(count) || count <= 0) {
@@ -158,7 +158,7 @@ export function createInitializer<T extends InitializerName>(name: T): Initializ
 export function createInitializer<T extends InitializerName>(name: T): Initializer {
   switch (name) {
     case 'kmeans++': {
-      return new KmeansPlusPlusInitializer();
+      return new KmeansPlusPlusInitializer(squaredEuclidean());
     }
     case 'random': {
       return new RandomInitializer();

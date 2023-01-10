@@ -1,4 +1,4 @@
-import { DistanceMeasure, Point } from '../../math';
+import { DistanceFunction, Point } from '../../math';
 
 import { Cluster } from './cluster';
 import { createInitializer, Initializer, InitializerName } from './initializer';
@@ -13,14 +13,14 @@ export class Kmeans<P extends Point> {
    * Create a new {@link Kmeans} instance
    *
    * @param initializationMethod The name of initialization method.
-   * @param distanceMeasure The distance measure.
+   * @param distanceFunction The distance function.
    * @param maxIterations The max iteration.
    * @param minDifference The min difference.
    * @throws {TypeError} if the maxIterations is not positive integer.
    */
   constructor(
     initializationMethod: InitializerName = 'kmeans++',
-    private readonly distanceMeasure: DistanceMeasure,
+    private readonly distanceFunction: DistanceFunction,
     private readonly maxIterations: number,
     private readonly minDifference: number,
   ) {
@@ -48,7 +48,7 @@ export class Kmeans<P extends Point> {
 
     if (points.length <= size) {
       return points.map((point: P): Cluster<P> => {
-        const cluster = new Cluster(point);
+        const cluster = new Cluster(point, this.distanceFunction);
         cluster.insert(point);
         return cluster;
       });
@@ -56,7 +56,7 @@ export class Kmeans<P extends Point> {
 
     const centroids = this.initializer.initialize<P>(points, size);
     const clusters = centroids.map((centroid: P): Cluster<P> => {
-      return new Cluster(centroid, this.distanceMeasure);
+      return new Cluster(centroid, this.distanceFunction);
     });
     for (let i = 0; i < this.maxIterations; i++) {
       const updated = this.iterate(clusters, points);

@@ -10,16 +10,29 @@ export type Distance = number & {
 };
 
 /**
- * Interface to compute the distance between 2 points.
+ * Interface to compute the distance between the given 2 points.
  */
-export interface DistanceMeasure {
+export interface DistanceFunction {
   /**
-   * Compute the distance between 2 points.
+   * Compute the distance between the given 2 points.
    *
    * @param point1 The 1st point.
    * @param point2 The 2nd point.
    * @return The distance between 2 points.
    */ <P extends Point>(point1: P, point2: P): Distance;
+}
+
+/**
+ * Check whether the given value is valid distance.
+ *
+ * @param value The value to be checked.
+ * @return true if the given value is valid distance.
+ */
+export function isDistance(value: unknown): value is Distance {
+  if (typeof value !== 'number') {
+    return false;
+  }
+  return Number.isFinite(value) && value >= 0.0;
 }
 
 /**
@@ -29,35 +42,36 @@ export interface DistanceMeasure {
  * @return The distance representation.
  */
 export function toDistance(value: number): Distance {
-  if (!Number.isFinite(value)) {
+  if (!isDistance(value)) {
     throw new TypeError(`The given value(${value}) is not valid distance`);
   }
-  return value as Distance;
+  return value;
 }
 
 /**
- * DistanceMeasure implementation to compute squared euclidean distance.
+ * Return the squared euclidean distance formula.
  *
- * @param point1 The 1st point.
- * @param point2 The 2nd point.
- * @return The squared euclidean distance.
+ * @return The squared euclidean distance formula.
  */
-export const SquaredEuclideanDistance: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
-  const squared = point1.reduce((total: number, value: number, index: number): number => {
-    const delta = point2[index] - value;
-    return total + delta * delta;
-  }, 0.0);
-  return toDistance(squared);
-};
+export function squaredEuclidean(): DistanceFunction {
+  return <P extends Point>(point1: P, point2: P): Distance => {
+    const distance = point1.reduce((total: number, value: number, index: number): number => {
+      const delta = point2[index] - value;
+      return total + delta * delta;
+    }, 0.0);
+    return toDistance(distance);
+  };
+}
 
 /**
- * DistanceMeasure implementation to compute euclidean distance.
+ * Return the euclidean distance formula.
  *
- * @param point1 The 1st point.
- * @param point2 The 2nd point.
- * @return The euclidean distance.
+ * @return The euclidean distance formula.
  */
-export const EuclideanDistance: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
-  const squared = SquaredEuclideanDistance<P>(point1, point2);
-  return toDistance(Math.sqrt(squared));
-};
+export function euclidean(): DistanceFunction {
+  const squaredEuclideanFunction = squaredEuclidean();
+  return <P extends Point>(point1: P, point2: P): Distance => {
+    const squaredDistance = squaredEuclideanFunction(point1, point2);
+    return toDistance(Math.sqrt(squaredDistance));
+  };
+}

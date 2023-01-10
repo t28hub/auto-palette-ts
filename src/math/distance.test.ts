@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { EuclideanDistance, SquaredEuclideanDistance } from './distance';
+import { euclidean, squaredEuclidean } from './distance';
 import { Point2 } from './point';
 
-describe('DistanceMeasure', () => {
-  describe('EuclideanDistance', () => {
+describe('DistanceFunction', () => {
+  describe('euclidean', () => {
     it('should compute euclidean distance between 2 points', () => {
       // Act
-      const actual = EuclideanDistance<Point2>([0, 0], [1, 2]);
+      const actual = euclidean()<Point2>([0, 0], [1, 2]);
 
       // Assert
       expect(actual).toEqual(Math.sqrt(5));
@@ -17,15 +17,15 @@ describe('DistanceMeasure', () => {
       // Assert
       expect(() => {
         // Act
-        EuclideanDistance<Point2>([0, 0], [1, NaN]);
+        euclidean()<Point2>([0, 0], [1, NaN]);
       }).toThrowError(TypeError);
     });
   });
 
-  describe('SquaredEuclideanDistance', () => {
+  describe('squaredEuclidean', () => {
     it('should compute squared euclidean distance between 2 points', () => {
       // Act
-      const actual = SquaredEuclideanDistance<Point2>([0, 0], [1, 2]);
+      const actual = squaredEuclidean()<Point2>([0, 0], [1, 2]);
 
       // Assert
       expect(actual).toEqual(5);
@@ -35,7 +35,7 @@ describe('DistanceMeasure', () => {
       // Assert
       expect(() => {
         // Act
-        SquaredEuclideanDistance<Point2>([NaN, 0], [1, 2]);
+        squaredEuclidean()<Point2>([NaN, 0], [1, 2]);
       }).toThrowError(TypeError);
     });
   });

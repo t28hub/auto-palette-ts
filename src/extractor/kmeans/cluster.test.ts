@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
+import { euclidean } from '../../math';
+
 import { Cluster } from './cluster';
 
 describe('cluster', () => {
   describe('constructor', () => {
     it('should create a new cluster', () => {
       // Act
-      const actual = new Cluster([1, 2, 3]);
+      const actual = new Cluster([1, 2, 3], euclidean());
 
       // Assert
       expect(actual.size).toEqual(0);
@@ -18,7 +20,7 @@ describe('cluster', () => {
       // Assert
       expect(() => {
         // Act
-        new Cluster([1, 2, NaN]);
+        new Cluster([1, 2, NaN], euclidean());
       }).toThrowError(TypeError);
     });
   });
@@ -26,7 +28,7 @@ describe('cluster', () => {
   describe('getCentroid', () => {
     it('should return centroid of this cluster', () => {
       // Act
-      const cluster = new Cluster([1, 2, 3]);
+      const cluster = new Cluster([1, 2, 3], euclidean());
       const actual = cluster.getCentroid();
 
       // Assert
@@ -37,7 +39,7 @@ describe('cluster', () => {
   describe('updateCenter', () => {
     it('should update the centroid', () => {
       // Arrange
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
       cluster.insert([2, 0, 0]);
       cluster.insert([1, 1, 0]);
       cluster.insert([0, 5, 0]);
@@ -52,7 +54,7 @@ describe('cluster', () => {
 
     it('should not update the centroid if cluster is empty', () => {
       // Arrange
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
 
       // Act
       const actual = cluster.updateCentroid();
@@ -66,7 +68,7 @@ describe('cluster', () => {
   describe('insert', () => {
     it('should insert a point to cluster', () => {
       // Act
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
       cluster.insert([1, 2, 3]);
 
       // Assert
@@ -78,7 +80,7 @@ describe('cluster', () => {
   describe('clear', () => {
     it('should clear all points of cluster', () => {
       // Arrange
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
       cluster.insert([1, 2, 3]);
       cluster.insert([3, 3, 3]);
 
@@ -94,7 +96,7 @@ describe('cluster', () => {
   describe('distanceTo', () => {
     it('should compute euclidean distance', () => {
       // Act
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
       const actual = cluster.distanceTo([1, 2, 3]);
 
       // Assert
@@ -102,7 +104,7 @@ describe('cluster', () => {
     });
 
     it('should throw TypeError if the point contains infinite number', () => {
-      const cluster = new Cluster([0, 0, 0]);
+      const cluster = new Cluster([0, 0, 0], euclidean());
 
       // Assert
       expect(() => {

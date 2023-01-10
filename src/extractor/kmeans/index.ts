@@ -1,6 +1,6 @@
 import { lab, parse, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
-import { Point5, SquaredEuclideanDistance } from '../../math';
+import { Point5, squaredEuclidean } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
 import { composite } from '../filter';
 import { ColorFilter, Extractor } from '../types';
@@ -23,7 +23,7 @@ export class KmeansExtractor implements Extractor {
   constructor(maxIterations: number, minDifference: number, colorFilters: ColorFilter<RGB>[]) {
     this.rgb = rgb();
     this.lab = lab();
-    this.kmeans = new Kmeans<Point5>('kmeans++', SquaredEuclideanDistance, maxIterations, minDifference);
+    this.kmeans = new Kmeans<Point5>('kmeans++', squaredEuclidean(), maxIterations, minDifference);
     this.filter = composite(...colorFilters);
   }
 

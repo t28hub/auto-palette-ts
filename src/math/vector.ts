@@ -1,4 +1,4 @@
-import { Distance, DistanceMeasure, EuclideanDistance } from './distance';
+import { Distance, DistanceFunction, euclidean } from './distance';
 import { Point } from './point';
 
 const NO_INDEX = -1;
@@ -105,11 +105,11 @@ export class Vector<P extends Point> {
    * Compute the distance to the other vector or point.
    *
    * @param other The other vector or point.
-   * @param distanceMeasure The distance measure to be used.
+   * @param distanceFunction The distance function.
    * @return The distance to the other vector or point.
    */
-  distanceTo(other: Vector<P> | P, distanceMeasure: DistanceMeasure = EuclideanDistance): Distance {
+  distanceTo(other: Vector<P> | P, distanceFunction: DistanceFunction = euclidean()): Distance {
     const components = other instanceof Vector ? other.components : other;
-    return distanceMeasure<P>(this.components, components);
+    return distanceFunction<P>(this.components, components);
   }
 }

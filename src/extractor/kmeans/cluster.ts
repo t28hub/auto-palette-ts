@@ -1,4 +1,4 @@
-import { Distance, DistanceMeasure, EuclideanDistance, Point, toDistance, Vector } from '../../math';
+import { Distance, DistanceFunction, Point, toDistance, Vector } from '../../math';
 
 export class Cluster<P extends Point> {
   private readonly centroid: Vector<P>;
@@ -8,10 +8,10 @@ export class Cluster<P extends Point> {
    * Create a new {@link Cluster} instance
    *
    * @param initialCentroid The initial centroid.
-   * @param distanceMeasure The distance measure.
+   * @param distanceFunction The distance function.
    * @throws {TypeError} if the initial centroid is invalid.
    */
-  constructor(initialCentroid: P, private readonly distanceMeasure: DistanceMeasure = EuclideanDistance) {
+  constructor(initialCentroid: P, private readonly distanceFunction: DistanceFunction) {
     this.centroid = new Vector(initialCentroid);
     this.children = [];
   }
@@ -57,7 +57,7 @@ export class Cluster<P extends Point> {
     this.centroid.scale(1 / this.size);
 
     const newCentroid = this.centroid.toArray();
-    return this.distanceMeasure(oldCentroid, newCentroid);
+    return this.distanceFunction(oldCentroid, newCentroid);
   }
 
   /**
@@ -83,6 +83,6 @@ export class Cluster<P extends Point> {
    * @return The distance to the centroid of this cluster.
    */
   distanceTo(point: P): Distance {
-    return this.centroid.distanceTo(point, this.distanceMeasure);
+    return this.centroid.distanceTo(point, this.distanceFunction);
   }
 }
