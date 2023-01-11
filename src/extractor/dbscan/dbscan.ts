@@ -1,6 +1,7 @@
 import { ArrayQueue } from '../../collection';
-import { Point, Vector } from '../../math';
+import { Point } from '../../math';
 
+import { Cluster } from './cluster';
 import { Neighbor, NNS } from './nns';
 
 type Label = number;
@@ -8,40 +9,6 @@ type Label = number;
 const NOISE: Label = -1;
 const MARKED: Label = -2;
 const UNKNOWN: Label = -3;
-
-export class Cluster<P extends Point> {
-  private readonly children: P[];
-
-  constructor(points: Iterable<P> | ArrayLike<P>) {
-    this.children = Array.from(points);
-  }
-
-  get size(): number {
-    return this.children.length;
-  }
-
-  get isEmpty(): boolean {
-    return this.children.length === 0;
-  }
-
-  average(): P {
-    if (this.size === 0) {
-      throw new Error('This cluster does not have children');
-    }
-
-    const total = this.children.reduce((previousVector: Vector<P>, point: P, index: number): Vector<P> => {
-      if (index === 0) {
-        return previousVector;
-      }
-      return previousVector.add(point);
-    }, new Vector<P>(this.children[0]));
-    return total.scale(1 / this.size).toArray();
-  }
-
-  insert(point: P) {
-    this.children.push(point);
-  }
-}
 
 /**
  * Density-based spatial clustering of applications with noise implementation.
@@ -68,7 +35,7 @@ export class DBSCAN<P extends Point> {
     }
   }
 
-  predict(points: P[]): Cluster<P>[] {
+  fit(points: P[]): Cluster<P>[] {
     let label: Label = 0;
     const labels = new Array<Label>(points.length).fill(UNKNOWN);
     const clusters = new Map<Label, Cluster<P>>();

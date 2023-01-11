@@ -58,7 +58,7 @@ describe('dbscan', () => {
       const dbscan = new DBSCAN(4, 2.0, nns);
 
       // Act
-      const actual = dbscan.predict(points);
+      const actual = dbscan.fit(points);
 
       // Assert
       expect(actual).toHaveLength(2);
