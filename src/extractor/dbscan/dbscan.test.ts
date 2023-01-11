@@ -61,8 +61,29 @@ describe('dbscan', () => {
       const actual = dbscan.predict(points);
 
       // Assert
-      expect(actual).toHaveLength(16);
-      expect(actual).toEqual([0, 0, -1, -1, 0, 0, 0, -1, -1, 0, 0, 1, 1, 1, 1, 1]);
+      expect(actual).toHaveLength(2);
+      expect(actual[0].size).toEqual(7);
+      expect(actual[0]).toMatchObject({
+        children: [
+          [0, 0],
+          [1, 1],
+          [1, 0],
+          [1, 2],
+          [2, 1],
+          [2, 2],
+          [0, 1],
+        ],
+      });
+      expect(actual[1].size).toEqual(5);
+      expect(actual[1]).toMatchObject({
+        children: [
+          [4, 3],
+          [4, 5],
+          [5, 4],
+          [5, 3],
+          [4, 4],
+        ],
+      });
     });
   });
 });

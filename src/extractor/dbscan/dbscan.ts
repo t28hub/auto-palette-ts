@@ -1,9 +1,47 @@
 import { ArrayQueue } from '../../collection';
-import { Point } from '../../math';
+import { Point, Vector } from '../../math';
 
 import { Neighbor, NNS } from './nns';
 
-const NO_ID = -1;
+type Label = number;
+
+const NOISE: Label = -1;
+const MARKED: Label = -2;
+const UNKNOWN: Label = -3;
+
+export class Cluster<P extends Point> {
+  private readonly children: P[];
+
+  constructor(points: Iterable<P> | ArrayLike<P>) {
+    this.children = Array.from(points);
+  }
+
+  get size(): number {
+    return this.children.length;
+  }
+
+  get isEmpty(): boolean {
+    return this.children.length === 0;
+  }
+
+  average(): P {
+    if (this.size === 0) {
+      throw new Error('This cluster does not have children');
+    }
+
+    const total = this.children.reduce((previousVector: Vector<P>, point: P, index: number): Vector<P> => {
+      if (index === 0) {
+        return previousVector;
+      }
+      return previousVector.add(point);
+    }, new Vector<P>(this.children[0]));
+    return total.scale(1 / this.size).toArray();
+  }
+
+  insert(point: P) {
+    this.children.push(point);
+  }
+}
 
 /**
  * Density-based spatial clustering of applications with noise implementation.
@@ -30,31 +68,42 @@ export class DBSCAN<P extends Point> {
     }
   }
 
-  predict(points: P[]): number[] {
-    let id = 0;
-    const visited = new Set<number>();
-    const cluster = new Array<number>(points.length).fill(NO_ID);
+  predict(points: P[]): Cluster<P>[] {
+    let label: Label = 0;
+    const labels = new Array<Label>(points.length).fill(UNKNOWN);
+    const clusters = new Map<Label, Cluster<P>>();
     points.forEach((point: P, index: number) => {
       // Skip visited point.
-      if (visited.has(index)) {
+      if (labels[index] !== UNKNOWN) {
         return;
       }
 
       const neighbors = this.nns.search(point, this.radius);
       // Mark as noise point
       if (neighbors.length < this.minPoints) {
-        cluster[index] = NO_ID;
+        labels[index] = NOISE;
         return;
       }
 
-      cluster[index] = id;
-      this.classifyNeighbors(neighbors, visited, cluster, id++);
+      labels[index] = label;
+
+      const cluster = this.buildCluster(neighbors, labels, label);
+      cluster.insert(point);
+      clusters.set(label++, cluster);
     });
-    return cluster;
+    return Array.from(clusters.values());
   }
 
-  private classifyNeighbors(neighbors: Neighbor<P>[], visited: Set<number>, clusters: number[], id: number) {
+  private buildCluster(neighbors: Neighbor<P>[], labels: Label[], label: Label): Cluster<P> {
+    neighbors.forEach((neighbor: Neighbor<P>) => {
+      const index = neighbor.index;
+      if (labels[index] === UNKNOWN) {
+        labels[index] = MARKED;
+      }
+    });
+
     const queue = new ArrayQueue(...neighbors);
+    const points = new Set<P>();
     while (!queue.isEmpty) {
       const neighbor = queue.dequeue();
       if (!neighbor) {
@@ -62,20 +111,35 @@ export class DBSCAN<P extends Point> {
       }
 
       const index = neighbor.index;
-      if (clusters[index] === NO_ID) {
-        clusters[index] = id;
-      }
-      if (visited.has(index)) {
+      if (labels[index] > 0) {
         continue;
       }
 
-      visited.add(index);
-      clusters[index] = id;
+      if (labels[index] === NOISE) {
+        labels[index] = label;
+        points.add(neighbor.point);
+        continue;
+      }
+
+      labels[index] = label;
+      points.add(neighbor.point);
 
       const secondaryNeighbors = this.nns.search(neighbor.point, this.radius);
-      if (secondaryNeighbors.length >= this.minPoints) {
-        queue.enqueue(...secondaryNeighbors);
+      if (secondaryNeighbors.length < this.minPoints) {
+        continue;
+      }
+
+      for (const secondaryNeighbor of secondaryNeighbors) {
+        const secondaryIndex = secondaryNeighbor.index;
+        const secondaryLabel = labels[secondaryIndex];
+        if (secondaryLabel === UNKNOWN) {
+          labels[secondaryIndex] = MARKED;
+          queue.enqueue(secondaryNeighbor);
+        } else if (secondaryLabel === NOISE) {
+          queue.enqueue(secondaryNeighbor);
+        }
       }
     }
+    return new Cluster<P>(points);
   }
 }
