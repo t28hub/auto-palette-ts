@@ -1214,12 +1214,12 @@
     sirv "^2.0.2"
 
 "@vitest/web-worker@^0.27.0":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.27.0.tgz#dcd8ec056b93b7bc45be10b0ec96a040e5fed7da"
-  integrity sha512-rFCVfJ2g0hIYIHMh0KuwYFMlLPCHPRsYWoSxuRHVnhli0wd5Cc0h65HLYBgg9K9PorSPDhM1rsEvPLPBraikFA==
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/@vitest/web-worker/-/web-worker-0.27.1.tgz#ccab766068ab50d8f1ba0877fbb53f78ec2a0ff9"
+  integrity sha512-EvL903OkR/R5vGc+2gUBp6FM9Cz6B3ymBObFuCCHGzmPAE4JXtaZHNoMUeUikZ5CgnkAccHWpGydzbPlpi6NTQ==
   dependencies:
     debug "^4.3.4"
-    vite-node "0.27.0"
+    vite-node "0.27.1"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -3653,6 +3653,16 @@ mlly@^1.0.0:
     pkg-types "^1.0.0"
     ufo "^1.0.0"
 
+mlly@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mlly/-/mlly-1.1.0.tgz#9e23c5e675ef7b10cc47ee6281795cb1a7aa3aa2"
+  integrity sha512-cwzBrBfwGC1gYJyfcy8TcZU1f+dbH/T+TuOhtYP2wLv/Fb51/uV7HJQfBPtEupZ2ORLRU1EKFS/QfS3eo9+kBQ==
+  dependencies:
+    acorn "^8.8.1"
+    pathe "^1.0.0"
+    pkg-types "^1.0.1"
+    ufo "^1.0.1"
+
 mrmime@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mrmime/-/mrmime-1.0.1.tgz#5f90c825fad4bdd41dc914eff5d1a8cfdaf24f27"
@@ -3971,7 +3981,7 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-types@^1.0.0:
+pkg-types@^1.0.0, pkg-types@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pkg-types/-/pkg-types-1.0.1.tgz#25234407f9dc63409af45ced9407625ff446a761"
   integrity sha512-jHv9HB+Ho7dj6ItwppRDDl0iZRYBD0jsakHXtFgoLr+cHSF6xC+QL54sJmWxyGxOLYSHm0afhXhXcQDQqH9z8g==
@@ -4653,7 +4663,7 @@ typescript@~4.8.4:
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.8.4.tgz"
   integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
 
-ufo@^1.0.0:
+ufo@^1.0.0, ufo@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.0.1.tgz#64ed43b530706bda2e4892f911f568cf4cf67d29"
   integrity sha512-boAm74ubXHY7KJQZLlXrtMz52qFvpsbOxDcZOnw/Wf+LS4Mmyu7JxmzD4tDLtUQtmZECypJ0FrCz4QIe6dvKRA==
@@ -4738,6 +4748,20 @@ vite-node@0.27.0:
     cac "^6.7.14"
     debug "^4.3.4"
     mlly "^1.0.0"
+    pathe "^0.2.0"
+    picocolors "^1.0.0"
+    source-map "^0.6.1"
+    source-map-support "^0.5.21"
+    vite "^3.0.0 || ^4.0.0"
+
+vite-node@0.27.1:
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/vite-node/-/vite-node-0.27.1.tgz#945868e3f9e4685a9c5dd877bb3f627ef366f493"
+  integrity sha512-d6+ue/3NzsfndWaPbYh/bFkHbmAWfDXI4B874zRx+WREnG6CUHUbBC8lKaRYZjeR6gCPN5m1aVNNRXBYICA9XA==
+  dependencies:
+    cac "^6.7.14"
+    debug "^4.3.4"
+    mlly "^1.1.0"
     pathe "^0.2.0"
     picocolors "^1.0.0"
     source-map "^0.6.1"
