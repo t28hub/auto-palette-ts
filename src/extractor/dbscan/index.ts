@@ -1,13 +1,13 @@
 import { lab, parse, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
-import { Point5, squaredEuclidean } from '../../math';
+import { Point5 } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
 import { composite } from '../filter';
 import { ColorFilter, Extractor } from '../types';
 
 import { Cluster } from './cluster';
 import { DBSCAN } from './dbscan';
-import { LinearSearch } from './linear';
+import { KDTree } from './kdtree';
 
 /**
  * Color extractor implementation using DBSCAN.
@@ -58,7 +58,7 @@ export class DBSCANExtractor implements Extractor {
       ]);
     }
 
-    const nns = new LinearSearch(pixels, squaredEuclidean());
+    const nns = KDTree.build(pixels);
     const dbscan = new DBSCAN(this.minPoints, this.radius, nns);
     const clusters = dbscan.fit(pixels);
     return clusters.map((cluster: Cluster<Point5>): Swatch => {
@@ -68,8 +68,8 @@ export class DBSCANExtractor implements Extractor {
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;
       const packed = this.lab.encode({ l, a, b, opacity: 1.0 });
 
-      const x = pixel[3] * width;
-      const y = pixel[4] * height;
+      const x = Math.round(pixel[3] * width);
+      const y = Math.round(pixel[4] * height);
       return {
         color: parse(packed),
         population: cluster.size,

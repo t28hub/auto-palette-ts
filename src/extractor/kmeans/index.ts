@@ -70,8 +70,8 @@ export class KmeansExtractor implements Extractor {
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;
       const packed = this.lab.encode({ l, a, b, opacity: 1.0 });
 
-      const x = pixel[3] * width;
-      const y = pixel[4] * height;
+      const x = Math.round(pixel[3] * width);
+      const y = Math.round(pixel[4] * height);
       return {
         color: parse(packed),
         population: cluster.size,

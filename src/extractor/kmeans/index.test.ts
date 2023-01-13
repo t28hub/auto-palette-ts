@@ -24,22 +24,22 @@ describe('kmeans/index', () => {
       {
         filename: 'flag_gr.png',
         maxColors: 2,
-        expected: ['#005baeff', '#ffffffff'],
+        expected: ['#005bae', '#ffffff'],
       },
       {
         filename: 'flag_de.png',
         maxColors: 3,
-        expected: ['#dd0000ff', '#ffcc00ff', '#000000ff'],
+        expected: ['#dd0000', '#ffcc00', '#000000'],
       },
       {
         filename: 'flag_ae.png',
         maxColors: 4,
-        expected: ['#ef3340ff', '#009739ff', '#ffffffff', '#000000ff'],
+        expected: ['#ef3340', '#009739', '#ffffff', '#000000'],
       },
       {
         filename: 'flag_sc.png',
         maxColors: 5,
-        expected: ['#d92323ff', '#003d88ff', '#007a3aff', '#fcd955ff', '#ffffffff'],
+        expected: ['#d92323', '#003d88', '#007a3a', '#fcd955', '#ffffff'],
       },
     ])(
       'should extract $maxColors colors from $filename',

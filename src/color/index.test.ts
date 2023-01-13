@@ -15,6 +15,14 @@ describe('color/parse', () => {
       hsl: { h: 0, s: 0.0, l: 1.0, opacity: 1.0 },
     },
     {
+      value: '#000000',
+      hsl: { h: 0, s: 0.0, l: 0.0, opacity: 1.0 },
+    },
+    {
+      value: '#ffffff',
+      hsl: { h: 0, s: 0.0, l: 1.0, opacity: 1.0 },
+    },
+    {
       value: '#00000000',
       hsl: { h: 0, s: 0.0, l: 0.0, opacity: 0.0 },
     },
@@ -34,7 +42,7 @@ describe('color/parse', () => {
     expect(actual).toMatchObject(hsl);
   });
 
-  it.each([{ value: null }, { value: undefined }, { value: [] }, { value: {} }])(
+  it.each([{ value: null }, { value: undefined }, { value: '' }, { value: [] }, { value: {} }])(
     'should throw TypeError if the value($value) is not supported',
     ({ value }) => {
       // Assert
