@@ -1,7 +1,7 @@
 import { ArrayQueue } from '../../collection';
-import { NearestNeighborSearch, Neighbor, Point } from '../../math';
+import { Cluster, ClusteringAlgorithm, NearestNeighborSearch, Neighbor, Point } from '../types';
 
-import { Cluster } from './cluster';
+import { DBSCANCluster } from './dbscanCluster';
 
 type Label = number;
 
@@ -15,7 +15,7 @@ const UNKNOWN: Label = -3;
  * @param P The type of point.
  * @see [Wikipedia - DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
  */
-export class DBSCAN<P extends Point> {
+export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new DBSCAN.
    *
@@ -58,13 +58,13 @@ export class DBSCAN<P extends Point> {
       labels[index] = label;
 
       const cluster = this.buildCluster(neighbors, labels, label);
-      cluster.insert(point);
+      cluster.append(point);
       clusters.set(label++, cluster);
     });
     return Array.from(clusters.values());
   }
 
-  private buildCluster(neighbors: Neighbor<P>[], labels: Label[], label: Label): Cluster<P> {
+  private buildCluster(neighbors: Neighbor<P>[], labels: Label[], label: Label): DBSCANCluster<P> {
     neighbors.forEach((neighbor: Neighbor<P>) => {
       const index = neighbor.index;
       if (labels[index] === UNKNOWN) {
@@ -110,6 +110,6 @@ export class DBSCAN<P extends Point> {
         }
       }
     }
-    return new Cluster<P>(points);
+    return new DBSCANCluster<P>(points);
   }
 }

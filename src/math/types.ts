@@ -48,7 +48,7 @@ export interface DistanceFunction<P extends Point> {
  *
  * @param P The type of point.
  */
-export type Neighbor<P extends Point> = {
+export interface Neighbor<P extends Point> {
   /**
    * The index of this neighbor.
    */
@@ -63,7 +63,7 @@ export type Neighbor<P extends Point> = {
    * The distance between the query to this neighbor.
    */
   readonly distance: Distance;
-};
+}
 
 /**
  * Interface representing the nearest neighbor search.
@@ -76,6 +76,46 @@ export interface NearestNeighborSearch<P extends Point> {
    *
    * @param query The query point.
    * @param radius The neighbor radius.
+   * @return The array of neighbors.
    */
   search(query: P, radius: number): Neighbor<P>[];
+}
+
+/**
+ * Interface representing cluster.
+ *
+ * @param P The type of point.
+ */
+export interface Cluster<P extends Point> {
+  /**
+   * The size of this cluster.
+   */
+  readonly size: number;
+
+  /**
+   * Whether this cluster is empty or not.
+   */
+  readonly isEmpty: boolean;
+
+  /**
+   * Compute the centroid of this cluster.
+   *
+   * @return The centroid of this cluster.
+   */
+  centroid(): P;
+}
+
+/**
+ * Interface representing clustering algorithm.
+ *
+ * @param P The type of point.
+ */
+export interface ClusteringAlgorithm<P extends Point> {
+  /**
+   * Perform the clustering algorithm to the given points.
+   *
+   * @param points The points to be clustered.
+   * @return The array of clusters.
+   */
+  fit(points: P[]): Cluster<P>[];
 }

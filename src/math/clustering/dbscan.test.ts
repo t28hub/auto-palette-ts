@@ -23,7 +23,7 @@ const points: Point2[] = [
   [5, 4],
 ];
 
-describe('dbscan', () => {
+describe('DBSCAN', () => {
   describe('constructor', () => {
     it('should create a new DBSCAN', () => {
       // Actual
@@ -62,7 +62,7 @@ describe('dbscan', () => {
       expect(actual).toHaveLength(2);
       expect(actual[0].size).toEqual(7);
       expect(actual[0]).toMatchObject({
-        children: [
+        points: [
           [0, 0],
           [1, 1],
           [1, 0],
@@ -74,7 +74,9 @@ describe('dbscan', () => {
       });
       expect(actual[1].size).toEqual(5);
       expect(actual[1]).toMatchObject({
-        children: [
+        size: 5,
+        isEmpty: false,
+        points: [
           [4, 3],
           [4, 5],
           [5, 4],

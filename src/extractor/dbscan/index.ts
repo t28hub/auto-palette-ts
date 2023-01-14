@@ -1,12 +1,9 @@
 import { lab, parse, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
-import { kdtree, Point5 } from '../../math';
+import { DBSCAN, kdtree, Point5 } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
 import { composite } from '../filter';
 import { ColorFilter, Extractor } from '../types';
-
-import { Cluster } from './cluster';
-import { DBSCAN } from './dbscan';
 
 /**
  * Color extractor implementation using DBSCAN.
@@ -16,7 +13,11 @@ export class DBSCANExtractor implements Extractor {
   private readonly lab: ColorSpace<Lab>;
   private readonly filter: ColorFilter<RGB>;
 
-  constructor(private readonly minPoints: number, private readonly radius: number, colorFilters: ColorFilter<RGB>[]) {
+  constructor(
+    private readonly minPoints: number,
+    private readonly threshold: number,
+    colorFilters: ColorFilter<RGB>[],
+  ) {
     this.rgb = rgb();
     this.lab = lab();
     this.filter = composite(...colorFilters);
@@ -58,10 +59,9 @@ export class DBSCANExtractor implements Extractor {
     }
 
     const nns = kdtree(pixels);
-    const dbscan = new DBSCAN(this.minPoints, this.radius, nns);
-    const clusters = dbscan.fit(pixels);
-    return clusters.map((cluster: Cluster<Point5>): Swatch => {
-      const pixel = cluster.average();
+    const dbscan = new DBSCAN(this.minPoints, this.threshold, nns);
+    return dbscan.fit(pixels).map((cluster): Swatch => {
+      const pixel = cluster.centroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;

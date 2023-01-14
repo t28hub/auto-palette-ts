@@ -1,3 +1,4 @@
+export * from './clustering';
 export * from './distance';
 export * from './neighbor';
 export * from './types';
