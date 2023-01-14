@@ -21,7 +21,7 @@ describe('extractor/index', () => {
       // Act
       const actual = kmeans({
         maxIterations: 5,
-        minDifference: 0.01,
+        tolerance: 0.01,
         colorFilters: [],
       });
 

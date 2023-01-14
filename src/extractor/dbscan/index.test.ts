@@ -5,7 +5,7 @@ import { opacity } from '../filter';
 
 import { DBSCANExtractor } from './index';
 
-describe('dbscan/index', () => {
+describe('DBSCANExtractor', () => {
   describe('extract', () => {
     it('should extract colors from image', async () => {
       // Arrange
@@ -13,7 +13,7 @@ describe('dbscan/index', () => {
       const extractor = new DBSCANExtractor(9, 0.06, [opacity()]);
 
       // Act
-      const actual = extractor.extract(imageData, 6).sort((swatch1, swatch2) => {
+      const actual = extractor.extract(imageData).sort((swatch1, swatch2) => {
         return swatch2.population - swatch1.population;
       });
 

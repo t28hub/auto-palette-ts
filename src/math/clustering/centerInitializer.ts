@@ -1,70 +1,54 @@
-import { toDistance, Distance, DistanceFunction, Point, euclidean } from '../../math';
+import { Distance, DistanceFunction, Point, toDistance } from '../index';
 
 /**
- * Interface to choose initial centroids.
+ * Interface to initialize center points.
  *
  * @param P The type of point.
  */
-export interface Initializer<P extends Point> {
+export interface CenterInitializer<P extends Point> {
   /**
-   * Choose initial centroids.
+   * Initialize center points.
    *
-   * @param points The all points.
-   * @param count The number of center points.
-   * @return The initial centroids.
+   * @param points The candidate points.
+   * @param k The number of center points.
+   * @return The initial center points.
    */
-  initialize(points: P[], count: number): P[];
-}
-
-/**
- * Random centroid initializer.
- */
-export class RandomInitializer<P extends Point> implements Initializer<P> {
-  initialize(points: P[], count: number): P[] {
-    if (!Number.isInteger(count) || count <= 0) {
-      throw new TypeError(`Count(${count}) is not positive integer`);
-    }
-
-    if (points.length <= count) {
-      return [...points];
-    }
-
-    const centroids = new Map<number, P>();
-    while (centroids.size < count) {
-      const index = Math.floor(Math.random() * points.length);
-      if (centroids.has(index)) {
-        continue;
-      }
-
-      const point = points.at(index);
-      if (!point) {
-        continue;
-      }
-      centroids.set(index, [...point]);
-    }
-    return Array.from(centroids.values());
-  }
+  initialize(points: P[], k: number): P[];
 }
 
 const NO_INDEX = -1;
 
 /**
- * Kmeans++ centroid initializer.
+ * Kmeans++ center points initializer.
+ *
+ * @param P The type of point.
  */
-export class KmeansPlusPlusInitializer<P extends Point> implements Initializer<P> {
+export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitializer<P> {
+  /**
+   * Create a new Kmeans++ center initializer
+   *
+   * @param distanceFunction The distance function.
+   */
   constructor(private readonly distanceFunction: DistanceFunction<P>) {}
 
-  initialize(points: P[], count: number): P[] {
-    if (!Number.isInteger(count) || count <= 0) {
-      throw new TypeError(`Count(${count}) is not positive integer`);
+  /**
+   * Initialize center points.
+   *
+   * @param points The candidate points.
+   * @param k The number of center points.
+   * @return The initial center points.
+   */
+  initialize(points: P[], k: number): P[] {
+    if (!Number.isInteger(k) || k <= 0) {
+      throw new TypeError(`The k is not positive integer: ${k}`);
     }
 
-    if (points.length <= count) {
+    if (points.length <= k) {
       return [...points];
     }
 
     const selected = new Map<number, P>();
-    this.selectRecursively(points, count, selected);
+    this.selectRecursively(points, k, selected);
     return Array.from(selected.values());
   }
 
@@ -134,12 +118,4 @@ export class KmeansPlusPlusInitializer<P extends Point> implements Initializer<P
     } while (selected.has(index));
     selected.set(index, data[index]);
   }
-}
-
-export function kmeansPlusPlus<P extends Point>(distanceFunction: DistanceFunction<P> = euclidean()): Initializer<P> {
-  return new KmeansPlusPlusInitializer(distanceFunction);
-}
-
-export function random<P extends Point>(): Initializer<P> {
-  return new RandomInitializer();
 }

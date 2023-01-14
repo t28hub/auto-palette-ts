@@ -8,10 +8,9 @@ export interface Extractor {
    * Extract colors from image data.
    *
    * @param imageData The image data.
-   * @param maxColors The max colors.
-   * @return The extracted results.
+   * @return The extracted swatches.
    */
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[];
+  extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[];
 }
 
 /**

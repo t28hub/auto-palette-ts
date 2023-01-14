@@ -23,7 +23,7 @@ export class DBSCANExtractor implements Extractor {
     this.filter = composite(...colorFilters);
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, _maxColors: number): Swatch[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];

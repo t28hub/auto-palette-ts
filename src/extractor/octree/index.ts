@@ -9,6 +9,7 @@ import { Node } from './node';
 import { Octree } from './octree';
 
 const MAX_DEPTH = 8;
+const MAX_COLORS = 25;
 
 export class OctreeExtractor implements Extractor {
   private readonly bounds: Bounds;
@@ -26,7 +27,7 @@ export class OctreeExtractor implements Extractor {
     this.filter = composite(...colorFilters);
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[] {
     const data = imageData.data;
     if (data.length === 0) {
       return [];
@@ -47,7 +48,7 @@ export class OctreeExtractor implements Extractor {
 
     let leafCount = octree.countLeafNodes();
     for (let depth = this.maxDepth - 1; depth > 0; depth--) {
-      if (leafCount <= maxColors) {
+      if (leafCount <= MAX_COLORS) {
         break;
       }
 
@@ -56,7 +57,7 @@ export class OctreeExtractor implements Extractor {
           return;
         }
 
-        if (leafCount - found.childrenSize < maxColors) {
+        if (leafCount - found.childrenSize < MAX_COLORS) {
           return;
         }
 

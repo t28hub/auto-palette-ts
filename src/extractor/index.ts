@@ -11,14 +11,16 @@ export { type Extractor } from './types';
  * Type representing options of KmeansExtractor.
  */
 export type KmeansOptions = {
+  readonly maxColors: number;
   readonly maxIterations: number;
-  readonly minDifference: number;
+  readonly tolerance: number;
   readonly colorFilters: ColorFilter<RGB>[];
 };
 
 const defaultKmeansOptions: KmeansOptions = {
+  maxColors: 25,
   maxIterations: 10,
-  minDifference: 0.25,
+  tolerance: 0.25,
   colorFilters: [opacity()],
 };
 
@@ -32,8 +34,8 @@ const defaultKmeansOptions: KmeansOptions = {
  * @see createExtractor
  */
 export function kmeans(options: Partial<KmeansOptions> = {}): Extractor {
-  const { maxIterations, minDifference, colorFilters } = { ...defaultKmeansOptions, ...options };
-  return new KmeansExtractor(maxIterations, minDifference, colorFilters);
+  const { maxColors, maxIterations, tolerance, colorFilters } = { ...defaultKmeansOptions, ...options };
+  return new KmeansExtractor(maxColors, maxIterations, tolerance, colorFilters);
 }
 
 /**

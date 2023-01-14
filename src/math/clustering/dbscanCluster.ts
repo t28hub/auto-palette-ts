@@ -2,7 +2,7 @@ import { Cluster, Point } from '../types';
 import { Vector } from '../vector';
 
 /**
- * Cluster implementation for DBSCAN.
+ * KmeansCluster implementation for DBSCAN.
  */
 export class DBSCANCluster<P extends Point> implements Cluster<P> {
   private readonly points: P[];

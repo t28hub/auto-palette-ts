@@ -1,13 +1,9 @@
 import { lab, parse, rgb } from '../../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
-import { Point5, squaredEuclidean } from '../../math';
+import { Kmeans, Point5, squaredEuclidean } from '../../math';
 import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
 import { composite } from '../filter';
 import { ColorFilter, Extractor } from '../types';
-
-import { Cluster } from './cluster';
-import { kmeansPlusPlus } from './initializer';
-import { Kmeans } from './kmeans';
 
 /**
  * Implementation of {@link Extractor} using Kmeans algorithm.
@@ -21,14 +17,14 @@ export class KmeansExtractor implements Extractor {
   /**
    * Create a new {@link KmeansExtractor}.
    */
-  constructor(maxIterations: number, minDifference: number, colorFilters: ColorFilter<RGB>[]) {
+  constructor(maxClusters: number, maxIterations: number, tolerance: number, colorFilters: ColorFilter<RGB>[]) {
     this.rgb = rgb();
     this.lab = lab();
-    this.kmeans = new Kmeans<Point5>(kmeansPlusPlus(), squaredEuclidean(), maxIterations, minDifference);
+    this.kmeans = new Kmeans<Point5>(maxClusters, maxIterations, tolerance, squaredEuclidean());
     this.filter = composite(...colorFilters);
   }
 
-  extract(imageData: ImageObject<Uint8ClampedArray>, maxColors: number): Swatch[] {
+  extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
@@ -63,9 +59,8 @@ export class KmeansExtractor implements Extractor {
       ]);
     }
 
-    const clusters = this.kmeans.classify(pixels, maxColors);
-    return clusters.map((cluster: Cluster<Point5>): Swatch => {
-      const pixel = cluster.getCentroid();
+    return this.kmeans.fit(pixels).map((cluster): Swatch => {
+      const pixel = cluster.centroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;
