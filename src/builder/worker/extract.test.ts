@@ -34,7 +34,7 @@ describe('extract', () => {
     };
 
     // Act
-    const actual = extract(imageData, 'octree', 3);
+    const actual = extract(imageData, 'octree');
 
     // Assert
     expect(actual).toBeArrayOfSize(2);

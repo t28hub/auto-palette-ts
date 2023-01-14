@@ -14,7 +14,7 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
   switch (type) {
     case 'request': {
       try {
-        const results = extract(payload.imageObject, payload.method, payload.maxColors);
+        const results = extract(payload.imageObject, payload.method);
         const message: ResponseMessage = {
           type: 'response',
           payload: { id: payload.id, results },
