@@ -11,7 +11,7 @@ export class Cluster<P extends Point> {
    * @param distanceFunction The distance function.
    * @throws {TypeError} if the initial centroid is invalid.
    */
-  constructor(initialCentroid: P, private readonly distanceFunction: DistanceFunction) {
+  constructor(initialCentroid: P, private readonly distanceFunction: DistanceFunction<P>) {
     this.centroid = new Vector(initialCentroid);
     this.children = [];
   }
@@ -57,7 +57,7 @@ export class Cluster<P extends Point> {
     this.centroid.scale(1 / this.size);
 
     const newCentroid = this.centroid.toArray();
-    return this.distanceFunction(oldCentroid, newCentroid);
+    return this.distanceFunction.compute(oldCentroid, newCentroid);
   }
 
   /**

@@ -6,6 +6,7 @@ import { composite } from '../filter';
 import { ColorFilter, Extractor } from '../types';
 
 import { Cluster } from './cluster';
+import { kmeansPlusPlus } from './initializer';
 import { Kmeans } from './kmeans';
 
 /**
@@ -23,7 +24,7 @@ export class KmeansExtractor implements Extractor {
   constructor(maxIterations: number, minDifference: number, colorFilters: ColorFilter<RGB>[]) {
     this.rgb = rgb();
     this.lab = lab();
-    this.kmeans = new Kmeans<Point5>('kmeans++', squaredEuclidean(), maxIterations, minDifference);
+    this.kmeans = new Kmeans<Point5>(kmeansPlusPlus(), squaredEuclidean(), maxIterations, minDifference);
     this.filter = composite(...colorFilters);
   }
 

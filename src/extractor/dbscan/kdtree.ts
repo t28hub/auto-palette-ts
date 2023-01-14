@@ -1,4 +1,4 @@
-import { DistanceFunction, euclidean, Point } from '../../math';
+import { DistanceFunction, Point, euclidean } from '../../math';
 
 import { Neighbor, NNS } from './nns';
 import { Node } from './node';
@@ -20,7 +20,11 @@ export class KDTree<P extends Point> implements NNS<P> {
    * @param distanceFunction The distance function.
    * @see build
    */
-  private constructor(private readonly root: Node, points: P[], private readonly distanceFunction: DistanceFunction) {
+  private constructor(
+    private readonly root: Node,
+    points: P[],
+    private readonly distanceFunction: DistanceFunction<P>,
+  ) {
     this.points = Array.from(points);
   }
 
@@ -40,7 +44,7 @@ export class KDTree<P extends Point> implements NNS<P> {
     }
 
     const point = this.points[node.index];
-    const distance = this.distanceFunction(query, point);
+    const distance = this.distanceFunction.compute(query, point);
     if (distance <= radius) {
       neighbors.push({ index: node.index, point, distance });
     }
@@ -63,7 +67,7 @@ export class KDTree<P extends Point> implements NNS<P> {
    * @param distanceFunction The distance function.
    * @return The created KDTree.
    */
-  static build<P extends Point>(points: P[], distanceFunction: DistanceFunction = euclidean()): KDTree<P> {
+  static build<P extends Point>(points: P[], distanceFunction: DistanceFunction<P> = euclidean()): KDTree<P> {
     const indices = new Uint32Array(points.length).map((_: number, index: number) => index);
     const root = this.buildNode(points, indices, 0);
     if (!root) {

@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import { Point2 } from '../../math';
+import { euclidean, Point2, squaredEuclidean } from '../../math';
 
-import { createInitializer, InitializerName } from './initializer';
+import { Initializer, kmeansPlusPlus, KmeansPlusPlusInitializer, random, RandomInitializer } from './initializer';
 
 describe('initializer', () => {
   const points: Point2[] = [
@@ -15,6 +15,11 @@ describe('initializer', () => {
   ];
 
   describe('KmeansPlusPlusInitializer', () => {
+    let initializer: Initializer<Point2>;
+    beforeEach(() => {
+      initializer = new KmeansPlusPlusInitializer(euclidean());
+    });
+
     it.each([
       { count: 1, expected: 1 },
       { count: 2, expected: 2 },
@@ -23,7 +28,6 @@ describe('initializer', () => {
       { count: 8, expected: 6 },
     ])('should return initial $count point(s)', ({ count, expected }) => {
       // Act
-      const initializer = createInitializer('kmeans++');
       const actual = initializer.initialize(points, count);
 
       // Assert
@@ -34,11 +38,9 @@ describe('initializer', () => {
     it.each([{ count: -1 }, { count: 0 }, { count: NaN }])(
       'should throw TypeError if count($count) is invalid',
       ({ count }) => {
-        // Act
-        const initializer = createInitializer('kmeans++');
-
         // Assert
         expect(() => {
+          // Act
           initializer.initialize(points, count);
         }).toThrowError(TypeError);
       },
@@ -46,6 +48,11 @@ describe('initializer', () => {
   });
 
   describe('RandomInitializer', () => {
+    let initializer: Initializer<Point2>;
+    beforeEach(() => {
+      initializer = new RandomInitializer();
+    });
+
     it.each([
       { count: 1, expected: 1 },
       { count: 2, expected: 2 },
@@ -54,7 +61,6 @@ describe('initializer', () => {
       { count: 8, expected: 6 },
     ])('should return initial $count point(s)', ({ count, expected }) => {
       // Act
-      const initializer = createInitializer('random');
       const actual = initializer.initialize(points, count);
 
       // Assert
@@ -65,32 +71,32 @@ describe('initializer', () => {
     it.each([{ count: -1 }, { count: 0 }, { count: NaN }])(
       'should throw TypeError if count($count) is invalid',
       ({ count }) => {
-        // Act
-        const initializer = createInitializer('random');
-
         // Assert
         expect(() => {
+          // Act
           initializer.initialize(points, count);
         }).toThrowError(TypeError);
       },
     );
   });
 
-  describe('createInitializer', () => {
-    it.each([{ name: 'kmeans++' }, { name: 'random' }])('should return $name initializer', ({ name }) => {
+  describe('kmeansPlusPlus', () => {
+    it('should create the KmeansPlusPlusInitializer', () => {
       // Act
-      const actual = createInitializer(name as InitializerName);
+      const actual = kmeansPlusPlus(squaredEuclidean());
 
       // Assert
-      expect(actual).toBeDefined();
+      expect(actual).toBeInstanceOf(KmeansPlusPlusInitializer);
     });
+  });
 
-    it('should throw TypeError if name is unrecognized', () => {
+  describe('random', () => {
+    it('should create the RandomInitializer', () => {
+      // Act
+      const actual = random();
+
       // Assert
-      expect(() => {
-        // Act
-        createInitializer('unknown' as InitializerName);
-      }).toThrowError(TypeError);
+      expect(actual).toBeInstanceOf(RandomInitializer);
     });
   });
 });

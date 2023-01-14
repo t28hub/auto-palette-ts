@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import { Point3, squaredEuclidean } from '../../math';
 
+import { kmeansPlusPlus, random } from './initializer';
 import { Kmeans } from './kmeans';
 
 describe('kmeans', () => {
   describe('constructor', () => {
     it('should create a new Kmeans', () => {
       // Act
-      const actual = new Kmeans('random', squaredEuclidean(), 15, Number.EPSILON);
+      const actual = new Kmeans(random(), squaredEuclidean(), 15, Number.EPSILON);
 
       // Assert
       expect(actual).toBeDefined();
@@ -22,7 +23,7 @@ describe('kmeans', () => {
     ])('should throw TypeError if parameters are invalid %p', ({ maxIterations, minDifference }) => {
       // Assert
       expect(() => {
-        new Kmeans('random', squaredEuclidean(), maxIterations, minDifference);
+        new Kmeans(random(), squaredEuclidean(), maxIterations, minDifference);
       }).toThrowError(TypeError);
     });
   });
@@ -38,7 +39,7 @@ describe('kmeans', () => {
       [4, 4, 5],
       [3, 4, 5],
     ];
-    const kmeans = new Kmeans('kmeans++', squaredEuclidean(), 10, 0.01);
+    const kmeans = new Kmeans(kmeansPlusPlus(), squaredEuclidean(), 10, 0.01);
 
     it.each([
       { count: 1, expected: 1 },

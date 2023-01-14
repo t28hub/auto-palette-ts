@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { squaredEuclidean } from './distance';
-import { Point } from './point';
+import { Point } from './types';
 import { Vector } from './vector';
 
 describe('Vector', () => {

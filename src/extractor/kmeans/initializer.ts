@@ -1,9 +1,11 @@
-import { toDistance, Distance, DistanceFunction, Point, squaredEuclidean } from '../../math';
+import { toDistance, Distance, DistanceFunction, Point, euclidean } from '../../math';
 
 /**
  * Interface to choose initial centroids.
+ *
+ * @param P The type of point.
  */
-export interface Initializer {
+export interface Initializer<P extends Point> {
   /**
    * Choose initial centroids.
    *
@@ -11,14 +13,14 @@ export interface Initializer {
    * @param count The number of center points.
    * @return The initial centroids.
    */
-  initialize<P extends Point>(points: P[], count: number): P[];
+  initialize(points: P[], count: number): P[];
 }
 
 /**
  * Random centroid initializer.
  */
-export class RandomInitializer implements Initializer {
-  initialize<P extends Point>(points: P[], count: number): P[] {
+export class RandomInitializer<P extends Point> implements Initializer<P> {
+  initialize(points: P[], count: number): P[] {
     if (!Number.isInteger(count) || count <= 0) {
       throw new TypeError(`Count(${count}) is not positive integer`);
     }
@@ -49,10 +51,10 @@ const NO_INDEX = -1;
 /**
  * Kmeans++ centroid initializer.
  */
-export class KmeansPlusPlusInitializer implements Initializer {
-  constructor(private readonly distanceMeasure: DistanceFunction) {}
+export class KmeansPlusPlusInitializer<P extends Point> implements Initializer<P> {
+  constructor(private readonly distanceFunction: DistanceFunction<P>) {}
 
-  initialize<P extends Point>(points: P[], count: number): P[] {
+  initialize(points: P[], count: number): P[] {
     if (!Number.isInteger(count) || count <= 0) {
       throw new TypeError(`Count(${count}) is not positive integer`);
     }
@@ -66,7 +68,7 @@ export class KmeansPlusPlusInitializer implements Initializer {
     return Array.from(selected.values());
   }
 
-  private selectRecursively<P extends Point>(data: P[], k: number, selected: Map<number, P>) {
+  private selectRecursively(data: P[], k: number, selected: Map<number, P>) {
     if (selected.size === k) {
       return;
     }
@@ -79,7 +81,7 @@ export class KmeansPlusPlusInitializer implements Initializer {
     this.selectRecursively(data, k, selected);
   }
 
-  private selectBest<P extends Point>(data: P[], selected: Map<number, P>) {
+  private selectBest(data: P[], selected: Map<number, P>) {
     const dataSize = data.length;
     const totalDistanceCache = new Float32Array(dataSize);
     let totalDistance = 0.0;
@@ -114,10 +116,10 @@ export class KmeansPlusPlusInitializer implements Initializer {
     selected.set(targetIndex, data[targetIndex]);
   }
 
-  private computeNearestDistance<P extends Point>(point: P, selected: Map<number, P>): Distance {
+  private computeNearestDistance(point: P, selected: Map<number, P>): Distance {
     let minDistance: Distance = toDistance(Number.MAX_VALUE);
     for (const selectedPoint of selected.values()) {
-      const distance = this.distanceMeasure<P>(point, selectedPoint);
+      const distance = this.distanceFunction.compute(point, selectedPoint);
       if (distance < minDistance) {
         minDistance = distance;
       }
@@ -134,37 +136,10 @@ export class KmeansPlusPlusInitializer implements Initializer {
   }
 }
 
-/**
- * Map of initialize method name.
- */
-export interface InitializerMap {
-  'kmeans++': KmeansPlusPlusInitializer;
-  random: RandomInitializer;
+export function kmeansPlusPlus<P extends Point>(distanceFunction: DistanceFunction<P> = euclidean()): Initializer<P> {
+  return new KmeansPlusPlusInitializer(distanceFunction);
 }
 
-/**
- * The name of initializers.
- */
-export type InitializerName = keyof InitializerMap;
-
-/**
- * Create an {@link Initializer} from method name.
- *
- * @param name The name of method.
- * @return The instance of initializer corresponding to the method name.
- * @throws {TypeError} if the method name is unrecognized.
- */
-export function createInitializer<T extends InitializerName>(name: T): InitializerMap[T];
-export function createInitializer<T extends InitializerName>(name: T): Initializer {
-  switch (name) {
-    case 'kmeans++': {
-      return new KmeansPlusPlusInitializer(squaredEuclidean());
-    }
-    case 'random': {
-      return new RandomInitializer();
-    }
-    default: {
-      throw new TypeError(`Unrecognized method name: ${name}`);
-    }
-  }
+export function random<P extends Point>(): Initializer<P> {
+  return new RandomInitializer();
 }

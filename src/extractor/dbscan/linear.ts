@@ -14,7 +14,7 @@ export class LinearSearch<P extends Point> implements NNS<P> {
    * @param points The points to be searched.
    * @param distanceFunction The distance function.
    */
-  constructor(private readonly points: P[], private readonly distanceFunction: DistanceFunction) {}
+  constructor(private readonly points: P[], private readonly distanceFunction: DistanceFunction<P>) {}
 
   /**
    * Search the neighbors from the given query and radius.
@@ -33,7 +33,7 @@ export class LinearSearch<P extends Point> implements NNS<P> {
         return previous;
       }
 
-      const distance = this.distanceFunction(point, query);
+      const distance = this.distanceFunction.compute(point, query);
       if (distance <= radius) {
         previous.push({ index, point, distance });
       }

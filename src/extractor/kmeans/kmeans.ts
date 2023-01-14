@@ -1,26 +1,24 @@
 import { DistanceFunction, Point } from '../../math';
 
 import { Cluster } from './cluster';
-import { createInitializer, Initializer, InitializerName } from './initializer';
+import { Initializer } from './initializer';
 
 /**
  * Kmeans clustering algorithm implementation.
  */
 export class Kmeans<P extends Point> {
-  private readonly initializer: Initializer;
-
   /**
    * Create a new {@link Kmeans} instance
    *
-   * @param initializationMethod The name of initialization method.
+   * @param initializer The centroid initializer.
    * @param distanceFunction The distance function.
    * @param maxIterations The max iteration.
    * @param minDifference The min difference.
    * @throws {TypeError} if the maxIterations is not positive integer.
    */
   constructor(
-    initializationMethod: InitializerName = 'kmeans++',
-    private readonly distanceFunction: DistanceFunction,
+    private readonly initializer: Initializer<P>,
+    private readonly distanceFunction: DistanceFunction<P>,
     private readonly maxIterations: number,
     private readonly minDifference: number,
   ) {
@@ -30,7 +28,6 @@ export class Kmeans<P extends Point> {
     if (!Number.isFinite(minDifference) || minDifference < 0) {
       throw new TypeError(`The min difference(${minDifference}) is not positive number`);
     }
-    this.initializer = createInitializer(initializationMethod);
   }
 
   /**
@@ -54,7 +51,7 @@ export class Kmeans<P extends Point> {
       });
     }
 
-    const centroids = this.initializer.initialize<P>(points, size);
+    const centroids = this.initializer.initialize(points, size);
     const clusters = centroids.map((centroid: P): Cluster<P> => {
       return new Cluster(centroid, this.distanceFunction);
     });
