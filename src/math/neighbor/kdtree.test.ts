@@ -21,7 +21,8 @@ const points: Point3[] = [
   [2, 3, 4],
   [4, 5, 4],
 ];
-describe('kdtree', () => {
+
+describe('KDTree', () => {
   describe('build', () => {
     it('should build KDTree from points', () => {
       // Act

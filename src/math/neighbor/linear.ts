@@ -1,13 +1,11 @@
-import { DistanceFunction, Point } from '../../math';
-
-import { Neighbor, NNS } from './nns';
+import { DistanceFunction, Neighbor, NearestNeighborSearch, Point } from '../types';
 
 /**
  * NNS implementation of linear search
  *
  * @param P The type of point.
  */
-export class LinearSearch<P extends Point> implements NNS<P> {
+export class LinearSearch<P extends Point> implements NearestNeighborSearch<P> {
   /**
    * Create a new LinearSearch.
    *
@@ -21,11 +19,11 @@ export class LinearSearch<P extends Point> implements NNS<P> {
    *
    * @param query The query point.
    * @param radius The neighbor radius.
-   * @throws RangeError if the given radius is not positive.
+   * @throws {RangeError} if the given radius is not positive.
    */
   search(query: P, radius: number): Neighbor<P>[] {
     if (radius < 0.0) {
-      throw new RangeError(`The given radius(${radius}) is not positive`);
+      throw new RangeError(`The given radius is not positive: ${radius}`);
     }
 
     const neighbors = this.points.reduce((previous: Neighbor<P>[], point: P, index: number): Neighbor<P>[] => {
@@ -39,6 +37,7 @@ export class LinearSearch<P extends Point> implements NNS<P> {
       }
       return previous;
     }, []);
+
     return neighbors.sort((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): number => {
       return neighbor1.distance - neighbor2.distance;
     });

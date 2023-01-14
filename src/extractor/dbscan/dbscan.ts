@@ -1,8 +1,7 @@
 import { ArrayQueue } from '../../collection';
-import { Point } from '../../math';
+import { NearestNeighborSearch, Neighbor, Point } from '../../math';
 
 import { Cluster } from './cluster';
-import { Neighbor, NNS } from './nns';
 
 type Label = number;
 
@@ -22,11 +21,15 @@ export class DBSCAN<P extends Point> {
    *
    * @param minPoints The minimum size of cluster.
    * @param radius The neighbor radius.
-   * @param nns The NNS algorithm.
+   * @param nns The Nearest neighbor search algorithm.
    * @throws {RangeError} if the given minPoint is less than 1.
    * @throws {RangeError} if the given radius is less than 0.0.
    */
-  constructor(private readonly minPoints: number, private readonly radius: number, private readonly nns: NNS<P>) {
+  constructor(
+    private readonly minPoints: number,
+    private readonly radius: number,
+    private readonly nns: NearestNeighborSearch<P>,
+  ) {
     if (minPoints < 1) {
       throw new RangeError(`The minimum size of cluster(${minPoints}) is not greater than or equal to 1`);
     }

@@ -1,14 +1,37 @@
-import { DistanceFunction, Point, euclidean } from '../../math';
+import { euclidean } from '../distance';
+import { DistanceFunction, NearestNeighborSearch, Neighbor, Point } from '../types';
 
-import { Neighbor, NNS } from './nns';
-import { Node } from './node';
+/**
+ * Interface representing node of KDTree.
+ */
+interface Node {
+  /**
+   * The index of the points.
+   */
+  readonly index: number;
+
+  /**
+   * The index of the coordinate axis used to split.
+   */
+  readonly axis: number;
+
+  /**
+   * The left child node.
+   */
+  readonly left: Node | undefined;
+
+  /**
+   * The right child node.
+   */
+  readonly right: Node | undefined;
+}
 
 /**
  * NNS implementation of KD-tree.
  *
  * @param P The type of point.
  */
-export class KDTree<P extends Point> implements NNS<P> {
+export class KDTree<P extends Point> implements NearestNeighborSearch<P> {
   private readonly points: P[];
 
   /**
@@ -96,6 +119,6 @@ export class KDTree<P extends Point> implements NNS<P> {
 
     const left = this.buildNode(points, indices.slice(0, median), depth + 1);
     const right = this.buildNode(points, indices.slice(median + 1), depth + 1);
-    return new Node(indices[median], axis, left, right);
+    return { index: indices[median], axis, left, right };
   }
 }

@@ -42,3 +42,40 @@ export interface DistanceFunction<P extends Point> {
    */
   compute(point1: P, point2: P): Distance;
 }
+
+/**
+ * Type representing the result of nearest neighbor search.
+ *
+ * @param P The type of point.
+ */
+export type Neighbor<P extends Point> = {
+  /**
+   * The index of this neighbor.
+   */
+  readonly index: number;
+
+  /**
+   * The point of this neighbor.
+   */
+  readonly point: P;
+
+  /**
+   * The distance between the query to this neighbor.
+   */
+  readonly distance: Distance;
+};
+
+/**
+ * Interface representing the nearest neighbor search.
+ *
+ * @param P The type of point.
+ */
+export interface NearestNeighborSearch<P extends Point> {
+  /**
+   * Search the neighbors of the given point.
+   *
+   * @param query The query point.
+   * @param radius The neighbor radius.
+   */
+  search(query: P, radius: number): Neighbor<P>[];
+}

@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { euclidean, Point2, squaredEuclidean } from '../../math';
+import { linear, Point2, squaredEuclidean } from '../../math';
 
 import { DBSCAN } from './dbscan';
-import { LinearSearch } from './linear';
 
 const points: Point2[] = [
   [0, 0],
@@ -28,7 +27,7 @@ describe('dbscan', () => {
   describe('constructor', () => {
     it('should create a new DBSCAN', () => {
       // Actual
-      const actual = new DBSCAN(10, 2.5, new LinearSearch(points, euclidean()));
+      const actual = new DBSCAN(10, 2.5, linear(points));
 
       // Assert
       expect(actual).toBeDefined();
@@ -38,7 +37,7 @@ describe('dbscan', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(0, 2.5, new LinearSearch(points, euclidean()));
+        new DBSCAN(0, 2.5, linear(points));
       }).toThrowError(RangeError);
     });
 
@@ -46,16 +45,15 @@ describe('dbscan', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(10, -1.0, new LinearSearch(points, euclidean()));
+        new DBSCAN(10, -1.0, linear(points));
       }).toThrowError(RangeError);
     });
   });
 
-  describe('predict', () => {
+  describe('fit', () => {
     it('should cluster the given points', () => {
       // Arrange
-      const nns = new LinearSearch(points, squaredEuclidean());
-      const dbscan = new DBSCAN(4, 2.0, nns);
+      const dbscan = new DBSCAN(4, 2.0, linear(points, squaredEuclidean()));
 
       // Act
       const actual = dbscan.fit(points);
