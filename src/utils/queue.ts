@@ -1,16 +1,18 @@
 /**
- * Interface representing Queue.
+ * Interface representing queue.
+ *
+ * @param E The type of elements.
  */
 export interface Queue<E> {
-  /**
-   * The size of this queue.
-   */
-  readonly size: number;
-
   /**
    * Whether this queue is empty.
    */
   readonly isEmpty: boolean;
+
+  /**
+   * The size of this queue.
+   */
+  readonly size: number;
 
   /**
    * Enqueue the elements to this queue.
@@ -21,9 +23,16 @@ export interface Queue<E> {
   enqueue(...elements: E[]): boolean;
 
   /**
-   * Dequeue the element from this queue.
+   * Dequeue an element from this queue.
    *
    * @return The first element or undefined.
    */
   dequeue(): E | undefined;
+
+  /**
+   * Return an array of all elements.
+   *
+   * @return The array of all elements.
+   */
+  toArray(): E[];
 }

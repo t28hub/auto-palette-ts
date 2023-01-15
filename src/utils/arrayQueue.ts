@@ -2,6 +2,8 @@ import { Queue } from './queue';
 
 /**
  * The array based Queue implementation.
+ *
+ * @param E The type of elements.
  */
 export class ArrayQueue<E> implements Queue<E> {
   private readonly elements: E[];
@@ -16,17 +18,17 @@ export class ArrayQueue<E> implements Queue<E> {
   }
 
   /**
-   * The size of this queue.
-   */
-  get size(): number {
-    return this.elements.length;
-  }
-
-  /**
    * Whether this queue is empty.
    */
   get isEmpty(): boolean {
     return this.elements.length === 0;
+  }
+
+  /**
+   * The size of this queue.
+   */
+  get size(): number {
+    return this.elements.length;
   }
 
   /**
@@ -47,5 +49,14 @@ export class ArrayQueue<E> implements Queue<E> {
    */
   dequeue(): E | undefined {
     return this.elements.shift();
+  }
+
+  /**
+   * Return an array of all elements.
+   *
+   * @return The array of all elements.
+   */
+  toArray(): E[] {
+    return [...this.elements];
   }
 }
