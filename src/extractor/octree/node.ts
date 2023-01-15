@@ -1,5 +1,5 @@
-import { ArrayQueue } from '../../collection';
 import { Point3, Vector } from '../../math';
+import { ArrayQueue } from '../../utils';
 
 import { Bounds } from './bounds';
 

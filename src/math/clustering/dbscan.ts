@@ -1,4 +1,4 @@
-import { ArrayQueue } from '../../collection';
+import { ArrayQueue } from '../../utils';
 import { Cluster, ClusteringAlgorithm, NearestNeighborSearch, Neighbor, Point } from '../types';
 
 import { DBSCANCluster } from './dbscanCluster';

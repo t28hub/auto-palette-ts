@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ArrayQueue } from './arrayQueue';
 
-describe('arrayQueue', () => {
+describe('ArrayQueue', () => {
   describe('constructor', () => {
     it('should create a new ArrayQueue', () => {
       // Act
