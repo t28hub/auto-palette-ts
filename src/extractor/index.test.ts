@@ -2,12 +2,36 @@ import { describe, expect, it } from 'vitest';
 
 import { Method } from '../types';
 
+import { DBSCANExtractor } from './dbscan';
+import { opacity } from './filter';
 import { KmeansExtractor } from './kmeans';
 import { OctreeExtractor } from './octree';
 
-import { createExtractor, kmeans, octree } from './index';
+import { createExtractor, dbscan, kmeans, octree } from './index';
 
-describe('extractor/index', () => {
+describe('extractor', () => {
+  describe('dbscan', () => {
+    it('should create a DBSCABExtractor', () => {
+      // Act
+      const actual = dbscan();
+
+      // Assert
+      expect(actual).toBeInstanceOf(DBSCANExtractor);
+    });
+
+    it('should create a DBSCANExtractor with options', () => {
+      // Act
+      const actual = dbscan({
+        minPoints: 36,
+        threshold: 0.1,
+        colorFilters: [opacity()],
+      });
+
+      // Assert
+      expect(actual).toBeInstanceOf(DBSCANExtractor);
+    });
+  });
+
   describe('kmeans', () => {
     it('should create a KmeansExtractor', () => {
       // Act
@@ -53,6 +77,7 @@ describe('extractor/index', () => {
 
   describe('createExtractor', () => {
     it.each([
+      { method: 'dbscan', expected: DBSCANExtractor },
       { method: 'kmeans', expected: KmeansExtractor },
       { method: 'octree', expected: OctreeExtractor },
     ])('should create $expected from option($options)', ({ method, expected }) => {
@@ -63,7 +88,7 @@ describe('extractor/index', () => {
       expect(actual).toBeInstanceOf(expected);
     });
 
-    it('should throw Error when algorithm is unrecognized', () => {
+    it('should throw TypeError when the method is unrecognized', () => {
       // Assert
       expect(() => {
         createExtractor('unrecognized' as Method);

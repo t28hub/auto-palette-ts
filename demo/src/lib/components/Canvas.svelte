@@ -53,15 +53,15 @@
     const scale = Math.min(width / imageWidth, height / imageHeight);
     const scaledWidth = Math.round(imageWidth * scale);
     const scaledHeight = Math.round(imageHeight * scale);
-    const positionX = Math.round((width - scaledWidth) / 2.0);
-    const positionY = Math.round((height - scaledHeight) / 2.0);
-    context.drawImage(img, 0, 0, imageWidth, imageHeight, positionX, positionY, scaledWidth, scaledHeight);
+    context.drawImage(img, 0, 0, imageWidth, imageHeight, 0, 0, scaledWidth, scaledHeight);
 
-    const imageData = context.getImageData(positionX, positionY, scaledWidth, scaledHeight);
+    const imageData = context.getImageData(0, 0, scaledWidth, scaledHeight);
+    const begin = performance.now();
     palette(imageData)
-      .build()
+      .build({ method: 'dbscan' })
       .then((result) => swatches.set(result.getSwatches()))
-      .catch((cause) => console.warn({ cause }));
+      .catch((cause) => console.warn({ cause }))
+      .finally(() => console.info(performance.now() - begin));
   }
 
   $: drawImage(context, image);
