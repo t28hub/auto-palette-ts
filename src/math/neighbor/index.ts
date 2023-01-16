@@ -1,5 +1,5 @@
 import { euclidean } from '../distance';
-import { DistanceFunction, NearestNeighborSearch, Point } from '../types';
+import { DistanceFunction, NeighborSearch, Point } from '../types';
 
 import { KDTree } from './kdtree';
 import { LinearSearch } from './linear';
@@ -13,7 +13,7 @@ import { LinearSearch } from './linear';
 export function kdtree<P extends Point>(
   points: P[],
   distanceFunction: DistanceFunction<P> = euclidean(),
-): NearestNeighborSearch<P> {
+): NeighborSearch<P> {
   return KDTree.build(points, distanceFunction);
 }
 
@@ -26,6 +26,6 @@ export function kdtree<P extends Point>(
 export function linear<P extends Point>(
   points: P[],
   distanceFunction: DistanceFunction<P> = euclidean(),
-): NearestNeighborSearch<P> {
+): NeighborSearch<P> {
   return new LinearSearch(points, distanceFunction);
 }

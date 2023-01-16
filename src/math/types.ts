@@ -66,11 +66,19 @@ export interface Neighbor<P extends Point> {
 }
 
 /**
- * Interface representing the nearest neighbor search.
+ * Interface representing the neighbor search.
  *
  * @param P The type of point.
  */
-export interface NearestNeighborSearch<P extends Point> {
+export interface NeighborSearch<P extends Point> {
+  /**
+   * Search the nearest neighbor of the given point.
+   *
+   * @param query The query point.
+   * @return The nearest neighbor.
+   */
+  nearest(query: P): Neighbor<P>;
+
   /**
    * Search the neighbors of the given point.
    *

@@ -41,13 +41,44 @@ describe('KDTree', () => {
     });
   });
 
+  describe('nearest', () => {
+    let kdtree: KDTree<Point3>;
+    beforeEach(() => {
+      kdtree = KDTree.build(points, euclidean());
+    });
+
+    it('should return the nearest neighbor to the given point', () => {
+      // Act
+      const actual = kdtree.nearest([9, 3, 4]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 8,
+        point: [7, 2, 2],
+        distance: 3.0,
+      });
+    });
+
+    it('should return the nearest neighbor if the given point exists', () => {
+      // Act
+      const actual = kdtree.nearest([5, 0, 0]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 6,
+        point: [5, 0, 0],
+        distance: 0.0,
+      });
+    });
+  });
+
   describe('search', () => {
     let kdtree: KDTree<Point3>;
     beforeEach(() => {
       kdtree = KDTree.build(points, euclidean());
     });
 
-    it('should return neighbors of the given point', () => {
+    it('should return the neighbors to the given point', () => {
       // Act
       const actual = kdtree.search([2, 5, 6], 3.0);
 

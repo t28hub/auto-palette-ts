@@ -1,4 +1,4 @@
-import { beforeEach, describe } from 'vitest';
+import { beforeEach, describe, it } from 'vitest';
 
 import { Point2, squaredEuclidean } from '../../math';
 
@@ -27,6 +27,44 @@ describe('LinearSearch', () => {
       // Assert
       expect(actual).toBeDefined();
     });
+
+    it('should throw TypeError if the given points is empty', () => {
+      // Assert
+      expect(() => {
+        new LinearSearch([], squaredEuclidean());
+      }).toThrowError(TypeError);
+    });
+  });
+
+  describe('nearest', () => {
+    let linearSearch: LinearSearch<Point2>;
+    beforeEach(() => {
+      linearSearch = new LinearSearch(points, squaredEuclidean());
+    });
+
+    it('should return the nearest neighbor to the given point', () => {
+      // Act
+      const actual = linearSearch.nearest([1, 2]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 3,
+        point: [2, 2],
+        distance: 1.0,
+      });
+    });
+
+    it('should return the nearest neighbor if the given point exists', () => {
+      // Act
+      const actual = linearSearch.nearest([4, 4]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 5,
+        point: [4, 4],
+        distance: 0.0,
+      });
+    });
   });
 
   describe('search', () => {
@@ -35,7 +73,7 @@ describe('LinearSearch', () => {
       linearSearch = new LinearSearch(points, squaredEuclidean());
     });
 
-    it('should return an array of neighbors', () => {
+    it('should return the neighbors to the given point', () => {
       // Act
       const actual = linearSearch.search([3, 5], 1);
 

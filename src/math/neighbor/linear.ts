@@ -1,25 +1,49 @@
-import { DistanceFunction, Neighbor, NearestNeighborSearch, Point } from '../types';
+import { Mutable } from '../../utils';
+import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
 
 /**
  * NNS implementation of linear search
  *
  * @param P The type of point.
  */
-export class LinearSearch<P extends Point> implements NearestNeighborSearch<P> {
+export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * Create a new LinearSearch.
    *
    * @param points The points to be searched.
    * @param distanceFunction The distance function.
+   * @throws {TypeError} if the given points is empty.
    */
-  constructor(private readonly points: P[], private readonly distanceFunction: DistanceFunction<P>) {}
+  constructor(private readonly points: P[], private readonly distanceFunction: DistanceFunction<P>) {
+    if (points.length === 0) {
+      throw new TypeError('The points is empty');
+    }
+  }
 
   /**
-   * Search the neighbors from the given query and radius.
-   *
-   * @param query The query point.
-   * @param radius The neighbor radius.
-   * @throws {RangeError} if the given radius is not positive.
+   * {@inheritDoc NeighborSearch.nearest}
+   */
+  nearest(query: P): Neighbor<P> {
+    return this.points.reduce(
+      (neighbor: Mutable<Neighbor<P>>, point: P, index: number): Mutable<Neighbor<P>> => {
+        if (index === 0) {
+          return neighbor;
+        }
+
+        const distance = this.distanceFunction.compute(point, query);
+        if (distance < neighbor.distance) {
+          neighbor.index = index;
+          neighbor.point = point;
+          neighbor.distance = distance;
+        }
+        return neighbor;
+      },
+      { index: 0, point: this.points[0], distance: this.distanceFunction.compute(this.points[0], query) },
+    );
+  }
+
+  /**
+   * {@inheritDoc NeighborSearch.search}
    */
   search(query: P, radius: number): Neighbor<P>[] {
     if (radius < 0.0) {

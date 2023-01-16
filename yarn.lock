@@ -1375,11 +1375,6 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-auto-palette@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/auto-palette/-/auto-palette-0.0.1.tgz#6edf3d7e72cd9497374e9604dee882439d645f37"
-  integrity sha512-glzBN5eglyyPJiItoo0p1EIgfK+o63NM5V1KIf1jxIiG5rTCia83b3oX2eCT4S72kHhhGmUEZ+i2LXvdLHPzGQ==
-
 babel-jest@^29.3.1:
   version "29.3.1"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.3.1.tgz#05c83e0d128cd48c453eea851482a38782249f44"

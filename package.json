@@ -49,9 +49,7 @@
     "build": "tsc && vite build",
     "prepare": "husky install"
   },
-  "dependencies": {
-    "auto-palette": "^0.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.30",
     "@types/jest": "^29.2.4",

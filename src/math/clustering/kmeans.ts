@@ -1,3 +1,4 @@
+import { kdtree } from '../neighbor';
 import { Cluster, ClusteringAlgorithm, DistanceFunction, Point } from '../types';
 
 import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
@@ -60,10 +61,16 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
   }
 
   private iterate(clusters: KmeansCluster<P>[], points: P[]): boolean {
-    clusters.forEach((cluster: KmeansCluster<P>) => cluster.clear());
+    const centroids = clusters.reduce((centroids: P[], cluster: KmeansCluster<P>) => {
+      centroids.push(cluster.centroid());
+      cluster.clear();
+      return centroids;
+    }, []);
 
+    const neighborSearch = kdtree(centroids, this.distanceFunction);
     points.forEach((point: P) => {
-      const nearestCluster = Kmeans.findNearestCluster(clusters, point);
+      const neighbor = neighborSearch.nearest(point);
+      const nearestCluster = clusters[neighbor.index];
       nearestCluster.append(point);
     });
 
@@ -75,19 +82,5 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
       }
     }, 0.0);
     return updated;
-  }
-
-  private static findNearestCluster<P extends Point>(clusters: KmeansCluster<P>[], point: P): KmeansCluster<P> {
-    let nearestCluster: KmeansCluster<P> = clusters[0];
-    let minDistance = nearestCluster.distanceTo(point);
-    for (let i = 1; i < clusters.length; i++) {
-      const cluster = clusters[i];
-      const distance = cluster.distanceTo(point);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestCluster = cluster;
-      }
-    }
-    return nearestCluster;
   }
 }

@@ -1,5 +1,5 @@
 import { ArrayQueue } from '../../utils';
-import { Cluster, ClusteringAlgorithm, NearestNeighborSearch, Neighbor, Point } from '../types';
+import { Cluster, ClusteringAlgorithm, NeighborSearch, Neighbor, Point } from '../types';
 
 import { DBSCANCluster } from './dbscanCluster';
 
@@ -28,7 +28,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   constructor(
     private readonly minPoints: number,
     private readonly radius: number,
-    private readonly nns: NearestNeighborSearch<P>,
+    private readonly nns: NeighborSearch<P>,
   ) {
     if (minPoints < 1) {
       throw new RangeError(`The minimum size of cluster(${minPoints}) is not greater than or equal to 1`);
