@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { PriorityQueue } from './priorityQueue';
 
+const elements = ['Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank'];
+
 describe('PriorityQueue', () => {
   describe('constructor', () => {
     it('should create a new PriorityQueue with the score function', () => {
@@ -23,7 +25,7 @@ describe('PriorityQueue', () => {
       const queue = new PriorityQueue<string>((string: string): number => {
         return string.length;
       });
-      queue.enqueue('Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank');
+      elements.forEach((name) => queue.enqueue(name));
 
       // Assert
       expect(queue.size).toEqual(6);
@@ -38,7 +40,7 @@ describe('PriorityQueue', () => {
       const queue = new PriorityQueue<string>((string: string): number => {
         return string.length;
       });
-      queue.enqueue('Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank');
+      elements.forEach((name) => queue.enqueue(name));
 
       // Act & Assert
       expect(queue.dequeue()).toEqual('Charlie');
@@ -61,13 +63,14 @@ describe('PriorityQueue', () => {
       const queue = new PriorityQueue<string>((string: string): number => {
         return string.length;
       });
-      queue.enqueue('Alice', 'Bob', 'Charlie', 'Dave', 'Ellen');
+      elements.forEach((name) => queue.enqueue(name));
 
       // Act
       const actual = queue.toArray();
 
       // Assert
-      expect(actual).toEqual(['Charlie', 'Ellen', 'Alice', 'Dave', 'Bob']);
+      expect(actual).toHaveLength(6);
+      expect(actual).toEqual(['Charlie', 'Frank', 'Ellen', 'Dave', 'Bob', 'Alice']);
     });
   });
 });

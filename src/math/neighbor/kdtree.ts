@@ -1,31 +1,8 @@
-import { Mutable } from '../../utils';
+import { Mutable, PriorityQueue, Queue } from '../../utils';
 import { euclidean } from '../distance';
-import { DistanceFunction, NeighborSearch, Neighbor, Point } from '../types';
+import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
 
-/**
- * Interface representing node of KDTree.
- */
-interface Node {
-  /**
-   * The index of the points.
-   */
-  readonly index: number;
-
-  /**
-   * The index of the coordinate axis used to split.
-   */
-  readonly axis: number;
-
-  /**
-   * The left child node.
-   */
-  readonly left: Node | undefined;
-
-  /**
-   * The right child node.
-   */
-  readonly right: Node | undefined;
-}
+import { KDNode } from './kdnode';
 
 /**
  * NNS implementation of KD-tree.
@@ -45,7 +22,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
    * @see build
    */
   private constructor(
-    private readonly root: Node,
+    private readonly root: KDNode,
     points: P[],
     private readonly distanceFunction: DistanceFunction<P>,
   ) {
@@ -59,25 +36,47 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     // Do not need to check whether the points is empty, since size of points is checked when constructing the KDTree.
     const point = this.points[0];
     const distance = this.distanceFunction.compute(query, point);
-    const nearest: Mutable<Neighbor<P>> = { index: 0, point, distance };
-    this.nearestRecursively(this.root, query, nearest);
-    return nearest;
+    const result: Mutable<Neighbor<P>> = { index: 0, point, distance };
+    this.nearestRecursively(this.root, query, result);
+    return result;
+  }
+
+  search(query: P, k: number): Neighbor<P>[] {
+    if (k < 1) {
+      throw new RangeError(`The k is less than 1: ${k}`);
+    }
+
+    const result = new PriorityQueue((neighbor: Neighbor<P>): number => {
+      // Sort in descending order of distance from the given query point.
+      return -neighbor.distance;
+    });
+    this.searchRecursively(this.root, query, k, result);
+
+    const neighbors = new Array<Neighbor<P>>();
+    while (neighbors.length < k) {
+      const neighbor = result.dequeue();
+      if (!neighbor) {
+        break;
+      }
+      neighbors.push(neighbor);
+    }
+    return neighbors;
   }
 
   /**
-   * {@inheritDoc NeighborSearch.search}
+   * {@inheritDoc NeighborSearch.range}
    */
-  search(query: P, radius: number): Neighbor<P>[] {
+  range(query: P, radius: number): Neighbor<P>[] {
     if (radius <= 0.0) {
       throw new RangeError(`The radius is not positive number: ${radius}`);
     }
 
-    const neighbors = new Array<Neighbor<P>>();
-    this.searchRecursively(this.root, query, radius, neighbors);
-    return neighbors;
+    const result = new Array<Neighbor<P>>();
+    this.rangeRecursively(this.root, query, radius, result);
+    return result;
   }
 
-  private nearestRecursively(node: Node | undefined, query: P, neighbor: Mutable<Neighbor<P>>) {
+  private nearestRecursively(node: KDNode | undefined, query: P, neighbor: Mutable<Neighbor<P>>) {
     if (!node) {
       return;
     }
@@ -88,7 +87,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     }
 
     const point = this.points[index];
-    if (!node.left && !node.right) {
+    if (node.isLeaf) {
       const distance = this.distanceFunction.compute(query, point);
       if (distance < neighbor.distance) {
         neighbor.index = index;
@@ -109,7 +108,32 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     }
   }
 
-  private searchRecursively(node: Node | undefined, query: P, radius: number, neighbors: Neighbor<P>[]) {
+  private searchRecursively(node: KDNode | undefined, query: P, k: number, neighbors: Queue<Neighbor<P>>) {
+    if (!node) {
+      return;
+    }
+
+    const index = node.index;
+    const point = this.points[index];
+    const distance = this.distanceFunction.compute(query, point);
+    neighbors.enqueue({ index, point, distance });
+    if (node.isLeaf) {
+      return;
+    }
+
+    const delta = query[node.axis] - point[node.axis];
+    const neighbor = neighbors.peek();
+    if (neighbors.size < k || (neighbor && Math.abs(delta) <= neighbor.distance)) {
+      this.searchRecursively(node.left, query, k, neighbors);
+      this.searchRecursively(node.right, query, k, neighbors);
+    } else if (delta < 0) {
+      this.searchRecursively(node.left, query, k, neighbors);
+    } else {
+      this.searchRecursively(node.right, query, k, neighbors);
+    }
+  }
+
+  private rangeRecursively(node: KDNode | undefined, query: P, radius: number, neighbors: Neighbor<P>[]) {
     if (!node) {
       return;
     }
@@ -122,12 +146,12 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const delta = query[node.axis] - point[node.axis];
     if (Math.abs(delta) <= radius) {
-      this.searchRecursively(node.left, query, radius, neighbors);
-      this.searchRecursively(node.right, query, radius, neighbors);
+      this.rangeRecursively(node.left, query, radius, neighbors);
+      this.rangeRecursively(node.right, query, radius, neighbors);
     } else if (delta < 0) {
-      this.searchRecursively(node.left, query, radius, neighbors);
+      this.rangeRecursively(node.left, query, radius, neighbors);
     } else {
-      this.searchRecursively(node.right, query, radius, neighbors);
+      this.rangeRecursively(node.right, query, radius, neighbors);
     }
   }
 
@@ -151,7 +175,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     points: ReadonlyArray<P>,
     indices: Uint32Array,
     depth: number,
-  ): Node | undefined {
+  ): KDNode | undefined {
     if (indices.length <= 0) {
       return undefined;
     }
@@ -167,6 +191,6 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const left = this.buildNode(points, indices.slice(0, median), depth + 1);
     const right = this.buildNode(points, indices.slice(median + 1), depth + 1);
-    return { index: indices[median], axis, left, right };
+    return new KDNode(indices[median], axis, left, right);
   }
 }

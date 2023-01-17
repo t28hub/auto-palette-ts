@@ -32,29 +32,29 @@ export class ArrayQueue<E> implements Queue<E> {
   }
 
   /**
-   * Enqueue the elements to this queue.
-   *
-   * @param elements The elements to be enqueued.
-   * @return true if the elements are enqueued.
+   * {@inheritDoc Queue.enqueue}
    */
-  enqueue(...elements: E[]): boolean {
-    this.elements.push(...elements);
+  enqueue(element: E): boolean {
+    this.elements.push(element);
     return true;
   }
 
   /**
-   * Dequeue the element from this queue.
-   *
-   * @return The first element or undefined.
+   * {@inheritDoc Queue.dequeue}
    */
   dequeue(): E | undefined {
     return this.elements.shift();
   }
 
   /**
-   * Return an array of all elements.
-   *
-   * @return The array of all elements.
+   * {@inheritDoc Queue.peek}
+   */
+  peek(): E | undefined {
+    return this.elements.at(0);
+  }
+
+  /**
+   * {@inheritDoc Queue.toArray}
    */
   toArray(): E[] {
     return [...this.elements];

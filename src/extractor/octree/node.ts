@@ -129,7 +129,9 @@ export class Node {
       const result = walker(node);
       switch (result) {
         case 'continue': {
-          queue.enqueue(...node.children);
+          node.children.forEach((child: Node) => {
+            queue.enqueue(child);
+          });
           break;
         }
         case 'terminate': {

@@ -33,10 +33,12 @@ describe('ArrayQueue', () => {
     it('should enqueue the given elements', () => {
       // Act
       const queue = new ArrayQueue<string>();
-      const actual = queue.enqueue('Alice', 'Bob', 'Charlie', 'Dave');
+      queue.enqueue('Alice');
+      queue.enqueue('Bob');
+      queue.enqueue('Charlie');
+      queue.enqueue('Dave');
 
       // Assert
-      expect(actual).toEqual(true);
       expect(queue).toMatchObject({
         size: 4,
         isEmpty: false,
@@ -49,7 +51,9 @@ describe('ArrayQueue', () => {
     it('should return the first element', () => {
       // Act
       const queue = new ArrayQueue<string>();
-      queue.enqueue('Alice', 'Bob', 'Charlie');
+      queue.enqueue('Alice');
+      queue.enqueue('Bob');
+      queue.enqueue('Charlie');
       const actual = queue.dequeue();
 
       // Assert
@@ -80,7 +84,8 @@ describe('ArrayQueue', () => {
     it('should return an array of all elements', () => {
       // Arrange
       const queue = new ArrayQueue();
-      queue.enqueue('Alice', 'Bob');
+      queue.enqueue('Alice');
+      queue.enqueue('Bob');
 
       // Act
       const actual = queue.toArray();

@@ -15,19 +15,28 @@ export interface Queue<E> {
   readonly size: number;
 
   /**
-   * Enqueue the elements to this queue.
+   * Enqueue the given element to this queue.
    *
-   * @param elements The elements to be enqueued.
-   * @return true if the elements are enqueued.
+   * @param element The element to be enqueued.
+   * @return true if the element is enqueued.
    */
-  enqueue(...elements: E[]): boolean;
+  enqueue(element: E): boolean;
 
   /**
    * Dequeue an element from this queue.
    *
-   * @return The first element or undefined.
+   * @return The head element, or undefined if this queue is empty.
+   * @see peek
    */
   dequeue(): E | undefined;
+
+  /**
+   * Return the head element of this queue, but does not remove.
+   *
+   * @return The head element, or undefined if this queue is empty.
+   * @see dequeue
+   */
+  peek(): E | undefined;
 
   /**
    * Return an array of all elements.

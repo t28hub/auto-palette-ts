@@ -80,13 +80,22 @@ export interface NeighborSearch<P extends Point> {
   nearest(query: P): Neighbor<P>;
 
   /**
-   * Search the neighbors of the given point.
+   * Search the k nearest neighbors to the given query.
    *
    * @param query The query point.
-   * @param radius The neighbor radius.
-   * @return The array of neighbors.
+   * @param k The number of nearest neighbors.
+   * @return The k nearest neighbors.
    */
-  search(query: P, radius: number): Neighbor<P>[];
+  search(query: P, k: number): Neighbor<P>[];
+
+  /**
+   * Search the neighbors in the given radius to the given query.
+   *
+   * @param query The query point.
+   * @param radius The radius of search range.
+   * @return The neighbors in the given radius.
+   */
+  range(query: P, radius: number): Neighbor<P>[];
 }
 
 /**

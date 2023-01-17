@@ -78,9 +78,60 @@ describe('KDTree', () => {
       kdtree = KDTree.build(points, euclidean());
     });
 
-    it('should return the neighbors to the given point', () => {
+    it('should return the k nearest neighbors to the given point', () => {
       // Act
-      const actual = kdtree.search([2, 5, 6], 3.0);
+      const actual = kdtree.search([2, 5, 6], 3);
+
+      // Assert
+      expect(actual).toHaveLength(3);
+      expect(actual[0]).toMatchObject({
+        index: 13,
+        point: [4, 5, 4],
+        distance: 2.8284271247461903,
+      });
+      expect(actual[1]).toMatchObject({
+        index: 12,
+        point: [2, 3, 4],
+        distance: 2.8284271247461903,
+      });
+      expect(actual[2]).toMatchObject({
+        index: 0,
+        point: [1, 2, 3],
+        distance: 4.358898943540674,
+      });
+    });
+
+    it('should return all neighbors if the k >= points.length', () => {
+      // Act
+      const actual = kdtree.search([3, 5, 7], points.length);
+
+      // Assert
+      expect(actual).toHaveLength(points.length);
+      expect(actual[0]).toMatchObject({
+        index: 13,
+        point: [4, 5, 4],
+        distance: 3.1622776601683795,
+      });
+    });
+
+    it('should throw RangeError if the k is invalid', () => {
+      // Assert
+      expect(() => {
+        // Act
+        kdtree.search([0, 1, 2], 0);
+      }).toThrowError(RangeError);
+    });
+  });
+
+  describe('range', () => {
+    let kdtree: KDTree<Point3>;
+    beforeEach(() => {
+      kdtree = KDTree.build(points, euclidean());
+    });
+
+    it('should return the neighbors in the given radius to the given point', () => {
+      // Act
+      const actual = kdtree.range([2, 5, 6], 3.0);
 
       // Assert
       expect(actual).toHaveLength(2);
@@ -98,16 +149,24 @@ describe('KDTree', () => {
 
     it('should return an empty array if no neighbors exist', () => {
       // Act
-      const actual = kdtree.search([2, 5, 6], 2.0);
+      const actual = kdtree.range([2, 5, 6], 2.0);
 
       // Assert
       expect(actual).toBeEmpty();
     });
 
+    it('should return the all neighbors if all points exist in the given radius', () => {
+      // Act
+      const actual = kdtree.range([2, 5, 6], 100.0);
+
+      // Assert
+      expect(actual).toHaveLength(14);
+    });
+
     it('should throw RangeError if the given radius is not positive', () => {
       // Assert
       expect(() => {
-        kdtree.search([2, 5, 6], 0.0);
+        kdtree.range([2, 5, 6], 0.0);
       }).toThrowError(RangeError);
     });
   });

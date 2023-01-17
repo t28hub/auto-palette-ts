@@ -47,32 +47,30 @@ export class PriorityQueue<E> implements Queue<E> {
   }
 
   /**
-   * Enqueue the elements to this queue.
-   *
-   * @param elements The elements to be enqueued.
-   * @return true if the elements are enqueued.
+   * {@inheritDoc Queue.enqueue}
    */
-  enqueue(...elements: E[]): boolean {
-    elements.forEach((element: E) => {
-      const score = this.scoreFunction(element);
-      this.elements.push({ score, element });
+  enqueue(element: E): boolean {
+    const score = this.scoreFunction(element);
+    this.elements.push({ score, element });
 
-      let index = this.elements.length - 1;
-      // If the index is 0, the element is root element.
-      while (index > 0) {
-        const parentIndex = Math.round((index - 1) / 2);
-        const parentElement = this.elements[parentIndex];
-        if (score < parentElement.score) {
-          break;
-        }
-
-        this.swap(index, parentIndex);
-        index = parentIndex;
+    let index = this.elements.length - 1;
+    // If the index is 0, the element is root element.
+    while (index > 0) {
+      const parentIndex = Math.round((index - 1) / 2);
+      const parentElement = this.elements[parentIndex];
+      if (score < parentElement.score) {
+        break;
       }
-    });
+
+      this.swap(index, parentIndex);
+      index = parentIndex;
+    }
     return true;
   }
 
+  /**
+   * {@inheritDoc Queue.dequeue}
+   */
   dequeue(): E | undefined {
     const element = this.elements[0];
     const lastElement = this.elements.pop();
@@ -124,9 +122,15 @@ export class PriorityQueue<E> implements Queue<E> {
   }
 
   /**
-   * Return an array of all elements.
-   *
-   * @return The array of all elements.
+   * {@inheritDoc Queue.peek}
+   */
+  peek(): E | undefined {
+    const head = this.elements.at(0);
+    return head?.element;
+  }
+
+  /**
+   * {@inheritDoc Queue.toArray}
    */
   toArray(): E[] {
     return this.elements.map((scored: ScoredElement<E>): E => scored.element);

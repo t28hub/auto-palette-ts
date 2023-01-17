@@ -73,9 +73,60 @@ describe('LinearSearch', () => {
       linearSearch = new LinearSearch(points, squaredEuclidean());
     });
 
-    it('should return the neighbors to the given point', () => {
+    it('should return the k nearest neighbors to the given point', () => {
       // Act
-      const actual = linearSearch.search([3, 5], 1);
+      const actual = linearSearch.search([4, 4], 3);
+
+      // Assert
+      expect(actual).toHaveLength(3);
+      expect(actual[0]).toMatchObject({
+        index: 5,
+        point: [4, 4],
+        distance: 0,
+      });
+      expect(actual[1]).toMatchObject({
+        index: 4,
+        point: [3, 4],
+        distance: 1,
+      });
+      expect(actual[2]).toMatchObject({
+        index: 6,
+        point: [4, 3],
+        distance: 1,
+      });
+    });
+
+    it('should return all points if the given k >= points.length', () => {
+      // Act
+      const actual = linearSearch.search([3, 5], points.length);
+
+      // Assert
+      expect(actual).toHaveLength(points.length);
+      expect(actual[0]).toMatchObject({
+        index: 8,
+        point: [4, 5],
+        distance: 1,
+      });
+    });
+
+    it('should throw RangeError if the given k is invalid', () => {
+      // Assert
+      expect(() => {
+        // Act
+        linearSearch.search([0, 3], 0);
+      }).toThrowError(RangeError);
+    });
+  });
+
+  describe('range', () => {
+    let linearSearch: LinearSearch<Point2>;
+    beforeEach(() => {
+      linearSearch = new LinearSearch(points, squaredEuclidean());
+    });
+
+    it('should return the neighbors in the given radius to the given point', () => {
+      // Act
+      const actual = linearSearch.range([3, 5], 1);
 
       // Assert
       expect(actual).toHaveLength(2);
@@ -91,9 +142,9 @@ describe('LinearSearch', () => {
       });
     });
 
-    it('should return an empty array if no neighbors', () => {
+    it('should return an empty array if no neighbors in the given radius', () => {
       // Act
-      const actual = linearSearch.search([-1, -4], 1);
+      const actual = linearSearch.range([-1, -4], 1);
 
       // Assert
       expect(actual).toBeEmpty();
@@ -103,7 +154,7 @@ describe('LinearSearch', () => {
       // Assert
       expect(() => {
         // Act
-        linearSearch.search([2, 2], -1);
+        linearSearch.range([2, 2], -1);
       }).toThrowError(RangeError);
     });
   });

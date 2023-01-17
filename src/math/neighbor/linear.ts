@@ -1,4 +1,4 @@
-import { Mutable } from '../../utils';
+import { Mutable, PriorityQueue, Queue } from '../../utils';
 import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
 
 /**
@@ -45,7 +45,41 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.search}
    */
-  search(query: P, radius: number): Neighbor<P>[] {
+  search(query: P, k: number): Neighbor<P>[] {
+    if (k < 1) {
+      throw new RangeError(`The k is less than 1: ${k}`);
+    }
+
+    const queue = this.points.reduce((neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
+      const distance = this.distanceFunction.compute(point, query);
+      if (neighbors.size < k) {
+        neighbors.enqueue({ index, point, distance });
+        return neighbors;
+      }
+
+      const neighbor = neighbors.peek();
+      if (neighbor && distance < neighbor.distance) {
+        neighbors.dequeue();
+        neighbors.enqueue({ index, point, distance });
+      }
+      return neighbors;
+    }, new PriorityQueue((neighbor: Neighbor<P>) => neighbor.distance));
+
+    const neighbors = new Array<Neighbor<P>>();
+    while (!queue.isEmpty) {
+      const headElement = queue.dequeue();
+      if (!headElement) {
+        break;
+      }
+      neighbors.unshift(headElement);
+    }
+    return neighbors;
+  }
+
+  /**
+   * {@inheritDoc NeighborSearch.searchRadius}
+   */
+  range(query: P, radius: number): Neighbor<P>[] {
     if (radius < 0.0) {
       throw new RangeError(`The given radius is not positive: ${radius}`);
     }
