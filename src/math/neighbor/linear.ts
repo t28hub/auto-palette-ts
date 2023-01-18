@@ -23,14 +23,14 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.nearest}
    */
-  nearest(query: P): Neighbor<P> {
+  searchNearest(query: P): Neighbor<P> {
     return this.points.reduce(
       (neighbor: Mutable<Neighbor<P>>, point: P, index: number): Mutable<Neighbor<P>> => {
         if (index === 0) {
           return neighbor;
         }
 
-        const distance = this.distanceFunction.compute(point, query);
+        const distance = this.distanceFunction.measure(point, query);
         if (distance < neighbor.distance) {
           neighbor.index = index;
           neighbor.point = point;
@@ -38,7 +38,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
         }
         return neighbor;
       },
-      { index: 0, point: this.points[0], distance: this.distanceFunction.compute(this.points[0], query) },
+      { index: 0, point: this.points[0], distance: this.distanceFunction.measure(this.points[0], query) },
     );
   }
 
@@ -51,7 +51,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
     }
 
     const queue = this.points.reduce((neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
-      const distance = this.distanceFunction.compute(point, query);
+      const distance = this.distanceFunction.measure(point, query);
       if (neighbors.size < k) {
         neighbors.enqueue({ index, point, distance });
         return neighbors;
@@ -79,7 +79,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.searchRadius}
    */
-  range(query: P, radius: number): Neighbor<P>[] {
+  searchRadius(query: P, radius: number): Neighbor<P>[] {
     if (radius < 0.0) {
       throw new RangeError(`The given radius is not positive: ${radius}`);
     }
@@ -89,7 +89,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
         return previous;
       }
 
-      const distance = this.distanceFunction.compute(point, query);
+      const distance = this.distanceFunction.measure(point, query);
       if (distance <= radius) {
         previous.push({ index, point, distance });
       }

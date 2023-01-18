@@ -57,7 +57,7 @@ export class KmeansCluster<P extends Point> implements Cluster<P> {
     this.center.scale(1 / this.size);
 
     const newCenter = this.center.toArray();
-    return this.distanceFunction.compute(oldCenter, newCenter);
+    return this.distanceFunction.measure(oldCenter, newCenter);
   }
 
   /**

@@ -110,6 +110,6 @@ export class Vector<P extends Point> {
    */
   distanceTo(other: Vector<P> | P, distanceFunction: DistanceFunction<P> = euclidean()): Distance {
     const components = other instanceof Vector ? other.components : other;
-    return distanceFunction.compute(this.components, components);
+    return distanceFunction.measure(this.components, components);
   }
 }

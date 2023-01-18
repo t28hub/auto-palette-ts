@@ -10,10 +10,10 @@ describe('SquaredEuclideanDistance', () => {
     squaredEuclideanDistance = new SquaredEuclideanDistance();
   });
 
-  describe('compute', () => {
+  describe('measure', () => {
     it('should compute squared euclidean distance between 2 points', () => {
       // Act
-      const actual = squaredEuclideanDistance.compute([0, 0], [1, 2]);
+      const actual = squaredEuclideanDistance.measure([0, 0], [1, 2]);
 
       // Assert
       expect(actual).toEqual(5);
@@ -23,7 +23,7 @@ describe('SquaredEuclideanDistance', () => {
       // Assert
       expect(() => {
         // Act
-        squaredEuclideanDistance.compute([NaN, 0], [1, 2]);
+        squaredEuclideanDistance.measure([NaN, 0], [1, 2]);
       }).toThrowError(TypeError);
     });
   });

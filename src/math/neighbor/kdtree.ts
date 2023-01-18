@@ -32,10 +32,10 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.nearest}
    */
-  nearest(query: P): Neighbor<P> {
+  searchNearest(query: P): Neighbor<P> {
     // Do not need to check whether the points is empty, since size of points is checked when constructing the KDTree.
     const point = this.points[0];
-    const distance = this.distanceFunction.compute(query, point);
+    const distance = this.distanceFunction.measure(query, point);
     const result: Mutable<Neighbor<P>> = { index: 0, point, distance };
     this.nearestRecursively(this.root, query, result);
     return result;
@@ -66,7 +66,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.range}
    */
-  range(query: P, radius: number): Neighbor<P>[] {
+  searchRadius(query: P, radius: number): Neighbor<P>[] {
     if (radius <= 0.0) {
       throw new RangeError(`The radius is not positive number: ${radius}`);
     }
@@ -88,7 +88,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const point = this.points[index];
     if (node.isLeaf) {
-      const distance = this.distanceFunction.compute(query, point);
+      const distance = this.distanceFunction.measure(query, point);
       if (distance < neighbor.distance) {
         neighbor.index = index;
         neighbor.point = point;
@@ -115,7 +115,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const index = node.index;
     const point = this.points[index];
-    const distance = this.distanceFunction.compute(query, point);
+    const distance = this.distanceFunction.measure(query, point);
     neighbors.enqueue({ index, point, distance });
     if (node.isLeaf) {
       return;
@@ -139,7 +139,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     }
 
     const point = this.points[node.index];
-    const distance = this.distanceFunction.compute(query, point);
+    const distance = this.distanceFunction.measure(query, point);
     if (distance <= radius) {
       neighbors.push({ index: node.index, point, distance });
     }

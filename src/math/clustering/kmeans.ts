@@ -69,7 +69,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
 
     const neighborSearch = kdtree(centroids, this.distanceFunction);
     points.forEach((point: P) => {
-      const neighbor = neighborSearch.nearest(point);
+      const neighbor = neighborSearch.searchNearest(point);
       const nearestCluster = clusters[neighbor.index];
       nearestCluster.append(point);
     });

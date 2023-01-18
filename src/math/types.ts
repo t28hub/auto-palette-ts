@@ -40,7 +40,7 @@ export interface DistanceFunction<P extends Point> {
    * @param point2 The 2nd point.
    * @return The distance between 2 points.
    */
-  compute(point1: P, point2: P): Distance;
+  measure(point1: P, point2: P): Distance;
 }
 
 /**
@@ -72,14 +72,6 @@ export interface Neighbor<P extends Point> {
  */
 export interface NeighborSearch<P extends Point> {
   /**
-   * Search the nearest neighbor of the given point.
-   *
-   * @param query The query point.
-   * @return The nearest neighbor.
-   */
-  nearest(query: P): Neighbor<P>;
-
-  /**
    * Search the k nearest neighbors to the given query.
    *
    * @param query The query point.
@@ -89,13 +81,21 @@ export interface NeighborSearch<P extends Point> {
   search(query: P, k: number): Neighbor<P>[];
 
   /**
+   * Search the nearest neighbor of the given point.
+   *
+   * @param query The query point.
+   * @return The nearest neighbor.
+   */
+  searchNearest(query: P): Neighbor<P>;
+
+  /**
    * Search the neighbors in the given radius to the given query.
    *
    * @param query The query point.
    * @param radius The radius of search range.
    * @return The neighbors in the given radius.
    */
-  range(query: P, radius: number): Neighbor<P>[];
+  searchRadius(query: P, radius: number): Neighbor<P>[];
 }
 
 /**

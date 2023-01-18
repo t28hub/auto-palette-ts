@@ -48,7 +48,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         return;
       }
 
-      const neighbors = this.nns.range(point, this.radius);
+      const neighbors = this.nns.searchRadius(point, this.radius);
       // Mark as noise point
       if (neighbors.length < this.minPoints) {
         labels[index] = NOISE;
@@ -94,7 +94,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
       labels[index] = label;
       points.add(neighbor.point);
 
-      const secondaryNeighbors = this.nns.range(neighbor.point, this.radius);
+      const secondaryNeighbors = this.nns.searchRadius(neighbor.point, this.radius);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
       }

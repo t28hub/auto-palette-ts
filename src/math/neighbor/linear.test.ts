@@ -36,37 +36,6 @@ describe('LinearSearch', () => {
     });
   });
 
-  describe('nearest', () => {
-    let linearSearch: LinearSearch<Point2>;
-    beforeEach(() => {
-      linearSearch = new LinearSearch(points, squaredEuclidean());
-    });
-
-    it('should return the nearest neighbor to the given point', () => {
-      // Act
-      const actual = linearSearch.nearest([1, 2]);
-
-      // Assert
-      expect(actual).toMatchObject({
-        index: 3,
-        point: [2, 2],
-        distance: 1.0,
-      });
-    });
-
-    it('should return the nearest neighbor if the given point exists', () => {
-      // Act
-      const actual = linearSearch.nearest([4, 4]);
-
-      // Assert
-      expect(actual).toMatchObject({
-        index: 5,
-        point: [4, 4],
-        distance: 0.0,
-      });
-    });
-  });
-
   describe('search', () => {
     let linearSearch: LinearSearch<Point2>;
     beforeEach(() => {
@@ -118,7 +87,38 @@ describe('LinearSearch', () => {
     });
   });
 
-  describe('range', () => {
+  describe('searchNearest', () => {
+    let linearSearch: LinearSearch<Point2>;
+    beforeEach(() => {
+      linearSearch = new LinearSearch(points, squaredEuclidean());
+    });
+
+    it('should return the nearest neighbor to the given point', () => {
+      // Act
+      const actual = linearSearch.searchNearest([1, 2]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 3,
+        point: [2, 2],
+        distance: 1.0,
+      });
+    });
+
+    it('should return the nearest neighbor if the given point exists', () => {
+      // Act
+      const actual = linearSearch.searchNearest([4, 4]);
+
+      // Assert
+      expect(actual).toMatchObject({
+        index: 5,
+        point: [4, 4],
+        distance: 0.0,
+      });
+    });
+  });
+
+  describe('searchRadius', () => {
     let linearSearch: LinearSearch<Point2>;
     beforeEach(() => {
       linearSearch = new LinearSearch(points, squaredEuclidean());
@@ -126,7 +126,7 @@ describe('LinearSearch', () => {
 
     it('should return the neighbors in the given radius to the given point', () => {
       // Act
-      const actual = linearSearch.range([3, 5], 1);
+      const actual = linearSearch.searchRadius([3, 5], 1);
 
       // Assert
       expect(actual).toHaveLength(2);
@@ -144,7 +144,7 @@ describe('LinearSearch', () => {
 
     it('should return an empty array if no neighbors in the given radius', () => {
       // Act
-      const actual = linearSearch.range([-1, -4], 1);
+      const actual = linearSearch.searchRadius([-1, -4], 1);
 
       // Assert
       expect(actual).toBeEmpty();
@@ -154,7 +154,7 @@ describe('LinearSearch', () => {
       // Assert
       expect(() => {
         // Act
-        linearSearch.range([2, 2], -1);
+        linearSearch.searchRadius([2, 2], -1);
       }).toThrowError(RangeError);
     });
   });
