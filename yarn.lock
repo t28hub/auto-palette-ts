@@ -1171,9 +1171,9 @@
     vitest "0.27.1"
 
 "@vitest/ui@^0.27.0":
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.27.1.tgz#fd4ed29ff9374c98fe0e2481ba0a6a0d49da4263"
-  integrity sha512-o9LmWY/XyWt5Pqb+bLLK+N3Vk+PP2jqrdDDMEAY43dB6vtZ+gYuOt5IutUfB7gXeJ6xeIlzUZ/OabrR3leldCA==
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.27.2.tgz#6034a879085da5835d31611acc11dcc4f0082c31"
+  integrity sha512-IlzkmBQfFCddESiN5TqdZAVdWfbQWARkD8esyfSBu3q8uVelYWKQXo9BBLxUhlhj85wGq1/oxHHCI4aY7R8qzg==
   dependencies:
     fast-glob "^3.2.12"
     flatted "^3.2.7"
