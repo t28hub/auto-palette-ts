@@ -127,7 +127,7 @@ export interface Cluster<P extends Point> {
  *
  * @param P The type of point.
  */
-export interface ClusteringAlgorithm<P extends Point> {
+export interface Clustering<P extends Point> {
   /**
    * Perform the clustering algorithm to the given points.
    *

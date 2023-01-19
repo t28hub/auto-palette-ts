@@ -1,5 +1,5 @@
 import { ArrayQueue } from '../../utils';
-import { Cluster, ClusteringAlgorithm, NeighborSearch, Neighbor, Point } from '../types';
+import { Cluster, Clustering, NeighborSearch, Neighbor, Point } from '../types';
 
 import { DBSCANCluster } from './dbscanCluster';
 
@@ -15,7 +15,7 @@ const UNKNOWN: Label = -3;
  * @param P The type of point.
  * @see [Wikipedia - DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
  */
-export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
+export class DBSCAN<P extends Point> implements Clustering<P> {
   /**
    * Create a new DBSCAN.
    *
@@ -38,6 +38,9 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     }
   }
 
+  /**
+   * {@inheritDoc Clustering.fit}
+   */
   fit(points: P[]): Cluster<P>[] {
     let label: Label = 0;
     const labels = new Array<Label>(points.length).fill(UNKNOWN);

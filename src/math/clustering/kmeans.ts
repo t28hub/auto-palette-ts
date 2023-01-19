@@ -1,5 +1,5 @@
 import { kdtree } from '../neighbor';
-import { Cluster, ClusteringAlgorithm, DistanceFunction, Point } from '../types';
+import { Cluster, Clustering, DistanceFunction, Point } from '../types';
 
 import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
 import { KmeansCluster } from './kmeansCluster';
@@ -10,7 +10,7 @@ import { KmeansCluster } from './kmeansCluster';
  * @param P The type of point.
  * @see [Wikipedia - k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
  */
-export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
+export class Kmeans<P extends Point> implements Clustering<P> {
   /**
    * Create a new Kmeans.
    *
@@ -39,6 +39,9 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     }
   }
 
+  /**
+   * {@inheritDoc Clustering.fit}
+   */
   fit(points: P[]): Cluster<P>[] {
     if (points.length <= this.k) {
       return points.map((point: P): KmeansCluster<P> => {
