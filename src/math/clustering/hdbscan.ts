@@ -3,9 +3,65 @@ import { kdtree } from '../neighbor';
 import { Cluster, Clustering, DistanceFunction, Point } from '../types';
 
 interface Edge {
-  readonly from: number;
-  readonly to: number;
+  readonly u: number;
+  readonly v: number;
   readonly weight: number;
+}
+
+/**
+ * https://en.wikipedia.org/wiki/Disjoint-set_data_structure
+ */
+class UnionFind {
+  private readonly parents: Uint32Array;
+  private readonly sizes: Uint32Array;
+
+  private nextLabel: number;
+
+  constructor(readonly n: number) {
+    if (n < 1) {
+      throw new RangeError(`The number of node is less than 1: ${n}`);
+    }
+
+    this.parents = new Uint32Array(2 * n - 1).map((_: number, index: number) => index);
+    this.sizes = new Uint32Array(2 * n - 1).fill(1, 0, n);
+    this.nextLabel = n;
+  }
+
+  /**
+   * Find the root index of root of the given index.
+   *
+   * @param a The index to find.
+   * @return The root index of the given index.
+   * @throws {RangeError} if the given index is invalid.
+   */
+  find(a: number): number {
+    if (a < 0) {
+      throw new RangeError(`The given index is invalid: ${a}`);
+    }
+
+    let root = a;
+    let current = a;
+    while (this.parents[current] !== current) {
+      current = this.parents[current];
+    }
+
+    while (this.parents[root] !== current) {
+      const tmp = this.parents[root];
+      this.parents[root] = current;
+      root = tmp;
+    }
+    return current;
+  }
+
+  union(a: number, b: number): number {
+    const label = this.nextLabel++;
+    this.parents[a] = label;
+    this.parents[b] = label;
+
+    const total = this.sizes[a] + this.sizes[b];
+    this.sizes[label] = total;
+    return total;
+  }
 }
 
 /**
@@ -18,12 +74,20 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
   /**
    * Create a new HDBSCAN.
    *
-   * @param minPoints The number of min points to compute core distance.
+   * @param minPoints The minimum number of points to compute core distance.
+   * @param minClusterSize The minimum number of points required to build a cluster
    * @param distanceFunction The distance function.
    */
-  constructor(private readonly minPoints: number, private readonly distanceFunction: DistanceFunction<P>) {
-    if (minPoints < 1) {
-      throw new RangeError(`The number of min points is less than 1: ${minPoints}`);
+  constructor(
+    private readonly minPoints: number,
+    private readonly minClusterSize: number,
+    private readonly distanceFunction: DistanceFunction<P>,
+  ) {
+    if (this.minPoints < 1) {
+      throw new RangeError(`The minimum number of points is less than 1: ${minPoints}`);
+    }
+    if (this.minClusterSize < 1) {
+      throw new RangeError(`The minimum number of cluster size is less than 1: ${minClusterSize}`);
     }
   }
 
@@ -36,8 +100,20 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     }
 
     const coreDistances = this.createCoreDistances(points);
-    const minimumSpanningTree = this.buildMinimumSpanningTree(points, coreDistances);
-    console.table(minimumSpanningTree);
+    const edges = this.buildMSTree(points, coreDistances).sort((edge1: Edge, edge2: Edge): number => {
+      // Sort all edges in ascending order of weight.
+      return edge1.weight - edge2.weight;
+    });
+
+    const unionFind = new UnionFind(edges.length + 1);
+    const labeled = edges.map((edge: Edge) => {
+      // Build a hierarchical dendrogram.
+      const u = unionFind.find(edge.u);
+      const v = unionFind.find(edge.v);
+      const size = unionFind.union(u, v);
+      return { u, v, weight: edge.weight, size };
+    });
+    console.table(labeled);
     return [];
   }
 
@@ -55,7 +131,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     }, new Float64Array(points.length));
   }
 
-  private buildMinimumSpanningTree(points: P[], coreDistance: Float64Array): Edge[] {
+  private buildMSTree(points: P[], coreDistance: Float64Array): Edge[] {
     const edges = new Array<Edge>();
     const attached = new Set<number>();
     const candidates = new PriorityQueue((edge: Edge): number => -edge.weight);
@@ -69,7 +145,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
 
         const distance = this.distanceFunction.measure(point, points[currentIndex]);
         const mutualReachabilityDistance = Math.max(distance, coreDistance[index], coreDistance[currentIndex]);
-        candidates.enqueue({ from: currentIndex, to: index, weight: mutualReachabilityDistance });
+        candidates.enqueue({ u: currentIndex, v: index, weight: mutualReachabilityDistance });
       });
 
       while (!candidates.isEmpty) {
@@ -78,10 +154,10 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
           throw new Error(`No shortest edge at ${currentIndex} was found`);
         }
 
-        if (!attached.has(shortest.to)) {
+        if (!attached.has(shortest.v)) {
           edges.push(shortest);
-          attached.add(shortest.to);
-          currentIndex = shortest.to;
+          attached.add(shortest.v);
+          currentIndex = shortest.v;
           break;
         }
       }

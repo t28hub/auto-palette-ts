@@ -33,7 +33,7 @@ describe('HDBSCAN', () => {
   describe('constructor', () => {
     it('should create a HDBSCAN', () => {
       // Act
-      const actual = new HDBSCAN(16, euclidean());
+      const actual = new HDBSCAN(16, 9, euclidean());
 
       // Assert
       expect(actual).toBeDefined();
@@ -43,7 +43,7 @@ describe('HDBSCAN', () => {
   describe('fit', () => {
     let hdbscan: HDBSCAN<Point2>;
     beforeEach(() => {
-      hdbscan = new HDBSCAN<Point2>(4, euclidean());
+      hdbscan = new HDBSCAN<Point2>(4, 4, euclidean());
     });
 
     it('should return clusters', () => {
