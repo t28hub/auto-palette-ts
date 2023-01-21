@@ -1,7 +1,7 @@
 *.d.ts
 .DS_Store
-.yarn
 package.json
+pnpm-lock.yaml
 node_modules
 coverage
 demo

@@ -13,11 +13,11 @@
 # Install via npm
 $ npm install auto-palette
 
-# Install via yarn
-$ yarn add auto-palette
-
 # Install via pnpm
 $ pnpm add auto-palette
+
+# Install via yarn
+$ yarn add auto-palette
 ```
 
 ## Usage

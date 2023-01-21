@@ -25,22 +25,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7.25.1
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Check code syntax
-        run: yarn lint
+        run: pnpm lint
 
       - name: Run unit test
-        run: yarn test
+        run: pnpm test
 
       - name: Build project
-        run: yarn build
+        run: pnpm build
 
       - name: Upload module files
         uses: actions/upload-artifact@v3

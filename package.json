@@ -38,6 +38,8 @@
     "image"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
     "clean": "rimraf dist",
     "dev": "vite",
     "lint": "eslint .",
@@ -45,9 +47,8 @@
     "test": "vitest run --coverage",
     "test:ui": "vitest run --coverage --ui",
     "format": "prettier --plugin-search-dir . --list-different --write .",
-    "prebuild": "yarn clean",
-    "build": "tsc && vite build",
-    "prepare": "husky install"
+    "prebuild": "pnpm clean",
+    "build": "tsc && vite build"
   },
   "dependencies": {},
   "devDependencies": {
@@ -80,12 +81,12 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "yarn lint:fix",
-      "yarn format"
+      "pnpm lint:fix",
+      "pnpm format"
     ],
     "*.{json,yml,md,html,css}": [
-      "yarn format"
+      "pnpm format"
     ]
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "pnpm@7.25.0"
 }
