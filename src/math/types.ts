@@ -99,6 +99,50 @@ export interface NeighborSearch<P extends Point> {
 }
 
 /**
+ * Interface  representing edge.
+ */
+export interface Edge {
+  /**
+   * The index of the source vertex.
+   */
+  readonly u: number;
+
+  /**
+   * The index of the target vertex.
+   */
+  readonly v: number;
+}
+
+/**
+ * Interface  representing weighted edge.
+ */
+export interface WeightedEdge extends Edge {
+  /**
+   * The weight of this edge.
+   */
+  readonly weight: number;
+}
+
+/**
+ * Interface representing graph.
+ */
+export interface Graph<E extends Edge> {
+  /**
+   * Whether this graph is empty.
+   *
+   * @return true if this graph is empty.
+   */
+  isEmpty: boolean;
+
+  /**
+   * Return all edges of this graph.
+   *
+   * @return The array of all edges.
+   */
+  getEdges(): E[];
+}
+
+/**
  * Interface representing cluster.
  *
  * @param P The type of point.

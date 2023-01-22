@@ -1,12 +1,6 @@
-import { PriorityQueue } from '../../utils';
+import { MinimumSpanningTree } from '../graph';
 import { kdtree } from '../neighbor';
-import { Cluster, Clustering, DistanceFunction, Point } from '../types';
-
-interface Edge {
-  readonly u: number;
-  readonly v: number;
-  readonly weight: number;
-}
+import { Cluster, Clustering, DistanceFunction, Point, WeightedEdge } from '../types';
 
 /**
  * https://en.wikipedia.org/wiki/Disjoint-set_data_structure
@@ -100,13 +94,18 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     }
 
     const coreDistances = this.createCoreDistances(points);
-    const edges = this.buildMSTree(points, coreDistances).sort((edge1: Edge, edge2: Edge): number => {
+    const minimumSpanningTree = MinimumSpanningTree.prim(points, (index1: number, index2: number): number => {
+      // Use the mutual reachability distance as a weight.
+      const distance = this.distanceFunction.measure(points[index1], points[index2]);
+      return Math.max(distance, coreDistances[index1], coreDistances[index2]);
+    });
+    const edges = minimumSpanningTree.getEdges().sort((edge1: WeightedEdge, edge2: WeightedEdge): number => {
       // Sort all edges in ascending order of weight.
       return edge1.weight - edge2.weight;
     });
 
     const unionFind = new UnionFind(edges.length + 1);
-    const labeled = edges.map((edge: Edge) => {
+    const labeled = edges.map((edge: WeightedEdge) => {
       // Build a hierarchical dendrogram.
       const u = unionFind.find(edge.u);
       const v = unionFind.find(edge.v);
@@ -129,39 +128,5 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       distances[index] = coreNeighbor.distance;
       return distances;
     }, new Float64Array(points.length));
-  }
-
-  private buildMSTree(points: P[], coreDistance: Float64Array): Edge[] {
-    const edges = new Array<Edge>();
-    const attached = new Set<number>();
-    const candidates = new PriorityQueue((edge: Edge): number => -edge.weight);
-    let currentIndex = points.length - 1;
-    attached.add(currentIndex);
-    while (attached.size < points.length) {
-      points.forEach((point: P, index: number) => {
-        if (currentIndex == index || attached.has(index)) {
-          return;
-        }
-
-        const distance = this.distanceFunction.measure(point, points[currentIndex]);
-        const mutualReachabilityDistance = Math.max(distance, coreDistance[index], coreDistance[currentIndex]);
-        candidates.enqueue({ u: currentIndex, v: index, weight: mutualReachabilityDistance });
-      });
-
-      while (!candidates.isEmpty) {
-        const shortest = candidates.dequeue();
-        if (!shortest) {
-          throw new Error(`No shortest edge at ${currentIndex} was found`);
-        }
-
-        if (!attached.has(shortest.v)) {
-          edges.push(shortest);
-          attached.add(shortest.v);
-          currentIndex = shortest.v;
-          break;
-        }
-      }
-    }
-    return edges;
   }
 }
