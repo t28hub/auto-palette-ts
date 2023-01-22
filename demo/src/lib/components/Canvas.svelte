@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { palette } from 'auto-palette';
   import { onMount } from 'svelte';
   import { swatches } from '$lib/stores/palette';
+
+  import { palette } from '../../../../src/';
 
   export let src: string = '';
   export let width: number = 300;

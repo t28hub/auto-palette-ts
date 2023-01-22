@@ -12,8 +12,15 @@ export default defineConfig({
       formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
     },
+    sourcemap: true,
   },
-  plugins: [dts({ include: 'src', rollupTypes: true })],
+  plugins: [
+    dts({
+      include: 'src',
+      rollupTypes: true,
+      copyDtsFiles: false,
+    }),
+  ],
   test: {
     globals: true,
     threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740

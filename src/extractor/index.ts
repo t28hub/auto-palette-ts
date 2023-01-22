@@ -19,7 +19,7 @@ export type DBSCANOptions = {
 
 const defaultDBSCANOptions: DBSCANOptions = {
   minPoints: 9,
-  threshold: 0.09,
+  threshold: 0.05,
   colorFilters: [opacity()],
 };
 

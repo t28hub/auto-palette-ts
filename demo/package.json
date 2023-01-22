@@ -15,7 +15,6 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
-    "auto-palette": "../",
     "blurhash": "^2.0.4"
   },
   "devDependencies": {
