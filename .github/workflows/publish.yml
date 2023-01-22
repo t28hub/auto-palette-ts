@@ -33,6 +33,6 @@ jobs:
         run: pnpm build
 
       - name: Publish package
-        run: pnpm publish --verbose --access public --tag latest
+        run: pnpm publish --verbose --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
