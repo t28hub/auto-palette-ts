@@ -108,6 +108,10 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     });
     const singleLinkage = this.buildSingleLinkage(minimumSpanningTree);
     console.table(singleLinkage);
+
+    const condensedTree = this.condenseTree(singleLinkage);
+    console.table(condensedTree);
+
     return [];
   }
 
@@ -140,4 +144,109 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       return { parent, child, delta: edge.weight, size };
     });
   }
+
+  private condenseTree(singleLinkage: HierarchyNode[]): HierarchyNode[] {
+    const root = singleLinkage.length * 2;
+    const pointSize = singleLinkage.length + 1;
+
+    const relabel = new Uint32Array(root + 1);
+    relabel[root] = pointSize;
+    let nextLabel = pointSize + 1;
+
+    const nodes = bfs(singleLinkage, root);
+    const ignored = new Set<number>();
+    const condensed = new Array<HierarchyNode>();
+    nodes.forEach((node: number) => {
+      if (node < pointSize) {
+        return;
+      }
+      if (ignored.has(node)) {
+        return;
+      }
+
+      const currentNode = singleLinkage[node - pointSize];
+      let lambda = Number.MAX_VALUE;
+      if (currentNode.delta > 0.0) {
+        lambda = 1.0 / currentNode.delta;
+      }
+
+      const left = currentNode.parent;
+      const right = currentNode.child;
+
+      // If the node is leaf, the count is equal to 1
+      const leftSize = singleLinkage.at(left - pointSize)?.size ?? 1;
+      const rightSize = singleLinkage.at(right - pointSize)?.size ?? 1;
+
+      if (leftSize >= this.minClusterSize && rightSize >= this.minClusterSize) {
+        relabel[left] = nextLabel;
+        condensed.push({ parent: relabel[node], child: nextLabel, delta: lambda, size: leftSize });
+        nextLabel++;
+
+        relabel[right] = nextLabel;
+        condensed.push({ parent: relabel[node], child: nextLabel, delta: lambda, size: rightSize });
+        nextLabel++;
+        return;
+      }
+
+      if (leftSize < this.minClusterSize && rightSize < this.minClusterSize) {
+        bfs(singleLinkage, left).forEach((childNode: number) => {
+          if (childNode < pointSize) {
+            condensed.push({ parent: relabel[node], child: childNode, delta: lambda, size: 1 });
+          }
+          ignored.add(childNode);
+        });
+
+        bfs(singleLinkage, right).forEach((childNode: number) => {
+          if (childNode < pointSize) {
+            condensed.push({ parent: relabel[node], child: childNode, delta: lambda, size: 1 });
+          }
+          ignored.add(childNode);
+        });
+        return;
+      }
+
+      if (leftSize >= this.minClusterSize) {
+        relabel[left] = relabel[node];
+        bfs(singleLinkage, right).forEach((childNode: number) => {
+          if (childNode < pointSize) {
+            condensed.push({ parent: relabel[node], child: childNode, delta: lambda, size: 1 });
+          }
+          ignored.add(childNode);
+        });
+        return;
+      }
+
+      if (rightSize >= this.minClusterSize) {
+        relabel[right] = relabel[node];
+        bfs(singleLinkage, left).forEach((childNode: number) => {
+          if (childNode < pointSize) {
+            condensed.push({ parent: relabel[node], child: childNode, delta: lambda, size: 1 });
+          }
+          ignored.add(childNode);
+        });
+        return;
+      }
+    });
+    return condensed;
+  }
+}
+
+function bfs(singleLinkage: HierarchyNode[], root: number): number[] {
+  const dimension = singleLinkage.length;
+  const maxNode = 2 * dimension;
+  const pointSize = maxNode - dimension + 1;
+
+  let queue = [root];
+  const result = new Array<number>();
+  while (queue.length > 0) {
+    result.push(...queue);
+    queue = queue.flatMap((label: number): number[] => {
+      if (label < pointSize) {
+        return [];
+      }
+      const node = singleLinkage[label - pointSize];
+      return [node.parent, node.child];
+    });
+  }
+  return result;
 }
