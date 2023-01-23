@@ -1,6 +1,6 @@
 import { MinimumSpanningTree } from '../graph';
 import { kdtree } from '../neighbor';
-import { Cluster, Clustering, DistanceFunction, Point, WeightedEdge } from '../types';
+import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../types';
 
 /**
  * https://en.wikipedia.org/wiki/Disjoint-set_data_structure
@@ -58,6 +58,13 @@ class UnionFind {
   }
 }
 
+interface HierarchyNode {
+  readonly parent: number;
+  readonly child: number;
+  readonly delta: number;
+  readonly size: number;
+}
+
 /**
  * Hierarchical density-based spatial clustering of applications with noise implementation.
  *
@@ -99,20 +106,8 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       const distance = this.distanceFunction.measure(points[index1], points[index2]);
       return Math.max(distance, coreDistances[index1], coreDistances[index2]);
     });
-    const edges = minimumSpanningTree.getEdges().sort((edge1: WeightedEdge, edge2: WeightedEdge): number => {
-      // Sort all edges in ascending order of weight.
-      return edge1.weight - edge2.weight;
-    });
-
-    const unionFind = new UnionFind(edges.length + 1);
-    const labeled = edges.map((edge: WeightedEdge) => {
-      // Build a hierarchical dendrogram.
-      const u = unionFind.find(edge.u);
-      const v = unionFind.find(edge.v);
-      const size = unionFind.union(u, v);
-      return { u, v, weight: edge.weight, size };
-    });
-    console.table(labeled);
+    const singleLinkage = this.buildSingleLinkage(minimumSpanningTree);
+    console.table(singleLinkage);
     return [];
   }
 
@@ -128,5 +123,21 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       distances[index] = coreNeighbor.distance;
       return distances;
     }, new Float64Array(points.length));
+  }
+
+  private buildSingleLinkage(mst: Graph<WeightedEdge>): HierarchyNode[] {
+    const sortedEdges = mst.getEdges().sort((edge1: WeightedEdge, edge2: WeightedEdge): number => {
+      // Sort all edges in ascending order of weight.
+      return edge1.weight - edge2.weight;
+    });
+
+    const unionFind = new UnionFind(sortedEdges.length + 1);
+    return sortedEdges.map((edge: WeightedEdge) => {
+      // Build a hierarchical dendrogram.
+      const parent = unionFind.find(edge.u);
+      const child = unionFind.find(edge.v);
+      const size = unionFind.union(parent, child);
+      return { parent, child, delta: edge.weight, size };
+    });
   }
 }
