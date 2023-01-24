@@ -28,7 +28,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7.25.1
+          version: '7.x'
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -38,7 +38,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Check code syntax
         run: pnpm lint
