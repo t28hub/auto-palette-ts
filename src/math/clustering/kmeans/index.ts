@@ -1,8 +1,8 @@
-import { kdtree } from '../neighbor';
-import { Cluster, Clustering, DistanceFunction, Point } from '../types';
+import { kdtree } from '../../neighbor';
+import { Cluster, Clustering, DistanceFunction, Point } from '../../types';
 
 import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
-import { KmeansCluster } from './kmeansCluster';
+import { KmeansCluster } from './cluster';
 
 /**
  * Kmeans clustering algorithm implementation.

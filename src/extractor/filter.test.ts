@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { HSL, RGB } from '../types';
 
-import { composite, opacity } from './filter';
-import { ColorFilter } from './types';
+import { ColorFilter, composite, opacity } from './filter';
 
 describe('filter', () => {
   describe('opacity', () => {

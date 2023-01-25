@@ -1,8 +1,7 @@
 import { parse, rgb } from '../../color';
 import { Point3 } from '../../math';
 import { ImageObject, RGB, Swatch } from '../../types';
-import { composite } from '../filter';
-import { ColorFilter, Extractor } from '../types';
+import { ColorFilter, composite } from '../filter';
 
 import { Bounds } from './bounds';
 import { Node } from './node';
@@ -11,7 +10,7 @@ import { Octree } from './octree';
 const MAX_DEPTH = 8;
 const MAX_COLORS = 25;
 
-export class OctreeExtractor implements Extractor {
+export class OctreeExtractor {
   private readonly bounds: Bounds;
   private readonly filter: ColorFilter<RGB>;
 

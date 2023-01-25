@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { Point2 } from '../types';
+import { Point2 } from '../../types';
 
-import { DBSCANCluster } from './dbscanCluster';
+import { DBSCANCluster } from './cluster';
 
 describe('DBSCANCluster', () => {
   describe('constructor', () => {

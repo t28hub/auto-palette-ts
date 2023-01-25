@@ -1,5 +1,3 @@
-export { type CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
+export { type CenterInitializer, KmeansPlusPlusInitializer } from './kmeans/centerInitializer';
 export { DBSCAN } from './dbscan';
-export { DBSCANCluster } from './dbscanCluster';
 export { Kmeans } from './kmeans';
-export { KmeansCluster } from './kmeansCluster';

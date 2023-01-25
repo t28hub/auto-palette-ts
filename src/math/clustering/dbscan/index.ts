@@ -1,7 +1,8 @@
-import { ArrayQueue } from '../../utils';
-import { Cluster, Clustering, NeighborSearch, Neighbor, Point } from '../types';
+import { ArrayQueue } from '../../../utils';
+import { kdtree } from '../../neighbor';
+import { Cluster, Clustering, NeighborSearch, Neighbor, Point, DistanceFunction } from '../../types';
 
-import { DBSCANCluster } from './dbscanCluster';
+import { DBSCANCluster } from './cluster';
 
 type Label = number;
 
@@ -21,14 +22,14 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
    *
    * @param minPoints The minimum size of cluster.
    * @param radius The neighbor radius.
-   * @param nns The Nearest neighbor search algorithm.
+   * @param distanceFunction The distance function.
    * @throws {RangeError} if the given minPoint is less than 1.
    * @throws {RangeError} if the given radius is less than 0.0.
    */
   constructor(
     private readonly minPoints: number,
     private readonly radius: number,
-    private readonly nns: NeighborSearch<P>,
+    private readonly distanceFunction: DistanceFunction<P>,
   ) {
     if (minPoints < 1) {
       throw new RangeError(`The minimum size of cluster(${minPoints}) is not greater than or equal to 1`);
@@ -43,6 +44,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
    */
   fit(points: P[]): Cluster<P>[] {
     let label: Label = 0;
+    const nns = kdtree(points, this.distanceFunction);
     const labels = new Array<Label>(points.length).fill(UNKNOWN);
     const clusters = new Map<Label, Cluster<P>>();
     points.forEach((point: P, index: number) => {
@@ -51,7 +53,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
         return;
       }
 
-      const neighbors = this.nns.searchRadius(point, this.radius);
+      const neighbors = nns.searchRadius(point, this.radius);
       // Mark as noise point
       if (neighbors.length < this.minPoints) {
         labels[index] = NOISE;
@@ -60,14 +62,19 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
 
       labels[index] = label;
 
-      const cluster = this.buildCluster(neighbors, labels, label);
+      const cluster = this.buildCluster(nns, neighbors, labels, label);
       cluster.append(point);
       clusters.set(label++, cluster);
     });
     return Array.from(clusters.values());
   }
 
-  private buildCluster(neighbors: Neighbor<P>[], labels: Label[], label: Label): DBSCANCluster<P> {
+  private buildCluster(
+    nns: NeighborSearch<P>,
+    neighbors: Neighbor<P>[],
+    labels: Label[],
+    label: Label,
+  ): DBSCANCluster<P> {
     neighbors.forEach((neighbor: Neighbor<P>) => {
       const index = neighbor.index;
       if (labels[index] === UNKNOWN) {
@@ -97,7 +104,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
       labels[index] = label;
       points.add(neighbor.point);
 
-      const secondaryNeighbors = this.nns.searchRadius(neighbor.point, this.radius);
+      const secondaryNeighbors = nns.searchRadius(neighbor.point, this.radius);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
       }

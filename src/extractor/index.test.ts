@@ -2,12 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import { Method } from '../types';
 
-import { DBSCANExtractor } from './dbscan';
+import { Extractor } from './extractor';
 import { opacity } from './filter';
-import { KmeansExtractor } from './kmeans';
-import { OctreeExtractor } from './octree';
 
-import { createExtractor, dbscan, kmeans, octree } from './index';
+import { createExtractor, dbscan, kmeans } from './index';
 
 describe('extractor', () => {
   describe('dbscan', () => {
@@ -16,7 +14,7 @@ describe('extractor', () => {
       const actual = dbscan();
 
       // Assert
-      expect(actual).toBeInstanceOf(DBSCANExtractor);
+      expect(actual).toBeInstanceOf(Extractor);
     });
 
     it('should create a DBSCANExtractor with options', () => {
@@ -28,7 +26,7 @@ describe('extractor', () => {
       });
 
       // Assert
-      expect(actual).toBeInstanceOf(DBSCANExtractor);
+      expect(actual).toBeInstanceOf(Extractor);
     });
   });
 
@@ -38,7 +36,7 @@ describe('extractor', () => {
       const actual = kmeans();
 
       // Assert
-      expect(actual).toBeInstanceOf(KmeansExtractor);
+      expect(actual).toBeInstanceOf(Extractor);
     });
 
     it('should create a KmeansExtractor with options', () => {
@@ -50,43 +48,21 @@ describe('extractor', () => {
       });
 
       // Assert
-      expect(actual).toBeInstanceOf(KmeansExtractor);
-    });
-  });
-
-  describe('octree', () => {
-    it('should create a OctreeExtractor', () => {
-      // Act
-      const actual = octree();
-
-      // Assert
-      expect(actual).toBeInstanceOf(OctreeExtractor);
-    });
-
-    it('should create a OctreeExtractor with options', () => {
-      // Act
-      const actual = octree({
-        maxDepth: 6,
-        colorFilters: [],
-      });
-
-      // Assert
-      expect(actual).toBeInstanceOf(OctreeExtractor);
+      expect(actual).toBeInstanceOf(Extractor);
     });
   });
 
   describe('createExtractor', () => {
-    it.each([
-      { method: 'dbscan', expected: DBSCANExtractor },
-      { method: 'kmeans', expected: KmeansExtractor },
-      { method: 'octree', expected: OctreeExtractor },
-    ])('should create $expected from option($options)', ({ method, expected }) => {
-      // Act
-      const actual = createExtractor(method as Method);
+    it.each([{ method: 'dbscan' }, { method: 'kmeans' }])(
+      'should create a new Extractor from $method',
+      ({ method }) => {
+        // Act
+        const actual = createExtractor(method as Method);
 
-      // Assert
-      expect(actual).toBeInstanceOf(expected);
-    });
+        // Assert
+        expect(actual).toBeInstanceOf(Extractor);
+      },
+    );
 
     it('should throw TypeError when the method is unrecognized', () => {
       // Assert

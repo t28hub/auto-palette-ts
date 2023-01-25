@@ -1,7 +1,7 @@
 import { beforeEach, describe, it } from 'vitest';
 
-import { euclidean } from '../distance';
-import { Point2 } from '../types';
+import { euclidean } from '../../distance';
+import { Point2 } from '../../types';
 
 import { HDBSCAN } from './hdbscan';
 
@@ -51,7 +51,7 @@ describe('HDBSCAN', () => {
       const actual = hdbscan.fit(points);
 
       // Assert
-      expect(actual).toBeEmpty();
+      expect(actual).toHaveLength(5);
     });
 
     it('should return an empty clusters if the given points is empty', () => {

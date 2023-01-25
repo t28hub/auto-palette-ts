@@ -157,7 +157,7 @@ export type Swatch = {
 /**
  * Supported color extraction method.
  */
-export type Method = 'dbscan' | 'kmeans' | 'octree';
+export type Method = 'dbscan' | 'kmeans';
 
 /**
  * Type representing options for Auto Palette.

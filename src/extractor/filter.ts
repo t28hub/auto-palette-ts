@@ -1,8 +1,21 @@
 import { AlphaChannel } from '../types';
 
-import { ColorFilter } from './types';
-
 const DEFAULT_THRESHOLD = 0.5;
+
+/**
+ * Interface of color filtering.
+ *
+ * @param T The type of color.
+ */
+export interface ColorFilter<T extends AlphaChannel> {
+  /**
+   * Check the color
+   *
+   * @param color The color to be checked.
+   * @return true if the given color is included.
+   */
+  test(color: T): boolean;
+}
 
 /**
  * Create a new color filter by opacity.

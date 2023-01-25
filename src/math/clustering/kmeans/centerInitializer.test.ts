@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { euclidean, Point2 } from '../index';
+import { euclidean, Point2 } from '../../index';
 
 import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
 

@@ -1,4 +1,4 @@
-import { Distance, DistanceFunction, Point, toDistance } from '../index';
+import { Distance, DistanceFunction, Point, toDistance } from '../../index';
 
 /**
  * Interface to initialize center points.

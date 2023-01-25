@@ -1,4 +1,4 @@
-import { Cluster, Distance, DistanceFunction, Point, toDistance, Vector } from '../../math';
+import { Cluster, Distance, DistanceFunction, Point, toDistance, Vector } from '../../index';
 
 export class KmeansCluster<P extends Point> implements Cluster<P> {
   private readonly center: Vector<P>;

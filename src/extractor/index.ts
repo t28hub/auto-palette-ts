@@ -1,16 +1,11 @@
+import { DBSCAN, euclidean, Kmeans, Point5, squaredEuclidean } from '../math';
 import { Method, RGB } from '../types';
 
-import { DBSCANExtractor } from './dbscan';
-import { opacity } from './filter';
-import { KmeansExtractor } from './kmeans';
-import { OctreeExtractor } from './octree';
-import { ColorFilter, type Extractor } from './types';
+import { Extractor } from './extractor';
+import { type ColorFilter, opacity } from './filter';
 
-export { type Extractor } from './types';
+export type { ColorFilter } from './filter';
 
-/**
- * Type representing options of {@link DBSCANExtractor}.
- */
 export type DBSCANOptions = {
   readonly minPoints: number;
   readonly threshold: number;
@@ -31,12 +26,10 @@ const defaultDBSCANOptions: DBSCANOptions = {
  */
 export function dbscan(options: Partial<DBSCANOptions> = {}): Extractor {
   const { minPoints, threshold, colorFilters } = { ...defaultDBSCANOptions, ...options };
-  return new DBSCANExtractor(minPoints, threshold, colorFilters);
+  const dbscan = new DBSCAN<Point5>(minPoints, threshold, euclidean());
+  return new Extractor(dbscan, colorFilters);
 }
 
-/**
- * Type representing options of {@link KmeansExtractor}.
- */
 export type KmeansOptions = {
   readonly maxColors: number;
   readonly maxIterations: number;
@@ -52,38 +45,15 @@ const defaultKmeansOptions: KmeansOptions = {
 };
 
 /**
- * Create a new extractor using kmeans.
+ * Create a new extractor using K-means.
  *
  * @param options The options for the extractor.
  * @return The kmeans extractor.
  */
 export function kmeans(options: Partial<KmeansOptions> = {}): Extractor {
   const { maxColors, maxIterations, tolerance, colorFilters } = { ...defaultKmeansOptions, ...options };
-  return new KmeansExtractor(maxColors, maxIterations, tolerance, colorFilters);
-}
-
-/**
- * Type representing options of {@link OctreeExtractor}.
- */
-export type OctreeOptions = {
-  readonly maxDepth: number;
-  readonly colorFilters: ColorFilter<RGB>[];
-};
-
-const defaultOctreeOptions: OctreeOptions = {
-  maxDepth: 5,
-  colorFilters: [opacity()],
-};
-
-/**
- * Create a new extractor using Octree.
- *
- * @param options The options for the extractor.
- * @return The Octree extractor.
- */
-export function octree(options: Partial<OctreeOptions> = {}): Extractor {
-  const { maxDepth, colorFilters } = { ...defaultOctreeOptions, ...options };
-  return new OctreeExtractor(maxDepth, colorFilters);
+  const kmeans = new Kmeans<Point5>(maxColors, maxIterations, tolerance, squaredEuclidean());
+  return new Extractor(kmeans, colorFilters);
 }
 
 /**
@@ -94,7 +64,6 @@ export function octree(options: Partial<OctreeOptions> = {}): Extractor {
  *
  * @see dbscan
  * @see kmeans
- * @see octree
  */
 export function createExtractor(method: Method): Extractor {
   switch (method) {
@@ -102,8 +71,6 @@ export function createExtractor(method: Method): Extractor {
       return dbscan();
     case 'kmeans':
       return kmeans();
-    case 'octree':
-      return octree();
     default:
       throw new TypeError(`Unrecognized method name: ${method}`);
   }

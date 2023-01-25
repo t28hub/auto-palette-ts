@@ -1,6 +1,8 @@
-import { MinimumSpanningTree } from '../graph';
-import { kdtree } from '../neighbor';
-import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../types';
+import { MinimumSpanningTree } from '../../graph';
+import { kdtree } from '../../neighbor';
+import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../../types';
+
+import { HDBSCANCluster } from './cluster';
 
 class TreeUnionFind {
   private readonly parents: Uint32Array;
@@ -159,8 +161,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     const condensedTree = this.condenseTree(singleLinkage);
     console.table(condensedTree);
 
-    this.extractClusters(condensedTree);
-    return [];
+    return this.extractClusters(condensedTree, points);
   }
 
   private createCoreDistances(points: P[]): Float32Array {
@@ -290,13 +291,14 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
   /**
    *
    * @param condensedTree
+   * @param points
    * @private
    * @see [Extract the clusters](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#extract-the-clusters)
    */
-  private extractClusters(condensedTree: HierarchyNode[]) {
+  private extractClusters(condensedTree: HierarchyNode[], points: P[]): HDBSCANCluster<P>[] {
     const stability = this.computeStability(condensedTree);
-    const clusters = new Set<number>(stability.keys());
-    const nodes = Array.from(clusters).sort((node1: number, node2: number): number => node2 - node1);
+    const clusterLabels = new Set<number>(stability.keys());
+    const nodes = Array.from(clusterLabels).sort((node1: number, node2: number): number => node2 - node1);
     nodes.pop(); // Remove last node
 
     const clusterTree = condensedTree.filter(({ size }) => size > 1);
@@ -310,7 +312,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
 
       const currentStability = stability.get(node) ?? 0.0;
       if (currentStability < childStability) {
-        clusters.delete(node);
+        clusterLabels.delete(node);
         stability.set(node, childStability);
         return;
       }
@@ -319,11 +321,11 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
         if (child === node) {
           return;
         }
-        clusters.delete(child);
+        clusterLabels.delete(child);
       });
     });
 
-    console.info(clusters);
+    console.info(clusterLabels);
 
     const sortedTree = condensedTree.sort((node1, node2): number => {
       return node2.parent - node1.parent;
@@ -332,25 +334,25 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     const minParent = sortedTree[sortedTree.length - 1].parent;
     const unionFind = new TreeUnionFind(maxParent + 1);
     condensedTree.forEach(({ parent, child }) => {
-      if (clusters.has(child)) {
+      if (clusterLabels.has(child)) {
         return;
       }
       unionFind.union(parent, child);
     });
 
-    const results = new Map<number, number[]>();
-    const outliers = new Set<number>();
+    const outlierSet = new Set<number>();
+    const clusterMap = new Map<number, HDBSCANCluster<P>>();
     for (let node = 0; node < minParent; node++) {
       const parent = unionFind.find(node);
       if (parent > minParent) {
-        const children = results.get(parent) ?? [];
-        children.push(node);
-        results.set(parent, children);
+        const cluster = clusterMap.get(parent) ?? new HDBSCANCluster<P>(parent);
+        cluster.append(points[node]);
+        clusterMap.set(parent, cluster);
       } else {
-        outliers.add(node);
+        outlierSet.add(node);
       }
     }
-    console.info(results, outliers);
+    return Array.from(clusterMap.values());
   }
 
   private computeStability(condensedTree: HierarchyNode[]): Map<number, number> {

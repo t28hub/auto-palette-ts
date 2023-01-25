@@ -1,19 +1,24 @@
-import { Cluster, Point } from '../types';
-import { Vector } from '../vector';
+import { Cluster, Point } from '../../types';
+import { Vector } from '../../vector';
 
 /**
- * KmeansCluster implementation for DBSCAN.
+ * Cluster implementation for HDBSCAN.
  */
-export class DBSCANCluster<P extends Point> implements Cluster<P> {
+export class HDBSCANCluster<P extends Point> implements Cluster<P> {
   private readonly points: P[];
 
   /**
-   * Create a new cluster with initial points.
+   * Create a new cluster with label.
    *
-   * @param initialPoints The initial points.
+   * @param label The unique cluster label.
+   *
+   * @throws {RangeError} if the label is invalid.
    */
-  constructor(initialPoints: Iterable<P> | ArrayLike<P>) {
-    this.points = Array.from(initialPoints);
+  constructor(readonly label: number) {
+    if (label < 0) {
+      throw new RangeError(`The given label is invalid: ${label}`);
+    }
+    this.points = [];
   }
 
   /**

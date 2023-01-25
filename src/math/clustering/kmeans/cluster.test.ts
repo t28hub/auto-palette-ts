@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { euclidean } from '../../math';
+import { euclidean } from '../../index';
 
-import { KmeansCluster } from './kmeansCluster';
+import { KmeansCluster } from './cluster';
 
 describe('KmeansCluster', () => {
   describe('constructor', () => {

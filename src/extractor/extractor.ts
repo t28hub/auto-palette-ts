@@ -1,28 +1,36 @@
-import { lab, parse, rgb } from '../../color';
-import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../../color/space/lab';
-import { DBSCAN, kdtree, Point5 } from '../../math';
-import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../../types';
-import { composite } from '../filter';
-import { ColorFilter, Extractor } from '../types';
+import { lab, parse, rgb } from '../color';
+import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
+import { Cluster, Clustering, Point5 } from '../math';
+import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../types';
+
+import { ColorFilter, composite } from './filter';
 
 /**
- * Color extractor implementation using DBSCAN.
+ * Class to extract swatches from image data.
  */
-export class DBSCANExtractor implements Extractor {
+export class Extractor {
   private readonly rgb: ColorSpace<RGB>;
   private readonly lab: ColorSpace<Lab>;
   private readonly filter: ColorFilter<RGB>;
 
-  constructor(
-    private readonly minPoints: number,
-    private readonly threshold: number,
-    colorFilters: ColorFilter<RGB>[],
-  ) {
+  /**
+   * Create a new Extractor.
+   *
+   * @param clustering The clustering algorithm.
+   * @param filters The color filters.
+   */
+  constructor(private readonly clustering: Clustering<Point5>, filters: ColorFilter<RGB>[]) {
     this.rgb = rgb();
     this.lab = lab();
-    this.filter = composite(...colorFilters);
+    this.filter = composite(...filters);
   }
 
+  /**
+   * Extract colors from image data.
+   *
+   * @param imageData The image data.
+   * @return The extracted swatches.
+   */
   extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
@@ -58,9 +66,7 @@ export class DBSCANExtractor implements Extractor {
       ]);
     }
 
-    const nns = kdtree(pixels);
-    const dbscan = new DBSCAN(this.minPoints, this.threshold, nns);
-    return dbscan.fit(pixels).map((cluster): Swatch => {
+    return this.clustering.fit(pixels).map((cluster: Cluster<Point5>): Swatch => {
       const pixel = cluster.centroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;

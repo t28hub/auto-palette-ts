@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { Point3, squaredEuclidean } from '../../math';
+import { Point3, squaredEuclidean } from '../../index';
 
-import { Kmeans } from './kmeans';
+import { Kmeans } from './index';
 
 describe('Kmeans', () => {
   describe('constructor', () => {

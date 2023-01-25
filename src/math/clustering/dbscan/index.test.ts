@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { linear, Point2, squaredEuclidean } from '../../math';
+import { euclidean, Point2 } from '../../index';
 
-import { DBSCAN } from './dbscan';
+import { DBSCAN } from './index';
 
 const points: Point2[] = [
   [0, 0],
@@ -27,7 +27,7 @@ describe('DBSCAN', () => {
   describe('constructor', () => {
     it('should create a new DBSCAN', () => {
       // Actual
-      const actual = new DBSCAN(10, 2.5, linear(points));
+      const actual = new DBSCAN(10, 2.5, euclidean());
 
       // Assert
       expect(actual).toBeDefined();
@@ -37,7 +37,7 @@ describe('DBSCAN', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(0, 2.5, linear(points));
+        new DBSCAN(0, 2.5, euclidean());
       }).toThrowError(RangeError);
     });
 
@@ -45,7 +45,7 @@ describe('DBSCAN', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(10, -1.0, linear(points));
+        new DBSCAN(10, -1.0, euclidean());
       }).toThrowError(RangeError);
     });
   });
@@ -53,35 +53,43 @@ describe('DBSCAN', () => {
   describe('fit', () => {
     it('should cluster the given points', () => {
       // Arrange
-      const dbscan = new DBSCAN(4, 2.0, linear(points, squaredEuclidean()));
+      const dbscan = new DBSCAN(4, 2.0, euclidean());
 
       // Act
       const actual = dbscan.fit(points);
 
       // Assert
-      expect(actual).toHaveLength(2);
-      expect(actual[0].size).toEqual(7);
+      expect(actual).toHaveLength(3);
+      expect(actual[0].size).toEqual(8);
       expect(actual[0]).toMatchObject({
         points: [
+          [1, 0],
+          [0, 1],
           [0, 0],
           [1, 1],
-          [1, 0],
           [1, 2],
           [2, 1],
           [2, 2],
-          [0, 1],
+          [0, 0],
         ],
       });
-      expect(actual[1].size).toEqual(5);
+      expect(actual[1].size).toEqual(4);
       expect(actual[1]).toMatchObject({
-        size: 5,
-        isEmpty: false,
         points: [
-          [4, 3],
-          [4, 5],
-          [5, 4],
+          [1, 8],
+          [0, 8],
+          [1, 7],
+          [0, 7],
+        ],
+      });
+      expect(actual[2].size).toEqual(5);
+      expect(actual[2]).toMatchObject({
+        points: [
           [5, 3],
+          [4, 5],
           [4, 4],
+          [5, 4],
+          [4, 3],
         ],
       });
     });

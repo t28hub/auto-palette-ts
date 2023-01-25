@@ -83,7 +83,7 @@ describe('worker', () => {
       type: 'request',
       payload: {
         id: id(),
-        method: 'octree',
+        method: 'kmeans',
         maxColors: 2,
         imageObject: {
           width: 2,
