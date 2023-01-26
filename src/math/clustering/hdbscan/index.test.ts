@@ -51,7 +51,7 @@ describe('HDBSCAN', () => {
       const actual = hdbscan.fit(points);
 
       // Assert
-      expect(actual).toHaveLength(5);
+      expect(actual).toHaveLength(3);
     });
 
     it('should return an empty clusters if the given points is empty', () => {

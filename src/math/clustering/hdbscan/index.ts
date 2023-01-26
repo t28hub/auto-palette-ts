@@ -1,8 +1,8 @@
 import { MinimumSpanningTree } from '../../graph';
-import { kdtree } from '../../neighbor';
 import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../../types';
 
 import { HDBSCANCluster } from './cluster';
+import { CoreDistance } from './coreDistance';
 import { UnionFind } from './unionFind';
 
 class TreeUnionFind {
@@ -75,10 +75,10 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     private readonly minClusterSize: number,
     private readonly distanceFunction: DistanceFunction<P>,
   ) {
-    if (this.minPoints < 1) {
+    if (minPoints < 1) {
       throw new RangeError(`The minimum number of points is less than 1: ${minPoints}`);
     }
-    if (this.minClusterSize < 1) {
+    if (minClusterSize < 1) {
       throw new RangeError(`The minimum number of cluster size is less than 1: ${minClusterSize}`);
     }
   }
@@ -91,14 +91,12 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       return [];
     }
 
-    // https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#transform-the-space
-    const coreDistances = this.createCoreDistances(points);
-
+    const coreDistance = CoreDistance.from(points, this.minPoints, this.distanceFunction);
     // https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#build-the-minimum-spanning-tree
     const minimumSpanningTree = MinimumSpanningTree.prim(points, (index1: number, index2: number): number => {
       // Use the mutual reachability distance as a weight.
       const distance = this.distanceFunction.measure(points[index1], points[index2]);
-      return Math.max(distance, coreDistances[index1], coreDistances[index2]);
+      return Math.max(distance, coreDistance.at(index1), coreDistance.at(index2));
     });
     const singleLinkage = this.buildSingleLinkage(minimumSpanningTree);
     console.table(singleLinkage);
@@ -107,20 +105,6 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     console.table(condensedTree);
 
     return this.extractClusters(condensedTree, points);
-  }
-
-  private createCoreDistances(points: P[]): Float32Array {
-    const k = Math.min(points.length, this.minPoints);
-    const neighborSearch = kdtree(points, this.distanceFunction);
-    return points.reduce((distances: Float32Array, point: P, index: number): Float32Array => {
-      const neighbors = neighborSearch.search(point, k);
-      const coreNeighbor = neighbors.pop();
-      if (!coreNeighbor) {
-        throw new Error(`No neighbor point corresponding at ${index} was found`);
-      }
-      distances[index] = coreNeighbor.distance;
-      return distances;
-    }, new Float32Array(points.length));
   }
 
   /**
