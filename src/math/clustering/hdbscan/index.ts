@@ -3,6 +3,7 @@ import { kdtree } from '../../neighbor';
 import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../../types';
 
 import { HDBSCANCluster } from './cluster';
+import { UnionFind } from './unionFind';
 
 class TreeUnionFind {
   private readonly parents: Uint32Array;
@@ -45,62 +46,6 @@ class TreeUnionFind {
 
   getComponents(): number[] {
     return Array.from(this.components);
-  }
-}
-
-/**
- * https://en.wikipedia.org/wiki/Disjoint-set_data_structure
- */
-class UnionFind {
-  private readonly parents: Uint32Array;
-  private readonly sizes: Uint32Array;
-
-  private nextLabel: number;
-
-  constructor(readonly n: number) {
-    if (n < 1) {
-      throw new RangeError(`The number of node is less than 1: ${n}`);
-    }
-
-    this.parents = new Uint32Array(2 * n - 1).map((_: number, index: number) => index);
-    this.sizes = new Uint32Array(2 * n - 1).fill(1, 0, n);
-    this.nextLabel = n;
-  }
-
-  /**
-   * Find the root index of root of the given index.
-   *
-   * @param a The index to find.
-   * @return The root index of the given index.
-   * @throws {RangeError} if the given index is invalid.
-   */
-  find(a: number): number {
-    if (a < 0) {
-      throw new RangeError(`The given index is invalid: ${a}`);
-    }
-
-    let root = a;
-    let current = a;
-    while (this.parents[current] !== current) {
-      current = this.parents[current];
-    }
-
-    while (this.parents[root] !== current) {
-      const tmp = this.parents[root];
-      this.parents[root] = current;
-      root = tmp;
-    }
-    return current;
-  }
-
-  union(a: number, b: number): number {
-    const label = this.nextLabel++;
-    this.parents[a] = label;
-    this.parents[b] = label;
-
-    const total = this.sizes[a] + this.sizes[b];
-    this.sizes[label] = total;
-    return total;
   }
 }
 

@@ -3,7 +3,7 @@ import { beforeEach, describe, it } from 'vitest';
 import { euclidean } from '../../distance';
 import { Point2 } from '../../types';
 
-import { HDBSCAN } from './hdbscan';
+import { HDBSCAN } from './index';
 
 const points: Point2[] = [
   [0, 0],
