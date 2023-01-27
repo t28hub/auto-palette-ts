@@ -103,10 +103,11 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     const pointGraph = new PointGraph(points, coreDistance, this.distanceFunction);
     // https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#build-the-minimum-spanning-tree
     const minimumSpanningTree = MinimumSpanningTree.prim(pointGraph);
-    const hierarchicalClusters = this.buildSingleLinkage(minimumSpanningTree);
-    console.table(hierarchicalClusters);
+    console.info(minimumSpanningTree.getEdges());
+    const hierarchy = this.buildSingleLinkage(minimumSpanningTree);
+    console.table(hierarchy);
 
-    const condensedTree = this.condenseTree(hierarchicalClusters);
+    const condensedTree = this.condenseTree(hierarchy);
     console.table(condensedTree);
 
     return this.extractClusters(condensedTree, points);
@@ -138,28 +139,29 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
   }
 
   /**
-   * @param hierarchicalClusters
+   * @param hierarchy
    *
    * @private
    * @see [Condense the cluster tree](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#condense-the-cluster-tree)
    */
-  private condenseTree(hierarchicalClusters: HierarchicalCluster[]): HierarchyNode[] {
-    const root = hierarchicalClusters.length * 2;
-    const pointSize = hierarchicalClusters.length + 1;
+  private condenseTree(hierarchy: HierarchicalCluster[]): HierarchyNode[] {
+    const edgeSize = hierarchy.length;
+    const pointSize = edgeSize + 1;
+    const root = edgeSize * 2;
 
     const relabel = new Uint32Array(root + 1);
     relabel[root] = pointSize;
-    let nextLabel = pointSize + 1;
 
-    const clusters = bfs(hierarchicalClusters, root);
-    const ignored = new Set<number>();
+    let nextLabel = pointSize + 1;
+    const nodeIds = HDBSCAN.bfsHierarchy(hierarchy, root);
+    const visited = new Set<number>();
     const condensed = new Array<HierarchyNode>();
-    clusters.forEach((node: number) => {
-      if (ignored.has(node) || node < pointSize) {
+    nodeIds.forEach((nodeId: number) => {
+      if (visited.has(nodeId) || nodeId < pointSize) {
         return;
       }
 
-      const currentCluster = hierarchicalClusters[node - pointSize];
+      const currentCluster = hierarchy[nodeId - pointSize];
       let lambda = Number.MAX_VALUE;
       if (currentCluster.height > 0.0) {
         lambda = 1.0 / currentCluster.height;
@@ -169,52 +171,52 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       const right = currentCluster.child;
 
       // If the node is leaf, the count is equal to 1
-      const leftSize = hierarchicalClusters.at(left - pointSize)?.size ?? 1;
-      const rightSize = hierarchicalClusters.at(right - pointSize)?.size ?? 1;
+      const leftSize = hierarchy.at(left - pointSize)?.size ?? 1;
+      const rightSize = hierarchy.at(right - pointSize)?.size ?? 1;
 
       if (leftSize >= this.minClusterSize && rightSize >= this.minClusterSize) {
         relabel[left] = nextLabel;
-        condensed.push({ parent: relabel[node], child: nextLabel, lambda, size: leftSize });
+        condensed.push({ parent: relabel[nodeId], child: relabel[left], lambda, size: leftSize });
         nextLabel++;
 
         relabel[right] = nextLabel;
-        condensed.push({ parent: relabel[node], child: nextLabel, lambda, size: rightSize });
+        condensed.push({ parent: relabel[nodeId], child: relabel[right], lambda, size: rightSize });
         nextLabel++;
         return;
       }
 
       if (leftSize < this.minClusterSize && rightSize < this.minClusterSize) {
-        bfs(hierarchicalClusters, node).forEach((childNode: number) => {
-          if (childNode === node) {
+        HDBSCAN.bfsHierarchy(hierarchy, nodeId).forEach((childNodeId: number) => {
+          if (childNodeId === nodeId) {
             return;
           }
 
-          if (childNode < pointSize) {
-            condensed.push({ parent: relabel[node], child: childNode, lambda, size: 1 });
+          if (childNodeId < pointSize) {
+            condensed.push({ parent: relabel[nodeId], child: childNodeId, lambda, size: 1 });
           }
-          ignored.add(childNode);
+          visited.add(childNodeId);
         });
         return;
       }
 
-      if (leftSize >= this.minClusterSize) {
-        relabel[left] = relabel[node];
-        bfs(hierarchicalClusters, right).forEach((childNode: number) => {
-          if (childNode < pointSize) {
-            condensed.push({ parent: relabel[node], child: childNode, lambda, size: 1 });
+      if (leftSize < this.minClusterSize) {
+        relabel[right] = relabel[nodeId];
+        HDBSCAN.bfsHierarchy(hierarchy, left).forEach((childNodeId: number) => {
+          if (childNodeId < pointSize) {
+            condensed.push({ parent: relabel[nodeId], child: childNodeId, lambda, size: 1 });
           }
-          ignored.add(childNode);
+          visited.add(childNodeId);
         });
         return;
       }
 
-      if (rightSize >= this.minClusterSize) {
-        relabel[right] = relabel[node];
-        bfs(hierarchicalClusters, left).forEach((childNode: number) => {
-          if (childNode < pointSize) {
-            condensed.push({ parent: relabel[node], child: childNode, lambda, size: 1 });
+      if (rightSize < this.minClusterSize) {
+        relabel[left] = relabel[nodeId];
+        HDBSCAN.bfsHierarchy(hierarchy, right).forEach((childNodeId: number) => {
+          if (childNodeId < pointSize) {
+            condensed.push({ parent: relabel[nodeId], child: childNodeId, lambda, size: 1 });
           }
-          ignored.add(childNode);
+          visited.add(childNodeId);
         });
         return;
       }
@@ -251,7 +253,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
         return;
       }
 
-      bfsTree(clusterTree, node).forEach((child: number) => {
+      HDBSCAN.bfsTree(clusterTree, node).forEach((child: number) => {
         if (child === node) {
           return;
         }
@@ -318,34 +320,36 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       return stability;
     }, new Map<number, number>());
   }
-}
 
-function bfsTree(clusterTree: HierarchyNode[], root: number): number[] {
-  let queue = [root];
-  const result = new Array<number>();
-  while (queue.length > 0) {
-    result.push(...queue);
-    queue = clusterTree.filter(({ parent }) => queue.indexOf(parent) !== -1).map(({ child }) => child);
+  private static bfsHierarchy(hierarchy: HierarchicalCluster[], root: number): number[] {
+    const edgeSize = hierarchy.length;
+    const pointSize = edgeSize + 1;
+
+    let queue = [root];
+    const result = new Array<number>();
+    while (queue.length > 0) {
+      result.push(...queue);
+      queue = queue.flatMap((label: number): number[] => {
+        if (label < pointSize) {
+          return [];
+        }
+
+        const node = hierarchy[label - pointSize];
+        return [node.parent, node.child];
+      });
+    }
+    return result;
   }
-  return result;
-}
 
-function bfs(singleLinkage: HierarchicalCluster[], root: number): number[] {
-  const dimension = singleLinkage.length;
-  const maxNode = 2 * dimension;
-  const pointSize = maxNode - dimension + 1;
-
-  let queue = [root];
-  const result = new Array<number>();
-  while (queue.length > 0) {
-    result.push(...queue);
-    queue = queue.flatMap((label: number): number[] => {
-      if (label < pointSize) {
-        return [];
-      }
-      const node = singleLinkage[label - pointSize];
-      return [node.parent, node.child];
-    });
+  private static bfsTree(tree: HierarchyNode[], root: number): number[] {
+    let queue = [root];
+    const result = new Array<number>();
+    while (queue.length > 0) {
+      result.push(...queue);
+      queue = tree
+        .filter((node: HierarchyNode) => queue.indexOf(node.parent) !== -1)
+        .map((node: HierarchyNode) => node.child);
+    }
+    return result;
   }
-  return result;
 }
