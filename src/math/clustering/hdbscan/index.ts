@@ -1,8 +1,9 @@
 import { MinimumSpanningTree } from '../../graph';
-import { Cluster, Clustering, DistanceFunction, Graph, Point, WeightedEdge } from '../../types';
+import { Cluster, Clustering, DistanceFunction, Point, SpanningTree, WeightedEdge } from '../../types';
 
 import { HDBSCANCluster } from './cluster';
 import { CoreDistance } from './coreDistance';
+import { PointGraph } from './pointGraph';
 import { UnionFind } from './unionFind';
 
 class TreeUnionFind {
@@ -56,6 +57,13 @@ interface HierarchyNode {
   readonly size: number;
 }
 
+interface HierarchicalCluster {
+  readonly parent: number;
+  readonly child: number;
+  readonly height: number;
+  readonly size: number;
+}
+
 /**
  * Hierarchical density-based spatial clustering of applications with noise implementation.
  *
@@ -92,16 +100,13 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     }
 
     const coreDistance = CoreDistance.from(points, this.minPoints, this.distanceFunction);
+    const pointGraph = new PointGraph(points, coreDistance, this.distanceFunction);
     // https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#build-the-minimum-spanning-tree
-    const minimumSpanningTree = MinimumSpanningTree.prim(points, (index1: number, index2: number): number => {
-      // Use the mutual reachability distance as a weight.
-      const distance = this.distanceFunction.measure(points[index1], points[index2]);
-      return Math.max(distance, coreDistance.at(index1), coreDistance.at(index2));
-    });
-    const singleLinkage = this.buildSingleLinkage(minimumSpanningTree);
-    console.table(singleLinkage);
+    const minimumSpanningTree = MinimumSpanningTree.prim(pointGraph);
+    const hierarchicalClusters = this.buildSingleLinkage(minimumSpanningTree);
+    console.table(hierarchicalClusters);
 
-    const condensedTree = this.condenseTree(singleLinkage);
+    const condensedTree = this.condenseTree(hierarchicalClusters);
     console.table(condensedTree);
 
     return this.extractClusters(condensedTree, points);
@@ -110,15 +115,15 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
   /**
    * Build the cluster hierarchy using the single linkage.
    *
-   * @param mst The minimum spanning tree.
+   * @param spanningTree The minimum spanning tree.
    * @return The built single linkage.
    *
    * @private
    * @see [Build the cluster hierarchy](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#build-the-cluster-hierarchy)
    */
-  private buildSingleLinkage(mst: Graph<WeightedEdge>): HierarchyNode[] {
+  private buildSingleLinkage(spanningTree: SpanningTree<WeightedEdge>): HierarchicalCluster[] {
     // Sort all edges in ascending order of weight.
-    const edges = mst.getEdges().sort((edge1: WeightedEdge, edge2: WeightedEdge): number => {
+    const edges = spanningTree.getEdges().sort((edge1: WeightedEdge, edge2: WeightedEdge): number => {
       return edge1.weight - edge2.weight;
     });
 
@@ -128,44 +133,44 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       const parent = unionFind.find(edge.u);
       const child = unionFind.find(edge.v);
       const size = unionFind.union(parent, child);
-      return { parent, child, lambda: edge.weight, size };
+      return { parent, child, height: edge.weight, size };
     });
   }
 
   /**
-   * @param singleLinkage
+   * @param hierarchicalClusters
    *
    * @private
    * @see [Condense the cluster tree](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#condense-the-cluster-tree)
    */
-  private condenseTree(singleLinkage: HierarchyNode[]): HierarchyNode[] {
-    const root = singleLinkage.length * 2;
-    const pointSize = singleLinkage.length + 1;
+  private condenseTree(hierarchicalClusters: HierarchicalCluster[]): HierarchyNode[] {
+    const root = hierarchicalClusters.length * 2;
+    const pointSize = hierarchicalClusters.length + 1;
 
     const relabel = new Uint32Array(root + 1);
     relabel[root] = pointSize;
     let nextLabel = pointSize + 1;
 
-    const nodes = bfs(singleLinkage, root);
+    const clusters = bfs(hierarchicalClusters, root);
     const ignored = new Set<number>();
     const condensed = new Array<HierarchyNode>();
-    nodes.forEach((node: number) => {
+    clusters.forEach((node: number) => {
       if (ignored.has(node) || node < pointSize) {
         return;
       }
 
-      const currentNode = singleLinkage[node - pointSize];
+      const currentCluster = hierarchicalClusters[node - pointSize];
       let lambda = Number.MAX_VALUE;
-      if (currentNode.lambda > 0.0) {
-        lambda = 1.0 / currentNode.lambda;
+      if (currentCluster.height > 0.0) {
+        lambda = 1.0 / currentCluster.height;
       }
 
-      const left = currentNode.parent;
-      const right = currentNode.child;
+      const left = currentCluster.parent;
+      const right = currentCluster.child;
 
       // If the node is leaf, the count is equal to 1
-      const leftSize = singleLinkage.at(left - pointSize)?.size ?? 1;
-      const rightSize = singleLinkage.at(right - pointSize)?.size ?? 1;
+      const leftSize = hierarchicalClusters.at(left - pointSize)?.size ?? 1;
+      const rightSize = hierarchicalClusters.at(right - pointSize)?.size ?? 1;
 
       if (leftSize >= this.minClusterSize && rightSize >= this.minClusterSize) {
         relabel[left] = nextLabel;
@@ -179,7 +184,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       }
 
       if (leftSize < this.minClusterSize && rightSize < this.minClusterSize) {
-        bfs(singleLinkage, node).forEach((childNode: number) => {
+        bfs(hierarchicalClusters, node).forEach((childNode: number) => {
           if (childNode === node) {
             return;
           }
@@ -194,7 +199,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
 
       if (leftSize >= this.minClusterSize) {
         relabel[left] = relabel[node];
-        bfs(singleLinkage, right).forEach((childNode: number) => {
+        bfs(hierarchicalClusters, right).forEach((childNode: number) => {
           if (childNode < pointSize) {
             condensed.push({ parent: relabel[node], child: childNode, lambda, size: 1 });
           }
@@ -205,7 +210,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
 
       if (rightSize >= this.minClusterSize) {
         relabel[right] = relabel[node];
-        bfs(singleLinkage, left).forEach((childNode: number) => {
+        bfs(hierarchicalClusters, left).forEach((childNode: number) => {
           if (childNode < pointSize) {
             condensed.push({ parent: relabel[node], child: childNode, lambda, size: 1 });
           }
@@ -325,7 +330,7 @@ function bfsTree(clusterTree: HierarchyNode[], root: number): number[] {
   return result;
 }
 
-function bfs(singleLinkage: HierarchyNode[], root: number): number[] {
+function bfs(singleLinkage: HierarchicalCluster[], root: number): number[] {
   const dimension = singleLinkage.length;
   const maxNode = 2 * dimension;
   const pointSize = maxNode - dimension + 1;

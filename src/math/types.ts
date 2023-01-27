@@ -124,20 +124,52 @@ export interface WeightedEdge extends Edge {
 }
 
 /**
- * Interface representing graph.
+ * Interface representing undirected graph.
+ *
+ * @param V The type of vertex.
+ * @param E The type of edge.
  */
-export interface Graph<E extends Edge> {
+export interface Graph<V, E extends Edge> {
   /**
-   * Whether this graph is empty.
+   * Return the edge connecting vertices u and v.
    *
-   * @return true if this graph is empty.
+   * @param u The index of source vertex.
+   * @param v The index of target vertex.
+   * @return The edge connecting vertices u and v.
+   * @throws {RangeError} if both or either u and v is invalid.
    */
-  isEmpty: boolean;
+  getEdge(u: number, v: number): E;
 
   /**
-   * Return all edges of this graph.
+   * Return all vertices in this graph.
    *
-   * @return The array of all edges.
+   * @return The array of all vertices.
+   */
+  getVertices(): V[];
+
+  /**
+   * Count the number of vertices.
+   *
+   * @return The number of vertices.
+   */
+  countVertices(): number;
+}
+
+/**
+ * Interface representing spanning tree.
+ *
+ * @param E The type of edge.
+ */
+export interface SpanningTree<E extends Edge> {
+  /**
+   * Return the weight of this spanning tree.
+   */
+  readonly weight: number;
+
+  /**
+   * Return a set of edges of this spanning tree.
+   *
+   * @return An array of edges of this spanning tree.
    */
   getEdges(): E[];
 }

@@ -1,1 +1,1 @@
-export * from './mst';
+export * from './spanning';
