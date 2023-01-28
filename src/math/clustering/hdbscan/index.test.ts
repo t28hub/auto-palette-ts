@@ -22,7 +22,7 @@ const points: Point2[] = [
   [4, 5],
   [5, 3],
   [5, 4],
-  [8, 4],
+  [8, 3],
   [8, 4],
   [8, 5],
   [8, 7],
@@ -43,7 +43,7 @@ describe('HDBSCAN', () => {
   describe('fit', () => {
     let hdbscan: HDBSCAN<Point2>;
     beforeEach(() => {
-      hdbscan = new HDBSCAN<Point2>(4, 4, euclidean());
+      hdbscan = new HDBSCAN<Point2>(3, 4, euclidean());
     });
 
     it('should return clusters', () => {
@@ -51,7 +51,8 @@ describe('HDBSCAN', () => {
       const actual = hdbscan.fit(points);
 
       // Assert
-      expect(actual).toHaveLength(3);
+      actual.forEach((a) => console.info(a));
+      expect(actual).toHaveLength(4);
     });
 
     it('should return an empty clusters if the given points is empty', () => {

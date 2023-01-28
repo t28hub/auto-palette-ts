@@ -1,5 +1,5 @@
 import { PriorityQueue } from '../../utils';
-import { Graph, SpanningTree, WeightedEdge } from '../types';
+import { Graph, SpanningTree, WeightedEdge, WeightFunction } from '../types';
 
 /**
  * Minimum spanning tree(MST) implementation.
@@ -24,13 +24,29 @@ export class MinimumSpanningTree<E extends WeightedEdge> implements SpanningTree
     return Array.from(this.edges);
   }
 
+  static fromVertices<V>(vertices: V[], weightFunction: WeightFunction): SpanningTree<WeightedEdge> {
+    const graph: Graph<V, WeightedEdge> = {
+      getEdge(u: number, v: number): WeightedEdge {
+        const weight = weightFunction.compute(u, v);
+        return { u, v, weight };
+      },
+      getVertices(): V[] {
+        return Array.from(vertices);
+      },
+      countVertices(): number {
+        return vertices.length;
+      },
+    };
+    return this.fromGraph(graph);
+  }
+
   /**
    * Build a new spanning tree using the Prim's algorithm.
    *
    * @param graph The source graph.
    * @return The new minimum spanning tree.
    */
-  static prim<V, E extends WeightedEdge>(graph: Graph<V, E>): SpanningTree<E> {
+  static fromGraph<V, E extends WeightedEdge>(graph: Graph<V, E>): SpanningTree<E> {
     const vertices = graph.getVertices();
     if (vertices.length <= 1) {
       return new MinimumSpanningTree<E>([], 0.0);
@@ -40,18 +56,20 @@ export class MinimumSpanningTree<E extends WeightedEdge> implements SpanningTree
     const attached = new Set<number>();
     const candidates = new PriorityQueue<E>((edge: E): number => -edge.weight);
 
-    const verticesCount = graph.countVertices();
+    const verticesSize = vertices.length;
     let totalWeight = 0.0;
-    let currentIndex = verticesCount - 1;
+    let currentIndex = verticesSize - 1;
     attached.add(currentIndex);
-    while (attached.size < verticesCount) {
-      for (let i = 0; i < verticesCount; i++) {
+    while (attached.size < verticesSize) {
+      for (let i = 0; i < verticesSize; i++) {
         if (currentIndex === i || attached.has(i)) {
           continue;
         }
 
         const edge = graph.getEdge(currentIndex, i);
-        candidates.enqueue(edge);
+        if (Number.isFinite(edge.weight)) {
+          candidates.enqueue(edge);
+        }
       }
 
       while (!candidates.isEmpty) {

@@ -175,6 +175,20 @@ export interface SpanningTree<E extends Edge> {
 }
 
 /**
+ * Interface computing weight of each edge.
+ */
+export interface WeightFunction {
+  /**
+   * Compute the weight of the edge connecting u and v.
+   *
+   * @param u The source index.
+   * @param v The target index.
+   * @return The weight of the edge connecting u and v.
+   */
+  compute(u: number, v: number): number;
+}
+
+/**
  * Interface representing cluster.
  *
  * @param P The type of point.
