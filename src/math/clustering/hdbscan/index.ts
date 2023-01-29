@@ -1,9 +1,9 @@
 import { Cluster, Clustering, DistanceFunction, Point } from '../../types';
+import { HierarchicalClustering, HierarchicalNode } from '../hierarchical';
 
 import { HDBSCANCluster } from './cluster';
 import { CoreDistance } from './coreDistance';
 import { MutualReachabilityDistance } from './mutualReachabilityDistance';
-import { Node, SingleLinkage } from './singleLinkage';
 
 class TreeUnionFind {
   private readonly parents: Uint32Array;
@@ -49,7 +49,7 @@ class TreeUnionFind {
   }
 }
 
-interface HierarchyNode {
+interface Node {
   readonly parent: number;
   readonly child: number;
   readonly lambda: number;
@@ -94,8 +94,8 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     // https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#build-the-minimum-spanning-tree
     const coreDistance = CoreDistance.from(points, this.minPoints, this.distanceFunction);
     const weightFunction = new MutualReachabilityDistance(points, coreDistance, this.distanceFunction);
-    const singleLinkage = new SingleLinkage(weightFunction);
-    const hierarchy = singleLinkage.fit(points);
+    const singleLinkage = new HierarchicalClustering(1, weightFunction);
+    const hierarchy = singleLinkage.buildTree(points);
     console.table(hierarchy);
 
     const condensedTree = this.condenseTree(hierarchy);
@@ -110,7 +110,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
    * @private
    * @see [Condense the cluster tree](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#condense-the-cluster-tree)
    */
-  private condenseTree(hierarchy: Node[]): HierarchyNode[] {
+  private condenseTree(hierarchy: HierarchicalNode[]): Node[] {
     const edgeSize = hierarchy.length;
     const pointSize = edgeSize + 1;
     const root = edgeSize * 2;
@@ -121,7 +121,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     let nextLabel = pointSize + 1;
     const nodeIds = HDBSCAN.bfsHierarchy(hierarchy, root);
     const visited = new Set<number>();
-    const condensed = new Array<HierarchyNode>();
+    const condensed = new Array<Node>();
     nodeIds.forEach((nodeId: number) => {
       if (visited.has(nodeId) || nodeId < pointSize) {
         return;
@@ -197,7 +197,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
    * @private
    * @see [Extract the clusters](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#extract-the-clusters)
    */
-  private extractClusters(condensedTree: HierarchyNode[], points: P[]): HDBSCANCluster<P>[] {
+  private extractClusters(condensedTree: Node[], points: P[]): HDBSCANCluster<P>[] {
     const stability = this.computeStability(condensedTree);
     const clusterLabels = new Set<number>(stability.keys());
     const nodes = Array.from(clusterLabels).sort((node1: number, node2: number): number => node2 - node1);
@@ -257,8 +257,8 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     return Array.from(clusterMap.values());
   }
 
-  private computeStability(condensedTree: HierarchyNode[]): Map<number, number> {
-    const births = condensedTree.reduce((births: Map<number, number>, node: HierarchyNode): Map<number, number> => {
+  private computeStability(condensedTree: Node[]): Map<number, number> {
+    const births = condensedTree.reduce((births: Map<number, number>, node: Node): Map<number, number> => {
       const birth = births.get(node.child);
       if (birth) {
         births.set(node.child, Math.min(node.lambda, birth));
@@ -268,13 +268,13 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
       return births;
     }, new Map<number, number>());
 
-    const sortedTree = condensedTree.sort((node1: HierarchyNode, node2: HierarchyNode): number => {
+    const sortedTree = condensedTree.sort((node1: Node, node2: Node): number => {
       return node1.parent - node2.parent;
     });
     const minCluster = sortedTree[0].parent;
     births.set(minCluster, 0.0);
 
-    return condensedTree.reduce((stability: Map<number, number>, node: HierarchyNode): Map<number, number> => {
+    return condensedTree.reduce((stability: Map<number, number>, node: Node): Map<number, number> => {
       const { parent, lambda, size } = node;
       const birth = births.get(parent) ?? 0;
       const previous = stability.get(parent);
@@ -287,7 +287,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     }, new Map<number, number>());
   }
 
-  private static bfsHierarchy(hierarchy: Node[], root: number): number[] {
+  private static bfsHierarchy(hierarchy: HierarchicalNode[], root: number): number[] {
     const edgeSize = hierarchy.length;
     const pointSize = edgeSize + 1;
 
@@ -307,14 +307,12 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     return result;
   }
 
-  private static bfsTree(tree: HierarchyNode[], root: number): number[] {
+  private static bfsTree(tree: Node[], root: number): number[] {
     let queue = [root];
     const result = new Array<number>();
     while (queue.length > 0) {
       result.push(...queue);
-      queue = tree
-        .filter((node: HierarchyNode) => queue.indexOf(node.parent) !== -1)
-        .map((node: HierarchyNode) => node.child);
+      queue = tree.filter((node: Node) => queue.indexOf(node.parent) !== -1).map((node: Node) => node.child);
     }
     return result;
   }
