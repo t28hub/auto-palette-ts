@@ -99,7 +99,7 @@ describe('UnionFind', () => {
       // Act & Assert
       expect(() => {
         unionFind.union(x, y);
-      });
+      }).toThrowError(RangeError);
     });
   });
 });
