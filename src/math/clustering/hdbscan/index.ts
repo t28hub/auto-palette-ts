@@ -4,50 +4,7 @@ import { HierarchicalClustering, HierarchicalNode } from '../hierarchical';
 import { HDBSCANCluster } from './cluster';
 import { CoreDistance } from './coreDistance';
 import { MutualReachabilityDistance } from './mutualReachabilityDistance';
-
-class TreeUnionFind {
-  private readonly parents: Uint32Array;
-  private readonly sizes: Uint32Array;
-  private readonly components: Set<number>;
-
-  constructor(readonly n: number) {
-    if (n < 1) {
-      throw new RangeError(`The number of node is less than 1: ${n}`);
-    }
-    this.parents = new Uint32Array(n).map((_: number, index: number) => index);
-    this.sizes = new Uint32Array(n);
-    this.components = new Set<number>(this.parents);
-  }
-
-  find(a: number): number {
-    if (this.parents[a] !== a) {
-      const rootA = this.parents[a];
-      this.parents[a] = this.find(rootA);
-      this.components.delete(a);
-    }
-    return this.parents[a];
-  }
-
-  union(a: number, b: number) {
-    const rootA = this.parents[a];
-    const rootB = this.parents[b];
-
-    const rootSizeA = this.sizes[rootA];
-    const rootSizeBB = this.sizes[rootB];
-    if (rootSizeA < rootSizeBB) {
-      this.parents[rootA] = rootB;
-    } else if (rootSizeA > rootSizeBB) {
-      this.parents[rootB] = rootA;
-    } else {
-      this.parents[rootB] = rootA;
-      this.sizes[rootA]++;
-    }
-  }
-
-  getComponents(): number[] {
-    return Array.from(this.components);
-  }
-}
+import { UnionFind } from './unionFind';
 
 interface Node {
   readonly parent: number;
@@ -234,7 +191,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     });
     const maxParent = sortedTree[0].parent;
     const minParent = sortedTree[sortedTree.length - 1].parent;
-    const unionFind = new TreeUnionFind(maxParent + 1);
+    const unionFind = new UnionFind(maxParent + 1);
     condensedTree.forEach(({ parent, child }) => {
       if (clusterLabels.has(child)) {
         return;
