@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { euclidean } from '../../distance';
 import { Point2 } from '../../types';
@@ -38,6 +38,20 @@ describe('HDBSCAN', () => {
       // Assert
       expect(actual).toBeDefined();
     });
+
+    it.each([
+      { minPoints: 0, minClusterSize: 1 },
+      { minPoints: 1, minClusterSize: 0 },
+      { minPoints: 0, minClusterSize: 0 },
+    ])(
+      'should throw RangeError if either or both arguments(minPoints=$minPoints, minClusterSize=$minClusterSize) are invalid',
+      ({ minPoints, minClusterSize }) => {
+        // Act& Assert
+        expect(() => {
+          new HDBSCAN(minPoints, minClusterSize, euclidean());
+        }).toThrowError(RangeError);
+      },
+    );
   });
 
   describe('fit', () => {
