@@ -65,7 +65,6 @@ describe('HDBSCAN', () => {
       const actual = hdbscan.fit(points);
 
       // Assert
-      actual.forEach((a) => console.info(a));
       expect(actual).toHaveLength(4);
     });
 

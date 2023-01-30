@@ -47,11 +47,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     const weightFunction = new MutualReachabilityDistance(points, coreDistance, this.distanceFunction);
     const hierarchicalClustering = new HierarchicalClustering(1, weightFunction);
     const hierarchicalTree = hierarchicalClustering.buildTree(points);
-    console.table(hierarchicalTree);
-
     const condensedTree = this.condenseTree(hierarchicalTree);
-    console.table(condensedTree);
-
     return this.extractClusters(condensedTree, points);
   }
 
@@ -174,8 +170,6 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
         }
       });
     });
-
-    console.info(clusterIds);
 
     const sortedTree = condensedTree.sort((node1: CondensedNode, node2: CondensedNode): number => {
       return node2.parent - node1.parent;
