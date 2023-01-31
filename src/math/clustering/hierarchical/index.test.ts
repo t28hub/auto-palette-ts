@@ -1,4 +1,4 @@
-import { beforeEach, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { squaredEuclidean } from '../../distance';
 import { Point2, WeightFunction } from '../../types';
@@ -51,6 +51,26 @@ describe('HierarchicalClustering', () => {
 
       // Assert
       expect(actual).toHaveLength(3);
+      expect(actual[0]).toMatchObject({
+        id: 1,
+        points: [
+          [0.0, 0.0],
+          [1.0, 1.0],
+          [1.0, 0.0],
+          [0.0, 1.0],
+        ],
+      });
+      expect(actual[1]).toMatchObject({
+        id: 2,
+        points: [
+          [2.0, 1.5],
+          [2.0, 2.0],
+        ],
+      });
+      expect(actual[2]).toMatchObject({
+        id: 0,
+        points: [[2.5, 3.0]],
+      });
     });
 
     it('should return an array contains single cluster if the cluster size === 1', () => {
@@ -64,7 +84,29 @@ describe('HierarchicalClustering', () => {
     });
   });
 
-  describe('buildTree', () => {
+  describe('label', () => {
+    it('should return labels', () => {
+      // Act
+      const hierarchicalClustering = new HierarchicalClustering(3, DistanceWeightFunction);
+      const actual = hierarchicalClustering.label(points);
+
+      // Assert
+      expect(actual).toHaveLength(points.length);
+      expect(actual).toContainAllValues([1, 1, 2, 1, 2, 1, 0]);
+    });
+
+    it('should return labels contains only 0 if the cluster size is less than 2', () => {
+      // Act
+      const hierarchicalClustering = new HierarchicalClustering(1, DistanceWeightFunction);
+      const actual = hierarchicalClustering.label(points);
+
+      // Assert
+      expect(actual).toHaveLength(points.length);
+      expect(actual).toContainAllValues([0, 0, 0, 0, 0, 0, 0]);
+    });
+  });
+
+  describe('buildHierarchy', () => {
     let hierarchicalClustering: HierarchicalClustering<Point2>;
     beforeEach(() => {
       hierarchicalClustering = new HierarchicalClustering(3, DistanceWeightFunction);
@@ -72,7 +114,7 @@ describe('HierarchicalClustering', () => {
 
     it('should build hierarchical tree from the given points', () => {
       // Act
-      const actual = hierarchicalClustering.buildTree(points);
+      const actual = hierarchicalClustering.buildHierarchy(points);
 
       // Assert
       expect(actual).toHaveLength(6);
@@ -88,7 +130,7 @@ describe('HierarchicalClustering', () => {
 
     it('should return an empty array if the points is empty', () => {
       // Act
-      const actual = hierarchicalClustering.buildTree([]);
+      const actual = hierarchicalClustering.buildHierarchy([]);
 
       // Assert
       expect(actual).toBeEmpty();

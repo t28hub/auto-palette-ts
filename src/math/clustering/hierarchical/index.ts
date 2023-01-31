@@ -31,8 +31,30 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
    * {@inheritDoc Clustering.fit}
    */
   fit(points: P[]): Cluster<P>[] {
-    const tree = this.buildTree(points);
-    return this.buildClusters(points, tree);
+    const hierarchy = this.buildHierarchy(points);
+    const labels = this.labelHierarchy(hierarchy);
+    const clusters = points.reduce(
+      (clusters: Map<number, MutableCluster<P>>, point: P, index: number): Map<number, MutableCluster<P>> => {
+        const label = labels[index];
+        const cluster = clusters.get(label) ?? new MutableCluster<P>(label);
+        cluster.add(point);
+        clusters.set(label, cluster);
+        return clusters;
+      },
+      new Map<number, MutableCluster<P>>(),
+    );
+    return Array.from(clusters.values());
+  }
+
+  /**
+   * Label the given points.
+   *
+   * @param points The points to be labeled.
+   * @return The labels.
+   */
+  label(points: P[]): Uint32Array {
+    const hierarchy = this.buildHierarchy(points);
+    return this.labelHierarchy(hierarchy);
   }
 
   /**
@@ -41,7 +63,7 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
    * @param points The points.
    * @return The hierarchical tree.
    */
-  buildTree(points: P[]): HierarchicalNode[] {
+  buildHierarchy(points: P[]): HierarchicalNode[] {
     if (points.length === 0) {
       return [];
     }
@@ -63,33 +85,31 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
     });
   }
 
-  private buildClusters(points: P[], tree: HierarchicalNode[]): Cluster<P>[] {
+  private labelHierarchy(hierarchy: HierarchicalNode[]): Uint32Array {
+    const pointSize = hierarchy.length + 1;
+    const labels = new Uint32Array(pointSize);
     if (this.k < 2) {
-      const cluster = new MutableCluster(0, points);
-      return [cluster];
+      return labels;
     }
 
-    const edgeSize = tree.length;
-    const pointSize = edgeSize + 1;
     const nodeIds = [];
     for (let i = 2; i <= this.k; i++) {
-      const node = tree[pointSize - i];
+      const node = hierarchy[pointSize - i];
       nodeIds.push(node.left, node.right);
     }
 
-    const clusters = [];
-    for (let i = 0; i < this.k; i++) {
-      const cluster = this.bfs(points, tree, nodeIds[i], i);
-      clusters.push(cluster);
+    // Sort by node ID in descending order.
+    nodeIds.sort((nodeId1: number, nodeId2: number) => nodeId2 - nodeId1);
+    for (let clusterId = 0; clusterId < this.k; clusterId++) {
+      this.bfs(hierarchy, nodeIds[clusterId], clusterId, labels);
     }
-    return clusters;
+    return labels;
   }
 
-  private bfs(points: P[], tree: HierarchicalNode[], rootNodeId: number, clusterId: number): Cluster<P> {
-    const pointSize = points.length;
-    const rootNode = tree[rootNodeId - pointSize];
-    const cluster = new MutableCluster<P>(clusterId);
-
+  private bfs(hierarchy: HierarchicalNode[], rootNodeId: number, clusterId: number, labels: Uint32Array) {
+    const edgeSize = hierarchy.length;
+    const pointSize = edgeSize + 1;
+    const rootNode = hierarchy[rootNodeId - pointSize];
     const queue = new ArrayQueue(rootNode);
     while (!queue.isEmpty) {
       const node = queue.dequeue();
@@ -99,18 +119,17 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
 
       const left = node.left;
       if (left >= pointSize) {
-        queue.enqueue(tree[left - pointSize]);
+        queue.enqueue(hierarchy[left - pointSize]);
       } else {
-        cluster.add(points[left]);
+        labels[left] = clusterId;
       }
 
       const right = node.right;
       if (right >= pointSize) {
-        queue.enqueue(tree[right - pointSize]);
+        queue.enqueue(hierarchy[right - pointSize]);
       } else {
-        cluster.add(points[right]);
+        labels[right] = clusterId;
       }
     }
-    return cluster;
   }
 }
