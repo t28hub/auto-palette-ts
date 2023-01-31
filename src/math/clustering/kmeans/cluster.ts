@@ -1,33 +1,20 @@
-import { Cluster, Distance, DistanceFunction, Point, toDistance, Vector } from '../../index';
+import { Distance, DistanceFunction, Point, toDistance, Vector } from '../../index';
+import { MutableCluster } from '../mutableCluster';
 
-export class KmeansCluster<P extends Point> implements Cluster<P> {
-  private readonly center: Vector<P>;
-  private readonly points: P[];
+export class KmeansCluster<P extends Point> extends MutableCluster<P> {
+  private readonly centroid: Vector<P>;
 
   /**
    * Create a new {@link KmeansCluster} instance
    *
-   * @param initialCenter The initial center point.
+   * @param id The cluster ID.
+   * @param initialCenter The initial centroid point.
    * @param distanceFunction The distance function.
-   * @throws {TypeError} if the initial center point is invalid.
+   * @throws {TypeError} if the initial centroid point is invalid.
    */
-  constructor(initialCenter: P, private readonly distanceFunction: DistanceFunction<P>) {
-    this.center = new Vector(initialCenter);
-    this.points = [];
-  }
-
-  /**
-   * Return the size of this cluster.
-   */
-  get size(): number {
-    return this.points.length;
-  }
-
-  /**
-   * Return whether this cluster is empty.
-   */
-  get isEmpty(): boolean {
-    return this.points.length === 0;
+  constructor(id: number, initialCenter: P, private readonly distanceFunction: DistanceFunction<P>) {
+    super(id);
+    this.centroid = new Vector(initialCenter);
   }
 
   /**
@@ -35,54 +22,38 @@ export class KmeansCluster<P extends Point> implements Cluster<P> {
    *
    * @return The centroid of this cluster.
    */
-  centroid(): P {
-    return this.center.toArray();
+  computeCentroid(): P {
+    return this.centroid.toArray();
   }
 
   /**
-   * Update the center point of this cluster.
+   * Update the centroid point of this cluster.
    *
-   * @return The distance between old center point and new center point.
+   * @return The distance between old centroid point and new centroid point.
    */
-  updateCenter(): Distance {
-    this.center.setZero();
+  updateCentroid(): Distance {
+    this.centroid.setZero();
     if (this.isEmpty) {
       return toDistance(0.0);
     }
 
-    const oldCenter = this.center.toArray();
+    const oldCenter = this.centroid.toArray();
     for (const point of this.points) {
-      this.center.add(point);
+      this.centroid.add(point);
     }
-    this.center.scale(1 / this.size);
+    this.centroid.scale(1 / this.size);
 
-    const newCenter = this.center.toArray();
+    const newCenter = this.centroid.toArray();
     return this.distanceFunction.measure(oldCenter, newCenter);
   }
 
   /**
-   * Append the given point to this cluster.
-   *
-   * @param point The point to be inserted.
-   */
-  append(point: P) {
-    this.points.push(point);
-  }
-
-  /**
-   * Clear all points of this cluster.
-   */
-  clear() {
-    this.points.length = 0;
-  }
-
-  /**
-   * Compute the distance to the center point of this cluster.
+   * Compute the distance to the centroid point of this cluster.
    *
    * @param point The point.
-   * @return The distance to the center of this cluster.
+   * @return The distance to the centroid of this cluster.
    */
   distanceTo(point: P): Distance {
-    return this.center.distanceTo(point, this.distanceFunction);
+    return this.centroid.distanceTo(point, this.distanceFunction);
   }
 }

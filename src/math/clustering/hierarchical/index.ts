@@ -1,8 +1,8 @@
 import { ArrayQueue } from '../../../utils';
 import { MinimumSpanningTree } from '../../graph';
 import { Cluster, Clustering, Point, WeightedEdge, WeightFunction } from '../../types';
+import { MutableCluster } from '../mutableCluster';
 
-import { HierarchicalCluster } from './cluster';
 import { HierarchicalNode } from './node';
 import { UnionFind } from './unionFind';
 
@@ -65,7 +65,7 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
 
   private buildClusters(points: P[], tree: HierarchicalNode[]): Cluster<P>[] {
     if (this.k < 2) {
-      const cluster = new HierarchicalCluster(0, points);
+      const cluster = new MutableCluster(0, points);
       return [cluster];
     }
 
@@ -88,7 +88,7 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
   private bfs(points: P[], tree: HierarchicalNode[], rootNodeId: number, clusterId: number): Cluster<P> {
     const pointSize = points.length;
     const rootNode = tree[rootNodeId - pointSize];
-    const cluster = new HierarchicalCluster<P>(clusterId);
+    const cluster = new MutableCluster<P>(clusterId);
 
     const queue = new ArrayQueue(rootNode);
     while (!queue.isEmpty) {
@@ -101,14 +101,14 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
       if (left >= pointSize) {
         queue.enqueue(tree[left - pointSize]);
       } else {
-        cluster.append(points[left]);
+        cluster.add(points[left]);
       }
 
       const right = node.right;
       if (right >= pointSize) {
         queue.enqueue(tree[right - pointSize]);
       } else {
-        cluster.append(points[right]);
+        cluster.add(points[right]);
       }
     }
     return cluster;

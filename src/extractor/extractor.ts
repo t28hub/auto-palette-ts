@@ -67,7 +67,7 @@ export class Extractor {
     }
 
     return this.clustering.fit(pixels).map((cluster: Cluster<Point5>): Swatch => {
-      const pixel = cluster.centroid();
+      const pixel = cluster.computeCentroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;

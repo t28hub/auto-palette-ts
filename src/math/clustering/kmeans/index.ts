@@ -44,16 +44,16 @@ export class Kmeans<P extends Point> implements Clustering<P> {
    */
   fit(points: P[]): Cluster<P>[] {
     if (points.length <= this.k) {
-      return points.map((point: P): KmeansCluster<P> => {
-        const cluster = new KmeansCluster(point, this.distanceFunction);
-        cluster.append(point);
+      return points.map((point: P, index: number): KmeansCluster<P> => {
+        const cluster = new KmeansCluster(index, point, this.distanceFunction);
+        cluster.add(point);
         return cluster;
       });
     }
 
     const clusters = this.centerInitializer
       .initialize(points, this.k)
-      .map((center: P): KmeansCluster<P> => new KmeansCluster(center, this.distanceFunction));
+      .map((center: P, index: number): KmeansCluster<P> => new KmeansCluster(index, center, this.distanceFunction));
     for (let i = 0; i < this.maxIterations; i++) {
       const updated = this.iterate(clusters, points);
       if (!updated) {
@@ -65,7 +65,7 @@ export class Kmeans<P extends Point> implements Clustering<P> {
 
   private iterate(clusters: KmeansCluster<P>[], points: P[]): boolean {
     const centroids = clusters.reduce((centroids: P[], cluster: KmeansCluster<P>) => {
-      centroids.push(cluster.centroid());
+      centroids.push(cluster.computeCentroid());
       cluster.clear();
       return centroids;
     }, []);
@@ -74,12 +74,12 @@ export class Kmeans<P extends Point> implements Clustering<P> {
     points.forEach((point: P) => {
       const neighbor = neighborSearch.searchNearest(point);
       const nearestCluster = clusters[neighbor.index];
-      nearestCluster.append(point);
+      nearestCluster.add(point);
     });
 
     let updated = true;
     clusters.forEach((cluster: KmeansCluster<P>) => {
-      const difference = cluster.updateCenter();
+      const difference = cluster.updateCentroid();
       if (difference < this.tolerance) {
         updated = false;
       }

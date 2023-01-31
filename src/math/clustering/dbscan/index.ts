@@ -1,8 +1,7 @@
 import { ArrayQueue } from '../../../utils';
 import { kdtree } from '../../neighbor';
 import { Cluster, Clustering, NeighborSearch, Neighbor, Point, DistanceFunction } from '../../types';
-
-import { DBSCANCluster } from './cluster';
+import { MutableCluster } from '../mutableCluster';
 
 type Label = number;
 
@@ -63,7 +62,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
       labels[index] = label;
 
       const cluster = this.buildCluster(nns, neighbors, labels, label);
-      cluster.append(point);
+      cluster.add(point);
       clusters.set(label++, cluster);
     });
     return Array.from(clusters.values());
@@ -74,7 +73,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
     neighbors: Neighbor<P>[],
     labels: Label[],
     label: Label,
-  ): DBSCANCluster<P> {
+  ): MutableCluster<P> {
     neighbors.forEach((neighbor: Neighbor<P>) => {
       const index = neighbor.index;
       if (labels[index] === UNKNOWN) {
@@ -120,6 +119,6 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
         }
       }
     }
-    return new DBSCANCluster<P>(points);
+    return new MutableCluster<P>(label, points);
   }
 }

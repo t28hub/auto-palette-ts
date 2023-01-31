@@ -1,7 +1,7 @@
 import { Cluster, Clustering, DistanceFunction, Point } from '../../types';
 import { HierarchicalClustering, HierarchicalNode } from '../hierarchical';
+import { MutableCluster } from '../mutableCluster';
 
-import { HDBSCANCluster } from './cluster';
 import { CondensedNode } from './condensedNode';
 import { CoreDistance } from './coreDistance';
 import { MutualReachabilityDistance } from './mutualReachabilityDistance';
@@ -141,7 +141,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
    * @private
    * @see [Extract the clusters](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html#extract-the-clusters)
    */
-  private extractClusters(condensedTree: CondensedNode[], points: P[]): HDBSCANCluster<P>[] {
+  private extractClusters(condensedTree: CondensedNode[], points: P[]): Cluster<P>[] {
     const stability = HDBSCAN.computeStability(condensedTree);
     const nodeIds = Array.from(stability.keys())
       .sort((nodeId1: number, nodeId2: number): number => nodeId2 - nodeId1)
@@ -185,12 +185,12 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     });
 
     const outliers = new Set<number>();
-    const clusters = new Map<number, HDBSCANCluster<P>>();
+    const clusters = new Map<number, MutableCluster<P>>();
     for (let nodeId = 0; nodeId < minParent; nodeId++) {
       const clusterId = unionFind.find(nodeId);
       if (clusterId > minParent) {
-        const cluster = clusters.get(clusterId) ?? new HDBSCANCluster<P>(clusterId);
-        cluster.append(points[nodeId]);
+        const cluster = clusters.get(clusterId) ?? new MutableCluster<P>(clusterId);
+        cluster.add(points[nodeId]);
         clusters.set(clusterId, cluster);
       } else {
         outliers.add(nodeId);

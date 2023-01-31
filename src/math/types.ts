@@ -205,11 +205,16 @@ export interface Cluster<P extends Point> {
   readonly isEmpty: boolean;
 
   /**
+   * Return the all points of this cluster.
+   */
+  getPoints(): P[];
+
+  /**
    * Compute the centroid of this cluster.
    *
    * @return The centroid of this cluster.
    */
-  centroid(): P;
+  computeCentroid(): P;
 }
 
 /**

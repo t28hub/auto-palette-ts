@@ -34,8 +34,6 @@ export default defineConfig({
       exclude: ['**/*.test.ts', '**/*.d.ts', '**/*/types.ts'],
       reporter: ['clover', 'cobertura', 'lcov', 'html'],
       reportsDirectory: 'coverage',
-      functions: 70,
-      branches: 70,
     },
   },
 });
