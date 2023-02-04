@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Point2, squaredEuclidean } from '../../math';
 

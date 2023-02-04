@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { euclidean } from '../../distance';
 import { Point2 } from '../../types';

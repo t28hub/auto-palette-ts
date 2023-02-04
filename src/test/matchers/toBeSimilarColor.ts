@@ -10,9 +10,16 @@ import {
 import { parse } from '../../color';
 import { Color } from '../../types';
 
+interface MatcherResult {
+  pass: boolean;
+  message: () => string;
+  actual?: unknown;
+  expected?: unknown;
+}
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
+  namespace vitest {
     interface Matchers<R> {
       toBeSimilarColor(expected: unknown): R;
 
@@ -35,7 +42,7 @@ declare global {
  * @param threshold The allowed threshold.
  * @return The matcher result.
  */
-export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): jest.CustomMatcherResult {
+export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): MatcherResult {
   let expectedColor: Color | undefined;
   try {
     expectedColor = parse(expected);
