@@ -10,29 +10,7 @@ import {
 import { parse } from '../../color';
 import { Color } from '../../types';
 
-interface MatcherResult {
-  pass: boolean;
-  message: () => string;
-  actual?: unknown;
-  expected?: unknown;
-}
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace vitest {
-    interface Matchers<R> {
-      toBeSimilarColor(expected: unknown): R;
-
-      toBeSimilarColor(expected: unknown, threshold: number): R;
-    }
-
-    interface Expect {
-      toBeSimilarColor(expected: unknown): unknown;
-
-      toBeSimilarColor(expected: unknown, threshold: number): unknown;
-    }
-  }
-}
+import { MatcherResult } from './types';
 
 /**
  * Check whether the received color is similar to the expected color.
