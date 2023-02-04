@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { euclidean } from '../../distance';
-import { Point2 } from '../../types';
+import { Cluster, Point2 } from '../../types';
 
 import { HDBSCAN } from './index';
 
@@ -66,6 +66,9 @@ describe('HDBSCAN', () => {
 
       // Assert
       expect(actual).toHaveLength(4);
+      actual.forEach((cluster: Cluster<Point2>) => {
+        console.info(cluster);
+      });
     });
 
     it('should return an empty clusters if the given points is empty', () => {

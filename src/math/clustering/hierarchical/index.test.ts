@@ -52,7 +52,7 @@ describe('HierarchicalClustering', () => {
       // Assert
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
-        id: 1,
+        id: 0,
         points: [
           [0.0, 0.0],
           [1.0, 1.0],
@@ -61,14 +61,14 @@ describe('HierarchicalClustering', () => {
         ],
       });
       expect(actual[1]).toMatchObject({
-        id: 2,
+        id: 1,
         points: [
           [2.0, 1.5],
           [2.0, 2.0],
         ],
       });
       expect(actual[2]).toMatchObject({
-        id: 0,
+        id: 2,
         points: [[2.5, 3.0]],
       });
     });
@@ -114,7 +114,7 @@ describe('HierarchicalClustering', () => {
 
     it('should build hierarchical tree from the given points', () => {
       // Act
-      const actual = hierarchicalClustering.buildHierarchy(points);
+      const actual = hierarchicalClustering.hierarchize(points);
 
       // Assert
       expect(actual).toHaveLength(6);
@@ -130,7 +130,7 @@ describe('HierarchicalClustering', () => {
 
     it('should return an empty array if the points is empty', () => {
       // Act
-      const actual = hierarchicalClustering.buildHierarchy([]);
+      const actual = hierarchicalClustering.hierarchize([]);
 
       // Assert
       expect(actual).toBeEmpty();

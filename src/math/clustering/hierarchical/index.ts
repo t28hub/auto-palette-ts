@@ -1,4 +1,4 @@
-import { ArrayQueue } from '../../../utils';
+import { ArrayQueue, PriorityQueue } from '../../../utils';
 import { MinimumSpanningTree } from '../../graph';
 import { Cluster, Clustering, Point, WeightedEdge, WeightFunction } from '../../types';
 import { MutableCluster } from '../mutableCluster';
@@ -31,7 +31,7 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
    * {@inheritDoc Clustering.fit}
    */
   fit(points: P[]): Cluster<P>[] {
-    const hierarchy = this.buildHierarchy(points);
+    const hierarchy = this.hierarchize(points);
     const labels = this.labelHierarchy(hierarchy);
     const clusters = points.reduce(
       (clusters: Map<number, MutableCluster<P>>, point: P, index: number): Map<number, MutableCluster<P>> => {
@@ -53,17 +53,17 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
    * @return The labels.
    */
   label(points: P[]): Uint32Array {
-    const hierarchy = this.buildHierarchy(points);
+    const hierarchy = this.hierarchize(points);
     return this.labelHierarchy(hierarchy);
   }
 
   /**
-   * Build hierarchical tree from points.
+   * Hierarchize the given points.
    *
-   * @param points The points.
-   * @return The hierarchical tree.
+   * @param points The points to be hierarchized.
+   * @return The hierarchized tree.
    */
-  buildHierarchy(points: P[]): HierarchicalNode[] {
+  hierarchize(points: P[]): HierarchicalNode[] {
     if (points.length === 0) {
       return [];
     }
@@ -86,22 +86,40 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
   }
 
   private labelHierarchy(hierarchy: HierarchicalNode[]): Uint32Array {
-    const pointSize = hierarchy.length + 1;
+    const edgeSize = hierarchy.length;
+    const pointSize = edgeSize + 1;
     const labels = new Uint32Array(pointSize);
     if (this.k < 2) {
       return labels;
     }
 
-    const nodeIds = [];
-    for (let i = 2; i <= this.k; i++) {
-      const node = hierarchy[pointSize - i];
-      nodeIds.push(node.left, node.right);
+    const nodeIds = new PriorityQueue<number>((nodeId: number): number => nodeId);
+    const rootNodeId = edgeSize * 2;
+    nodeIds.enqueue(rootNodeId);
+    while (nodeIds.size < this.k) {
+      const nodeId = nodeIds.dequeue();
+      if (typeof nodeId === 'undefined') {
+        break;
+      }
+
+      const node = hierarchy[nodeId - pointSize];
+      nodeIds.enqueue(node.left);
+      nodeIds.enqueue(node.right);
     }
 
-    // Sort by node ID in descending order.
-    nodeIds.sort((nodeId1: number, nodeId2: number) => nodeId2 - nodeId1);
-    for (let clusterId = 0; clusterId < this.k; clusterId++) {
-      this.bfs(hierarchy, nodeIds[clusterId], clusterId, labels);
+    let clusterId = 0;
+    while (!nodeIds.isEmpty) {
+      const nodeId = nodeIds.dequeue();
+      if (typeof nodeId === 'undefined') {
+        break;
+      }
+
+      if (nodeId >= pointSize) {
+        this.bfs(hierarchy, nodeId, clusterId, labels);
+      } else {
+        labels[nodeId] = clusterId;
+      }
+      clusterId++;
     }
     return labels;
   }
@@ -113,7 +131,7 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
     const queue = new ArrayQueue(rootNode);
     while (!queue.isEmpty) {
       const node = queue.dequeue();
-      if (!node) {
+      if (typeof node === 'undefined') {
         break;
       }
 

@@ -46,7 +46,7 @@ export class HDBSCAN<P extends Point> implements Clustering<P> {
     const coreDistance = CoreDistance.from(points, this.minPoints, this.distanceFunction);
     const weightFunction = new MutualReachabilityDistance(points, coreDistance, this.distanceFunction);
     const hierarchicalClustering = new HierarchicalClustering(1, weightFunction);
-    const hierarchicalTree = hierarchicalClustering.buildHierarchy(points);
+    const hierarchicalTree = hierarchicalClustering.hierarchize(points);
     const condensedTree = this.condenseTree(hierarchicalTree);
     return this.extractClusters(condensedTree, points);
   }
