@@ -3,10 +3,10 @@ import { MinimumSpanningTree } from '../../graph';
 import { Cluster, Clustering, Point, WeightedEdge, WeightFunction } from '../../types';
 import { MutableCluster } from '../mutableCluster';
 
-import { HierarchicalNode } from './node';
+import { HierarchicalNode } from './types';
 import { UnionFind } from './unionFind';
 
-export { type HierarchicalNode } from './node';
+export { type HierarchicalNode } from './types';
 
 /**
  * Hierarchical clustering algorithm implementation.
@@ -91,6 +91,10 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
     const labels = new Uint32Array(pointSize);
     if (this.k < 2) {
       return labels;
+    }
+
+    if (this.k >= pointSize) {
+      return labels.map((_: number, index: number): number => index);
     }
 
     const nodeIds = new PriorityQueue<number>((nodeId: number): number => nodeId);

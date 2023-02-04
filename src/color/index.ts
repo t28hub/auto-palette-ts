@@ -3,6 +3,7 @@ import { Color } from '../types';
 import { HSLColor } from './hsl';
 import { asPackedColor, hsl, rgb } from './space';
 
+export { ciede2000 } from './deltae';
 export { hsl, lab, rgb, xyz } from './space';
 
 function parseNumber(number: number): Color {

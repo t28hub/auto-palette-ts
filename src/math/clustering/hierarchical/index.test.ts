@@ -95,6 +95,16 @@ describe('HierarchicalClustering', () => {
       expect(actual).toContainAllValues([1, 1, 2, 1, 2, 1, 0]);
     });
 
+    it('should return labels if the cluster size is greater than point size', () => {
+      // Act
+      const hierarchicalClustering = new HierarchicalClustering(points.length + 1, DistanceWeightFunction);
+      const actual = hierarchicalClustering.label(points);
+
+      // Assert
+      expect(actual).toHaveLength(points.length);
+      expect(actual).toContainAllValues([0, 1, 2, 3, 4, 5, 6]);
+    });
+
     it('should return labels contains only 0 if the cluster size is less than 2', () => {
       // Act
       const hierarchicalClustering = new HierarchicalClustering(1, DistanceWeightFunction);

@@ -1,6 +1,5 @@
 import { createExtractor } from '../../extractor';
 import { Method, ImageObject, Swatch } from '../../types';
-import { swatchFilter } from '../filter';
 import { ExtractionResult } from '../types';
 
 /**
@@ -19,17 +18,12 @@ export function extract(imageData: ImageObject<ArrayBuffer>, method: Method): Ex
     data: new Uint8ClampedArray(data),
   };
 
-  const swatches = createExtractor(method).extract(image);
-  return swatchFilter()
-    .apply(swatches, 10)
-    .sort((swatch1: Swatch, swatch2: Swatch): number => {
-      return swatch2.population - swatch1.population;
-    })
-    .map((result: Swatch): ExtractionResult => {
-      return {
-        color: result.color.pack(),
-        population: result.population,
-        coordinate: { ...result.coordinate },
-      };
-    });
+  const extractor = createExtractor(method);
+  return extractor.extract(image).map((swatch: Swatch): ExtractionResult => {
+    return {
+      color: swatch.color.pack(),
+      population: swatch.population,
+      coordinate: { ...swatch.coordinate },
+    };
+  });
 }
