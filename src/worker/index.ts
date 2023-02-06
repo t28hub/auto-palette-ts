@@ -1,5 +1,7 @@
 import Worker from './worker?worker&inline';
 
+export * from './types';
+
 let worker: Worker | undefined;
 
 /**

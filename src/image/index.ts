@@ -1,3 +1,5 @@
+import { ImageSource } from '../types';
+
 import { CanvasElementImage, Image, ImageElementImage } from './image';
 import { ensureContext2D } from './utils';
 
@@ -35,4 +37,20 @@ export function fromImageData(imageData: ImageData): Image {
   canvas.height = imageData.height;
   ensureContext2D(canvas).putImageData(imageData, 0, 0);
   return new CanvasElementImage(canvas);
+}
+
+/**
+ * Create an image from the given image source.
+ *
+ * @param source The source of image.
+ * @return The created image.
+ */
+export function createImage(source: ImageSource): Image {
+  if (source instanceof HTMLCanvasElement) {
+    return fromCanvasElement(source);
+  }
+  if (source instanceof HTMLImageElement) {
+    return fromImageElement(source);
+  }
+  return fromImageData(source);
 }

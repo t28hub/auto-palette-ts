@@ -1,6 +1,5 @@
-import { ErrorResponseMessage, Request, ResponseMessage } from '../types';
-
 import { extract } from './extract';
+import { ErrorResponseMessage, Request, ResponseMessage } from './types';
 
 /**
  * Declare the property of the {@link WorkerGlobalScope} for TypeScript
@@ -14,7 +13,7 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
   switch (type) {
     case 'request': {
       try {
-        const results = extract(payload.imageObject, payload.method);
+        const results = extract(payload.imageObject, payload.quality);
         const message: ResponseMessage = {
           type: 'response',
           payload: { id: payload.id, results },

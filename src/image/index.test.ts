@@ -5,7 +5,7 @@ import { ensureContext2D } from './utils';
 
 import { fromCanvasElement, fromImageData, fromImageElement } from './index';
 
-describe('index', () => {
+describe('image', () => {
   describe('fromCanvasElement', () => {
     it('should create a image from HTMLCanvasElement', () => {
       // Act

@@ -1,64 +1,66 @@
-import { parse } from '../color';
-import { Image } from '../image';
-import { Palette } from '../palette';
-import { Method, Builder, ImageObject, Options, Swatch } from '../types';
-import { id, ID } from '../utils';
-
-import { ExtractionResult, RequestMessage, Response } from './types';
-import { defaultWorker } from './worker';
-
-const defaults: Options = {
-  method: 'kmeans',
-  maxColors: 5,
-  maxImageSize: 128 * 128,
-} as const;
+import { parse } from './color';
+import { createImage } from './image';
+import { Palette } from './palette';
+import { Quality, ImageObject, Swatch, ImageSource } from './types';
+import { id, ID } from './utils';
+import { ExtractionResult, RequestMessage, Response } from './worker';
 
 /**
- * Asynchronous palette builder.
+ * Asynchronous automatic palette extractor.
  */
-export class PaletteBuilder implements Builder {
+export class PaletteExtractor {
   private readonly id: ID;
 
   /**
-   * Create a new PaletteWorker.
+   * Create a new AutoPalette.
    *
-   * @param image The image object.
+   * @private
+   * @param quality The palette extraction quality.
+   * @param maxImageSize The maximum image size.
    * @param worker The worker instance.
+   * @throws {TypeError} if the maxImageSize is invalid.
    */
-  constructor(private readonly image: Image, private readonly worker: Worker = defaultWorker()) {
+  constructor(
+    private readonly quality: Quality,
+    private readonly maxImageSize: number,
+    private readonly worker: Worker,
+  ) {
+    if (maxImageSize < 1) {
+      throw new TypeError(`The maximum image size is invalid: ${maxImageSize}`);
+    }
     this.id = id();
   }
 
   /**
-   * Generate a palette from the image data.
+   * Extract a palette from the image data.
    *
+   * @param source The image source for palette extraction.
    * @return {Promise<Palette>}
    */
-  async build(options: Partial<Options> = {}): Promise<Palette> {
-    const merged = { ...defaults, ...options };
-    const resized = await this.image.resize(merged.maxImageSize);
+  async extract(source: ImageSource): Promise<Palette> {
+    const image = createImage(source);
+    const resized = await image.resize(this.maxImageSize);
     const imageData = await resized.getImageData();
-    return await this.execute(imageData, merged);
+    const scale = image.width / resized.width;
+    return await this.execute(imageData, scale, this.quality);
   }
 
-  private execute(imageData: ImageObject<Uint8ClampedArray>, options: Options): Promise<Palette> {
+  private execute(imageData: ImageData, scale: number, quality: Quality): Promise<Palette> {
     return new Promise((resolve, reject) => {
-      const message = this.buildRequestMessage(imageData, options.method, options.maxColors);
+      const message = this.buildRequestMessage(imageData, quality);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
         if (event.data.payload.id !== this.id) {
           return;
         }
 
-        const scaleX = this.image.width / imageData.width;
-        const scaleY = this.image.height / imageData.height;
         try {
           const swatches = this.onMessage(event).map((result): Swatch => {
             return {
               color: parse(result.color),
               population: result.population,
               coordinate: {
-                x: Math.round(result.coordinate.x * scaleX),
-                y: Math.round(result.coordinate.y * scaleY),
+                x: Math.round(result.coordinate.x * scale),
+                y: Math.round(result.coordinate.y * scale),
               },
             };
           });
@@ -92,11 +94,7 @@ export class PaletteBuilder implements Builder {
     }
   }
 
-  private buildRequestMessage(
-    imageData: ImageObject<Uint8ClampedArray>,
-    method: Method,
-    maxColors: number,
-  ): RequestMessage {
+  private buildRequestMessage(imageData: ImageObject<Uint8ClampedArray>, quality: Quality): RequestMessage {
     const { height, width, data } = imageData;
     const imageObject: ImageObject<ArrayBuffer> = {
       height,
@@ -109,8 +107,7 @@ export class PaletteBuilder implements Builder {
       payload: {
         id: this.id,
         imageObject,
-        method,
-        maxColors,
+        quality,
       },
     };
   }

@@ -9,6 +9,7 @@ specifiers:
   '@tsconfig/svelte': ^3.0.0
   '@typescript-eslint/eslint-plugin': ^5.48.0
   '@typescript-eslint/parser': ^5.48.0
+  auto-palette: link:..
   autoprefixer: ^10.4.13
   blurhash: ^2.0.4
   canvas: ^2.11.0
@@ -32,6 +33,7 @@ specifiers:
   vitest: ^0.26.3
 
 dependencies:
+  auto-palette: link:..
   blurhash: 2.0.4
 
 devDependencies:

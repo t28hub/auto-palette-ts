@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadImageData } from '../../test';
+import { loadImageData } from '../test';
 
 import { extract } from './extract';
 
@@ -10,7 +10,7 @@ describe('extract', () => {
     const imageData = await loadImageData('flag_za.png');
 
     // Act
-    const actual = extract(imageData, 'dbscan');
+    const actual = extract(imageData, 'middle');
 
     // Assert
     expect(actual).toBeArrayOfSize(8);

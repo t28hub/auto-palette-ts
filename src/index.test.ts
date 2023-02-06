@@ -1,37 +1,26 @@
 import { describe, expect, it } from 'vitest';
 
-import { PaletteBuilder } from './builder';
-import { ensureContext2D } from './image/utils';
+import { PaletteExtractor } from './paletteExtractor';
 
-import { palette } from './index';
+import { create } from './index';
 
-describe('index', () => {
-  it('should create a Builder from an HTMLCanvasElement', () => {
+describe('auto-palette', () => {
+  it('should create AutoPalette with options', () => {
     // Act
-    const canvasElement = document.createElement('canvas');
-    const actual = palette(canvasElement);
+    const actual = create({
+      quality: 'high',
+      maxImageSize: 64 * 64,
+    });
 
     // Assert
-    expect(actual).toBeInstanceOf(PaletteBuilder);
+    expect(actual).toBeInstanceOf(PaletteExtractor);
   });
 
-  it('should create a Builder from an HTMLImageElement', () => {
+  it('should create AutoPalette without options', () => {
     // Act
-    const imageElement = document.createElement('img');
-    const actual = palette(imageElement);
+    const actual = create();
 
     // Assert
-    expect(actual).toBeInstanceOf(PaletteBuilder);
-  });
-
-  it('should create a Builder from an ImageData', () => {
-    // Act
-    const canvasElement = document.createElement('canvas');
-    const { width, height } = canvasElement;
-    const imageData = ensureContext2D(canvasElement).getImageData(0, 0, width, height);
-    const actual = palette(imageData);
-
-    // Assert
-    expect(actual).toBeInstanceOf(PaletteBuilder);
+    expect(actual).toBeInstanceOf(PaletteExtractor);
   });
 });

@@ -1,49 +1,24 @@
 import { describe, expect, it } from 'vitest';
 
-import { Method } from '../types';
-
 import { Extractor } from './extractor';
-import { opacity } from './filter';
 
-import { createExtractor, dbscan, kmeans } from './index';
+import { dbscanExtractor, hdbscanExtractor, kmeansExtractor } from './index';
 
 describe('extractor', () => {
-  describe('dbscan', () => {
-    it('should create a DBSCABExtractor', () => {
+  describe('dbscanExtractor', () => {
+    it('should create an Extractor using DBSCAN', () => {
       // Act
-      const actual = dbscan();
+      const actual = dbscanExtractor();
 
       // Assert
       expect(actual).toBeInstanceOf(Extractor);
     });
 
-    it('should create a DBSCANExtractor with options', () => {
+    it('should create an Extractor using DBSCAN with options', () => {
       // Act
-      const actual = dbscan({
+      const actual = dbscanExtractor({
         minPoints: 36,
         threshold: 0.1,
-        colorFilters: [opacity()],
-      });
-
-      // Assert
-      expect(actual).toBeInstanceOf(Extractor);
-    });
-  });
-
-  describe('kmeans', () => {
-    it('should create a KmeansExtractor', () => {
-      // Act
-      const actual = kmeans();
-
-      // Assert
-      expect(actual).toBeInstanceOf(Extractor);
-    });
-
-    it('should create a KmeansExtractor with options', () => {
-      // Act
-      const actual = kmeans({
-        maxIterations: 5,
-        tolerance: 0.01,
         colorFilters: [],
       });
 
@@ -52,23 +27,47 @@ describe('extractor', () => {
     });
   });
 
-  describe('createExtractor', () => {
-    it.each([{ method: 'dbscan' }, { method: 'kmeans' }])(
-      'should create a new Extractor from $method',
-      ({ method }) => {
-        // Act
-        const actual = createExtractor(method as Method);
+  describe('hdbscanExtractor', () => {
+    it('should create an Extractor using HDBSCAN', () => {
+      // Act
+      const actual = hdbscanExtractor();
 
-        // Assert
-        expect(actual).toBeInstanceOf(Extractor);
-      },
-    );
-
-    it('should throw TypeError when the method is unrecognized', () => {
       // Assert
-      expect(() => {
-        createExtractor('unrecognized' as Method);
-      }).toThrowError(TypeError);
+      expect(actual).toBeInstanceOf(Extractor);
+    });
+
+    it('should create an Extractor using HDBSCAN with options', () => {
+      // Act
+      const actual = hdbscanExtractor({
+        minPoints: 16,
+        minClusterSize: 25,
+        colorFilters: [],
+      });
+
+      // Assert
+      expect(actual).toBeInstanceOf(Extractor);
+    });
+  });
+
+  describe('kmeansExtractor', () => {
+    it('should create an Extractor using Kmeans', () => {
+      // Act
+      const actual = kmeansExtractor();
+
+      // Assert
+      expect(actual).toBeInstanceOf(Extractor);
+    });
+
+    it('should create an Extractor using Kmeans with options', () => {
+      // Act
+      const actual = kmeansExtractor({
+        maxIterations: 5,
+        tolerance: 0.01,
+        colorFilters: [],
+      });
+
+      // Assert
+      expect(actual).toBeInstanceOf(Extractor);
     });
   });
 });

@@ -1,9 +1,9 @@
 import '@vitest/web-worker';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { id } from '../../utils';
-import { ErrorResponseMessage, ResponseMessage } from '../types';
+import { id } from '../utils';
 
+import { ErrorResponseMessage, ResponseMessage } from './types';
 import Worker from './worker?worker&inline';
 
 function isResponseMessage(value: unknown): value is ResponseMessage {

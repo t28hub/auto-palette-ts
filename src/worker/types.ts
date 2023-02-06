@@ -1,4 +1,4 @@
-import { Coordinate, ImageObject, Method, PackedColor } from '../types';
+import { Coordinate, ImageObject, Quality, PackedColor } from '../types';
 import { ID } from '../utils';
 
 /**
@@ -16,14 +16,9 @@ export type RequestPayload = {
   readonly imageObject: ImageObject<ArrayBuffer>;
 
   /**
-   * The method of color extraction.
+   * The quality of color extraction.
    */
-  readonly method: Method;
-
-  /**
-   * The maximum colors to be extracted.
-   */
-  readonly maxColors: number;
+  readonly quality: Quality;
 };
 
 /**

@@ -1,24 +1,25 @@
-import { PaletteBuilder } from './builder';
-import { fromCanvasElement, fromImageData, fromImageElement, Image } from './image';
-import { Builder, ImageSource } from './types';
+import { PaletteExtractor } from './paletteExtractor';
+import { Quality } from './types';
+import { defaultWorker } from './worker';
 
-export { Palette } from './palette';
-export type { Builder, Color, ImageSource, Options, Swatch } from './types';
+export { PaletteExtractor } from './paletteExtractor';
+export type { Palette } from './palette';
+export type { Color, ImageSource, Quality, Swatch } from './types';
 
 /**
- * Create a new builder from the given image source.
- *
- * @param source The image source.
- * @return The new palette builder.
+ * Type representing options for Auto Palette.
  */
-export function palette(source: ImageSource): Builder {
-  let image: Image;
-  if (source instanceof HTMLCanvasElement) {
-    image = fromCanvasElement(source);
-  } else if (source instanceof HTMLImageElement) {
-    image = fromImageElement(source);
-  } else {
-    image = fromImageData(source);
-  }
-  return new PaletteBuilder(image);
+export type Options = {
+  readonly quality: Quality;
+  readonly maxImageSize: number;
+};
+
+const DEFAULT_OPTIONS: Options = {
+  quality: 'middle',
+  maxImageSize: 128 * 128,
+};
+
+export function create(options: Partial<Options> = {}): PaletteExtractor {
+  const { quality, maxImageSize } = { ...DEFAULT_OPTIONS, ...options };
+  return new PaletteExtractor(quality, maxImageSize, defaultWorker());
 }
