@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { id } from '../utils';
 
-import { ErrorResponseMessage, ResponseMessage } from './types';
+import { ErrorResponseMessage, RequestMessage, ResponseMessage } from './types';
 import Worker from './worker?worker&inline';
 
 function isResponseMessage(value: unknown): value is ResponseMessage {
@@ -79,12 +79,11 @@ describe('worker', () => {
 
   it('should send a message with extraction results', async () => {
     // Act
-    const message = {
+    const message: RequestMessage = {
       type: 'request',
       payload: {
         id: id(),
-        method: 'kmeans',
-        maxColors: 2,
+        quality: 'high',
         imageObject: {
           width: 2,
           height: 2,
