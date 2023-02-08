@@ -15,7 +15,7 @@
   <h1>Auto Palette</h1>
   {#if $currentPhoto}
     <Background photo={$currentPhoto} />
-    <Canvas src={$currentPhoto.url} width="600" height="500" />
+    <Canvas src={$currentPhoto.url} width={600} height={500} />
   {/if}
   {#each $swatches as swatch}
     <SwatchCursor x={swatch.coordinate.x} y={swatch.coordinate.y} bind:color={swatch.color} />

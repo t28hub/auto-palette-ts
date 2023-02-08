@@ -8,10 +8,9 @@
 
   let screenWidth: number;
   let screenHeight: number;
-  let devicePixelRatio: number;
 
   let canvas: HTMLCanvasElement;
-  let context: CanvasRenderingContext2D | undefined;
+  let context: CanvasRenderingContext2D | null;
   onMount(() => {
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
@@ -19,7 +18,7 @@
     context = canvas.getContext('2d', { colorSpace: 'srgb', willReadFrequently: true });
   });
 
-  async function render(context, width, height) {
+  async function render(context: CanvasRenderingContext2D | null, width: number, height: number) {
     if (!context) {
       return;
     }

@@ -11,7 +11,7 @@
   let image: HTMLImageElement;
 
   let canvas: HTMLCanvasElement;
-  let context: CanvasRenderingContext2D;
+  let context: CanvasRenderingContext2D | null;
   onMount(() => {
     context = canvas.getContext('2d', { colorSpace: 'srgb' });
   });
@@ -38,12 +38,12 @@
 
   $: loadImage(src);
 
-  function drawImage(ctx: CanvasRenderingContext2D, img: HTMLImageElement) {
+  function drawImage(ctx: CanvasRenderingContext2D | null, img: HTMLImageElement) {
     if (!ctx || !img) {
       return;
     }
 
-    context.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, width, height);
 
     const imageWidth = img.naturalWidth;
     const imageHeight = img.naturalHeight;
@@ -54,9 +54,9 @@
     const scale = Math.min(width / imageWidth, height / imageHeight);
     const scaledWidth = Math.round(imageWidth * scale);
     const scaledHeight = Math.round(imageHeight * scale);
-    context.drawImage(img, 0, 0, imageWidth, imageHeight, 0, 0, scaledWidth, scaledHeight);
+    ctx.drawImage(img, 0, 0, imageWidth, imageHeight, 0, 0, scaledWidth, scaledHeight);
 
-    const imageData = context.getImageData(0, 0, scaledWidth, scaledHeight);
+    const imageData = ctx.getImageData(0, 0, scaledWidth, scaledHeight);
     const begin = performance.now();
     const autoPalette = create({ quality: 'middle', maxImageSize: 112 * 112 });
     autoPalette.extract(imageData)
