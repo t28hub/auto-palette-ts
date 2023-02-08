@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { swatches } from '$lib/stores/palette';
 
-  import { AutoPalette, create } from 'auto-palette';
+  import { create } from 'auto-palette';
 
   export let src: string = '';
   export let width: number = 300;

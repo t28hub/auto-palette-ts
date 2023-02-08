@@ -1,7 +1,7 @@
 import '@vitest/web-worker';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { id } from '../utils';
+import { uuid } from '../utils';
 
 import { ErrorResponseMessage, RequestMessage, ResponseMessage } from './types';
 import Worker from './worker?worker&inline';
@@ -82,7 +82,7 @@ describe('worker', () => {
     const message: RequestMessage = {
       type: 'request',
       payload: {
-        id: id(),
+        id: uuid(),
         quality: 'high',
         imageObject: {
           width: 2,
@@ -116,7 +116,7 @@ describe('worker', () => {
     const message = {
       type: 'request',
       payload: {
-        id: id(),
+        id: uuid(),
         method: 'unknown',
         maxColors: 2,
         imageObject: {
@@ -143,7 +143,7 @@ describe('worker', () => {
     // Act
     const message = {
       type: 'unknown',
-      payload: { id: id() },
+      payload: { id: uuid() },
     };
     worker.postMessage(message);
     const actual = await workerPromise;

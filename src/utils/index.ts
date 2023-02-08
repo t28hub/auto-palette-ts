@@ -1,5 +1,5 @@
 export * from './arrayQueue';
-export * from './id';
+export * from './uuid';
 export * from './priorityQueue';
 export * from './queue';
 export * from './types';

@@ -2,15 +2,13 @@ import { parse } from './color';
 import { createImage } from './image';
 import { Palette } from './palette';
 import { Quality, ImageObject, Swatch, ImageSource } from './types';
-import { id, ID } from './utils';
+import { uuid, UUID } from './utils';
 import { ExtractionResult, RequestMessage, Response } from './worker';
 
 /**
  * Asynchronous automatic palette extractor.
  */
 export class PaletteExtractor {
-  private readonly id: ID;
-
   /**
    * Create a new AutoPalette.
    *
@@ -28,7 +26,6 @@ export class PaletteExtractor {
     if (maxImageSize < 1) {
       throw new TypeError(`The maximum image size is invalid: ${maxImageSize}`);
     }
-    this.id = id();
   }
 
   /**
@@ -46,10 +43,11 @@ export class PaletteExtractor {
   }
 
   private execute(imageData: ImageData, scale: number, quality: Quality): Promise<Palette> {
+    const requestId = uuid();
     return new Promise((resolve, reject) => {
-      const message = this.buildRequestMessage(imageData, quality);
+      const request = PaletteExtractor.buildRequest(requestId, imageData, quality);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
-        if (event.data.payload.id !== this.id) {
+        if (event.data.payload.id !== requestId) {
           return;
         }
 
@@ -74,7 +72,7 @@ export class PaletteExtractor {
         reject(new Error(event.message));
       });
 
-      this.worker.postMessage(message, [message.payload.imageObject.data]);
+      this.worker.postMessage(request, [request.payload.imageObject.data]);
     });
   }
 
@@ -94,7 +92,11 @@ export class PaletteExtractor {
     }
   }
 
-  private buildRequestMessage(imageData: ImageObject<Uint8ClampedArray>, quality: Quality): RequestMessage {
+  private static buildRequest(
+    requestId: UUID,
+    imageData: ImageObject<Uint8ClampedArray>,
+    quality: Quality,
+  ): RequestMessage {
     const { height, width, data } = imageData;
     const imageObject: ImageObject<ArrayBuffer> = {
       height,
@@ -105,7 +107,7 @@ export class PaletteExtractor {
     return {
       type: 'request',
       payload: {
-        id: this.id,
+        id: requestId,
         imageObject,
         quality,
       },

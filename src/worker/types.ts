@@ -1,5 +1,5 @@
 import { Coordinate, ImageObject, Quality, PackedColor } from '../types';
-import { ID } from '../utils';
+import { UUID } from '../utils';
 
 /**
  * Type representing the payload of the request.
@@ -8,7 +8,7 @@ export type RequestPayload = {
   /**
    * The ID of request.
    */
-  readonly id: ID;
+  readonly id: UUID;
 
   /**
    * The image object.
@@ -63,7 +63,7 @@ export type ResponsePayload = {
   /**
    * The ID of request.
    */
-  readonly id: ID;
+  readonly id: UUID;
 
   /**
    * The results of extraction.
@@ -93,7 +93,7 @@ export type ErrorResponsePayload = {
   /**
    * The ID of request.
    */
-  readonly id: ID;
+  readonly id: UUID;
 
   /**
    * The error message.
