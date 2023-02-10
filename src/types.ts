@@ -15,6 +15,7 @@ export interface ResolutionFunction<T> {
  * @see ResolutionFunction
  */
 export interface RejectionFunction {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (reason?: any): void;
 }
 

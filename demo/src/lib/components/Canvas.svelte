@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { swatches } from '$lib/stores/palette';
 
-  import { create } from 'auto-palette';
+  import { AutoPalette } from 'auto-palette';
 
   export let src: string = '';
   export let width: number = 300;
@@ -58,7 +58,7 @@
 
     const imageData = ctx.getImageData(0, 0, scaledWidth, scaledHeight);
     const begin = performance.now();
-    const autoPalette = create({ quality: 'middle', maxImageSize: 112 * 112 });
+    const autoPalette = AutoPalette.create({ quality: 'middle', maxImageSize: 112 * 112 });
     autoPalette.extract(imageData)
       .then((result) => swatches.set(result.getSwatches()))
       .catch((cause) => console.warn({ cause }))

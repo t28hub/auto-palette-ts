@@ -23,10 +23,11 @@ $ yarn add auto-palette
 ## Usage
 
 ```typescript
-import { palette } from 'auto-palette';
+import { AutoPalette } from 'auto-palette';
 
-palette(image)
-  .build({ maxColors: 8 })
+const autoPalette = AutoPalette.create(options);
+autoPalette
+  .extract(image)
   .then((result) => {
     const dominantSwatch = result.getDominantSwatch();
     console.info(`Dominant swatch: ${dominantSwatch}`);

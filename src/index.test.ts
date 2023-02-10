@@ -1,26 +1,26 @@
 import { describe, expect, it } from 'vitest';
 
-import { PaletteExtractor } from './paletteExtractor';
+import { AutoPalette } from './index';
 
-import { create } from './index';
+describe('AutoPalette', () => {
+  describe('create', () => {
+    it('should create AutoPalette with options', () => {
+      // Act
+      const actual = AutoPalette.create({
+        quality: 'high',
+        maxImageSize: 64 * 64,
+      });
 
-describe('auto-palette', () => {
-  it('should create AutoPalette with options', () => {
-    // Act
-    const actual = create({
-      quality: 'high',
-      maxImageSize: 64 * 64,
+      // Assert
+      expect(actual).toBeInstanceOf(AutoPalette);
     });
 
-    // Assert
-    expect(actual).toBeInstanceOf(PaletteExtractor);
-  });
+    it('should create AutoPalette without options', () => {
+      // Act
+      const actual = AutoPalette.create();
 
-  it('should create AutoPalette without options', () => {
-    // Act
-    const actual = create();
-
-    // Assert
-    expect(actual).toBeInstanceOf(PaletteExtractor);
+      // Assert
+      expect(actual).toBeInstanceOf(AutoPalette);
+    });
   });
 });
