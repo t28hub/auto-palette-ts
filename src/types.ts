@@ -1,4 +1,24 @@
 /**
+ * Function interface to be called on resolved.
+ *
+ * @see Promise
+ * @see RejectionFunction
+ */
+export interface ResolutionFunction<T> {
+  (value: T | PromiseLike<T>): void;
+}
+
+/**
+ * Function interface to be called on rejected.
+ *
+ * @see Promise
+ * @see ResolutionFunction
+ */
+export interface RejectionFunction {
+  (reason?: any): void;
+}
+
+/**
  * Type representing supported image source.
  */
 export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;

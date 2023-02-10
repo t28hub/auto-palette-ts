@@ -1,7 +1,5 @@
 import Worker from './worker?worker&inline';
 
-export * from './types';
-
 let worker: Worker | undefined;
 
 /**
@@ -15,3 +13,6 @@ export function defaultWorker(): Worker {
   }
   return worker;
 }
+
+export * from './types';
+export * from './workerPromise';
