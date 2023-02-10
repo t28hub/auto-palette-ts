@@ -1,7 +1,7 @@
 import { ciede2000, lab, parse, rgb } from '../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
 import { Cluster, Clustering, HierarchicalClustering, Point3, Point5, WeightFunction } from '../math';
-import { ColorSpace, ImageObject, Lab, RGB, Swatch } from '../types';
+import { ColorSpace, Lab, RGB, Swatch } from '../types';
 
 import { ColorFilter, composite } from './filter';
 import { FeaturePoint } from './types';
@@ -32,7 +32,7 @@ export class Extractor {
    * @param imageData The image data.
    * @return The extracted swatches.
    */
-  extract(imageData: ImageObject<Uint8ClampedArray>): Swatch[] {
+  extract(imageData: ImageData): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];

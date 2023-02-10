@@ -1,45 +1,65 @@
-import { Coordinate, ImageObject, Quality, PackedColor } from '../types';
+import { Coordinate, Quality, PackedColor } from '../types';
 import { UUID } from '../utils';
 
 /**
- * Type representing the payload of the request.
+ * Interface representing message.
  */
-export type RequestPayload = {
+export interface Message<T> {
   /**
-   * The ID of request.
+   * The ID of this message.
    */
   readonly id: UUID;
 
   /**
-   * The image object.
+   * The type of this message.
    */
-  readonly imageObject: ImageObject<ArrayBuffer>;
+  readonly type: string;
+
+  /**
+   * The content of this message.
+   */
+  readonly content: T;
+}
+
+/**
+ * Interface representing the content of request.
+ */
+export interface RequestContent {
+  /**
+   * The height of image.
+   */
+  readonly height: number;
+
+  /**
+   * The width of image.
+   */
+  readonly width: number;
+
+  /**
+   * The buffer of image.
+   */
+  readonly buffer: ArrayBuffer;
 
   /**
    * The quality of color extraction.
    */
   readonly quality: Quality;
-};
+}
 
 /**
- * Type representing request message.
+ * Interface representing request message.
  */
-export type RequestMessage = {
+export interface RequestMessage extends Message<RequestContent> {
   /**
    * The type of this message.
    */
   readonly type: 'request';
-
-  /**
-   * The payload of this message.
-   */
-  readonly payload: RequestPayload;
-};
+}
 
 /**
- * Type representing extraction result.
+ * Interface representing the result of request.
  */
-export type ExtractionResult = {
+export interface FeaturePoint {
   /**
    * The packed color of the extraction result.
    */
@@ -54,67 +74,47 @@ export type ExtractionResult = {
    * The coordinate of the extraction result.
    */
   readonly coordinate: Coordinate;
-};
+}
 
 /**
- * Type representing the payload of the response.
+ * Interface representing the payload of the response.
  */
-export type ResponsePayload = {
+export interface ResponseContent {
   /**
-   * The ID of request.
+   * The feature points of the requested image.
    */
-  readonly id: UUID;
-
-  /**
-   * The results of extraction.
-   */
-  readonly results: ExtractionResult[];
-};
+  readonly points: FeaturePoint[];
+}
 
 /**
- * Type representing response message.
+ * Interface representing response message.
  */
-export type ResponseMessage = {
+export interface ResponseMessage extends Message<ResponseContent> {
   /**
    * The type of this message.
    */
   readonly type: 'response';
-
-  /**
-   * The payload of this message.
-   */
-  readonly payload: ResponsePayload;
-};
+}
 
 /**
- * Type representing the payload of the error response.
+ * Interface representing the content of the error response.
  */
-export type ErrorResponsePayload = {
-  /**
-   * The ID of request.
-   */
-  readonly id: UUID;
-
+export interface ErrorResponseContent {
   /**
    * The error message.
    */
   readonly message: string;
-};
+}
 
 /**
- * Type representing error response message.
+ * Interface representing error response message.
  */
-export type ErrorResponseMessage = {
+export interface ErrorResponseMessage extends Message<ErrorResponseContent> {
   /**
    * The type of this message.
    */
   readonly type: 'error';
-
-  /**
-   * The payload of this message.
-   */
-  readonly payload: ErrorResponsePayload;
-};
+}
 
 export type Request = RequestMessage;
-export type Response = ErrorResponseMessage | ResponseMessage;
+export type Response = ResponseMessage | ErrorResponseMessage;

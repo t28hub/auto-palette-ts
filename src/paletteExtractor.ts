@@ -1,9 +1,9 @@
 import { parse } from './color';
 import { createImage } from './image';
 import { Palette } from './palette';
-import { Quality, ImageObject, Swatch, ImageSource } from './types';
+import { Quality, Swatch, ImageSource } from './types';
 import { uuid, UUID } from './utils';
-import { ExtractionResult, RequestMessage, Response } from './worker';
+import { FeaturePoint, RequestMessage, Response } from './worker';
 
 /**
  * Asynchronous automatic palette extractor.
@@ -47,7 +47,7 @@ export class PaletteExtractor {
     return new Promise((resolve, reject) => {
       const request = PaletteExtractor.buildRequest(requestId, imageData, quality);
       this.worker.addEventListener('message', (event: MessageEvent<Response>) => {
-        if (event.data.payload.id !== requestId) {
+        if (event.data.id !== requestId) {
           return;
         }
 
@@ -72,19 +72,18 @@ export class PaletteExtractor {
         reject(new Error(event.message));
       });
 
-      this.worker.postMessage(request, [request.payload.imageObject.data]);
+      this.worker.postMessage(request, [request.content.buffer]);
     });
   }
 
-  private onMessage(event: MessageEvent<Response>): ExtractionResult[] {
-    const { type, payload } = event.data;
+  private onMessage(event: MessageEvent<Response>): FeaturePoint[] {
+    const { type, content } = event.data;
     switch (type) {
       case 'response': {
-        return payload.results;
+        return content.points;
       }
       case 'error': {
-        const message = payload.message;
-        throw new Error(message);
+        throw new Error(content.message);
       }
       default: {
         throw new Error(`Unrecognized type of data is received: ${event}`);
@@ -92,23 +91,14 @@ export class PaletteExtractor {
     }
   }
 
-  private static buildRequest(
-    requestId: UUID,
-    imageData: ImageObject<Uint8ClampedArray>,
-    quality: Quality,
-  ): RequestMessage {
-    const { height, width, data } = imageData;
-    const imageObject: ImageObject<ArrayBuffer> = {
-      height,
-      width,
-      data: data.buffer,
-    };
-
+  private static buildRequest(id: UUID, imageData: ImageData, quality: Quality): RequestMessage {
     return {
+      id,
       type: 'request',
-      payload: {
-        id: requestId,
-        imageObject,
+      content: {
+        height: imageData.height,
+        width: imageData.width,
+        buffer: imageData.data.buffer,
         quality,
       },
     };

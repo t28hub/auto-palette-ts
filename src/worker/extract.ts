@@ -1,24 +1,17 @@
 import { dbscanExtractor, hdbscanExtractor, kmeansExtractor } from '../extractor';
-import { Quality, ImageObject, Swatch } from '../types';
+import { Quality, Swatch } from '../types';
 
-import { ExtractionResult } from './types';
+import { FeaturePoint } from './types';
 
 /**
- * Extract colors from the given image.
+ * Extract feature points from the given image.
  *
  * @param imageData The image data to be extracted.
  * @param quality The color extraction quality.
- * @return The array of feature color.
+ * @return The array of feature points.
  * @throws {Error} if extraction is failed.
  */
-export function extract(imageData: ImageObject<ArrayBuffer>, quality: Quality): ExtractionResult[] {
-  const { height, width, data } = imageData;
-  const image: ImageObject<Uint8ClampedArray> = {
-    height,
-    width,
-    data: new Uint8ClampedArray(data),
-  };
-
+export function extract(imageData: ImageData, quality: Quality): FeaturePoint[] {
   let extractor;
   switch (quality) {
     case 'low':
@@ -31,7 +24,7 @@ export function extract(imageData: ImageObject<ArrayBuffer>, quality: Quality): 
       extractor = hdbscanExtractor();
       break;
   }
-  return extractor.extract(image).map((swatch: Swatch): ExtractionResult => {
+  return extractor.extract(imageData).map((swatch: Swatch): FeaturePoint => {
     return {
       color: swatch.color.pack(),
       population: swatch.population,

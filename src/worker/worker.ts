@@ -9,21 +9,28 @@ import { ErrorResponseMessage, Request, ResponseMessage } from './types';
 declare const self: DedicatedWorkerGlobalScope;
 
 self.addEventListener('message', (event: MessageEvent<Request>) => {
-  const { type, payload } = event.data;
+  const { id, type, content } = event.data;
   switch (type) {
     case 'request': {
       try {
-        const results = extract(payload.imageObject, payload.quality);
+        const imageData: ImageData = {
+          colorSpace: 'srgb',
+          height: content.height,
+          width: content.width,
+          data: new Uint8ClampedArray(content.buffer),
+        };
+        const points = extract(imageData, content.quality);
         const message: ResponseMessage = {
+          id,
           type: 'response',
-          payload: { id: payload.id, results },
+          content: { points },
         };
         self.postMessage(message);
       } catch (e) {
         const message: ErrorResponseMessage = {
+          id,
           type: 'error',
-          payload: {
-            id: payload.id,
+          content: {
             message: `Failed to extract colors: ${e}`,
           },
         };
@@ -33,9 +40,9 @@ self.addEventListener('message', (event: MessageEvent<Request>) => {
     }
     default: {
       const message: ErrorResponseMessage = {
+        id,
         type: 'error',
-        payload: {
-          id: payload.id,
+        content: {
           message: `Unrecognized event type: ${type}`,
         },
       };

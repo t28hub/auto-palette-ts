@@ -4,15 +4,6 @@
 export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
 
 /**
- * Interface representing ImageData.
- */
-export interface ImageObject<T extends Uint8ClampedArray | ArrayBuffer> {
-  readonly height: number;
-  readonly width: number;
-  readonly data: T;
-}
-
-/**
  * Type representing alpha channel.
  */
 export type AlphaChannel = {

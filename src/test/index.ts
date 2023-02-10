@@ -3,8 +3,6 @@ import { join } from 'node:path';
 
 import { createCanvas, Image } from '@napi-rs/canvas';
 
-import { ImageObject } from '../types';
-
 /**
  * Load the image from the given filename.
  *
@@ -26,7 +24,7 @@ export async function loadImage(filename: string): Promise<Image> {
  * @param filename The image filename.
  * @return The loaded image data.
  */
-export async function loadImageData(filename: string): Promise<ImageObject<Uint8ClampedArray>> {
+export async function loadImageData(filename: string): Promise<ImageData> {
   const image = await loadImage(filename);
   const { width, height } = image;
   const canvas = createCanvas(width, height);

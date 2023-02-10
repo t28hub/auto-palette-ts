@@ -3,15 +3,23 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { uuid } from '../utils';
 
-import { ErrorResponseMessage, RequestMessage, ResponseMessage } from './types';
+import { ErrorResponseMessage, Message, RequestMessage, ResponseMessage } from './types';
 import Worker from './worker?worker&inline';
 
-function isResponseMessage(value: unknown): value is ResponseMessage {
+function isMessage(value: unknown): value is Message<unknown> {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
 
-  if (!('type' in value) || !('payload' in value)) {
+  if (!('id' in value) || typeof value.id !== 'string') {
+    return false;
+  }
+
+  return 'type' in value && 'content' in value;
+}
+
+function isResponseMessage(value: unknown): value is ResponseMessage {
+  if (!isMessage(value)) {
     return false;
   }
 
@@ -20,22 +28,18 @@ function isResponseMessage(value: unknown): value is ResponseMessage {
     return false;
   }
 
-  const payload = value.payload;
-  if (typeof payload !== 'object' || payload === null) {
+  const content = value.content;
+  if (typeof content !== 'object' || content === null) {
     return false;
   }
-  if (!('id' in payload) || !('results' in payload)) {
+  if (!('points' in content)) {
     return false;
   }
-  return typeof payload.id === 'string' && Array.isArray(payload.results);
+  return Array.isArray(content.points);
 }
 
 function isErrorResponseMessage(value: unknown): value is ErrorResponseMessage {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  if (!('type' in value) || !('payload' in value)) {
+  if (!isMessage(value)) {
     return false;
   }
 
@@ -44,31 +48,25 @@ function isErrorResponseMessage(value: unknown): value is ErrorResponseMessage {
     return false;
   }
 
-  const payload = value.payload;
-  if (typeof payload !== 'object' || payload === null) {
+  const content = value.content;
+  if (typeof content !== 'object' || content === null) {
     return false;
   }
-  if (!('id' in payload) || !('message' in payload)) {
+  if (!('message' in content)) {
     return false;
   }
-  return typeof payload.id === 'string' && typeof payload.message === 'string';
+  return typeof content.message === 'string';
 }
 
-describe('worker', () => {
+describe('Worker', () => {
   let worker: Worker;
   let workerPromise: Promise<MessageEvent>;
   beforeEach(() => {
     worker = new Worker();
     workerPromise = new Promise((resolve, reject) => {
-      worker.addEventListener('message', (event) => {
-        resolve(event);
-      });
-      worker.addEventListener('messageerror', (event) => {
-        reject(event);
-      });
-      worker.addEventListener('error', (error) => {
-        reject(error);
-      });
+      worker.onerror = (error) => reject(error);
+      worker.onmessage = (event) => resolve(event);
+      worker.onmessageerror = (event) => reject(event);
     });
   });
 
@@ -80,15 +78,13 @@ describe('worker', () => {
   it('should send a message with extraction results', async () => {
     // Act
     const message: RequestMessage = {
+      id: uuid(),
       type: 'request',
-      payload: {
-        id: uuid(),
+      content: {
+        width: 2,
+        height: 2,
+        buffer: new ArrayBuffer(16),
         quality: 'high',
-        imageObject: {
-          width: 2,
-          height: 2,
-          data: new ArrayBuffer(16),
-        },
       },
     };
     worker.postMessage(message);
@@ -97,10 +93,10 @@ describe('worker', () => {
     // Assert
     expect(actual).toSatisfy((event: MessageEvent) => {
       const data = event.data;
-      if (!isResponseMessage(data)) {
+      if (data.id !== message.id) {
         return false;
       }
-      return data.payload.id === message.payload.id;
+      return isResponseMessage(data);
     });
   });
 
@@ -113,17 +109,14 @@ describe('worker', () => {
     }));
 
     // Act
-    const message = {
+    const message: RequestMessage = {
+      id: uuid(),
       type: 'request',
-      payload: {
-        id: uuid(),
-        method: 'unknown',
-        maxColors: 2,
-        imageObject: {
-          width: 2,
-          height: 2,
-          data: new ArrayBuffer(16),
-        },
+      content: {
+        height: 2,
+        width: 2,
+        buffer: new ArrayBuffer(16),
+        quality: 'middle',
       },
     };
     worker.postMessage(message);
@@ -132,18 +125,21 @@ describe('worker', () => {
     // Assert
     expect(actual).toSatisfy((event: MessageEvent) => {
       const data = event.data;
-      if (!isErrorResponseMessage(data)) {
+      if (data.id !== message.id) {
         return false;
       }
-      return data.payload.id === message.payload.id;
+      return isErrorResponseMessage(data);
     });
   });
 
   it('should send an error message if type is unrecognized', async () => {
     // Act
     const message = {
+      id: uuid(),
       type: 'unknown',
-      payload: { id: uuid() },
+      content: {
+        message: 'Unrecognized message type: unknown',
+      },
     };
     worker.postMessage(message);
     const actual = await workerPromise;
@@ -151,10 +147,10 @@ describe('worker', () => {
     // Assert
     expect(actual).toSatisfy((event: MessageEvent) => {
       const data = event.data;
-      if (!isErrorResponseMessage(data)) {
+      if (data.id !== message.id) {
         return false;
       }
-      return data.payload.id === message.payload.id;
+      return isErrorResponseMessage(data);
     });
   });
 });

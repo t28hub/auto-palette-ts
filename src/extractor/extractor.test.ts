@@ -71,7 +71,8 @@ describe('Extractor', () => {
     it('should ignore filtered colors', () => {
       // Arrange
       const pixels = [0x00, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00];
-      const imageData = {
+      const imageData: ImageData = {
+        colorSpace: 'srgb',
         width: 2,
         height: 2,
         data: Uint8ClampedArray.from(pixels),
@@ -86,7 +87,8 @@ describe('Extractor', () => {
 
     it('should return an empty array if the given image data is empty', () => {
       // Arrange
-      const imageData = {
+      const imageData: ImageData = {
+        colorSpace: 'srgb',
         width: 0,
         height: 0,
         data: new Uint8ClampedArray(0),
