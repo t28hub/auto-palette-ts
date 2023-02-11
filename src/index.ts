@@ -25,7 +25,7 @@ export type Options = {
 
 const DefaultOptions: Options = {
   quality: 'middle',
-  maxImageSize: 128 * 128
+  maxImageSize: 128 * 128,
 };
 
 /**
@@ -66,8 +66,8 @@ export class AutoPalette {
         population: point.population,
         coordinate: {
           x: Math.round(point.coordinate.x * scaleX),
-          y: Math.round(point.coordinate.y * scaleY)
-        }
+          y: Math.round(point.coordinate.y * scaleY),
+        },
       };
     });
     return new Palette(swatches);
@@ -81,8 +81,8 @@ export class AutoPalette {
         width: imageData.width,
         height: imageData.height,
         buffer: imageData.data.buffer,
-        quality: this.quality
-      }
+        quality: this.quality,
+      },
     });
     return response.content.points;
   }
