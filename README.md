@@ -7,7 +7,12 @@
 [![CodeCov](https://codecov.io/gh/t28hub/auto-palette/branch/main/graph/badge.svg?token=F5obdWWvEt)](https://codecov.io/gh/t28hub/auto-palette)
 [![FOSSA](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette.svg?type=shield)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette?ref=badge_shield)
 
-## Installation
+## Features
+
+- 🎨Palette extraction
+- 📦Zero-dependencies
+
+## 📦Installation
 
 ```sh
 # Install via npm
@@ -20,7 +25,7 @@ $ pnpm add auto-palette
 $ yarn add auto-palette
 ```
 
-## Usage
+## 👨‍💻Usage
 
 ```typescript
 import { AutoPalette } from 'auto-palette';
@@ -37,7 +42,7 @@ autoPalette
   });
 ```
 
-## License
+## 📜License
 
 This library is distributed under the MIT License.See the [LICENSE](https://github.com/t28hub/auto-palette/blob/main/LICENSE).
 
