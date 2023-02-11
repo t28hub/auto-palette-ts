@@ -1,5 +1,5 @@
 import { degreeToRadian, radianToDegree } from '../../math';
-import { ColorDifference, ColorDifferenceMeasure, Lab } from '../../types';
+import { DeltaE, DeltaEFunction, Lab } from '../../types';
 
 import { asColorDifference } from './utils';
 
@@ -46,7 +46,7 @@ function toDeltaHPrime(c1: number, c2: number, h1: number, h2: number): number {
  *
  * @see [The CIEDE2000 Color-Difference Formula](https://hajim.rochester.edu/ece/sites/gsharma/papers/CIEDE2000CRNAFeb05.pdf)
  */
-export class CIEDE2000 implements ColorDifferenceMeasure {
+export class CIEDE2000 implements DeltaEFunction {
   /**
    * Create a new CIEDE 2000 color difference formula.
    * @param kL The kL value.
@@ -55,7 +55,7 @@ export class CIEDE2000 implements ColorDifferenceMeasure {
    * @see [Wikipedia](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000).
    */
   constructor(private readonly kL = 1.0, private readonly kC = 1.0, private readonly kH = 1.0) {}
-  compute(lab1: Lab, lab2: Lab): ColorDifference {
+  compute(lab1: Lab, lab2: Lab): DeltaE {
     const deltaLPrime = lab2.l - lab1.l;
     const lBar = (lab1.l + lab2.l) / 2.0;
 

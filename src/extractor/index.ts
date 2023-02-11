@@ -5,6 +5,7 @@ import { Extractor } from './extractor';
 import { type ColorFilter, opacity } from './filter';
 
 export type { ColorFilter } from './filter';
+export { DeltaEWeightFunction } from './deltaEWeightFunction';
 
 /**
  * Type representing DBSCAN options.

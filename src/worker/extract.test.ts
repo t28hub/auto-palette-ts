@@ -13,6 +13,6 @@ describe('extract', () => {
     const actual = extract(imageData, 'middle');
 
     // Assert
-    expect(actual).toBeArrayOfSize(8);
+    expect(actual).toBeArrayOfSize(11);
   });
 });

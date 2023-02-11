@@ -3,8 +3,11 @@ import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
 import { Cluster, Clustering, HierarchicalClustering, Point3, Point5, WeightFunction } from '../math';
 import { ColorSpace, Lab, RGB, Swatch } from '../types';
 
+import { DeltaEWeightFunction } from './deltaEWeightFunction';
 import { ColorFilter, composite } from './filter';
 import { FeaturePoint } from './types';
+
+const MAX_COLOR_COUNT = 64;
 
 /**
  * Class to extract swatches from image data.
@@ -97,30 +100,23 @@ export class Extractor {
   }
 
   private static mergeFeatures(features: FeaturePoint[]): FeaturePoint[] {
-    const deltaFunction = ciede2000();
-    const weightFunction: WeightFunction = {
-      compute(u: number, v: number): number {
-        const { l: l1, a: a1, b: b1 } = features[u];
-        const { l: l2, a: a2, b: b2 } = features[v];
-        return deltaFunction.compute({ l: l1, a: a1, b: b1, opacity: 1.0 }, { l: l2, a: a2, b: b2, opacity: 1.0 });
-      },
-    };
-    const hierarchicalClustering = new HierarchicalClustering(8, weightFunction);
-    const points: Point3[] = features.map((feature: FeaturePoint): Point3 => {
+    const colors: Point3[] = features.map((feature: FeaturePoint): Point3 => {
       return [feature.l, feature.a, feature.b];
     });
-    const labels = hierarchicalClustering.label(points);
-    const featureMap = features.reduce(
-      (featureMap: Map<number, FeaturePoint>, feature: FeaturePoint, index: number): Map<number, FeaturePoint> => {
+    const weightFunction: WeightFunction = new DeltaEWeightFunction(colors, ciede2000());
+    const hierarchicalClustering = new HierarchicalClustering(MAX_COLOR_COUNT, weightFunction);
+    const labels = hierarchicalClustering.label(colors);
+    const merged = features.reduce(
+      (merged: Map<number, FeaturePoint>, feature: FeaturePoint, index: number): Map<number, FeaturePoint> => {
         const label = labels[index];
-        const previous = featureMap.get(label);
+        const previous = merged.get(label);
         if (!previous || previous.size < feature.size) {
-          featureMap.set(label, feature);
+          merged.set(label, feature);
         }
-        return featureMap;
+        return merged;
       },
       new Map<number, FeaturePoint>(),
     );
-    return Array.from(featureMap.values());
+    return Array.from(merged.values());
   }
 }

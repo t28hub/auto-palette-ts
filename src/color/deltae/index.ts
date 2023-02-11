@@ -1,4 +1,4 @@
-import { ColorDifferenceMeasure } from '../../types';
+import { DeltaEFunction } from '../../types';
 
 import { CIEDE2000 } from './ciede2000';
 
@@ -10,6 +10,6 @@ import { CIEDE2000 } from './ciede2000';
  * @param kH The kH value.
  * @return CIEDE 2000 color difference formula.
  */
-export function ciede2000(kL = 1.0, kC = 1.0, kH = 1.0): ColorDifferenceMeasure {
+export function ciede2000(kL = 1.0, kC = 1.0, kH = 1.0): DeltaEFunction {
   return new CIEDE2000(kL, kC, kH);
 }
