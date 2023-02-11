@@ -1,4 +1,4 @@
-import { parse } from './color';
+import { ciede2000, parse } from './color';
 import { createImage } from './image';
 import { Palette } from './palette';
 import { ImageSource, Quality, Swatch } from './types';
@@ -70,7 +70,7 @@ export class AutoPalette {
         },
       };
     });
-    return new Palette(swatches);
+    return new Palette(swatches, ciede2000());
   }
 
   private async extractFeatures(imageData: ImageData): Promise<FeaturePoint[]> {
