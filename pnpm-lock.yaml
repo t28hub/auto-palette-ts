@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 devDependencies:
   '@napi-rs/canvas':
     specifier: ^0.1.44
@@ -24,8 +20,8 @@ devDependencies:
     specifier: ^0.28.5
     version: 0.28.5
   '@vitest/web-worker':
-    specifier: ^0.28.5
-    version: 0.28.5(@types/node@18.18.9)(vitest@0.28.5)
+    specifier: ^0.33.0
+    version: 0.33.0(vitest@0.28.5)
   canvas:
     specifier: ^2.11.2
     version: 2.11.2
@@ -889,23 +885,15 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@vitest/web-worker@0.28.5(@types/node@18.18.9)(vitest@0.28.5):
-    resolution: {integrity: sha512-Wvk4kIItVXPNf10DCLWh4UbRFInbvxUH5lFGAOE7iwUgmsaql/ZQbKm5DgCy5iPq61GHrX1QbM7KIC7HhPOz4w==}
+  /@vitest/web-worker@0.33.0(vitest@0.28.5):
+    resolution: {integrity: sha512-sStiwW6AuA2zV5O/nFJ0Xn0j+eepNomOX2f7opHXkGQg1Lo2VxTfEkY0y0lyby+GIFwdoMTvVsInKseFrE2dJw==}
     peerDependencies:
       vitest: '*'
     dependencies:
       debug: 4.3.4
-      vite-node: 0.28.5(@types/node@18.18.9)
       vitest: 0.28.5(@vitest/ui@0.28.5)(jsdom@21.1.2)
     transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
       - supports-color
-      - terser
     dev: true
 
   /abab@2.0.6:
@@ -4050,3 +4038,7 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
