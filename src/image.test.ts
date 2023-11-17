@@ -13,25 +13,29 @@ describe('image', () => {
       expect(actual).toBeInstanceOf(ImageData);
     });
 
-    it('should create a image from HTMLImageElement', () =>
-      new Promise<void>((done, reject) => {
-        // Arrange
-        const imageElement = document.createElement('img');
-        imageElement.src = 'https://picsum.photos/64/64';
-        imageElement.crossOrigin = 'Anonymous';
+    it(
+      'should create a image from HTMLImageElement',
+      () =>
+        new Promise<void>((done, reject) => {
+          // Arrange
+          const imageElement = document.createElement('img');
+          imageElement.src = 'https://picsum.photos/64/64';
+          imageElement.crossOrigin = 'Anonymous';
 
-        imageElement.onload = () => {
-          // Act
-          const actual = createImageData(imageElement);
-          // Assert
-          expect(actual).toBeInstanceOf(ImageData);
-          done();
-        };
+          imageElement.onload = () => {
+            // Act
+            const actual = createImageData(imageElement);
+            // Assert
+            expect(actual).toBeInstanceOf(ImageData);
+            done();
+          };
 
-        imageElement.onerror = () => {
-          reject(new Error('Failed to load image'));
-        };
-      }));
+          imageElement.onerror = () => {
+            reject(new Error('Failed to load image'));
+          };
+        }),
+      10000,
+    );
 
     it('should create a image from ImageData', () => {
       // Act
