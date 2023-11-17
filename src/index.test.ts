@@ -1,26 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { AutoPalette } from './index';
+import { Palette } from './index';
 
-describe('AutoPalette', () => {
-  describe('create', () => {
-    it('should create AutoPalette with options', () => {
+describe('index', () => {
+  describe('Palette', () => {
+    it('should create Palette from ImageData', () => {
       // Act
-      const actual = AutoPalette.create({
-        quality: 'high',
-        maxImageSize: 64 * 64,
-      });
+      const pixels = new Uint8ClampedArray(4 * 4 * 4);
+      pixels.fill(255);
+      const image = new ImageData(pixels, 4, 4);
+      const actual = Palette.extract(image);
 
       // Assert
-      expect(actual).toBeInstanceOf(AutoPalette);
-    });
-
-    it('should create AutoPalette without options', () => {
-      // Act
-      const actual = AutoPalette.create();
-
-      // Assert
-      expect(actual).toBeInstanceOf(AutoPalette);
+      expect(actual).toBeDefined();
     });
   });
 });

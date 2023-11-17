@@ -1,12 +1,10 @@
-import '@vitest/web-worker';
 import 'jest-extended';
 import 'jest-extended/all';
 import { randomUUID } from 'node:crypto';
 
+import { ImageData } from 'canvas';
 import './src/test/matchers';
+import { vi } from 'vitest';
 
-Object.defineProperty(global.self, 'crypto', {
-  value: {
-    randomUUID: () => randomUUID(),
-  },
-});
+vi.stubGlobal('ImageData', ImageData);
+vi.stubGlobal('crypto', { randomUUID });

@@ -32,14 +32,6 @@ describe('Palette', () => {
       // Assert
       expect(actual).toBeDefined();
     });
-
-    it('should throw TypeError if results is empty', () => {
-      // Assert
-      expect(() => {
-        // Act
-        new Palette([], ciede2000());
-      }).toThrowError(TypeError);
-    });
   });
 
   describe('getDominantSwatch', () => {

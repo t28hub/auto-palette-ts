@@ -7,7 +7,7 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(__dirname, 'src/image.ts'),
       name: 'AutoPalette',
       formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
@@ -26,6 +26,11 @@ export default defineConfig({
     threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740
     include: ['src/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+      },
+    },
     reporters: ['default', 'html'],
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 3000,

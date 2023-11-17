@@ -1,4 +1,6 @@
-import { DeltaEWeightFunction } from './extractor';
+import { ciede2000 } from './color';
+import { dbscanExtractor, DeltaEWeightFunction } from './extractor';
+import { createImageData, ImageSource } from './image';
 import { HierarchicalClustering, Point3 } from './math';
 import { DeltaEFunction, Swatch } from './types';
 
@@ -17,13 +19,8 @@ export class Palette {
    *
    * @param swatches The list of source swatches.
    * @param deltaEFunction The DeltaE function.
-   * @throws {TypeError} if swatches is empty.
    */
   constructor(swatches: Swatch[], private readonly deltaEFunction: DeltaEFunction) {
-    if (swatches.length === 0) {
-      throw new TypeError('The array of swatches is empty');
-    }
-
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
     });
@@ -31,6 +28,15 @@ export class Palette {
       const color = swatch.color.toLab();
       return [color.l, color.a, color.b];
     });
+  }
+
+  /**
+   * Checks if the palette is empty.
+   *
+   * @return True if the palette is empty, false otherwise.
+   */
+  isEmpty(): boolean {
+    return this.swatches.length === 0;
   }
 
   /**
@@ -64,5 +70,18 @@ export class Palette {
       new Map<number, Swatch>(),
     );
     return Array.from(merged.values());
+  }
+
+  /**
+   * Extract a color palette from the given image source.
+   *
+   * @param source The source of the image.
+   * @return A new Palette instance containing the extracted swatches.
+   */
+  static extract(source: ImageSource): Palette {
+    const imageData = createImageData(source);
+    const extractor = dbscanExtractor();
+    const swatches = extractor.extract(imageData);
+    return new Palette(swatches, ciede2000());
   }
 }

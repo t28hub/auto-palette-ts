@@ -1,30 +1,4 @@
 /**
- * Function interface to be called on resolved.
- *
- * @see Promise
- * @see RejectionFunction
- */
-export interface ResolutionFunction<T> {
-  (value: T | PromiseLike<T>): void;
-}
-
-/**
- * Function interface to be called on rejected.
- *
- * @see Promise
- * @see ResolutionFunction
- */
-export interface RejectionFunction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (reason?: any): void;
-}
-
-/**
- * Type representing supported image source.
- */
-export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
-
-/**
  * Type representing alpha channel.
  */
 export type AlphaChannel = {
