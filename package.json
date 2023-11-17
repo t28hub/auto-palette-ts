@@ -65,7 +65,7 @@
     "husky": "^8.0.3",
     "jest-extended": "^3.2.4",
     "jest-matcher-utils": "^29.7.0",
-    "jsdom": "^21.1.2",
+    "jsdom": "^22.1.0",
     "lint-staged": "^13.3.0",
     "prettier": "^2.8.8",
     "rimraf": "^4.4.1",
