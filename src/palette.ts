@@ -20,7 +20,10 @@ export class Palette {
    * @param swatches The list of source swatches.
    * @param deltaEFunction The DeltaE function.
    */
-  constructor(swatches: Swatch[], private readonly deltaEFunction: DeltaEFunction) {
+  constructor(
+    swatches: Swatch[],
+    private readonly deltaEFunction: DeltaEFunction,
+  ) {
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
     });

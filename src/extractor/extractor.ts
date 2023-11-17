@@ -23,7 +23,10 @@ export class Extractor {
    * @param clustering The clustering algorithm.
    * @param filters The color filters.
    */
-  constructor(private readonly clustering: Clustering<Point5>, filters: ColorFilter<RGB>[]) {
+  constructor(
+    private readonly clustering: Clustering<Point5>,
+    filters: ColorFilter<RGB>[],
+  ) {
     this.rgb = rgb();
     this.lab = lab();
     this.filter = composite(...filters);

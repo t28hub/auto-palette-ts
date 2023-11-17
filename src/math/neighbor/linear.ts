@@ -14,7 +14,10 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * @param distanceFunction The distance function.
    * @throws {TypeError} if the given points is empty.
    */
-  constructor(private readonly points: P[], private readonly distanceFunction: DistanceFunction<P>) {
+  constructor(
+    private readonly points: P[],
+    private readonly distanceFunction: DistanceFunction<P>,
+  ) {
     if (points.length === 0) {
       throw new TypeError('The points is empty');
     }
@@ -50,20 +53,23 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
       throw new RangeError(`The k is less than 1: ${k}`);
     }
 
-    const queue = this.points.reduce((neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
-      const distance = this.distanceFunction.measure(point, query);
-      if (neighbors.size < k) {
-        neighbors.enqueue({ index, point, distance });
-        return neighbors;
-      }
+    const queue = this.points.reduce(
+      (neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
+        const distance = this.distanceFunction.measure(point, query);
+        if (neighbors.size < k) {
+          neighbors.enqueue({ index, point, distance });
+          return neighbors;
+        }
 
-      const neighbor = neighbors.peek();
-      if (neighbor && distance < neighbor.distance) {
-        neighbors.dequeue();
-        neighbors.enqueue({ index, point, distance });
-      }
-      return neighbors;
-    }, new PriorityQueue((neighbor: Neighbor<P>) => neighbor.distance));
+        const neighbor = neighbors.peek();
+        if (neighbor && distance < neighbor.distance) {
+          neighbors.dequeue();
+          neighbors.enqueue({ index, point, distance });
+        }
+        return neighbors;
+      },
+      new PriorityQueue((neighbor: Neighbor<P>) => neighbor.distance),
+    );
 
     const neighbors = new Array<Neighbor<P>>();
     while (!queue.isEmpty) {

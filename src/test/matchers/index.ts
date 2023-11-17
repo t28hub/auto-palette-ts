@@ -8,17 +8,12 @@ export interface AutoPaletteMatchers<R = unknown> {
   toBeSimilarColor(expected: unknown, threshold: number): R;
 }
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Vi {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface Assertion extends AutoPaletteMatchers {}
+declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Assertion extends AutoPaletteMatchers {}
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface AsymmetricMatchersContaining extends AutoPaletteMatchers {}
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface AsymmetricMatchersContaining extends AutoPaletteMatchers {}
 }
 
-expect.extend({
-  toBeSimilarColor,
-});
+expect.extend({ toBeSimilarColor });

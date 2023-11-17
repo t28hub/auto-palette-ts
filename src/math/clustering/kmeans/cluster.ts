@@ -12,7 +12,11 @@ export class KmeansCluster<P extends Point> extends MutableCluster<P> {
    * @param distanceFunction The distance function.
    * @throws {TypeError} if the initial centroid point is invalid.
    */
-  constructor(id: number, initialCenter: P, private readonly distanceFunction: DistanceFunction<P>) {
+  constructor(
+    id: number,
+    initialCenter: P,
+    private readonly distanceFunction: DistanceFunction<P>,
+  ) {
     super(id);
     this.centroid = new Vector(initialCenter);
   }

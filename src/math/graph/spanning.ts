@@ -15,7 +15,10 @@ export class MinimumSpanningTree<E extends WeightedEdge> implements SpanningTree
    * @param weight The weight of this tree
    * @private
    */
-  private constructor(private readonly edges: E[], readonly weight: number) {}
+  private constructor(
+    private readonly edges: E[],
+    readonly weight: number,
+  ) {}
 
   /**
    * {@inheritDoc SpanningTree.getEdges}

@@ -31,7 +31,12 @@ export class HSLColor implements Color {
    * @param l The lightness value.
    * @param opacity The opacity value.
    */
-  constructor(h: number, s: number, l: number, readonly opacity: number) {
+  constructor(
+    h: number,
+    s: number,
+    l: number,
+    readonly opacity: number,
+  ) {
     this.h = HSLColorSpace.clampH(h);
     this.s = HSLColorSpace.clampS(s);
     this.l = HSLColorSpace.clampL(l);

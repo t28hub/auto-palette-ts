@@ -11,7 +11,10 @@ export class DeltaEWeightFunction implements WeightFunction {
    * @param colors The array containing CIE L*a*b* representation.
    * @param deltaEFunction The DeltaE function.
    */
-  constructor(private readonly colors: Point3[], private readonly deltaEFunction: DeltaEFunction) {}
+  constructor(
+    private readonly colors: Point3[],
+    private readonly deltaEFunction: DeltaEFunction,
+  ) {}
 
   /**
    * {@inheritDoc WeightFunction.compute}

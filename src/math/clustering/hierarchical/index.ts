@@ -21,7 +21,10 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
    * @param k The number of clusters.
    * @param weightFunction The weight function.
    */
-  constructor(private readonly k: number, private readonly weightFunction: WeightFunction) {
+  constructor(
+    private readonly k: number,
+    private readonly weightFunction: WeightFunction,
+  ) {
     if (k < 1) {
       throw new RangeError(`The number of cluster is less than 1: ${k}`);
     }

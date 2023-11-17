@@ -54,7 +54,11 @@ export class CIEDE2000 implements DeltaEFunction {
    * @param kH The kH value.
    * @see [Wikipedia](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000).
    */
-  constructor(private readonly kL = 1.0, private readonly kC = 1.0, private readonly kH = 1.0) {}
+  constructor(
+    private readonly kL = 1.0,
+    private readonly kC = 1.0,
+    private readonly kH = 1.0,
+  ) {}
   compute(lab1: Lab, lab2: Lab): DeltaE {
     const deltaLPrime = lab2.l - lab1.l;
     const lBar = (lab1.l + lab2.l) / 2.0;

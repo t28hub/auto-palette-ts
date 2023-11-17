@@ -16,7 +16,10 @@ export class MutableCluster<P extends Point> implements Cluster<P> {
    * @param id The cluster ID.
    * @param initialPoints The initial points of cluster.
    */
-  constructor(readonly id: number, initialPoints: ArrayLike<P> | Iterable<P> = []) {
+  constructor(
+    readonly id: number,
+    initialPoints: ArrayLike<P> | Iterable<P> = [],
+  ) {
     this.points = Array.from(initialPoints);
   }
 
