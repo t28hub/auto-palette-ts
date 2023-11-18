@@ -57,14 +57,14 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
       (neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
         const distance = this.distanceFunction.measure(point, query);
         if (neighbors.size < k) {
-          neighbors.enqueue({ index, point, distance });
+          neighbors.push({ index, point, distance });
           return neighbors;
         }
 
         const neighbor = neighbors.peek();
         if (neighbor && distance < neighbor.distance) {
-          neighbors.dequeue();
-          neighbors.enqueue({ index, point, distance });
+          neighbors.pop();
+          neighbors.push({ index, point, distance });
         }
         return neighbors;
       },
@@ -81,7 +81,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
 
     const neighbors = new Array<Neighbor<P>>();
     while (!queue.isEmpty) {
-      const headElement = queue.dequeue();
+      const headElement = queue.pop();
       if (!headElement) {
         break;
       }

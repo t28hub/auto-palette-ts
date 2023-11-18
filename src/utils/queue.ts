@@ -1,7 +1,7 @@
 /**
- * Interface representing queue.
+ * Interface representing a queue data structure.
  *
- * @param E The type of elements.
+ * @param E The type of elements in the queue.
  */
 export interface Queue<E> {
   /**
@@ -10,38 +10,36 @@ export interface Queue<E> {
   readonly isEmpty: boolean;
 
   /**
-   * The size of this queue.
+   * The size of this queue (number of elements).
    */
   readonly size: number;
 
   /**
-   * Enqueue the given element to this queue.
+   * Push an element to the tail of this queue.
    *
-   * @param element The element to be enqueued.
-   * @return true if the element is enqueued.
+   * @param element The element to push to the queue.
    */
-  enqueue(element: E): boolean;
+  push(element: E): void;
 
   /**
-   * Dequeue an element from this queue.
+   * Pop an element from the head of this queue.
    *
-   * @return The head element, or undefined if this queue is empty.
-   * @see peek
+   * @return The element popped from the queue, or undefined if this queue is empty.
    */
-  dequeue(): E | undefined;
+  pop(): E | undefined;
 
   /**
-   * Return the head element of this queue, but does not remove.
+   * Return the head element of the queue without removing it.
    *
-   * @return The head element, or undefined if this queue is empty.
-   * @see dequeue
+   * @return The element at the front of the queue, or undefined if this queue is empty.
+   * @see pop
    */
   peek(): E | undefined;
 
   /**
-   * Return an array of all elements.
+   * Return all elements of the queue as an array.
    *
-   * @return The array of all elements.
+   * @return The array containing all elements of the queue.
    */
   toArray(): E[];
 }

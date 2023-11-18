@@ -1,7 +1,7 @@
 import { Queue } from './queue';
 
 /**
- * The array based Queue implementation.
+ * Array based queue implementation.
  *
  * @param E The type of elements.
  */
@@ -32,17 +32,16 @@ export class ArrayQueue<E> implements Queue<E> {
   }
 
   /**
-   * {@inheritDoc Queue.enqueue}
+   * {@inheritDoc Queue.push}
    */
-  enqueue(element: E): boolean {
+  push(element: E): void {
     this.elements.push(element);
-    return true;
   }
 
   /**
-   * {@inheritDoc Queue.dequeue}
+   * {@inheritDoc Queue.pop}
    */
-  dequeue(): E | undefined {
+  pop(): E | undefined {
     return this.elements.shift();
   }
 
@@ -50,7 +49,7 @@ export class ArrayQueue<E> implements Queue<E> {
    * {@inheritDoc Queue.peek}
    */
   peek(): E | undefined {
-    return this.elements.at(0);
+    return this.elements[0];
   }
 
   /**

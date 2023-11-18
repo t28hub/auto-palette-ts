@@ -29,14 +29,14 @@ describe('ArrayQueue', () => {
     });
   });
 
-  describe('enqueue', () => {
-    it('should enqueue the given elements', () => {
+  describe('push', () => {
+    it('should push the given elements', () => {
       // Act
       const queue = new ArrayQueue<string>();
-      queue.enqueue('Alice');
-      queue.enqueue('Bob');
-      queue.enqueue('Charlie');
-      queue.enqueue('Dave');
+      queue.push('Alice');
+      queue.push('Bob');
+      queue.push('Charlie');
+      queue.push('Dave');
 
       // Assert
       expect(queue).toMatchObject({
@@ -47,14 +47,14 @@ describe('ArrayQueue', () => {
     });
   });
 
-  describe('dequeue', () => {
+  describe('pop', () => {
     it('should return the first element', () => {
       // Act
       const queue = new ArrayQueue<string>();
-      queue.enqueue('Alice');
-      queue.enqueue('Bob');
-      queue.enqueue('Charlie');
-      const actual = queue.dequeue();
+      queue.push('Alice');
+      queue.push('Bob');
+      queue.push('Charlie');
+      const actual = queue.pop();
 
       // Assert
       expect(actual).toBe('Alice');
@@ -68,7 +68,7 @@ describe('ArrayQueue', () => {
     it('should return undefined if the queue is empty', () => {
       // Act
       const queue = new ArrayQueue();
-      const actual = queue.dequeue();
+      const actual = queue.pop();
 
       // Assert
       expect(actual).toBeUndefined();
@@ -80,12 +80,39 @@ describe('ArrayQueue', () => {
     });
   });
 
+  describe('peek', () => {
+    it('should return the first element', () => {
+      // Arrange
+      const queue = new ArrayQueue<string>();
+      queue.push('Alice');
+      queue.push('Bob');
+      queue.push('Charlie');
+
+      // Act
+      const actual = queue.peek();
+
+      // Assert
+      expect(actual).toBe('Alice');
+      expect(queue.toArray()).toEqual(['Alice', 'Bob', 'Charlie']);
+    });
+
+    it('should return undefined if the queue is empty', () => {
+      // Act
+      const queue = new ArrayQueue();
+      const actual = queue.peek();
+
+      // Assert
+      expect(actual).toBeUndefined();
+      expect(queue.toArray()).toBeEmpty();
+    });
+  });
+
   describe('toArray', () => {
     it('should return an array of all elements', () => {
       // Arrange
       const queue = new ArrayQueue();
-      queue.enqueue('Alice');
-      queue.enqueue('Bob');
+      queue.push('Alice');
+      queue.push('Bob');
 
       // Act
       const actual = queue.toArray();

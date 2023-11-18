@@ -33,9 +33,9 @@ export class PriorityQueue<E> implements Queue<E> {
   }
 
   /**
-   * {@inheritDoc Queue.enqueue}
+   * {@inheritDoc Queue.push}
    */
-  enqueue(element: E): boolean {
+  push(element: E): void {
     this.elements.push(element);
 
     let index = this.elements.length - 1;
@@ -50,13 +50,12 @@ export class PriorityQueue<E> implements Queue<E> {
       this.swap(index, parentIndex);
       index = parentIndex;
     }
-    return true;
   }
 
   /**
-   * {@inheritDoc Queue.dequeue}
+   * {@inheritDoc Queue.pop}
    */
-  dequeue(): E | undefined {
+  pop(): E | undefined {
     const rootElement = this.elements[0];
     const lastElement = this.elements.pop();
     // If the last element is undefined, this queue is empty.

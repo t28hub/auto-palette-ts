@@ -30,11 +30,11 @@ describe('PriorityQueue', () => {
     });
   });
 
-  describe('enqueue', () => {
-    it('should enqueue the given elements', () => {
+  describe('push', () => {
+    it('should push the given elements', () => {
       // Act
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.enqueue(name));
+      elements.forEach((name) => queue.push(name));
 
       // Assert
       expect(queue.size).toEqual(6);
@@ -43,23 +43,44 @@ describe('PriorityQueue', () => {
     });
   });
 
-  describe('dequeue', () => {
-    it('should dequeue the highest priority element', () => {
+  describe('pop', () => {
+    it('should pop the highest priority element', () => {
       // Arrange
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.enqueue(name));
+      elements.forEach((name) => queue.push(name));
 
       // Act & Assert
-      expect(queue.dequeue()).toEqual('Charlie');
-      expect(queue.dequeue()).toEqual('Alice');
-      expect(queue.dequeue()).toEqual('Frank');
-      expect(queue.dequeue()).toEqual('Ellen');
-      expect(queue.dequeue()).toEqual('Dave');
-      expect(queue.dequeue()).toEqual('Bob');
-      expect(queue.dequeue()).toBeUndefined();
+      expect(queue.pop()).toEqual('Charlie');
+      expect(queue.pop()).toEqual('Alice');
+      expect(queue.pop()).toEqual('Frank');
+      expect(queue.pop()).toEqual('Ellen');
+      expect(queue.pop()).toEqual('Dave');
+      expect(queue.pop()).toEqual('Bob');
+      expect(queue.pop()).toBeUndefined();
 
       expect(queue.size).toEqual(0);
       expect(queue.isEmpty).toBeTrue();
+      expect(queue.toArray()).toBeEmpty();
+    });
+  });
+
+  describe('peek', () => {
+    it('should return the highest priority element', () => {
+      // Arrange
+      const queue = new PriorityQueue<string>(stringComparator);
+      elements.forEach((name) => queue.push(name));
+
+      // Act & Assert
+      expect(queue.peek()).toEqual('Charlie');
+      expect(queue.toArray()).toEqual(['Charlie', 'Ellen', 'Alice', 'Bob', 'Dave', 'Frank']);
+    });
+
+    it('should return undefined if the queue is empty', () => {
+      // Arrange
+      const queue = new PriorityQueue<string>(stringComparator);
+
+      // Act & Assert
+      expect(queue.peek()).toBeUndefined();
       expect(queue.toArray()).toBeEmpty();
     });
   });
@@ -79,7 +100,7 @@ describe('PriorityQueue', () => {
     it('should return an array of all elements', () => {
       // Arrange
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.enqueue(name));
+      elements.forEach((name) => queue.push(name));
 
       // Act
       const actual = queue.toArray();

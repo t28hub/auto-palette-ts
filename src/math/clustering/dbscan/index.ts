@@ -84,7 +84,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
     const queue = new ArrayQueue(...neighbors);
     const points = new Set<P>();
     while (!queue.isEmpty) {
-      const neighbor = queue.dequeue();
+      const neighbor = queue.pop();
       if (!neighbor) {
         continue;
       }
@@ -113,9 +113,9 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
         const secondaryLabel = labels[secondaryIndex];
         if (secondaryLabel === UNKNOWN) {
           labels[secondaryIndex] = MARKED;
-          queue.enqueue(secondaryNeighbor);
+          queue.push(secondaryNeighbor);
         } else if (secondaryLabel === NOISE) {
-          queue.enqueue(secondaryNeighbor);
+          queue.push(secondaryNeighbor);
         }
       }
     }

@@ -79,12 +79,12 @@ export class MinimumSpanningTree<E extends WeightedEdge> implements SpanningTree
 
         const edge = graph.getEdge(currentIndex, i);
         if (Number.isFinite(edge.weight)) {
-          candidates.enqueue(edge);
+          candidates.push(edge);
         }
       }
 
       while (!candidates.isEmpty) {
-        const head = candidates.dequeue();
+        const head = candidates.pop();
         if (!head) {
           throw new Error(`No edge at ${currentIndex} was found`);
         }

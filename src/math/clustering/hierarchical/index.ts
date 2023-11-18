@@ -110,21 +110,21 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
       return 0;
     });
     const rootNodeId = edgeSize * 2;
-    nodeIds.enqueue(rootNodeId);
+    nodeIds.push(rootNodeId);
     while (nodeIds.size < this.k) {
-      const nodeId = nodeIds.dequeue();
+      const nodeId = nodeIds.pop();
       if (typeof nodeId === 'undefined') {
         break;
       }
 
       const node = hierarchy[nodeId - pointSize];
-      nodeIds.enqueue(node.left);
-      nodeIds.enqueue(node.right);
+      nodeIds.push(node.left);
+      nodeIds.push(node.right);
     }
 
     let clusterId = 0;
     while (!nodeIds.isEmpty) {
-      const nodeId = nodeIds.dequeue();
+      const nodeId = nodeIds.pop();
       if (typeof nodeId === 'undefined') {
         break;
       }
@@ -145,21 +145,21 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
     const rootNode = hierarchy[rootNodeId - pointSize];
     const queue = new ArrayQueue(rootNode);
     while (!queue.isEmpty) {
-      const node = queue.dequeue();
+      const node = queue.pop();
       if (typeof node === 'undefined') {
         break;
       }
 
       const left = node.left;
       if (left >= pointSize) {
-        queue.enqueue(hierarchy[left - pointSize]);
+        queue.push(hierarchy[left - pointSize]);
       } else {
         labels[left] = clusterId;
       }
 
       const right = node.right;
       if (right >= pointSize) {
-        queue.enqueue(hierarchy[right - pointSize]);
+        queue.push(hierarchy[right - pointSize]);
       } else {
         labels[right] = clusterId;
       }

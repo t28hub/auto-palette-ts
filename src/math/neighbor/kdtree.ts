@@ -59,7 +59,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const neighbors = new Array<Neighbor<P>>();
     while (neighbors.length < k) {
-      const neighbor = result.dequeue();
+      const neighbor = result.pop();
       if (!neighbor) {
         break;
       }
@@ -121,7 +121,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     const index = node.index;
     const point = this.points[index];
     const distance = this.distanceFunction.measure(query, point);
-    neighbors.enqueue({ index, point, distance });
+    neighbors.push({ index, point, distance });
     if (node.isLeaf) {
       return;
     }
