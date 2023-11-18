@@ -137,8 +137,3 @@ export interface Swatch {
   readonly population: number;
   readonly coordinate: Coordinate;
 }
-
-/**
- * Supported color extraction quality.
- */
-export type Quality = 'low' | 'middle' | 'high';

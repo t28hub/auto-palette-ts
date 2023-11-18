@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Extractor } from './extractor';
 
-import { dbscanExtractor, hdbscanExtractor, kmeansExtractor } from './index';
+import { dbscanExtractor, kmeansExtractor } from './index';
 
 describe('extractor', () => {
   describe('dbscanExtractor', () => {
@@ -19,28 +19,6 @@ describe('extractor', () => {
       const actual = dbscanExtractor({
         minPoints: 36,
         threshold: 0.1,
-        colorFilters: [],
-      });
-
-      // Assert
-      expect(actual).toBeInstanceOf(Extractor);
-    });
-  });
-
-  describe('hdbscanExtractor', () => {
-    it('should create an Extractor using HDBSCAN', () => {
-      // Act
-      const actual = hdbscanExtractor();
-
-      // Assert
-      expect(actual).toBeInstanceOf(Extractor);
-    });
-
-    it('should create an Extractor using HDBSCAN with options', () => {
-      // Act
-      const actual = hdbscanExtractor({
-        minPoints: 16,
-        minClusterSize: 25,
         colorFilters: [],
       });
 

@@ -1,4 +1,4 @@
-import { DBSCAN, euclidean, HDBSCAN, Kmeans, Point5, squaredEuclidean } from '../math';
+import { DBSCAN, euclidean, Kmeans, Point5, squaredEuclidean } from '../math';
 import { RGB } from '../types';
 
 import { Extractor } from './extractor';
@@ -32,33 +32,6 @@ export function dbscanExtractor(options: Partial<DBSCANOptions> = {}): Extractor
   const { minPoints, threshold, colorFilters } = { ...DEFAULT_DBSCAN_OPTIONS, ...options };
   const dbscan = new DBSCAN<Point5>(minPoints, threshold, euclidean());
   return new Extractor(dbscan, colorFilters);
-}
-
-/**
- * Type representing HDBSCAN options.
- */
-export type HDBSCANOptions = {
-  readonly minPoints: number;
-  readonly minClusterSize: number;
-  readonly colorFilters: ColorFilter<RGB>[];
-};
-
-const DEFAULT_HDBSCAN_OPTIONS: HDBSCANOptions = {
-  minPoints: 9,
-  minClusterSize: 9,
-  colorFilters: [opacity()],
-};
-
-/**
- * Create a new extractor using HDBSCAN.
- *
- * @param options The options for the extractor.
- * @return The HDBSCAN extractor.
- */
-export function hdbscanExtractor(options: Partial<HDBSCANOptions> = {}): Extractor {
-  const { minPoints, minClusterSize, colorFilters } = { ...DEFAULT_HDBSCAN_OPTIONS, ...options };
-  const hdbscan = new HDBSCAN<Point5>(minPoints, minClusterSize, euclidean());
-  return new Extractor(hdbscan, colorFilters);
 }
 
 /**
