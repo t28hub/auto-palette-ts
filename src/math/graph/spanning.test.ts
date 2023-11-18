@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { Graph, Point2, WeightedEdge } from '../types';
+import { Point2 } from '../point';
+import { Graph, WeightedEdge } from '../types';
 
 import { MinimumSpanningTree } from './spanning';
 

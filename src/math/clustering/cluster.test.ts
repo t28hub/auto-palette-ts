@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { Point2 } from '../types';
+import { Point2 } from '../point';
 
-import { MutableCluster } from './mutableCluster';
+import { MutableCluster } from './cluster';
 
 describe('MutableCluster', () => {
   describe('constructor', () => {

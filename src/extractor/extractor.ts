@@ -1,6 +1,6 @@
 import { ciede2000, lab, parse, rgb } from '../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
-import { Cluster, Clustering, HierarchicalClustering, Point3, Point5, WeightFunction } from '../math';
+import { Cluster, ClusteringAlgorithm, HierarchicalClustering, Point3, Point5, WeightFunction } from '../math';
 import { ColorSpace, Lab, RGB, Swatch } from '../types';
 
 import { DeltaEWeightFunction } from './deltaEWeightFunction';
@@ -24,7 +24,7 @@ export class Extractor {
    * @param filters The color filters.
    */
   constructor(
-    private readonly clustering: Clustering<Point5>,
+    private readonly clustering: ClusteringAlgorithm<Point5>,
     filters: ColorFilter<RGB>[],
   ) {
     this.rgb = rgb();

@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { squaredEuclidean } from '../../distance';
-import { Point2, WeightFunction } from '../../types';
+import { Point2 } from '../../point';
+import { WeightFunction } from '../../types';
 
 import { HierarchicalClustering } from './index';
 
@@ -20,7 +21,7 @@ const DistanceWeightFunction: WeightFunction = {
   compute: (u: number, v: number): number => {
     const pointU = points[u];
     const pointV = points[v];
-    return squaredEuclidean().measure(pointU, pointV);
+    return squaredEuclidean(pointU, pointV);
   },
 };
 

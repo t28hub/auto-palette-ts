@@ -30,7 +30,7 @@ const DEFAULT_DBSCAN_OPTIONS: DBSCANOptions = {
  */
 export function dbscanExtractor(options: Partial<DBSCANOptions> = {}): Extractor {
   const { minPoints, threshold, colorFilters } = { ...DEFAULT_DBSCAN_OPTIONS, ...options };
-  const dbscan = new DBSCAN<Point5>(minPoints, threshold, euclidean());
+  const dbscan = new DBSCAN<Point5>(minPoints, threshold, euclidean);
   return new Extractor(dbscan, colorFilters);
 }
 
@@ -59,6 +59,6 @@ const DEFAULT_KMEANS_OPTIONS: KmeansOptions = {
  */
 export function kmeansExtractor(options: Partial<KmeansOptions> = {}): Extractor {
   const { maxColors, maxIterations, tolerance, colorFilters } = { ...DEFAULT_KMEANS_OPTIONS, ...options };
-  const kmeans = new Kmeans<Point5>(maxColors, maxIterations, tolerance, squaredEuclidean());
+  const kmeans = new Kmeans<Point5>(maxColors, maxIterations, tolerance, squaredEuclidean);
   return new Extractor(kmeans, colorFilters);
 }

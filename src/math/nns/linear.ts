@@ -1,5 +1,8 @@
 import { Mutable, Ordering, PriorityQueue, Queue } from '../../utils';
-import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
+import { DistanceFunction } from '../distance';
+import { Point } from '../point';
+
+import { Neighbor, NeighborSearch } from './search';
 
 /**
  * NNS implementation of linear search
@@ -16,7 +19,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    */
   constructor(
     private readonly points: P[],
-    private readonly distanceFunction: DistanceFunction<P>,
+    private readonly distanceFunction: DistanceFunction,
   ) {
     if (points.length === 0) {
       throw new TypeError('The points is empty');
@@ -33,7 +36,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
           return neighbor;
         }
 
-        const distance = this.distanceFunction.measure(point, query);
+        const distance = this.distanceFunction(point, query);
         if (distance < neighbor.distance) {
           neighbor.index = index;
           neighbor.point = point;
@@ -41,7 +44,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
         }
         return neighbor;
       },
-      { index: 0, point: this.points[0], distance: this.distanceFunction.measure(this.points[0], query) },
+      { index: 0, point: this.points[0], distance: this.distanceFunction(this.points[0], query) },
     );
   }
 
@@ -55,7 +58,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
 
     const queue = this.points.reduce(
       (neighbors: Queue<Neighbor<P>>, point: P, index: number): Queue<Neighbor<P>> => {
-        const distance = this.distanceFunction.measure(point, query);
+        const distance = this.distanceFunction(point, query);
         if (neighbors.size < k) {
           neighbors.push({ index, point, distance });
           return neighbors;
@@ -103,7 +106,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
         return previous;
       }
 
-      const distance = this.distanceFunction.measure(point, query);
+      const distance = this.distanceFunction(point, query);
       if (distance <= radius) {
         previous.push({ index, point, distance });
       }

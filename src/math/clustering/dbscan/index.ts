@@ -1,7 +1,9 @@
 import { ArrayQueue } from '../../../utils';
-import { kdtree } from '../../neighbor';
-import { Cluster, Clustering, NeighborSearch, Neighbor, Point, DistanceFunction } from '../../types';
-import { MutableCluster } from '../mutableCluster';
+import { DistanceFunction } from '../../distance';
+import { kdtree, Neighbor, NeighborSearch } from '../../nns';
+import { Point } from '../../point';
+import { ClusteringAlgorithm } from '../algorithm';
+import { Cluster, MutableCluster } from '../cluster';
 
 type Label = number;
 
@@ -15,12 +17,12 @@ const UNKNOWN: Label = -3;
  * @param P The type of point.
  * @see [Wikipedia - DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
  */
-export class DBSCAN<P extends Point> implements Clustering<P> {
+export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new DBSCAN.
    *
    * @param minPoints The minimum size of cluster.
-   * @param radius The neighbor radius.
+   * @param radius The nns radius.
    * @param distanceFunction The distance function.
    * @throws {RangeError} if the given minPoint is less than 1.
    * @throws {RangeError} if the given radius is less than 0.0.
@@ -28,7 +30,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
   constructor(
     private readonly minPoints: number,
     private readonly radius: number,
-    private readonly distanceFunction: DistanceFunction<P>,
+    private readonly distanceFunction: DistanceFunction,
   ) {
     if (minPoints < 1) {
       throw new RangeError(`The minimum size of cluster(${minPoints}) is not greater than or equal to 1`);
@@ -45,7 +47,7 @@ export class DBSCAN<P extends Point> implements Clustering<P> {
     let label: Label = 0;
     const nns = kdtree(points, this.distanceFunction);
     const labels = new Array<Label>(points.length).fill(UNKNOWN);
-    const clusters = new Map<Label, Cluster<P>>();
+    const clusters = new Map<Label, MutableCluster<P>>();
     points.forEach((point: P, index: number) => {
       // Skip visited point.
       if (labels[index] !== UNKNOWN) {

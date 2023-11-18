@@ -29,7 +29,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitial
    *
    * @param distanceFunction The distance function.
    */
-  constructor(private readonly distanceFunction: DistanceFunction<P>) {}
+  constructor(private readonly distanceFunction: DistanceFunction) {}
 
   /**
    * Initialize center points.
@@ -103,7 +103,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitial
   private computeNearestDistance(point: P, selected: Map<number, P>): Distance {
     let minDistance: Distance = toDistance(Number.MAX_VALUE);
     for (const selectedPoint of selected.values()) {
-      const distance = this.distanceFunction.measure(point, selectedPoint);
+      const distance = this.distanceFunction(point, selectedPoint);
       if (distance < minDistance) {
         minDistance = distance;
       }

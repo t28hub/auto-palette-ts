@@ -1,5 +1,8 @@
-import { kdtree } from '../../neighbor';
-import { Cluster, Clustering, DistanceFunction, Point } from '../../types';
+import { DistanceFunction } from '../../distance';
+import { kdtree } from '../../nns';
+import { Point } from '../../point';
+import { ClusteringAlgorithm } from '../algorithm';
+import { Cluster } from '../cluster';
 
 import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
 import { KmeansCluster } from './cluster';
@@ -10,7 +13,7 @@ import { KmeansCluster } from './cluster';
  * @param P The type of point.
  * @see [Wikipedia - k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
  */
-export class Kmeans<P extends Point> implements Clustering<P> {
+export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new Kmeans.
    *
@@ -25,7 +28,7 @@ export class Kmeans<P extends Point> implements Clustering<P> {
     private readonly k: number,
     private readonly maxIterations: number,
     private readonly tolerance: number,
-    private readonly distanceFunction: DistanceFunction<P>,
+    private readonly distanceFunction: DistanceFunction,
     private readonly centerInitializer: CenterInitializer<P> = new KmeansPlusPlusInitializer(distanceFunction),
   ) {
     if (!Number.isInteger(k) || k <= 0) {

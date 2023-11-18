@@ -1,19 +1,34 @@
-import { Distance, Point } from '../types';
-import { toDistance } from '../utils';
+import { Point } from '../point';
 
-import { SquaredEuclideanDistance } from './squaredEuclidean';
+import { Distance, DistanceFunction } from './function';
+import { toDistance } from './guards';
 
 /**
- * The euclidean distance formula.
+ * Calculate the Euclidean distance between two points.
  *
- * @param P The type of point.
+ * @param point1  The first point.
+ * @param point2 The second point.
+ * @return The Euclidean distance between two points.
  */
-export class EuclideanDistance<P extends Point> extends SquaredEuclideanDistance<P> {
-  /**
-   * {@inheritDoc DistanceFunction.measure}
-   */
-  measure(point1: P, point2: P): Distance {
-    const squaredDistance = super.measure(point1, point2);
-    return toDistance(Math.sqrt(squaredDistance));
-  }
-}
+export const euclidean: DistanceFunction = <P extends Point>(point1: P, point2: P): Distance => {
+  const distance = point1.reduce((total: number, value: number, index: number): number => {
+    const delta = point2[index] - value;
+    return total + delta * delta;
+  }, 0.0);
+  return toDistance(Math.sqrt(distance));
+};
+
+/**
+ * Calculate the squared Euclidean distance between two points.
+ *
+ * @param point1 The first point.
+ * @param point2 The second point.
+ * @return The squared Euclidean distance between two points.
+ */
+export const squaredEuclidean: DistanceFunction = <P extends Point>(point1: P, point2: P): Distance => {
+  const distance = point1.reduce((total: number, value: number, index: number): number => {
+    const delta = point2[index] - value;
+    return total + delta * delta;
+  }, 0.0);
+  return toDistance(distance);
+};

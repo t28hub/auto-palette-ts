@@ -1,7 +1,9 @@
 import { ArrayQueue, Ordering, PriorityQueue } from '../../../utils';
 import { MinimumSpanningTree } from '../../graph';
-import { Cluster, Clustering, Point, WeightedEdge, WeightFunction } from '../../types';
-import { MutableCluster } from '../mutableCluster';
+import { Point } from '../../point';
+import { WeightedEdge, WeightFunction } from '../../types';
+import { ClusteringAlgorithm } from '../algorithm';
+import { Cluster, MutableCluster } from '../cluster';
 
 import { HierarchicalNode } from './types';
 import { UnionFind } from './unionFind';
@@ -14,7 +16,7 @@ export { type HierarchicalNode } from './types';
  * @param P The type of point.
  * @see [Hierarchical clustering - Wikipedia](https://en.wikipedia.org/wiki/Hierarchical_clustering)
  */
-export class HierarchicalClustering<P extends Point> implements Clustering<P> {
+export class HierarchicalClustering<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new HierarchicalClustering.
    *

@@ -22,7 +22,7 @@ describe('LinearSearch', () => {
   describe('constructor', () => {
     it('should create a new LinearSearch', () => {
       // Act
-      const actual = new LinearSearch(points, squaredEuclidean());
+      const actual = new LinearSearch(points, squaredEuclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -31,7 +31,7 @@ describe('LinearSearch', () => {
     it('should throw TypeError if the given points is empty', () => {
       // Assert
       expect(() => {
-        new LinearSearch([], squaredEuclidean());
+        new LinearSearch([], squaredEuclidean);
       }).toThrowError(TypeError);
     });
   });
@@ -39,7 +39,7 @@ describe('LinearSearch', () => {
   describe('search', () => {
     let linearSearch: LinearSearch<Point2>;
     beforeEach(() => {
-      linearSearch = new LinearSearch(points, squaredEuclidean());
+      linearSearch = new LinearSearch(points, squaredEuclidean);
     });
 
     it('should return the k nearest neighbors to the given point', () => {
@@ -90,10 +90,10 @@ describe('LinearSearch', () => {
   describe('searchNearest', () => {
     let linearSearch: LinearSearch<Point2>;
     beforeEach(() => {
-      linearSearch = new LinearSearch(points, squaredEuclidean());
+      linearSearch = new LinearSearch(points, squaredEuclidean);
     });
 
-    it('should return the nearest neighbor to the given point', () => {
+    it('should return the nearest nns to the given point', () => {
       // Act
       const actual = linearSearch.searchNearest([1, 2]);
 
@@ -105,7 +105,7 @@ describe('LinearSearch', () => {
       });
     });
 
-    it('should return the nearest neighbor if the given point exists', () => {
+    it('should return the nearest nns if the given point exists', () => {
       // Act
       const actual = linearSearch.searchNearest([4, 4]);
 
@@ -121,7 +121,7 @@ describe('LinearSearch', () => {
   describe('searchRadius', () => {
     let linearSearch: LinearSearch<Point2>;
     beforeEach(() => {
-      linearSearch = new LinearSearch(points, squaredEuclidean());
+      linearSearch = new LinearSearch(points, squaredEuclidean);
     });
 
     it('should return the neighbors in the given radius to the given point', () => {

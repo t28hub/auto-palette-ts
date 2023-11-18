@@ -27,7 +27,7 @@ describe('DBSCAN', () => {
   describe('constructor', () => {
     it('should create a new DBSCAN', () => {
       // Actual
-      const actual = new DBSCAN(10, 2.5, euclidean());
+      const actual = new DBSCAN(10, 2.5, euclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -37,7 +37,7 @@ describe('DBSCAN', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(0, 2.5, euclidean());
+        new DBSCAN(0, 2.5, euclidean);
       }).toThrowError(RangeError);
     });
 
@@ -45,7 +45,7 @@ describe('DBSCAN', () => {
       // Assert
       expect(() => {
         // Actual
-        new DBSCAN(10, -1.0, euclidean());
+        new DBSCAN(10, -1.0, euclidean);
       }).toThrowError(RangeError);
     });
   });
@@ -53,7 +53,7 @@ describe('DBSCAN', () => {
   describe('fit', () => {
     it('should cluster the given points', () => {
       // Arrange
-      const dbscan = new DBSCAN(4, 2.0, euclidean());
+      const dbscan = new DBSCAN(4, 2.0, euclidean);
 
       // Act
       const actual = dbscan.fit(points);

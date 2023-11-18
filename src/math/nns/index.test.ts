@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { squaredEuclidean } from '../distance';
-import { Point2 } from '../types';
+import { Point2 } from '../point';
 
 import { KDTree } from './kdtree';
 import { LinearSearch } from './linear';
@@ -17,10 +17,10 @@ const points: Point2[] = [
   [2, 1],
 ];
 
-describe('neighbor', () => {
+describe('nns', () => {
   it('kdtree should return a new KDTree', () => {
     // Act
-    const actual = kdtree(points, squaredEuclidean());
+    const actual = kdtree(points, squaredEuclidean);
 
     // Assert
     expect(actual).toBeInstanceOf(KDTree);
@@ -28,7 +28,7 @@ describe('neighbor', () => {
 
   it('linear should return a new LinearSearch', () => {
     // Act
-    const actual = linear(points, squaredEuclidean());
+    const actual = linear(points, squaredEuclidean);
 
     // Assert
     expect(actual).toBeInstanceOf(LinearSearch);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { squaredEuclidean } from './distance';
-import { Point } from './types';
+import { Point } from './point';
 import { Vector } from './vector';
 
 describe('Vector', () => {
@@ -170,7 +170,7 @@ describe('Vector', () => {
     it('should compute distance with the distance function to the other point', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
-      const actual = vector.distanceTo([3, 4, 5], squaredEuclidean());
+      const actual = vector.distanceTo([3, 4, 5], squaredEuclidean);
 
       // Assert
       expect(actual).toEqual(12);

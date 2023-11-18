@@ -1,8 +1,9 @@
 import { Mutable, Ordering, PriorityQueue, Queue } from '../../utils';
-import { euclidean } from '../distance';
-import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
+import { DistanceFunction, euclidean } from '../distance';
+import { Point } from '../point';
 
 import { KDNode } from './kdnode';
+import { Neighbor, NeighborSearch } from './search';
 
 /**
  * NNS implementation of KD-tree.
@@ -24,7 +25,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
   private constructor(
     private readonly root: KDNode,
     points: P[],
-    private readonly distanceFunction: DistanceFunction<P>,
+    private readonly distanceFunction: DistanceFunction,
   ) {
     this.points = Array.from(points);
   }
@@ -35,7 +36,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
   searchNearest(query: P): Neighbor<P> {
     // Do not need to check whether the points is empty, since size of points is checked when constructing the KDTree.
     const point = this.points[0];
-    const distance = this.distanceFunction.measure(query, point);
+    const distance = this.distanceFunction(query, point);
     const result: Mutable<Neighbor<P>> = { index: 0, point, distance };
     this.nearestRecursively(this.root, query, result);
     return result;
@@ -93,7 +94,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const point = this.points[index];
     if (node.isLeaf) {
-      const distance = this.distanceFunction.measure(query, point);
+      const distance = this.distanceFunction(query, point);
       if (distance < neighbor.distance) {
         neighbor.index = index;
         neighbor.point = point;
@@ -120,7 +121,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
 
     const index = node.index;
     const point = this.points[index];
-    const distance = this.distanceFunction.measure(query, point);
+    const distance = this.distanceFunction(query, point);
     neighbors.push({ index, point, distance });
     if (node.isLeaf) {
       return;
@@ -144,7 +145,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
     }
 
     const point = this.points[node.index];
-    const distance = this.distanceFunction.measure(query, point);
+    const distance = this.distanceFunction(query, point);
     if (distance <= radius) {
       neighbors.push({ index: node.index, point, distance });
     }
@@ -167,7 +168,7 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
    * @param distanceFunction The distance function.
    * @return The created KDTree.
    */
-  static build<P extends Point>(points: P[], distanceFunction: DistanceFunction<P> = euclidean()): KDTree<P> {
+  static build<P extends Point>(points: P[], distanceFunction: DistanceFunction = euclidean): KDTree<P> {
     const indices = new Uint32Array(points.length).map((_: number, index: number) => index);
     const root = this.buildNode(points, indices, 0);
     if (!root) {

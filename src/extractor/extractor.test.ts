@@ -12,7 +12,7 @@ describe('Extractor', () => {
   describe('constructor', () => {
     it('should create a new Extractor', () => {
       // Act
-      const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean());
+      const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
       const actual = new Extractor(kmeans, [opacity()]);
 
       // Assert
@@ -24,10 +24,10 @@ describe('Extractor', () => {
     let dbscanExtractor: Extractor;
     let kmeansExtractor: Extractor;
     beforeEach(() => {
-      const dbscan = new DBSCAN<Point5>(16, 0.05, euclidean());
+      const dbscan = new DBSCAN<Point5>(16, 0.05, euclidean);
       dbscanExtractor = new Extractor(dbscan, [opacity()]);
 
-      const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean());
+      const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
       kmeansExtractor = new Extractor(kmeans, [opacity()]);
     });
 

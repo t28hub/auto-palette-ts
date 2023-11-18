@@ -1,5 +1,7 @@
-import { Distance, DistanceFunction, Point, toDistance, Vector } from '../../index';
-import { MutableCluster } from '../mutableCluster';
+import { toDistance, Distance, DistanceFunction } from '../../distance';
+import { Point } from '../../point';
+import { Vector } from '../../vector';
+import { MutableCluster } from '../cluster';
 
 export class KmeansCluster<P extends Point> extends MutableCluster<P> {
   private readonly centroid: Vector<P>;
@@ -15,7 +17,7 @@ export class KmeansCluster<P extends Point> extends MutableCluster<P> {
   constructor(
     id: number,
     initialCenter: P,
-    private readonly distanceFunction: DistanceFunction<P>,
+    private readonly distanceFunction: DistanceFunction,
   ) {
     super(id);
     this.centroid = new Vector(initialCenter);
@@ -48,7 +50,7 @@ export class KmeansCluster<P extends Point> extends MutableCluster<P> {
     this.centroid.scale(1 / this.size);
 
     const newCenter = this.centroid.toArray();
-    return this.distanceFunction.measure(oldCenter, newCenter);
+    return this.distanceFunction(oldCenter, newCenter);
   }
 
   /**

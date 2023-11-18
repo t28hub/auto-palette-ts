@@ -26,7 +26,7 @@ describe('KDTree', () => {
   describe('build', () => {
     it('should build KDTree from points', () => {
       // Act
-      const actual = KDTree.build(points, euclidean());
+      const actual = KDTree.build(points, euclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -36,7 +36,7 @@ describe('KDTree', () => {
       // Assert
       expect(() => {
         // Act
-        KDTree.build([], euclidean());
+        KDTree.build([], euclidean);
       }).toThrowError(Error);
     });
   });
@@ -44,7 +44,7 @@ describe('KDTree', () => {
   describe('search', () => {
     let kdtree: KDTree<Point3>;
     beforeEach(() => {
-      kdtree = KDTree.build(points, euclidean());
+      kdtree = KDTree.build(points, euclidean);
     });
 
     it('should return the k nearest neighbors to the given point', () => {
@@ -95,10 +95,10 @@ describe('KDTree', () => {
   describe('searchNearest', () => {
     let kdtree: KDTree<Point3>;
     beforeEach(() => {
-      kdtree = KDTree.build(points, euclidean());
+      kdtree = KDTree.build(points, euclidean);
     });
 
-    it('should return the nearest neighbor to the given point', () => {
+    it('should return the nearest nns to the given point', () => {
       // Act
       const actual = kdtree.searchNearest([9, 3, 4]);
 
@@ -110,7 +110,7 @@ describe('KDTree', () => {
       });
     });
 
-    it('should return the nearest neighbor if the given point exists', () => {
+    it('should return the nearest nns if the given point exists', () => {
       // Act
       const actual = kdtree.searchNearest([5, 0, 0]);
 
@@ -126,7 +126,7 @@ describe('KDTree', () => {
   describe('searchRadius', () => {
     let kdtree: KDTree<Point3>;
     beforeEach(() => {
-      kdtree = KDTree.build(points, euclidean());
+      kdtree = KDTree.build(points, euclidean);
     });
 
     it('should return the neighbors in the given radius to the given point', () => {

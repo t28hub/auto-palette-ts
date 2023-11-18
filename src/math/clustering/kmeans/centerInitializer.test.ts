@@ -16,7 +16,7 @@ const points: Point2[] = [
 describe('KmeansPlusPlusInitializer', () => {
   let initializer: CenterInitializer<Point2>;
   beforeEach(() => {
-    initializer = new KmeansPlusPlusInitializer(euclidean());
+    initializer = new KmeansPlusPlusInitializer(euclidean);
   });
 
   it.each([

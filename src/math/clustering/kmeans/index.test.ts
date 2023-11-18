@@ -8,7 +8,7 @@ describe('Kmeans', () => {
   describe('constructor', () => {
     it('should create a new Kmeans', () => {
       // Act
-      const actual = new Kmeans(15, 10, Number.EPSILON, squaredEuclidean());
+      const actual = new Kmeans(15, 10, Number.EPSILON, squaredEuclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -25,7 +25,7 @@ describe('Kmeans', () => {
       // Assert
       expect(() => {
         // Act
-        new Kmeans(k, maxIterations, tolerance, squaredEuclidean());
+        new Kmeans(k, maxIterations, tolerance, squaredEuclidean);
       }).toThrowError(TypeError);
     });
   });
@@ -48,7 +48,7 @@ describe('Kmeans', () => {
       { k: 10, expected: 8 },
     ])('should predict $k clusters', ({ k, expected }) => {
       // Act
-      const kmeans = new Kmeans(k, 10, 0.01, squaredEuclidean());
+      const kmeans = new Kmeans(k, 10, 0.01, squaredEuclidean);
       const actual = kmeans.fit(points);
 
       // Assert

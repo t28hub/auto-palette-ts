@@ -8,7 +8,7 @@ describe('KmeansCluster', () => {
   describe('constructor', () => {
     it('should create a new cluster', () => {
       // Act
-      const actual = new KmeansCluster(0, [1, 2, 3], euclidean());
+      const actual = new KmeansCluster(0, [1, 2, 3], euclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -20,7 +20,7 @@ describe('KmeansCluster', () => {
     it('should throw TypeError if the initialCentroid contains infinite number', () => {
       // Act & Assert
       expect(() => {
-        new KmeansCluster(0, [1, 2, NaN], euclidean());
+        new KmeansCluster(0, [1, 2, NaN], euclidean);
       }).toThrowError(TypeError);
     });
   });
@@ -28,7 +28,7 @@ describe('KmeansCluster', () => {
   describe('computeCentroid', () => {
     it('should return centroid of this cluster', () => {
       // Act
-      const cluster = new KmeansCluster(0, [1, 2, 3], euclidean());
+      const cluster = new KmeansCluster(0, [1, 2, 3], euclidean);
       const actual = cluster.computeCentroid();
 
       // Assert
@@ -39,7 +39,7 @@ describe('KmeansCluster', () => {
   describe('updateCentroid', () => {
     it('should update the centroid', () => {
       // Arrange
-      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean());
+      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean);
       cluster.add([2, 0, 0]);
       cluster.add([1, 1, 0]);
       cluster.add([0, 5, 0]);
@@ -54,7 +54,7 @@ describe('KmeansCluster', () => {
 
     it('should not update the centroid if cluster is empty', () => {
       // Arrange
-      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean());
+      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean);
 
       // Act
       const actual = cluster.updateCentroid();
@@ -68,7 +68,7 @@ describe('KmeansCluster', () => {
   describe('distanceTo', () => {
     it('should compute euclidean distance', () => {
       // Act
-      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean());
+      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean);
       const actual = cluster.distanceTo([1, 2, 3]);
 
       // Assert
@@ -76,7 +76,7 @@ describe('KmeansCluster', () => {
     });
 
     it('should throw TypeError if the point contains infinite number', () => {
-      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean());
+      const cluster = new KmeansCluster(0, [0, 0, 0], euclidean);
 
       // Act & Assert
       expect(() => {
