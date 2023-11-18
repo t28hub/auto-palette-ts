@@ -1,4 +1,4 @@
-import { PriorityQueue } from '../../utils';
+import { Ordering, PriorityQueue } from '../../utils';
 import { Graph, SpanningTree, WeightedEdge, WeightFunction } from '../types';
 
 /**
@@ -57,7 +57,15 @@ export class MinimumSpanningTree<E extends WeightedEdge> implements SpanningTree
 
     const edges = new Array<E>();
     const attached = new Set<number>();
-    const candidates = new PriorityQueue<E>((edge: E): number => -edge.weight);
+    const candidates = new PriorityQueue<E>((edge1: E, edge2: E): Ordering => {
+      if (edge1.weight < edge2.weight) {
+        return -1;
+      }
+      if (edge1.weight > edge2.weight) {
+        return 1;
+      }
+      return 0;
+    });
 
     const verticesSize = vertices.length;
     let totalWeight = 0.0;

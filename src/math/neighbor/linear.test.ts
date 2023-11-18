@@ -54,13 +54,13 @@ describe('LinearSearch', () => {
         distance: 0,
       });
       expect(actual[1]).toMatchObject({
-        index: 4,
-        point: [3, 4],
+        index: 6,
+        point: [4, 3],
         distance: 1,
       });
       expect(actual[2]).toMatchObject({
-        index: 6,
-        point: [4, 3],
+        index: 4,
+        point: [3, 4],
         distance: 1,
       });
     });

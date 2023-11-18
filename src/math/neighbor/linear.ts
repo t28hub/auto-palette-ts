@@ -1,4 +1,4 @@
-import { Mutable, PriorityQueue, Queue } from '../../utils';
+import { Mutable, Ordering, PriorityQueue, Queue } from '../../utils';
 import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
 
 /**
@@ -68,7 +68,15 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
         }
         return neighbors;
       },
-      new PriorityQueue((neighbor: Neighbor<P>) => neighbor.distance),
+      new PriorityQueue((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): Ordering => {
+        if (neighbor1.distance < neighbor2.distance) {
+          return 1;
+        }
+        if (neighbor1.distance > neighbor2.distance) {
+          return -1;
+        }
+        return 0;
+      }),
     );
 
     const neighbors = new Array<Neighbor<P>>();

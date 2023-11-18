@@ -1,4 +1,4 @@
-import { ArrayQueue, PriorityQueue } from '../../../utils';
+import { ArrayQueue, Ordering, PriorityQueue } from '../../../utils';
 import { MinimumSpanningTree } from '../../graph';
 import { Cluster, Clustering, Point, WeightedEdge, WeightFunction } from '../../types';
 import { MutableCluster } from '../mutableCluster';
@@ -100,7 +100,15 @@ export class HierarchicalClustering<P extends Point> implements Clustering<P> {
       return labels.map((_: number, index: number): number => index);
     }
 
-    const nodeIds = new PriorityQueue<number>((nodeId: number): number => nodeId);
+    const nodeIds = new PriorityQueue<number>((nodeId1: number, nodeId2: number): Ordering => {
+      if (nodeId1 < nodeId2) {
+        return -1;
+      }
+      if (nodeId1 > nodeId2) {
+        return 1;
+      }
+      return 0;
+    });
     const rootNodeId = edgeSize * 2;
     nodeIds.enqueue(rootNodeId);
     while (nodeIds.size < this.k) {

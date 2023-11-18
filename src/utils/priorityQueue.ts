@@ -1,34 +1,20 @@
+import { Comparator } from './comparator';
 import { Queue } from './queue';
 
 /**
- * Wrapper type to prevent score recalculation.
- */
-type ScoredElement<E> = {
-  /**
-   * The score corresponding to this element.
-   */
-  readonly score: number;
-
-  /**
-   * The element.
-   */
-  readonly element: E;
-};
-
-/**
- * Implementation of binary heap based priority queue.
+ * Binary heap based priority queue implementation.
  *
  * @param E The type of elements.
  */
 export class PriorityQueue<E> implements Queue<E> {
-  private readonly elements: ScoredElement<E>[];
+  private readonly elements: E[];
 
   /**
    * Create a PriorityQueue with the score function.
    *
-   * @param scoreFunction The score function.
+   * @param comparator The comparator function to compare the elements.
    */
-  constructor(private readonly scoreFunction: (element: E) => number) {
+  constructor(private readonly comparator: Comparator<E>) {
     this.elements = [];
   }
 
@@ -50,15 +36,14 @@ export class PriorityQueue<E> implements Queue<E> {
    * {@inheritDoc Queue.enqueue}
    */
   enqueue(element: E): boolean {
-    const score = this.scoreFunction(element);
-    this.elements.push({ score, element });
+    this.elements.push(element);
 
     let index = this.elements.length - 1;
     // If the index is 0, the element is root element.
     while (index > 0) {
-      const parentIndex = Math.round((index - 1) / 2);
+      const parentIndex = Math.floor((index - 1) / 2);
       const parentElement = this.elements[parentIndex];
-      if (score < parentElement.score) {
+      if (this.comparator(element, parentElement) >= 0) {
         break;
       }
 
@@ -72,68 +57,65 @@ export class PriorityQueue<E> implements Queue<E> {
    * {@inheritDoc Queue.dequeue}
    */
   dequeue(): E | undefined {
-    const element = this.elements[0];
+    const rootElement = this.elements[0];
     const lastElement = this.elements.pop();
     // If the last element is undefined, this queue is empty.
     if (!lastElement || this.elements.length === 0) {
-      return element?.element;
+      return rootElement;
     }
 
     this.elements[0] = lastElement;
 
-    const score = lastElement.score;
-    const limit = this.elements.length;
     let index = 0;
+    const limit = this.elements.length;
     while (index < limit) {
-      const child1Index = index * 2 + 1;
-      const child2Index = child1Index + 1;
+      const leftChildIndex = index * 2 + 1;
+      const rightChildIndex = leftChildIndex + 1;
 
-      const child1 = this.elements[child1Index];
-      const child2 = this.elements[child2Index];
+      const leftChild = this.elements[leftChildIndex];
+      const rightChild = this.elements[rightChildIndex];
       // If both child elements are not present, stop reordering this binary tree.
-      if (!child1 && !child2) {
+      if (!leftChild && !rightChild) {
         break;
       }
 
-      if (!child2) {
-        if (child1.score < score) {
+      if (!rightChild) {
+        if (this.comparator(lastElement, leftChild) <= 0) {
           break;
         }
 
-        this.swap(index, child1Index);
-        index = child1Index;
+        this.swap(index, leftChildIndex);
+        index = leftChildIndex;
         continue;
       }
 
-      const maxScore = Math.max(score, child1.score, child2.score);
-      if (score >= maxScore) {
+      if (this.comparator(lastElement, leftChild) < 0 && this.comparator(lastElement, rightChild) < 0) {
         break;
       }
 
-      if (child1.score > child2.score) {
-        this.swap(index, child1Index);
-        index = child1Index;
+      if (this.comparator(leftChild, rightChild) < 0) {
+        this.swap(index, leftChildIndex);
+        index = leftChildIndex;
       } else {
-        this.swap(index, child2Index);
-        index = child2Index;
+        this.swap(index, rightChildIndex);
+        index = rightChildIndex;
       }
     }
-    return element.element;
+    return rootElement;
   }
 
   /**
    * {@inheritDoc Queue.peek}
    */
   peek(): E | undefined {
-    const head = this.elements.at(0);
-    return head?.element;
+    return this.elements[0];
   }
 
   /**
    * {@inheritDoc Queue.toArray}
    */
   toArray(): E[] {
-    return this.elements.map((scored: ScoredElement<E>): E => scored.element);
+    return [...this.elements];
   }
 
   private swap(index1: number, index2: number) {

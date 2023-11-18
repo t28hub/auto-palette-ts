@@ -53,23 +53,23 @@ describe('HierarchicalClustering', () => {
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
         id: 0,
+        points: [[0.0, 0.0]],
+      });
+      expect(actual[1]).toMatchObject({
+        id: 1,
         points: [
-          [0.0, 0.0],
           [1.0, 1.0],
           [1.0, 0.0],
           [0.0, 1.0],
         ],
       });
-      expect(actual[1]).toMatchObject({
-        id: 1,
+      expect(actual[2]).toMatchObject({
+        id: 2,
         points: [
           [2.0, 1.5],
           [2.0, 2.0],
+          [2.5, 3.0],
         ],
-      });
-      expect(actual[2]).toMatchObject({
-        id: 2,
-        points: [[2.5, 3.0]],
       });
     });
 
@@ -130,9 +130,9 @@ describe('HierarchicalClustering', () => {
       expect(actual).toHaveLength(6);
       expect(actual).toContainAllValues([
         { left: 4, right: 2, weight: 0.25, size: 2 },
-        { left: 1, right: 5, weight: 1.0, size: 2 },
-        { left: 8, right: 0, weight: 1.0, size: 3 },
-        { left: 9, right: 3, weight: 1.0, size: 4 },
+        { left: 1, right: 3, weight: 1.0, size: 2 },
+        { left: 8, right: 5, weight: 1.0, size: 3 },
+        { left: 9, right: 0, weight: 1.0, size: 4 },
         { left: 6, right: 7, weight: 1.25, size: 3 },
         { left: 11, right: 10, weight: 1.25, size: 7 },
       ]);

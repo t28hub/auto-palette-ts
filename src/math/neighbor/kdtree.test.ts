@@ -54,13 +54,13 @@ describe('KDTree', () => {
       // Assert
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
-        index: 13,
-        point: [4, 5, 4],
+        index: 12,
+        point: [2, 3, 4],
         distance: 2.8284271247461903,
       });
       expect(actual[1]).toMatchObject({
-        index: 12,
-        point: [2, 3, 4],
+        index: 13,
+        point: [4, 5, 4],
         distance: 2.8284271247461903,
       });
       expect(actual[2]).toMatchObject({

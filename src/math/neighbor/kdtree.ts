@@ -1,4 +1,4 @@
-import { Mutable, PriorityQueue, Queue } from '../../utils';
+import { Mutable, Ordering, PriorityQueue, Queue } from '../../utils';
 import { euclidean } from '../distance';
 import { DistanceFunction, Neighbor, NeighborSearch, Point } from '../types';
 
@@ -46,9 +46,14 @@ export class KDTree<P extends Point> implements NeighborSearch<P> {
       throw new RangeError(`The k is less than 1: ${k}`);
     }
 
-    const result = new PriorityQueue((neighbor: Neighbor<P>): number => {
-      // Sort in descending order of distance from the given query point.
-      return -neighbor.distance;
+    const result = new PriorityQueue((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): Ordering => {
+      if (neighbor1.distance < neighbor2.distance) {
+        return -1;
+      }
+      if (neighbor1.distance > neighbor2.distance) {
+        return 1;
+      }
+      return 0;
     });
     this.searchRecursively(this.root, query, k, result);
 
