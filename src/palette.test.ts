@@ -3,9 +3,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ciede2000 } from './color';
 import { HSLColor } from './color/hsl';
 import { Palette } from './palette';
+import { loadImageData } from './test';
 import { Swatch } from './types';
 
-const results: Swatch[] = [
+const swatches: Swatch[] = [
   {
     color: new HSLColor(120, 0.8, 0.5, 1.0),
     population: 64,
@@ -27,7 +28,7 @@ describe('Palette', () => {
   describe('constructor', () => {
     it('should create a new Palette', () => {
       // Act
-      const actual = new Palette(results, ciede2000());
+      const actual = new Palette(swatches, ciede2000());
 
       // Assert
       expect(actual).toBeDefined();
@@ -37,7 +38,7 @@ describe('Palette', () => {
   describe('getDominantSwatch', () => {
     it('should return the swatch of the max population', () => {
       // Act
-      const palette = new Palette(results, ciede2000());
+      const palette = new Palette(swatches, ciede2000());
       const actual = palette.getDominantSwatch();
 
       // Assert
@@ -57,7 +58,7 @@ describe('Palette', () => {
   describe('getSwatches', () => {
     let palette: Palette;
     beforeEach(() => {
-      palette = new Palette(results, ciede2000());
+      palette = new Palette(swatches, ciede2000());
     });
 
     it('should return the all swatches', () => {
@@ -66,9 +67,9 @@ describe('Palette', () => {
 
       // Assert
       expect(actual).toBeArrayOfSize(3);
-      expect(actual[0]).toMatchObject(results[1]);
-      expect(actual[1]).toMatchObject(results[0]);
-      expect(actual[2]).toMatchObject(results[2]);
+      expect(actual[0]).toMatchObject(swatches[1]);
+      expect(actual[1]).toMatchObject(swatches[0]);
+      expect(actual[2]).toMatchObject(swatches[2]);
     });
 
     it('should return the given number of swatches', () => {
@@ -77,8 +78,20 @@ describe('Palette', () => {
 
       // Assert
       expect(actual).toBeArrayOfSize(2);
-      expect(actual[0]).toMatchObject(results[1]);
-      expect(actual[1]).toMatchObject(results[0]);
+    });
+  });
+
+  describe('extract', () => {
+    it('should extract a new Palette from image', async () => {
+      const imageData = await loadImageData('flag_gr.png');
+      const actual = Palette.extract(imageData);
+      actual.getSwatches(2).forEach((swatch) => {
+        console.info({
+          color: swatch.color.toString(),
+          population: swatch.population,
+          coordinate: swatch.coordinate,
+        });
+      });
     });
   });
 });

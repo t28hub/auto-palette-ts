@@ -1,4 +1,4 @@
-import { DBSCAN, euclidean, Kmeans, Point5, squaredEuclidean } from '../math';
+import { DBSCAN, Kmeans, Point5, squaredEuclidean } from '../math';
 import { RGB } from '../types';
 
 import { Extractor } from './extractor';
@@ -17,8 +17,8 @@ export type DBSCANOptions = {
 };
 
 const DEFAULT_DBSCAN_OPTIONS: DBSCANOptions = {
-  minPoints: 9,
-  threshold: 0.04,
+  minPoints: 16,
+  threshold: 0.0016,
   colorFilters: [opacity()],
 };
 
@@ -30,7 +30,7 @@ const DEFAULT_DBSCAN_OPTIONS: DBSCANOptions = {
  */
 export function dbscanExtractor(options: Partial<DBSCANOptions> = {}): Extractor {
   const { minPoints, threshold, colorFilters } = { ...DEFAULT_DBSCAN_OPTIONS, ...options };
-  const dbscan = new DBSCAN<Point5>(minPoints, threshold, euclidean);
+  const dbscan = new DBSCAN<Point5>(minPoints, threshold, squaredEuclidean);
   return new Extractor(dbscan, colorFilters);
 }
 

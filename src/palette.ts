@@ -1,7 +1,7 @@
 import { ciede2000 } from './color';
-import { dbscanExtractor, DeltaEWeightFunction } from './extractor';
+import { dbscanExtractor } from './extractor';
 import { createImageData, ImageSource } from './image';
-import { HierarchicalClustering, Point3 } from './math';
+import { Distance, HierarchicalClustering, toDistance } from './math';
 import { DeltaEFunction, Swatch } from './types';
 
 const DEFAULT_SWATCH_COUNT = 6;
@@ -11,8 +11,6 @@ const DEFAULT_SWATCH_COUNT = 6;
  */
 export class Palette {
   private readonly swatches: Swatch[];
-
-  private readonly colors: Point3[];
 
   /**
    * Create a new Palette.
@@ -26,10 +24,6 @@ export class Palette {
   ) {
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
-    });
-    this.colors = this.swatches.map((swatch: Swatch): Point3 => {
-      const color = swatch.color.toLab();
-      return [color.l, color.a, color.b];
     });
   }
 
@@ -58,20 +52,32 @@ export class Palette {
    * @return The swatches within the given count.
    */
   getSwatches(count: number = DEFAULT_SWATCH_COUNT): Swatch[] {
-    const weightFunction = new DeltaEWeightFunction(this.colors, this.deltaEFunction);
-    const clustering = new HierarchicalClustering(count, weightFunction);
-    const labels = clustering.label(this.colors);
-    const merged = this.swatches.reduce(
-      (merged: Map<number, Swatch>, swatch: Swatch, index: number): Map<number, Swatch> => {
-        const label = labels[index];
-        const previousSwatch = merged.get(label);
-        if (!previousSwatch || previousSwatch.population < swatch.population) {
-          merged.set(label, swatch);
-        }
+    const algorithm = new HierarchicalClustering((swatch1: Swatch, swatch2: Swatch): Distance => {
+      const color1 = swatch1.color.toLab();
+      const color2 = swatch2.color.toLab();
+      const delta = this.deltaEFunction.compute(color1, color2);
+      return toDistance(delta);
+    });
+    const dendrogram = algorithm.fit(this.swatches);
+    const labels = dendrogram.partition(Math.min(count, dendrogram.length));
+    const merged = labels.reduce((merged, label, index): Map<number, Swatch> => {
+      const swatch = this.swatches[index];
+      const previous = merged.get(label);
+      if (!previous) {
+        merged.set(label, swatch);
         return merged;
-      },
-      new Map<number, Swatch>(),
-    );
+      }
+
+      const population = previous.population + swatch.population;
+      const fraction = swatch.population / population;
+      const color = swatch.color.mix(previous.color, fraction);
+      if (fraction <= 0.5) {
+        merged.set(label, { color, population, coordinate: swatch.coordinate });
+      } else {
+        merged.set(label, { color, population, coordinate: previous.coordinate });
+      }
+      return merged;
+    }, new Map<number, Swatch>());
     return Array.from(merged.values());
   }
 
