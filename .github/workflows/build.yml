@@ -10,6 +10,7 @@ on:
     paths-ignore:
       - '*.md'
       - '*.txt'
+  workflow_dispatch:
 
 permissions:
   contents: read
