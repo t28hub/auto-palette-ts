@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { euclidean, Point2 } from '../../index';
 
-import { CenterInitializer, KmeansPlusPlusInitializer } from './centerInitializer';
+import { KmeansPlusPlusInitializer } from './initializer';
 
 const points: Point2[] = [
   [0, 0],
@@ -14,11 +14,6 @@ const points: Point2[] = [
 ];
 
 describe('KmeansPlusPlusInitializer', () => {
-  let initializer: CenterInitializer<Point2>;
-  beforeEach(() => {
-    initializer = new KmeansPlusPlusInitializer(euclidean);
-  });
-
   it.each([
     { count: 1, expected: 1 },
     { count: 2, expected: 2 },
@@ -27,6 +22,7 @@ describe('KmeansPlusPlusInitializer', () => {
     { count: 8, expected: 6 },
   ])('should choose initial $count point(s)', ({ count, expected }) => {
     // Act
+    const initializer = new KmeansPlusPlusInitializer(euclidean);
     const actual = initializer.initialize(points, count);
 
     // Assert
@@ -34,7 +30,10 @@ describe('KmeansPlusPlusInitializer', () => {
     expect(actual).toIncludeAnyMembers(points);
   });
 
-  it.each([{ k: -1 }, { k: 0 }, { k: NaN }])('should throw TypeError if k($k) is invalid', ({ k }) => {
+  it.each([{ k: -1 }, { k: 0 }, { k: NaN }])('should throw a TypeError if k($k) is invalid', ({ k }) => {
+    // Arrange
+    const initializer = new KmeansPlusPlusInitializer(euclidean);
+
     // Assert
     expect(() => {
       // Act

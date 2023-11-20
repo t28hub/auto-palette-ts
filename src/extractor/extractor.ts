@@ -69,6 +69,10 @@ export class Extractor {
       ]);
     }
 
+    if (pixels.length === 0) {
+      return [];
+    }
+
     // TODO: Merge similar colors after clustering.
     return this.clustering.fit(pixels).map((cluster: Cluster<Point5>): Swatch => {
       const pixel = cluster.computeCentroid();

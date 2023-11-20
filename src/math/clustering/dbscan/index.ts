@@ -12,19 +12,19 @@ const MARKED: Label = -2;
 const UNKNOWN: Label = -3;
 
 /**
- * Density-based spatial clustering of applications with noise implementation.
+ * Implementation of the DBSCAN (Density-Based Spatial Clustering of Applications with Noise) algorithm.
  *
  * @param P The type of point.
  * @see [Wikipedia - DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
  */
 export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   /**
-   * Create a new DBSCAN.
+   * Create a new DBSCAN instance.
    *
-   * @param minPoints The minimum size of cluster.
-   * @param radius The neighbors radius.
-   * @param distanceFunction The distance function.
-   * @throws {RangeError} if the given minPoint is less than 1.
+   * @param minPoints The minimum number of points required to form a cluster.
+   * @param radius The radius within which to search for neighboring points.
+   * @param distanceFunction The function to measure the distance between two points.
+   * @throws {RangeError} if the given minPoints is less than 1.
    * @throws {RangeError} if the given radius is less than 0.0.
    */
   constructor(
@@ -41,21 +41,25 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   }
 
   /**
-   * {@inheritDoc Clustering.fit}
+   * {@inheritDoc ClusteringAlgorithm.fit}
    */
   fit(points: P[]): Cluster<P>[] {
+    if (points.length === 0) {
+      throw new Error('The points array is empty');
+    }
+
     let label: Label = 0;
-    const nns = KDTreeSearch.build(points, this.distanceFunction);
+    const neighborSearch = KDTreeSearch.build(points, this.distanceFunction);
     const labels = new Array<Label>(points.length).fill(UNKNOWN);
     const clusters = new Map<Label, MutableCluster<P>>();
     points.forEach((point: P, index: number) => {
-      // Skip visited point.
+      // Skip if the point has already been visited.
       if (labels[index] !== UNKNOWN) {
         return;
       }
 
-      const neighbors = nns.searchRadius(point, this.radius);
-      // Mark as noise point
+      const neighbors = neighborSearch.searchRadius(point, this.radius);
+      // Mark as noise point if there are not enough neighbors.
       if (neighbors.length < this.minPoints) {
         labels[index] = NOISE;
         return;
@@ -63,15 +67,25 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
 
       labels[index] = label;
 
-      const cluster = this.buildCluster(nns, neighbors, labels, label);
+      const cluster = this.buildClusterAndUpdateLabels(neighborSearch, neighbors, labels, label);
       cluster.add(point);
       clusters.set(label++, cluster);
     });
     return Array.from(clusters.values());
   }
 
-  private buildCluster(
-    nns: NeighborSearch<P>,
+  /**
+   * Build a cluster and update labels
+   *
+   * @private
+   * @param neighborSearch The neighbor search instance.
+   * @param neighbors The neighbors of the current point.
+   * @param labels The labels of the points.
+   * @param label The label of the current cluster.
+   * @return The built cluster.
+   */
+  private buildClusterAndUpdateLabels(
+    neighborSearch: NeighborSearch<P>,
     neighbors: Neighbor<P>[],
     labels: Label[],
     label: Label,
@@ -105,7 +119,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
       labels[index] = label;
       points.add(neighbor.point);
 
-      const secondaryNeighbors = nns.searchRadius(neighbor.point, this.radius);
+      const secondaryNeighbors = neighborSearch.searchRadius(neighbor.point, this.radius);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
       }

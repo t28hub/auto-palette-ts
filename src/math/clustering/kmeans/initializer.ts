@@ -1,7 +1,7 @@
 import { Distance, DistanceFunction, Point, toDistance } from '../../index';
 
 /**
- * Interface to initialize center points.
+ * Interface for initializing center points for Kmeans algorithm.
  *
  * @param P The type of point.
  */
@@ -32,11 +32,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitial
   constructor(private readonly distanceFunction: DistanceFunction) {}
 
   /**
-   * Initialize center points.
-   *
-   * @param points The candidate points.
-   * @param k The number of center points.
-   * @return The initial center points.
+   * {@inheritDoc CenterInitializer.initialize}
    */
   initialize(points: P[], k: number): P[] {
     if (!Number.isInteger(k) || k <= 0) {

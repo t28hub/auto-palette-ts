@@ -25,7 +25,7 @@ const points: Point2[] = [
 
 describe('DBSCAN', () => {
   describe('constructor', () => {
-    it('should create a new DBSCAN', () => {
+    it('should create a new DBSCAN instance', () => {
       // Actual
       const actual = new DBSCAN(10, 2.5, euclidean);
 
@@ -33,7 +33,7 @@ describe('DBSCAN', () => {
       expect(actual).toBeDefined();
     });
 
-    it('should throw RangeError if minPoint < 1', () => {
+    it('should throw a RangeError if minPoint is less than 1', () => {
       // Assert
       expect(() => {
         // Actual
@@ -41,7 +41,7 @@ describe('DBSCAN', () => {
       }).toThrowError(RangeError);
     });
 
-    it('should throw RangeError if radius < 0.0', () => {
+    it('should throw a RangeError if radius is less than 0.0', () => {
       // Assert
       expect(() => {
         // Actual
@@ -51,11 +51,9 @@ describe('DBSCAN', () => {
   });
 
   describe('fit', () => {
-    it('should cluster the given points', () => {
-      // Arrange
-      const dbscan = new DBSCAN(4, 2.0, euclidean);
-
+    it('should cluster the provided points', () => {
       // Act
+      const dbscan = new DBSCAN(4, 2.0, euclidean);
       const actual = dbscan.fit(points);
 
       // Assert
@@ -92,6 +90,17 @@ describe('DBSCAN', () => {
           [4, 3],
         ],
       });
+    });
+
+    it('should throw an Error if the provided points array is empty', () => {
+      // Arrange
+      const dbscan = new DBSCAN(4, 2.0, euclidean);
+
+      // Assert
+      expect(() => {
+        // Act
+        dbscan.fit([]);
+      }).toThrowError(Error);
     });
   });
 });
