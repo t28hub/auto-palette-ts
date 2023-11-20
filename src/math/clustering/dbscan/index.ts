@@ -1,6 +1,6 @@
 import { ArrayQueue } from '../../../utils';
 import { DistanceFunction } from '../../distance';
-import { kdtree, Neighbor, NeighborSearch } from '../../nns';
+import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbors';
 import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster, MutableCluster } from '../cluster';
@@ -22,7 +22,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
    * Create a new DBSCAN.
    *
    * @param minPoints The minimum size of cluster.
-   * @param radius The nns radius.
+   * @param radius The neighbors radius.
    * @param distanceFunction The distance function.
    * @throws {RangeError} if the given minPoint is less than 1.
    * @throws {RangeError} if the given radius is less than 0.0.
@@ -45,7 +45,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
    */
   fit(points: P[]): Cluster<P>[] {
     let label: Label = 0;
-    const nns = kdtree(points, this.distanceFunction);
+    const nns = KDTreeSearch.build(points, this.distanceFunction);
     const labels = new Array<Label>(points.length).fill(UNKNOWN);
     const clusters = new Map<Label, MutableCluster<P>>();
     points.forEach((point: P, index: number) => {

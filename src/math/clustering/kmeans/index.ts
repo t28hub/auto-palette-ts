@@ -1,5 +1,5 @@
 import { DistanceFunction } from '../../distance';
-import { kdtree } from '../../nns';
+import { KDTreeSearch } from '../../neighbors';
 import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
@@ -73,7 +73,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
       return centroids;
     }, []);
 
-    const neighborSearch = kdtree(centroids, this.distanceFunction);
+    const neighborSearch = KDTreeSearch.build(centroids, this.distanceFunction);
     points.forEach((point: P) => {
       const neighbor = neighborSearch.searchNearest(point);
       const nearestCluster = clusters[neighbor.index];
