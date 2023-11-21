@@ -9,6 +9,8 @@ import { Neighbor, NeighborSearch } from '../search';
  * @param P The type of point.
  */
 export class LinearSearch<P extends Point> implements NeighborSearch<P> {
+  private readonly points: P[];
+
   /**
    * Create a new LinearSearch instance.
    *
@@ -17,12 +19,14 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * @throws {TypeError} if the provided points array is empty.
    */
   constructor(
-    private readonly points: P[],
+    points: P[],
     private readonly distanceFunction: DistanceFunction,
   ) {
     if (points.length === 0) {
       throw new TypeError('The points is empty');
     }
+    // Copy the points array to avoid side effects.
+    this.points = [...points];
   }
 
   /**

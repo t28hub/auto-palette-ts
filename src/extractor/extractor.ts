@@ -75,7 +75,7 @@ export class Extractor {
 
     // TODO: Merge similar colors after clustering.
     return this.clustering.fit(pixels).map((cluster: Cluster<Point5>): Swatch => {
-      const pixel = cluster.computeCentroid();
+      const pixel = cluster.getCentroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;

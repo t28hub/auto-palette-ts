@@ -1,26 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import { euclidean, Point2 } from '../../index';
+import { euclidean, Point2, Vector } from '../../index';
 
 import { DBSCAN } from './index';
 
 const points: Point2[] = [
-  [0, 0],
-  [0, 1],
-  [0, 7],
-  [0, 8],
-  [1, 0],
-  [1, 1],
-  [1, 2],
-  [1, 7],
-  [1, 8],
-  [2, 1],
-  [2, 2],
-  [4, 3],
-  [4, 4],
-  [4, 5],
-  [5, 3],
-  [5, 4],
+  [0, 0], // 0
+  [0, 1], // 0
+  [0, 7], // 1
+  [0, 8], // 1
+  [1, 0], // 0
+  [1, 1], // 0
+  [1, 2], // 0
+  [1, 7], // 1
+  [1, 8], // 1
+  [2, 1], // 0
+  [2, 2], // 0
+  [4, 3], // 2
+  [4, 4], // 2
+  [4, 5], // 2
+  [5, 3], // 2
+  [5, 4], // 2
+  [9, 8], // Outlier
 ];
 
 describe('DBSCAN', () => {
@@ -58,37 +59,20 @@ describe('DBSCAN', () => {
 
       // Assert
       expect(actual).toHaveLength(3);
-      expect(actual[0].size).toEqual(8);
+      expect(actual[0].size).toEqual(7);
       expect(actual[0]).toMatchObject({
-        points: [
-          [1, 0],
-          [0, 1],
-          [0, 0],
-          [1, 1],
-          [1, 2],
-          [2, 1],
-          [2, 2],
-          [0, 0],
-        ],
+        centroid: new Vector([1, 1]),
+        memberships: new Set([0, 1, 4, 5, 6, 9, 10]),
       });
       expect(actual[1].size).toEqual(4);
       expect(actual[1]).toMatchObject({
-        points: [
-          [1, 8],
-          [0, 8],
-          [1, 7],
-          [0, 7],
-        ],
+        centroid: new Vector([0.5, 7.5]),
+        memberships: new Set([2, 3, 7, 8]),
       });
       expect(actual[2].size).toEqual(5);
       expect(actual[2]).toMatchObject({
-        points: [
-          [5, 3],
-          [4, 5],
-          [4, 4],
-          [5, 4],
-          [4, 3],
-        ],
+        centroid: new Vector([4.4, 3.8000000000000003]),
+        memberships: new Set([11, 12, 13, 14, 15]),
       });
     });
 

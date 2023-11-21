@@ -11,6 +11,8 @@ import { Node } from './node';
  * @param P The type of point.
  */
 export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
+  private readonly points: P[];
+
   /**
    * Create a new KDTreeSearch instance.
    *
@@ -22,9 +24,12 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    */
   private constructor(
     private readonly root: Node,
-    private readonly points: P[],
+    points: P[],
     private readonly distanceFunction: DistanceFunction,
-  ) {}
+  ) {
+    // Copy the points array to avoid side effects.
+    this.points = [...points];
+  }
 
   /**
    * {@inheritDoc NeighborSearch.search}

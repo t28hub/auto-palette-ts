@@ -4,7 +4,6 @@ import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
-import { KmeansCluster } from './cluster';
 import { CenterInitializer, KmeansPlusPlusInitializer } from './initializer';
 
 export { type CenterInitializer, KmeansPlusPlusInitializer } from './initializer';
@@ -53,16 +52,16 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     }
 
     if (points.length <= this.k) {
-      return points.map((point: P, index: number): KmeansCluster<P> => {
-        const cluster = new KmeansCluster(index, point, this.distanceFunction);
-        cluster.add(point);
+      return points.map((point: P, index: number): Cluster<P> => {
+        const cluster = new Cluster(point);
+        cluster.addMember(index, point);
         return cluster;
       });
     }
 
     const clusters = this.centerInitializer
       .initialize(points, this.k)
-      .map((center: P, index: number): KmeansCluster<P> => new KmeansCluster(index, center, this.distanceFunction));
+      .map((centroid: P): Cluster<P> => new Cluster(centroid));
     for (let i = 0; i < this.maxIterations; i++) {
       const updated = this.iterate(clusters, points);
       if (!updated) {
@@ -79,47 +78,40 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
    * @param points The points to cluster.
    * @returns Whether any cluster was updated.
    */
-  private iterate(clusters: KmeansCluster<P>[], points: P[]): boolean {
-    const centroids = this.computeNewCentroids(clusters);
-    this.assignPoints(clusters, points, centroids);
+  private iterate(clusters: Cluster<P>[], points: P[]): boolean {
+    const centroids = new Array<P>(clusters.length);
+    clusters.forEach((cluster: Cluster<P>, index: number) => {
+      centroids[index] = cluster.getCentroid();
+      cluster.clear();
+    });
+    this.assignPoints(clusters, centroids, points);
 
     let updated = false;
-    clusters.forEach((cluster: KmeansCluster<P>) => {
-      const difference = cluster.updateCentroid();
+    clusters.forEach((cluster: Cluster<P>, index: number) => {
+      const oldCentroid = centroids[index];
+      const newCentroid = cluster.getCentroid();
+      const difference = this.distanceFunction(oldCentroid, newCentroid);
       if (difference >= this.tolerance) {
         updated = true;
       }
-    }, 0.0);
+    });
     return updated;
-  }
-
-  /**
-   * Computes new centroids for the given clusters.
-   *
-   * @param clusters The clusters for which to compute new centroids.
-   * @returns The new centroids.
-   */
-  private computeNewCentroids(clusters: KmeansCluster<P>[]): P[] {
-    return clusters.reduce((centroids: P[], cluster: KmeansCluster<P>) => {
-      centroids.push(cluster.computeCentroid());
-      cluster.clear();
-      return centroids;
-    }, []);
   }
 
   /**
    * Assigns each point to the nearest cluster.
    *
    * @param clusters The clusters to which to assign points.
-   * @param points The points to assign.
    * @param centroids The centroids of the clusters.
+   * @param points The points to assign.
    */
-  private assignPoints(clusters: KmeansCluster<P>[], points: P[], centroids: P[]): void {
+  private assignPoints(clusters: Cluster<P>[], centroids: P[], points: P[]): void {
     const neighborSearch = KDTreeSearch.build(centroids, this.distanceFunction);
-    points.forEach((point: P) => {
+    // const neighborSearch = new LinearSearch(centroids, this.distanceFunction);
+    points.forEach((point: P, index: number) => {
       const neighbor = neighborSearch.searchNearest(point);
       const nearestCluster = clusters[neighbor.index];
-      nearestCluster.add(point);
+      nearestCluster.addMember(index, point);
     });
   }
 }

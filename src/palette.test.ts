@@ -83,9 +83,9 @@ describe('Palette', () => {
 
   describe('extract', () => {
     it('should extract a new Palette from image', async () => {
-      const imageData = await loadImageData('flag_gr.png');
+      const imageData = await loadImageData('flag_za.png');
       const actual = Palette.extract(imageData);
-      actual.getSwatches(2).forEach((swatch) => {
+      actual.getSwatches(6).forEach((swatch) => {
         console.info({
           color: swatch.color.toString(),
           population: swatch.population,
