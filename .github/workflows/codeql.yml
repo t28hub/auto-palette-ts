@@ -21,14 +21,14 @@ jobs:
       matrix:
         language: ['javascript']
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
+      - name: Initialize CodeQL for ${{ matrix.language }}
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
-      - name: Run CodeQL Analysis
+      - name: Run CodeQL analysis for ${{ matrix.language }}
         uses: github/codeql-action/analyze@v2
         with:
           category: '/language:${{matrix.language}}'

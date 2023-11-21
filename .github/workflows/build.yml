@@ -21,17 +21,17 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x, 20.x]
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
+      - name: Set up pnpm
         uses: pnpm/action-setup@v2
         with:
           version: '8.x'
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Set up Node.js with ${{ matrix.node-version }} version
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -41,22 +41,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Check code syntax
+      - name: Check the syntax of the code
         run: pnpm lint
 
-      - name: Run unit test
+      - name: Run the unit tests
         run: pnpm test
 
-      - name: Build project
+      - name: Build the project
         run: pnpm build
 
-      - name: Upload module files
+      - name: Upload the built module files
         uses: actions/upload-artifact@v3
         with:
           name: modules
           path: dist/
 
-      - name: Upload coverage reports
+      - name: Upload the coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
