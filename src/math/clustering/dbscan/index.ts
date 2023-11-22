@@ -1,6 +1,6 @@
 import { ArrayQueue } from '../../../utils';
 import { DistanceFunction } from '../../distance';
-import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbors';
+import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbor';
 import { Point } from '../../point';
 import { Vector } from '../../vector';
 import { ClusteringAlgorithm } from '../algorithm';
@@ -65,11 +65,11 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         return;
       }
 
-      neighbors.forEach((neighbor: Neighbor<P>) => {
+      neighbors.forEach((neighbor: Neighbor) => {
         const index = neighbor.index;
         labels[index] = MARKED;
       });
-      this.expandCluster(label++, labels, neighbors, neighborSearch);
+      this.expandCluster(label++, labels, points, neighbors, neighborSearch);
     });
 
     const clusters = new Map<Label, Cluster<P>>();
@@ -97,10 +97,17 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
    * @private
    * @param label The label of the current cluster.
    * @param labels The labels of the points.
+   * @param points The points to be clustered.
    * @param neighbors The neighbors of the current point.
    * @param neighborSearch The neighbor search instance.
    */
-  private expandCluster(label: Label, labels: Label[], neighbors: Neighbor<P>[], neighborSearch: NeighborSearch<P>) {
+  private expandCluster(
+    label: Label,
+    labels: Label[],
+    points: P[],
+    neighbors: Neighbor[],
+    neighborSearch: NeighborSearch<P>,
+  ) {
     const queue = new ArrayQueue(...neighbors);
     while (!queue.isEmpty) {
       const neighbor = queue.pop();
@@ -108,8 +115,8 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         continue;
       }
 
-      // Skip if the point has already been assigned a label.
       if (labels[neighbor.index] > 0) {
+        // Skip if the point has already been assigned a label.
         continue;
       }
 
@@ -120,12 +127,13 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
 
       labels[neighbor.index] = label;
 
-      const secondaryNeighbors = neighborSearch.searchRadius(neighbor.point, this.radius);
+      const neighborPoint = points[neighbor.index];
+      const secondaryNeighbors = neighborSearch.searchRadius(neighborPoint, this.radius);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
       }
 
-      secondaryNeighbors.forEach((secondaryNeighbor: Neighbor<P>) => {
+      secondaryNeighbors.forEach((secondaryNeighbor: Neighbor) => {
         const secondaryIndex = secondaryNeighbor.index;
         const secondaryLabel = labels[secondaryIndex];
         if (secondaryLabel === UNDEFINED) {

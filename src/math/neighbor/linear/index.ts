@@ -32,12 +32,12 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.search}
    */
-  search(query: P, k: number): Neighbor<P>[] {
+  search(query: P, k: number): Neighbor[] {
     if (k < 1) {
       throw new RangeError(`The k is less than 1: ${k}`);
     }
 
-    const queue = new PriorityQueue((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): Ordering => {
+    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
       if (neighbor1.distance < neighbor2.distance) {
         return 1;
       }
@@ -50,14 +50,14 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
     this.points.forEach((point: P, index: number) => {
       const distance = this.distanceFunction(point, query);
       if (queue.size < k) {
-        queue.push({ index, point, distance });
+        queue.push({ index, distance });
         return;
       }
 
       const neighbor = queue.peek();
       if (neighbor && distance < neighbor.distance) {
         queue.pop();
-        queue.push({ index, point, distance });
+        queue.push({ index, distance });
       }
     });
     return this.extractNeighbors(queue, k);
@@ -66,10 +66,9 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.searchNearest}
    */
-  searchNearest(query: P): Neighbor<P> {
-    const nearest: Mutable<Neighbor<P>> = {
+  searchNearest(query: P): Neighbor {
+    const nearest: Mutable<Neighbor> = {
       index: 0,
-      point: this.points[0],
       distance: this.distanceFunction(this.points[0], query),
     };
     this.points.forEach((point: P, index: number) => {
@@ -80,7 +79,6 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
       const distance = this.distanceFunction(point, query);
       if (distance < nearest.distance) {
         nearest.index = index;
-        nearest.point = point;
         nearest.distance = distance;
       }
     });
@@ -90,20 +88,20 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.searchRadius}
    */
-  searchRadius(query: P, radius: number): Neighbor<P>[] {
+  searchRadius(query: P, radius: number): Neighbor[] {
     if (radius < 0.0) {
       throw new RangeError(`The given radius is not positive: ${radius}`);
     }
 
-    const neighbors = new Array<Neighbor<P>>();
+    const neighbors = new Array<Neighbor>();
     this.points.forEach((point: P, index: number) => {
       const distance = this.distanceFunction(point, query);
       if (distance <= radius) {
-        neighbors.push({ index, point, distance });
+        neighbors.push({ index, distance });
       }
     });
 
-    return neighbors.sort((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): number => {
+    return neighbors.sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
       return neighbor1.distance - neighbor2.distance;
     });
   }
@@ -116,8 +114,8 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * @param k The number of neighbors to be extracted.
    * @return The extracted neighbors.
    */
-  private extractNeighbors(queue: Queue<Neighbor<P>>, k: number): Neighbor<P>[] {
-    const neighbors = new Array<Neighbor<P>>();
+  private extractNeighbors(queue: Queue<Neighbor>, k: number): Neighbor[] {
+    const neighbors = new Array<Neighbor>();
     while (neighbors.length < k) {
       const neighbor = queue.pop();
       if (!neighbor) {

@@ -46,17 +46,14 @@ describe('LinearSearch', () => {
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
         index: 5,
-        point: [4, 4],
         distance: 0,
       });
       expect(actual[1]).toMatchObject({
         index: 6,
-        point: [4, 3],
         distance: 1,
       });
       expect(actual[2]).toMatchObject({
         index: 4,
-        point: [3, 4],
         distance: 1,
       });
     });
@@ -70,7 +67,6 @@ describe('LinearSearch', () => {
       expect(actual).toHaveLength(points.length);
       expect(actual[0]).toMatchObject({
         index: 8,
-        point: [4, 5],
         distance: 1,
       });
     });
@@ -96,7 +92,6 @@ describe('LinearSearch', () => {
       // Assert
       expect(actual).toMatchObject({
         index: 3,
-        point: [2, 2],
         distance: 1.0,
       });
     });
@@ -109,7 +104,6 @@ describe('LinearSearch', () => {
       // Assert
       expect(actual).toMatchObject({
         index: 5,
-        point: [4, 4],
         distance: 0.0,
       });
     });
@@ -125,12 +119,10 @@ describe('LinearSearch', () => {
       expect(actual).toHaveLength(2);
       expect(actual[0]).toMatchObject({
         index: 4,
-        point: [3, 4],
         distance: 1,
       });
       expect(actual[1]).toMatchObject({
         index: 8,
-        point: [4, 5],
         distance: 1,
       });
     });

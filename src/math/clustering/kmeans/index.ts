@@ -1,5 +1,5 @@
 import { DistanceFunction } from '../../distance';
-import { KDTreeSearch } from '../../neighbors';
+import { KDTreeSearch } from '../../neighbor';
 import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';

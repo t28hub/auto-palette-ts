@@ -34,12 +34,12 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.search}
    */
-  search(query: P, k: number): Neighbor<P>[] {
+  search(query: P, k: number): Neighbor[] {
     if (k < 1) {
       throw new RangeError(`The k is less than 1: ${k}`);
     }
 
-    const queue = new PriorityQueue((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): Ordering => {
+    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
       if (neighbor1.distance < neighbor2.distance) {
         return -1;
       }
@@ -49,7 +49,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
       return 0;
     });
     this.searchRecursively(this.root, query, k, queue);
-    return this.extractNeighbors(queue, k).sort((neighbor1: Neighbor<P>, neighbor2: Neighbor<P>): number => {
+    return this.extractNeighbors(queue, k).sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
       return neighbor1.distance - neighbor2.distance;
     });
   }
@@ -57,11 +57,11 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.searchNearest}
    */
-  searchNearest(query: P): Neighbor<P> {
+  searchNearest(query: P): Neighbor {
     // Do not need to check whether the points are empty, since size of points is checked when constructing the Index.
     const point = this.points[0];
     const distance = this.distanceFunction(query, point);
-    const result: Mutable<Neighbor<P>> = { index: 0, point, distance };
+    const result: Mutable<Neighbor> = { index: 0, distance };
     this.nearestRecursively(this.root, query, result);
     return result;
   }
@@ -69,12 +69,12 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
   /**
    * {@inheritDoc NeighborSearch.searchRadius}
    */
-  searchRadius(query: P, radius: number): Neighbor<P>[] {
+  searchRadius(query: P, radius: number): Neighbor[] {
     if (radius <= 0.0) {
       throw new RangeError(`The radius is not positive number: ${radius}`);
     }
 
-    const result = new Array<Neighbor<P>>();
+    const result = new Array<Neighbor>();
     this.rangeRecursively(this.root, query, radius, result);
     return result;
   }
@@ -87,7 +87,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param query The query point.
    * @param neighbor The current nearest neighbor.
    */
-  private nearestRecursively(node: Node | undefined, query: P, neighbor: Mutable<Neighbor<P>>) {
+  private nearestRecursively(node: Node | undefined, query: P, neighbor: Mutable<Neighbor>) {
     if (!node) {
       return;
     }
@@ -102,7 +102,6 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
       const distance = this.distanceFunction(query, point);
       if (distance < neighbor.distance) {
         neighbor.index = index;
-        neighbor.point = point;
         neighbor.distance = distance;
       }
       return;
@@ -128,7 +127,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param k The number of nearest neighbors to find.
    * @param neighbors The current nearest neighbors.
    */
-  private searchRecursively(node: Node | undefined, query: P, k: number, neighbors: Queue<Neighbor<P>>) {
+  private searchRecursively(node: Node | undefined, query: P, k: number, neighbors: Queue<Neighbor>) {
     if (!node) {
       return;
     }
@@ -136,7 +135,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     const index = node.index;
     const point = this.points[index];
     const distance = this.distanceFunction(query, point);
-    neighbors.push({ index, point, distance });
+    neighbors.push({ index, distance });
     if (node.isLeaf) {
       return;
     }
@@ -162,7 +161,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param radius The search radius.
    * @param neighbors The current neighbors within the radius.
    */
-  private rangeRecursively(node: Node | undefined, query: P, radius: number, neighbors: Neighbor<P>[]) {
+  private rangeRecursively(node: Node | undefined, query: P, radius: number, neighbors: Neighbor[]) {
     if (!node) {
       return;
     }
@@ -170,7 +169,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     const point = this.points[node.index];
     const distance = this.distanceFunction(query, point);
     if (distance <= radius) {
-      neighbors.push({ index: node.index, point, distance });
+      neighbors.push({ index: node.index, distance });
     }
 
     const delta = query[node.axis] - point[node.axis];
@@ -192,8 +191,8 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param k The number of neighbors to be extracted.
    * @return The extracted neighbors.
    */
-  private extractNeighbors(queue: Queue<Neighbor<P>>, k: number): Neighbor<P>[] {
-    const neighbors = new Array<Neighbor<P>>();
+  private extractNeighbors(queue: Queue<Neighbor>, k: number): Neighbor[] {
+    const neighbors = new Array<Neighbor>();
     while (neighbors.length < k) {
       const neighbor = queue.pop();
       if (!neighbor) {

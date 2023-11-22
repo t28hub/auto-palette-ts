@@ -3,19 +3,12 @@ import { Point } from '../point';
 
 /**
  * Type representing the result of a nearest neighbor search.
- *
- * @param P The type of point.
  */
-export interface Neighbor<P extends Point> {
+export interface Neighbor {
   /**
    * The index of this neighbor.
    */
   readonly index: number;
-
-  /**
-   * The point of this neighbor.
-   */
-  readonly point: P;
 
   /**
    * The distance from the query point to this neighbor.
@@ -36,7 +29,7 @@ export interface NeighborSearch<P extends Point> {
    * @param k The number of nearest neighbors to search for.
    * @return An array of the k nearest neighbors.
    */
-  search(query: P, k: number): Neighbor<P>[];
+  search(query: P, k: number): Neighbor[];
 
   /**
    * Search for the nearest neighbor to a given query.
@@ -44,7 +37,7 @@ export interface NeighborSearch<P extends Point> {
    * @param query The query point.
    * @return The nearest neighbor.
    */
-  searchNearest(query: P): Neighbor<P>;
+  searchNearest(query: P): Neighbor;
 
   /**
    * Search for neighbors within a given radius from a query point.
@@ -53,5 +46,5 @@ export interface NeighborSearch<P extends Point> {
    * @param radius The radius of the search range.
    * @return An array of neighbors within the given radius.
    */
-  searchRadius(query: P, radius: number): Neighbor<P>[];
+  searchRadius(query: P, radius: number): Neighbor[];
 }

@@ -51,17 +51,14 @@ describe('KDTree', () => {
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
         index: 13,
-        point: [4, 5, 4],
         distance: 2.8284271247461903,
       });
       expect(actual[1]).toMatchObject({
         index: 12,
-        point: [2, 3, 4],
         distance: 2.8284271247461903,
       });
       expect(actual[2]).toMatchObject({
         index: 0,
-        point: [1, 2, 3],
         distance: 4.358898943540674,
       });
     });
@@ -75,7 +72,6 @@ describe('KDTree', () => {
       expect(actual).toHaveLength(points.length);
       expect(actual[0]).toMatchObject({
         index: 13,
-        point: [4, 5, 4],
         distance: 3.1622776601683795,
       });
     });
@@ -101,7 +97,6 @@ describe('KDTree', () => {
       // Assert
       expect(actual).toMatchObject({
         index: 8,
-        point: [7, 2, 2],
         distance: 3.0,
       });
     });
@@ -114,7 +109,6 @@ describe('KDTree', () => {
       // Assert
       expect(actual).toMatchObject({
         index: 6,
-        point: [5, 0, 0],
         distance: 0.0,
       });
     });
@@ -130,12 +124,10 @@ describe('KDTree', () => {
       expect(actual).toHaveLength(2);
       expect(actual[0]).toMatchObject({
         index: 12,
-        point: [2, 3, 4],
         distance: 2.8284271247461903,
       });
       expect(actual[1]).toMatchObject({
         index: 13,
-        point: [4, 5, 4],
         distance: 2.8284271247461903,
       });
     });
