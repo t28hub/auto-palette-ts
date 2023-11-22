@@ -50,8 +50,9 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     }
 
     let label: Label = 0;
-    const neighborSearch = KDTreeSearch.build(points, this.distanceFunction);
     const labels = new Array<Label>(points.length).fill(UNDEFINED);
+    const clusters = new Array<Cluster<P>>();
+    const neighborSearch = KDTreeSearch.build(points, this.distanceFunction);
     points.forEach((point: P, index: number) => {
       // Skip if the point has already been visited.
       if (labels[index] !== UNDEFINED) {
@@ -69,26 +70,14 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         const index = neighbor.index;
         labels[index] = MARKED;
       });
-      this.expandCluster(label++, labels, points, neighbors, neighborSearch);
-    });
 
-    const clusters = new Map<Label, Cluster<P>>();
-    labels.forEach((label: Label, index: number) => {
-      if (label === OUTLIER) {
-        return;
+      const cluster = this.expandCluster(label, labels, points, neighbors, neighborSearch);
+      if (cluster.size >= this.minPoints) {
+        clusters.push(cluster);
       }
-      if (label === UNDEFINED || label === MARKED) {
-        throw new Error(`The label(${label}) of point(${index}) is invalid`);
-      }
-
-      let cluster = clusters.get(label);
-      if (!cluster) {
-        cluster = new Cluster(new Vector(points[index]).setZero());
-        clusters.set(label, cluster);
-      }
-      cluster.addMember(index, points[index]);
+      label++;
     });
-    return Array.from(clusters.values());
+    return clusters;
   }
 
   /**
@@ -107,7 +96,9 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     points: P[],
     neighbors: Neighbor[],
     neighborSearch: NeighborSearch<P>,
-  ) {
+  ): Cluster<P> {
+    const centroid = new Vector(points[0]).setZero();
+    const cluster = new Cluster<P>(centroid);
     const queue = new ArrayQueue(...neighbors);
     while (!queue.isEmpty) {
       const neighbor = queue.pop();
@@ -115,19 +106,22 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         continue;
       }
 
-      if (labels[neighbor.index] > 0) {
+      const neighborIndex = neighbor.index;
+      const neighborPoint = points[neighborIndex];
+      if (labels[neighborIndex] > 0) {
         // Skip if the point has already been assigned a label.
         continue;
       }
 
-      if (labels[neighbor.index] === OUTLIER) {
-        labels[neighbor.index] = label;
+      if (labels[neighborIndex] === OUTLIER) {
+        labels[neighborIndex] = label;
+        cluster.addMember(neighborIndex, neighborPoint);
         continue;
       }
 
-      labels[neighbor.index] = label;
+      labels[neighborIndex] = label;
+      cluster.addMember(neighborIndex, neighborPoint);
 
-      const neighborPoint = points[neighbor.index];
       const secondaryNeighbors = neighborSearch.searchRadius(neighborPoint, this.radius);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
@@ -144,5 +138,6 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         }
       });
     }
+    return cluster;
   }
 }
