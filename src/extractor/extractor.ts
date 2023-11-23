@@ -1,6 +1,6 @@
 import { lab, parse, rgb } from '../color';
 import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
-import { Cluster, ClusteringAlgorithm, Point5 } from '../math';
+import { Cluster, ClusteringAlgorithm, DBSCAN, euclidean, Point3, Point5 } from '../math';
 import { ColorSpace, Lab, RGB, Swatch } from '../types';
 
 import { ColorFilter, composite } from './filter';
@@ -49,7 +49,7 @@ export class Extractor {
         opacity: data[i + 3] / 0xff,
       };
 
-      // Exclude colors with high opacity
+      // Exclude colors that do not meet the filter criteria.
       if (!this.filter.test(color)) {
         continue;
       }
@@ -59,7 +59,7 @@ export class Extractor {
       const x = Math.floor((i / 4) % width);
       const y = Math.floor((i / 4 / width) % height);
 
-      // Normalize each value to a range of [0, 1].
+      // Normalize each value to a range of [0, 1] for better clustering.
       pixels.push([
         (l - MIN_L) / (MAX_L - MIN_L),
         (a - MIN_A) / (MAX_A - MIN_A),
@@ -73,24 +73,64 @@ export class Extractor {
       return [];
     }
 
-    // TODO: Merge similar colors after clustering.
-    return this.clustering.fit(pixels).map((cluster: Cluster<Point5>): Swatch => {
+    const pixelCluster = this.clustering.fit(pixels);
+    if (pixelCluster.length === 0) {
+      return [];
+    }
+
+    const colors = pixelCluster.map((cluster: Cluster<Point5>): Point3 => {
       const pixel = cluster.getCentroid();
       const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
       const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
       const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;
-      const x = Math.round(pixel[3] * width);
-      const y = Math.round(pixel[4] * height);
-
-      const packed = this.lab.encode({ l, a, b, opacity: 1.0 });
-      return {
-        color: parse(packed),
-        population: cluster.size,
-        coordinate: {
-          x,
-          y,
-        },
-      };
+      return [l, a, b];
     });
+    const dbscan = new DBSCAN<Point3>(1, 2.3, euclidean);
+    const colorClusters = dbscan.fit(colors);
+
+    return colorClusters.map((cluster: Cluster<Point3>): Swatch => {
+      const [l, a, b, x, y, population] = Extractor.createSwatch(cluster, pixelCluster);
+      const lab = {
+        l: l * (MAX_L - MIN_L) + MIN_L,
+        a: a * (MAX_A - MIN_A) + MIN_A,
+        b: b * (MAX_B - MIN_B) + MIN_B,
+        opacity: 1.0,
+      };
+      const color = parse(this.lab.encode(lab));
+      const coordinate = {
+        x: Math.floor(x * width),
+        y: Math.floor(y * height),
+      };
+      return { color, coordinate, population };
+    });
+  }
+
+  private static createSwatch(colorCluster: Cluster<Point3>, pixelClusters: Cluster<Point5>[]): number[] {
+    const bestSwatch = {
+      l: 0.0,
+      a: 0.0,
+      b: 0.0,
+      x: 0.0,
+      y: 0.0,
+      size: 0.0,
+    };
+    let population = 0;
+    colorCluster.getMemberships().forEach((index: number) => {
+      const pixelCluster = pixelClusters[index];
+      const fraction = pixelCluster.size / (pixelCluster.size + bestSwatch.size);
+
+      const [l, a, b, x, y] = pixelCluster.getCentroid();
+      bestSwatch.l += (l - bestSwatch.l) * fraction;
+      bestSwatch.a += (a - bestSwatch.a) * fraction;
+      bestSwatch.b += (b - bestSwatch.b) * fraction;
+
+      if (fraction >= 0.5) {
+        bestSwatch.x = x;
+        bestSwatch.y = y;
+        bestSwatch.size = pixelCluster.size;
+      }
+      population += pixelCluster.size;
+    });
+    return [bestSwatch.l, bestSwatch.a, bestSwatch.b, bestSwatch.x, bestSwatch.y, population];
   }
 }

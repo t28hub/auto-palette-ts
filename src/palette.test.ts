@@ -83,8 +83,13 @@ describe('Palette', () => {
 
   describe('extract', () => {
     it('should extract a new Palette from image', async () => {
+      // Act
       const imageData = await loadImageData('flag_za.png');
       const actual = Palette.extract(imageData);
+
+      // Assert
+      expect(actual.isEmpty()).toBeFalsy();
+      expect(actual.size()).toEqual(6);
       actual.getSwatches(6).forEach((swatch) => {
         console.info({
           color: swatch.color.toString(),

@@ -28,6 +28,15 @@ export class Palette {
   }
 
   /**
+   * Return the size of swatches.
+   *
+   * @return The size of swatches.
+   */
+  size(): number {
+    return this.swatches.length;
+  }
+
+  /**
    * Checks if the palette is empty.
    *
    * @return True if the palette is empty, false otherwise.

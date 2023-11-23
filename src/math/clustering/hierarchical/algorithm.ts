@@ -90,8 +90,8 @@ export class HierarchicalClustering<T> {
         const distance1 = matrix.get(i, step.label);
         const distance2 = matrix.get(j, step.label);
 
-        // Single linkage
-        const distance = Math.min(distance1, distance2);
+        // Complete linkage
+        const distance = Math.max(distance1, distance2);
         matrix.set(label, step.label, distance);
         queue.push({ i: label, j: step.label, distance });
 
