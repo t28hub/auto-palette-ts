@@ -1,4 +1,7 @@
-import { clamp, radianToDegree } from '../math';
+import { radianToDegree } from '../math';
+
+import { CIELabSpace, XYZSpace } from './space';
+import { RGB } from './types';
 
 /**
  * Class representing a color in the CIELAB color space.
@@ -19,9 +22,9 @@ export class Color {
     if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
       throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
     }
-    this.l = clamp(l, 0, 100);
-    this.a = clamp(a, -128, 127);
-    this.b = clamp(b, -128, 127);
+    this.l = CIELabSpace.clampL(l);
+    this.a = CIELabSpace.clampA(a);
+    this.b = CIELabSpace.clampB(b);
   }
 
   /**
@@ -69,5 +72,15 @@ export class Color {
    */
   hue() {
     return radianToDegree(Math.atan2(this.b, this.a));
+  }
+
+  /**
+   * Convert the color to RGB color space.
+   *
+   * @returns The color in RGB color space.
+   */
+  toRGB(): RGB {
+    const xyz = CIELabSpace.toXYZ({ l: this.l, a: this.a, b: this.b });
+    return XYZSpace.toRGB(xyz);
   }
 }

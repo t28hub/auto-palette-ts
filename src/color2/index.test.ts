@@ -121,4 +121,24 @@ describe('Color', () => {
       expect(actual).toBe(90);
     });
   });
+
+  describe('toRGB', () => {
+    it.each([
+      { l: 0, a: 0, b: 0, expected: { r: 0, g: 0, b: 0 } }, // Black
+      { l: 100, a: 0, b: 0, expected: { r: 255, g: 255, b: 255 } }, // White
+      { l: 53.2371, a: 80.1106, b: 67.2237, expected: { r: 255, g: 0, b: 0 } }, // Red
+      { l: 87.7355, a: -86.1822, b: 83.1866, expected: { r: 0, g: 255, b: 0 } }, // Green
+      { l: 32.3008, a: 79.1952, b: -107.8554, expected: { r: 0, g: 0, b: 255 } }, // Blue
+      { l: 91.1132, a: -48.0875, b: -14.1312, expected: { r: 0, g: 255, b: 255 } }, // Cyan
+      { l: 60.3242, a: 98.2557, b: -60.8249, expected: { r: 255, g: 0, b: 255 } }, // Magenta
+      { l: 97.1393, a: -21.5537, b: 94.4896, expected: { r: 255, g: 255, b: 0 } }, // Yellow
+    ])('should convert color($l, $a, $b%) to RGB($expected)', ({ l, a, b, expected }) => {
+      // Act
+      const color = new Color(l, a, b);
+      const actual = color.toRGB();
+
+      // Assert
+      expect(actual).toMatchObject(expected);
+    });
+  });
 });
