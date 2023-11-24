@@ -1,6 +1,6 @@
 import { radianToDegree } from '../math';
 
-import { CIELabSpace, XYZSpace } from './space';
+import { CIELabSpace, RGBSpace, XYZSpace } from './space';
 import { RGB } from './types';
 
 /**
@@ -82,5 +82,15 @@ export class Color {
   toRGB(): RGB {
     const xyz = CIELabSpace.toXYZ({ l: this.l, a: this.a, b: this.b });
     return XYZSpace.toRGB(xyz);
+  }
+
+  /**
+   * Convert the color to hex decimal string.
+   *
+   * @returns The color in hex decimal string.
+   */
+  toHexString(): string {
+    const rgb = this.toRGB();
+    return RGBSpace.toHexString(rgb);
   }
 }

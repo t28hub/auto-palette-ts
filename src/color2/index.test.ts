@@ -96,7 +96,7 @@ describe('Color', () => {
       const actual = color.luminance;
 
       // Assert
-      expect(actual).toBe(50);
+      expect(actual).toEqual(50);
     });
   });
 
@@ -107,7 +107,7 @@ describe('Color', () => {
       const actual = color.chroma();
 
       // Assert
-      expect(actual).toBe(5);
+      expect(actual).toEqual(5);
     });
   });
 
@@ -118,7 +118,7 @@ describe('Color', () => {
       const actual = color.hue();
 
       // Assert
-      expect(actual).toBe(90);
+      expect(actual).toEqual(90);
     });
   });
 
@@ -139,6 +139,26 @@ describe('Color', () => {
 
       // Assert
       expect(actual).toMatchObject(expected);
+    });
+  });
+
+  describe('toHexString', () => {
+    it.each([
+      { l: 0, a: 0, b: 0, expected: '#000000' }, // Black
+      { l: 100, a: 0, b: 0, expected: '#ffffff' }, // White
+      { l: 53.2371, a: 80.1106, b: 67.2237, expected: '#ff0000' }, // Red
+      { l: 87.7355, a: -86.1822, b: 83.1866, expected: '#00ff00' }, // Green
+      { l: 32.3008, a: 79.1952, b: -107.8554, expected: '#0000ff' }, // Blue
+      { l: 91.1132, a: -48.0875, b: -14.1312, expected: '#00ffff' }, // Cyan
+      { l: 60.3242, a: 98.2557, b: -60.8249, expected: '#ff00ff' }, // Magenta
+      { l: 97.1393, a: -21.5537, b: 94.4896, expected: '#ffff00' }, // Yellow
+    ])('should convert color($l, $a, $b) to hex decimal string($expected)', ({ l, a, b, expected }) => {
+      // Act
+      const color = new Color(l, a, b);
+      const actual = color.toHexString();
+
+      // Assert
+      expect(actual).toEqual(expected);
     });
   });
 });
