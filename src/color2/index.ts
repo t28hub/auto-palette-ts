@@ -1,7 +1,7 @@
 import { radianToDegree } from '../math';
 
-import { CIELabSpace, RGBSpace, XYZSpace } from './space';
-import { RGB } from './types';
+import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
+import { HSL, RGB } from './types';
 
 /**
  * Class representing a color in the CIELAB color space.
@@ -82,6 +82,16 @@ export class Color {
   toRGB(): RGB {
     const xyz = CIELabSpace.toXYZ({ l: this.l, a: this.a, b: this.b });
     return XYZSpace.toRGB(xyz);
+  }
+
+  /**
+   * Convert the color to HSL color space.
+   *
+   * @returns The color in HSL color space.
+   */
+  toHSL(): HSL {
+    const rgb = this.toRGB();
+    return HSLSpace.fromRGB(rgb);
   }
 
   /**

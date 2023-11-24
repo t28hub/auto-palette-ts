@@ -142,6 +142,26 @@ describe('Color', () => {
     });
   });
 
+  describe('toHSL', () => {
+    it.each([
+      { l: 0, a: 0, b: 0, expected: { h: 0, s: 0.0, l: 0.0 } }, // Black
+      { l: 100, a: 0, b: 0, expected: { h: 0, s: 0.0, l: 1.0 } }, // White
+      { l: 53.2371, a: 80.1106, b: 67.2237, expected: { h: 0, s: 1.0, l: 0.5 } }, // Red
+      { l: 87.7355, a: -86.1822, b: 83.1866, expected: { h: 120, s: 1.0, l: 0.5 } }, // Green
+      { l: 32.3008, a: 79.1952, b: -107.8554, expected: { h: 240, s: 1.0, l: 0.5 } }, // Blue
+      { l: 91.1132, a: -48.0875, b: -14.1312, expected: { h: 180, s: 1.0, l: 0.5 } }, // Cyan
+      { l: 60.3242, a: 98.2557, b: -60.8249, expected: { h: 300, s: 1.0, l: 0.5 } }, // Magenta
+      { l: 97.1393, a: -21.5537, b: 94.4896, expected: { h: 60, s: 1.0, l: 0.5 } }, // Yellow
+    ])('should convert color($l, $a, $b%) to HSL($expected)', ({ l, a, b, expected }) => {
+      // Act
+      const color = new Color(l, a, b);
+      const actual = color.toHSL();
+
+      // Assert
+      expect(actual).toMatchObject(expected);
+    });
+  });
+
   describe('toHexString', () => {
     it.each([
       { l: 0, a: 0, b: 0, expected: '#000000' }, // Black
