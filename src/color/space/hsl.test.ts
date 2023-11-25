@@ -1,48 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import { HSLColorSpace } from './hsl';
-import { RGBColorSpace } from './rgb';
-import { asPackedColor } from './utils';
+import { HSLSpace } from './hsl';
 
-const fixtures = [
-  { value: 0x00000000, h: 0, s: 0.0, l: 0.0, opacity: 0.0 },
-  { value: 0x00000080, h: 0, s: 0.0, l: 0.0, opacity: 0.5 },
-  { value: 0x000000ff, h: 0, s: 0.0, l: 0.0, opacity: 1.0 },
-  { value: 0xff0000ff, h: 0, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0x808000ff, h: 60, s: 1.0, l: 0.25, opacity: 1.0 },
-  { value: 0xffff00ff, h: 60, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0xffff80ff, h: 60, s: 1.0, l: 0.75, opacity: 1.0 },
-  { value: 0x9f9f60ff, h: 60, s: 0.25, l: 0.5, opacity: 1.0 },
-  { value: 0xbfbf40ff, h: 60, s: 0.5, l: 0.5, opacity: 1.0 },
-  { value: 0xdfdf20ff, h: 60, s: 0.75, l: 0.5, opacity: 1.0 },
-  { value: 0xffff00ff, h: 60, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0x00ff00ff, h: 120, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0x00ffffff, h: 180, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0x0000ffff, h: 240, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0xff00ffff, h: 300, s: 1.0, l: 0.5, opacity: 1.0 },
-  { value: 0x404040ff, h: 0, s: 0.0, l: 0.25, opacity: 1.0 },
-  { value: 0x808080ff, h: 0, s: 0.0, l: 0.5, opacity: 1.0 },
-  { value: 0xbfbfbfff, h: 0, s: 0.0, l: 0.75, opacity: 1.0 },
-  { value: 0xffffffff, h: 0, s: 0.0, l: 1.0, opacity: 1.0 },
-];
-
-describe('hsl', () => {
-  describe('clampH', () => {
+describe('HSLSpace', () => {
+  describe('normalizeH', () => {
     it.each([
+      { value: -120, expected: 240 },
+      { value: -1, expected: 359 },
       { value: 0, expected: 0 },
-      { value: 60, expected: 60 },
-      { value: 300, expected: 300 },
-      { value: 359, expected: 359 },
+      { value: 180, expected: 180 },
       { value: 360, expected: 0 },
       { value: 361, expected: 1 },
       { value: 480, expected: 120 },
-      { value: 1080, expected: 0 },
-      { value: -1, expected: 359 },
-      { value: -60, expected: 300 },
-      { value: NaN, expected: 0 },
-    ])('should clamp the value($value) to valid hue($expected)', ({ value, expected }) => {
+    ])('should normalize hue value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLColorSpace.clampH(value);
+      const actual = HSLSpace.normalizeH(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -51,15 +23,14 @@ describe('hsl', () => {
 
   describe('clampS', () => {
     it.each([
+      { value: -0.1, expected: 0.0 },
       { value: 0.0, expected: 0.0 },
       { value: 0.5, expected: 0.5 },
       { value: 1.0, expected: 1.0 },
-      { value: 1.5, expected: 1.0 },
-      { value: -0.5, expected: 0.0 },
-      { value: NaN, expected: 0.0 },
-    ])('should clamp the value($value) to valid saturation($expected)', ({ value, expected }) => {
+      { value: 1.1, expected: 1.0 },
+    ])('should clamp saturation value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLColorSpace.clampS(value);
+      const actual = HSLSpace.clampS(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -68,62 +39,91 @@ describe('hsl', () => {
 
   describe('clampL', () => {
     it.each([
+      { value: -0.1, expected: 0.0 },
       { value: 0.0, expected: 0.0 },
       { value: 0.5, expected: 0.5 },
       { value: 1.0, expected: 1.0 },
-      { value: 1.5, expected: 1.0 },
-      { value: -0.5, expected: 0.0 },
-      { value: NaN, expected: 0.0 },
-    ])('should clamp the value($value) to valid lightness($expected)', ({ value, expected }) => {
+      { value: 1.1, expected: 1.0 },
+    ])('should clamp lightness value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLColorSpace.clampL(value);
+      const actual = HSLSpace.clampL(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('constructor', () => {
-    it('should create new HSL color apace', () => {
+  describe('toRGB', () => {
+    it.each([
+      { hsl: { h: 0, s: 0, l: 0 }, expected: { r: 0, g: 0, b: 0 } }, // Black
+      { hsl: { h: 0, s: 0, l: 1 }, expected: { r: 255, g: 255, b: 255 } }, // White
+      { hsl: { h: 0, s: 1, l: 0.5 }, expected: { r: 255, g: 0, b: 0 } }, // Red
+      { hsl: { h: 120, s: 1, l: 0.5 }, expected: { r: 0, g: 255, b: 0 } }, // Green
+      { hsl: { h: 240, s: 1, l: 0.5 }, expected: { r: 0, g: 0, b: 255 } }, // Blue
+      { hsl: { h: 180, s: 1, l: 0.5 }, expected: { r: 0, g: 255, b: 255 } }, // Cyan
+      { hsl: { h: 300, s: 1, l: 0.5 }, expected: { r: 255, g: 0, b: 255 } }, // Magenta
+      { hsl: { h: 60, s: 1, l: 0.5 }, expected: { r: 255, g: 255, b: 0 } }, // Yellow
+    ])('should convert HSL($hsl) to RGB($expected)', ({ hsl, expected }) => {
       // Act
-      const actual = new HSLColorSpace();
+      const actual = HSLSpace.toRGB(hsl);
 
       // Assert
-      expect(actual).toBeDefined();
+      expect(actual).toMatchObject(expected);
     });
 
-    it('should create new HSL color apace with RGB color space', () => {
-      // Act
-      const actual = new HSLColorSpace(new RGBColorSpace());
-
+    it.each([
+      { h: NaN, s: 0, l: 0 },
+      { h: Infinity, s: 0, l: 0 },
+      { h: -Infinity, s: 0, l: 0 },
+      { h: 0, s: NaN, l: 0 },
+      { h: 0, s: Infinity, l: 0 },
+      { h: 0, s: -Infinity, l: 0 },
+      { h: 0, s: 0, l: NaN },
+      { h: 0, s: 0, l: Infinity },
+      { h: 0, s: 0, l: -Infinity },
+    ])('should throw an error if the h, s, or l component(%o) is not a finite number', (hsl) => {
       // Assert
-      expect(actual).toBeDefined();
+      expect(() => {
+        // Act
+        HSLSpace.toRGB(hsl);
+      }).toThrowError(TypeError);
     });
   });
 
-  describe('encode', () => {
-    it.each(fixtures)('should encode HSL($h, $s, $l, $opacity) to $value', ({ value, h, s, l, opacity }) => {
+  describe('fromRGB', () => {
+    it.each([
+      { rgb: { r: 0, g: 0, b: 0 }, expected: { h: 0, s: 0, l: 0 } }, // Black
+      { rgb: { r: 255, g: 255, b: 255 }, expected: { h: 0, s: 0, l: 1 } }, // White
+      { rgb: { r: 255, g: 0, b: 0 }, expected: { h: 0, s: 1, l: 0.5 } }, // Red
+      { rgb: { r: 0, g: 255, b: 0 }, expected: { h: 120, s: 1, l: 0.5 } }, // Green
+      { rgb: { r: 0, g: 0, b: 255 }, expected: { h: 240, s: 1, l: 0.5 } }, // Blue
+      { rgb: { r: 0, g: 255, b: 255 }, expected: { h: 180, s: 1, l: 0.5 } }, // Cyan
+      { rgb: { r: 255, g: 0, b: 255 }, expected: { h: 300, s: 1, l: 0.5 } }, // Magenta
+      { rgb: { r: 255, g: 255, b: 0 }, expected: { h: 60, s: 1, l: 0.5 } }, // Yellow
+    ])('should convert RGB($rgb) to HSL($expected)', ({ rgb, expected }) => {
       // Act
-      const colorSpace = new HSLColorSpace();
-      const actual = colorSpace.encode({ h, s, l, opacity });
+      const actual = HSLSpace.fromRGB(rgb);
 
       // Assert
-      expect(actual).toEqual(value);
+      expect(actual).toMatchObject(expected);
     });
-  });
 
-  describe('decode', () => {
-    it.each(fixtures)('should decode $value to HSL($h, $s, $l, $opacity)', ({ value, h, s, l, opacity }) => {
-      // Act
-      const packed = asPackedColor(value);
-      const colorSpace = new HSLColorSpace();
-      const actual = colorSpace.decode(packed);
-
+    it.each([
+      { r: NaN, g: 0, b: 0 },
+      { r: Infinity, g: 0, b: 0 },
+      { r: -Infinity, g: 0, b: 0 },
+      { r: 0, g: NaN, b: 0 },
+      { r: 0, g: Infinity, b: 0 },
+      { r: 0, g: -Infinity, b: 0 },
+      { r: 0, g: 0, b: NaN },
+      { r: 0, g: 0, b: Infinity },
+      { r: 0, g: 0, b: -Infinity },
+    ])('should throw an error if the r, g, or b component(%o) is not a finite number', (rgb) => {
       // Assert
-      expect(actual.h).toBeCloseTo(h);
-      expect(actual.s).toBeCloseTo(s);
-      expect(actual.l).toBeCloseTo(l);
-      expect(actual.opacity).toBeCloseTo(opacity);
+      expect(() => {
+        // Act
+        HSLSpace.fromRGB(rgb);
+      }).toThrowError(TypeError);
     });
   });
 });

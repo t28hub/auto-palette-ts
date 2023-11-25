@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { CIEDE2000 } from './ciede2000';
+import { ciede2000 } from './ciede2000';
 
 describe('ciede2000', () => {
-  /**
-   * Test data for CIEDE2000 is defined at the following URL.
-   * [The CIEDE2000 Color-Difference Formula](https://hajim.rochester.edu/ece/sites/gsharma/papers/CIEDE2000CRNAFeb05.pdf)
-   */
+  // The test data for CIEDE2000 is defined in the following paper:
+  // "The CIEDE2000 Color-Difference Formula: Implementation Notes Supplementary Test Data, and Mathematical Observations"
+  // by Gaurav Sharma, Wencheng Wu and Edul N. Dalal.
+  // The paper can be found at the following URL:
+  // https://hajim.rochester.edu/ece/sites/gsharma/papers/CIEDE2000CRNAFeb05.pdf
   it.each([
     {
       lab1: { l: 50.0, a: 2.6772, b: -79.7751 },
@@ -178,10 +179,9 @@ describe('ciede2000', () => {
       lab2: { l: 0.9033, a: -0.0636, b: -0.5514 },
       expected: 0.9082,
     },
-  ])('should compute color difference($expected) from Lab($lab1) and Lab($lab2)', ({ lab1, lab2, expected }) => {
+  ])('should return the color difference($expected) for Lab($lab1) and Lab($lab2)', ({ lab1, lab2, expected }) => {
     // Act
-    const measure = new CIEDE2000();
-    const actual = measure.compute({ ...lab1, opacity: 1.0 }, { ...lab2, opacity: 1.0 });
+    const actual = ciede2000(lab1, lab2);
 
     // Assert
     expect(actual).toBeCloseTo(expected, 4);

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { parse } from '../color';
+import { ciede2000, Color } from '../color';
 import { DBSCAN, euclidean, Kmeans, Point5 } from '../math';
+import { Swatch } from '../swatch';
 import { loadImageData } from '../test';
-import { Swatch } from '../types';
 
 import { Extractor } from './extractor';
 import { opacity } from './filter';
@@ -42,11 +42,11 @@ describe('Extractor', () => {
       },
       {
         filename: 'flag_ae.png',
-        expected: ['#ef3340', '#009739', '#ffffff', '#000000'],
+        expected: ['#ff0000', '#00732f', '#ffffff', '#000000'],
       },
       {
         filename: 'flag_sc.png',
-        expected: ['#d92323', '#003d88', '#007a3a', '#fcd955', '#ffffff'],
+        expected: ['#003f87', '#fcd856', '#d62828', '#ffffff', '#007a3d'],
       },
     ])('should extract swatches from $filename', async ({ filename, expected }) => {
       // Arrange
@@ -61,8 +61,8 @@ describe('Extractor', () => {
       expect(actual).not.toBeEmpty();
       expected.forEach((hexColor) => {
         expect(actual).toSatisfyAny((swatch: Swatch): boolean => {
-          const expected = parse(hexColor);
-          const distance = swatch.color.difference(expected);
+          const expected = Color.parse(hexColor);
+          const distance = swatch.color.differenceTo(expected, ciede2000);
           return distance < 10.0;
         });
       });

@@ -1,5 +1,5 @@
+import { RGBA } from '../color';
 import { DBSCAN, Kmeans, Point5, squaredEuclidean } from '../math';
-import { RGB } from '../types';
 
 import { Extractor } from './extractor';
 import { type ColorFilter, opacity } from './filter';
@@ -12,7 +12,7 @@ export type { ColorFilter } from './filter';
 export type DBSCANOptions = {
   readonly minPoints: number;
   readonly threshold: number;
-  readonly colorFilters: ColorFilter<RGB>[];
+  readonly colorFilters: ColorFilter<RGBA>[];
 };
 
 const DEFAULT_DBSCAN_OPTIONS: DBSCANOptions = {
@@ -40,7 +40,7 @@ export type KmeansOptions = {
   readonly maxColors: number;
   readonly maxIterations: number;
   readonly tolerance: number;
-  readonly colorFilters: ColorFilter<RGB>[];
+  readonly colorFilters: ColorFilter<RGBA>[];
 };
 
 const DEFAULT_KMEANS_OPTIONS: KmeansOptions = {

@@ -82,3 +82,23 @@ export type XYZ = {
  * Color type represents a color in any color space.
  */
 export type ColorType = RGB | HSL | LAB | XYZ;
+
+/**
+ * AlphaChannel type represents a color with alpha channel.
+ */
+export type AlphaChannel<T> = T & {
+  /**
+   * The alpha value in [0, 255].
+   */
+  readonly a: number;
+};
+
+/**
+ * RGBA type represents a color in RGBA color space.
+ */
+export type RGBA = AlphaChannel<RGB>;
+
+/**
+ * HSLA type represents a color in HSLA color space.
+ */
+export type HSLA = AlphaChannel<HSL>;

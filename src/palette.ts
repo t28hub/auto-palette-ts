@@ -1,8 +1,8 @@
-import { ciede2000 } from './color';
+import { ciede2000, DifferenceFunction, LAB } from './color';
 import { dbscanExtractor } from './extractor';
 import { createImageData, ImageSource } from './image';
 import { Distance, HierarchicalClustering, toDistance } from './math';
-import { DeltaEFunction, Swatch } from './types';
+import { Swatch } from './swatch';
 
 const DEFAULT_SWATCH_COUNT = 6;
 
@@ -13,14 +13,14 @@ export class Palette {
   private readonly swatches: Swatch[];
 
   /**
-   * Create a new Palette.
+   * Create a new Palette instance.
    *
-   * @param swatches The list of source swatches.
-   * @param deltaEFunction The DeltaE function.
+   * @param swatches - The swatches of the palette.
+   * @param differenceFormula - The color difference formula.
    */
   constructor(
     swatches: Swatch[],
-    private readonly deltaEFunction: DeltaEFunction,
+    private readonly differenceFormula: DifferenceFunction<LAB>,
   ) {
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
@@ -62,10 +62,8 @@ export class Palette {
    */
   getSwatches(count: number = DEFAULT_SWATCH_COUNT): Swatch[] {
     const algorithm = new HierarchicalClustering((swatch1: Swatch, swatch2: Swatch): Distance => {
-      const color1 = swatch1.color.toLab();
-      const color2 = swatch2.color.toLab();
-      const delta = this.deltaEFunction.compute(color1, color2);
-      return toDistance(delta);
+      const difference = swatch1.color.differenceTo(swatch2.color, this.differenceFormula);
+      return toDistance(difference);
     });
     const dendrogram = algorithm.fit(this.swatches);
     const labels = dendrogram.partition(Math.min(count, dendrogram.length));
@@ -79,11 +77,10 @@ export class Palette {
 
       const population = previous.population + swatch.population;
       const fraction = swatch.population / population;
-      const color = swatch.color.mix(previous.color, fraction);
       if (fraction <= 0.5) {
-        merged.set(label, { color, population, coordinate: swatch.coordinate });
+        merged.set(label, { color: swatch.color.clone(), population, position: swatch.position });
       } else {
-        merged.set(label, { color, population, coordinate: previous.coordinate });
+        merged.set(label, { color: previous.color.clone(), population, position: previous.position });
       }
       return merged;
     }, new Map<number, Swatch>());
@@ -100,6 +97,6 @@ export class Palette {
     const imageData = createImageData(source);
     const extractor = dbscanExtractor();
     const swatches = extractor.extract(imageData);
-    return new Palette(swatches, ciede2000());
+    return new Palette(swatches, ciede2000);
   }
 }

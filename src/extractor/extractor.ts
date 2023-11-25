@@ -1,7 +1,6 @@
-import { lab, parse, rgb } from '../color';
-import { MAX_A, MAX_B, MAX_L, MIN_A, MIN_B, MIN_L } from '../color/space/lab';
-import { Cluster, ClusteringAlgorithm, DBSCAN, euclidean, Point3, Point5 } from '../math';
-import { ColorSpace, Lab, RGB, Swatch } from '../types';
+import { CIELabSpace, Color, RGB, RGBA, XYZSpace } from '../color';
+import { Cluster, ClusteringAlgorithm, DBSCAN, denormalize, euclidean, normalize, Point3, Point5 } from '../math';
+import { Swatch } from '../swatch';
 
 import { ColorFilter, composite } from './filter';
 
@@ -9,8 +8,6 @@ import { ColorFilter, composite } from './filter';
  * Class to extract swatches from image data.
  */
 export class Extractor {
-  private readonly rgb: ColorSpace<RGB>;
-  private readonly lab: ColorSpace<Lab>;
   private readonly filter: ColorFilter<RGB>;
 
   /**
@@ -23,8 +20,6 @@ export class Extractor {
     private readonly clustering: ClusteringAlgorithm<Point5>,
     filters: ColorFilter<RGB>[],
   ) {
-    this.rgb = rgb();
-    this.lab = lab();
     this.filter = composite(...filters);
   }
 
@@ -42,30 +37,29 @@ export class Extractor {
 
     const pixels: Point5[] = [];
     for (let i = 0; i < data.length; i += 4) {
-      const color = {
+      const rgba: RGBA = {
         r: data[i],
         g: data[i + 1],
         b: data[i + 2],
-        opacity: data[i + 3] / 0xff,
+        a: data[i + 3],
       };
 
       // Exclude colors that do not meet the filter criteria.
-      if (!this.filter.test(color)) {
+      if (!this.filter.test(rgba)) {
         continue;
       }
 
-      const packed = this.rgb.encode(color);
-      const { l, a, b } = this.lab.decode(packed);
+      const xyz = XYZSpace.fromRGB(rgba);
+      const lab = CIELabSpace.fromXYZ(xyz);
       const x = Math.floor((i / 4) % width);
       const y = Math.floor((i / 4 / width) % height);
 
-      // Normalize each value to a range of [0, 1] for better clustering.
       pixels.push([
-        (l - MIN_L) / (MAX_L - MIN_L),
-        (a - MIN_A) / (MAX_A - MIN_A),
-        (b - MIN_B) / (MAX_B - MIN_B),
-        x / width,
-        y / height,
+        normalize(lab.l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
+        normalize(lab.a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
+        normalize(lab.b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
+        normalize(x, 0, width),
+        normalize(y, 0, height),
       ]);
     }
 
@@ -80,9 +74,9 @@ export class Extractor {
 
     const colors = pixelCluster.map((cluster: Cluster<Point5>): Point3 => {
       const pixel = cluster.getCentroid();
-      const l = pixel[0] * (MAX_L - MIN_L) + MIN_L;
-      const a = pixel[1] * (MAX_A - MIN_A) + MIN_A;
-      const b = pixel[2] * (MAX_B - MIN_B) + MIN_B;
+      const l = denormalize(pixel[0], CIELabSpace.MIN_L, CIELabSpace.MAX_L);
+      const a = denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A);
+      const b = denormalize(pixel[2], CIELabSpace.MIN_B, CIELabSpace.MAX_B);
       return [l, a, b];
     });
     const dbscan = new DBSCAN<Point3>(1, 2.3, euclidean);
@@ -90,18 +84,16 @@ export class Extractor {
 
     return colorClusters.map((cluster: Cluster<Point3>): Swatch => {
       const [l, a, b, x, y, population] = Extractor.createSwatch(cluster, pixelCluster);
-      const lab = {
-        l: l * (MAX_L - MIN_L) + MIN_L,
-        a: a * (MAX_A - MIN_A) + MIN_A,
-        b: b * (MAX_B - MIN_B) + MIN_B,
-        opacity: 1.0,
-      };
-      const color = parse(this.lab.encode(lab));
+      const color = new Color(
+        denormalize(l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
+        denormalize(a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
+        denormalize(b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
+      );
       const coordinate = {
         x: Math.floor(x * width),
         y: Math.floor(y * height),
       };
-      return { color, coordinate, population };
+      return { color, position: coordinate, population };
     });
   }
 

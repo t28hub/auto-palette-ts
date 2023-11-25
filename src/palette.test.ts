@@ -1,34 +1,33 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { ciede2000 } from './color';
-import { HSLColor } from './color/hsl';
+import { ciede2000, Color } from './color';
 import { Palette } from './palette';
+import { Swatch } from './swatch';
 import { loadImageData } from './test';
-import { Swatch } from './types';
 
 const swatches: Swatch[] = [
   {
-    color: new HSLColor(120, 0.8, 0.5, 1.0),
+    color: Color.parse('#ff0000'),
     population: 64,
-    coordinate: { x: 45, y: 30 },
+    position: { x: 45, y: 30 },
   },
   {
-    color: new HSLColor(90, 0.6, 0.3, 1.0),
+    color: Color.parse('#fafafa'),
     population: 128,
-    coordinate: { x: 18, y: 72 },
+    position: { x: 18, y: 72 },
   },
   {
-    color: new HSLColor(60, 0.4, 0.3, 1.0),
+    color: Color.parse('#ff0050'),
     population: 48,
-    coordinate: { x: 9, y: 54 },
+    position: { x: 9, y: 54 },
   },
 ];
 
 describe('Palette', () => {
   describe('constructor', () => {
-    it('should create a new Palette', () => {
+    it('should create a new Palette instance', () => {
       // Act
-      const actual = new Palette(swatches, ciede2000());
+      const actual = new Palette(swatches, ciede2000);
 
       // Assert
       expect(actual).toBeDefined();
@@ -38,27 +37,20 @@ describe('Palette', () => {
   describe('getDominantSwatch', () => {
     it('should return the swatch of the max population', () => {
       // Act
-      const palette = new Palette(swatches, ciede2000());
+      const palette = new Palette(swatches, ciede2000);
       const actual = palette.getDominantSwatch();
 
       // Assert
-      expect(actual).toMatchObject({
-        color: {
-          h: 90,
-          s: 0.6,
-          l: 0.3,
-          opacity: 1.0,
-        },
-        population: 128,
-        coordinate: { x: 18, y: 72 },
-      });
+      expect(actual.color.toRGB()).toMatchObject({ r: 250, g: 250, b: 250 });
+      expect(actual.population).toEqual(128);
+      expect(actual.position).toMatchObject({ x: 18, y: 72 });
     });
   });
 
   describe('getSwatches', () => {
     let palette: Palette;
     beforeEach(() => {
-      palette = new Palette(swatches, ciede2000());
+      palette = new Palette(swatches, ciede2000);
     });
 
     it('should return the all swatches', () => {
@@ -92,9 +84,9 @@ describe('Palette', () => {
       expect(actual.size()).toEqual(6);
       actual.getSwatches(6).forEach((swatch) => {
         console.info({
-          color: swatch.color.toString(),
+          color: swatch.color.toHexString(),
           population: swatch.population,
-          coordinate: swatch.coordinate,
+          coordinate: swatch.position,
         });
       });
     });

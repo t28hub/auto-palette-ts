@@ -1,13 +1,13 @@
-import { AlphaChannel } from '../types';
+import { AlphaChannel } from '../color';
 
-const DEFAULT_THRESHOLD = 0.5;
+const DEFAULT_ALPHA_THRESHOLD = 128;
 
 /**
  * Interface of color filtering.
  *
  * @param T The type of color.
  */
-export interface ColorFilter<T extends AlphaChannel> {
+export interface ColorFilter<T> {
   /**
    * Check the color
    *
@@ -23,10 +23,10 @@ export interface ColorFilter<T extends AlphaChannel> {
  * @param threshold The threshold of opacity.
  * @return The opacity filter.
  */
-export function opacity<T extends AlphaChannel>(threshold: number = DEFAULT_THRESHOLD): ColorFilter<T> {
+export function opacity<T>(threshold: number = DEFAULT_ALPHA_THRESHOLD): ColorFilter<AlphaChannel<T>> {
   return {
-    test(color: T): boolean {
-      return color.opacity >= threshold;
+    test(color: AlphaChannel<T>): boolean {
+      return color.a >= threshold;
     },
   };
 }
@@ -37,7 +37,7 @@ export function opacity<T extends AlphaChannel>(threshold: number = DEFAULT_THRE
  * @param filters The filters to be composite.
  * @return The composite filter.
  */
-export function composite<T extends AlphaChannel>(...filters: ColorFilter<T>[]): ColorFilter<T> {
+export function composite<T>(...filters: ColorFilter<T>[]): ColorFilter<T> {
   return {
     test(color: T): boolean {
       return filters.every((filter: ColorFilter<T>) => filter.test(color));

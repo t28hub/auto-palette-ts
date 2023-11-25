@@ -1,52 +1,80 @@
 import { clamp } from '../../math';
-import { ColorSpace, PackedColor, RGB } from '../../types';
-
-import { asPackedColor } from './utils';
-
-const MIN_RGB = 0x00;
-const MAX_RGB = 0xff;
-
-const SHIFT_R = 24;
-const SHIFT_G = 16;
-const SHIFT_B = 8;
-const SHIFT_A = 0;
+import { RGB } from '../types';
 
 /**
- * The RGB color space implementation.
+ * Class representing operations in the RGB color space.
  */
-export class RGBColorSpace implements ColorSpace<RGB> {
-  encode(color: RGB): PackedColor {
-    const r = RGBColorSpace.clampValue(color.r);
-    const g = RGBColorSpace.clampValue(color.g);
-    const b = RGBColorSpace.clampValue(color.b);
+export class RGBSpace {
+  /**
+   * The minimum value of the RGB component.
+   */
+  static readonly MIN_RGB = 0x00;
 
-    const opacity = clamp(color.opacity, 0.0, 1.0);
-    const a = Math.round(opacity * MAX_RGB);
+  /**
+   * The maximum value of the RGB component.
+   */
+  static readonly MAX_RGB = 0xff;
 
-    // Force conversion to uint32.
-    const packed = ((r << SHIFT_R) | (g << SHIFT_G) | (b << SHIFT_B) | (a << SHIFT_A)) >>> 0;
-    return asPackedColor(packed);
-  }
-
-  decode(value: PackedColor): RGB {
-    const r = (value >> SHIFT_R) & MAX_RGB;
-    const g = (value >> SHIFT_G) & MAX_RGB;
-    const b = (value >> SHIFT_B) & MAX_RGB;
-    const a = (value >> SHIFT_A) & MAX_RGB;
-    const opacity = a / MAX_RGB;
-    return { r, g, b, opacity };
+  /**
+   * Clamp the RGB component of the color.
+   *
+   * @param value The RGB component of the color.
+   * @returns The clamped RGB component.
+   */
+  static clampValue(value: number): number {
+    return clamp(value, RGBSpace.MIN_RGB, RGBSpace.MAX_RGB);
   }
 
   /**
-   * Clamp the value as valid value of RGB.
+   * Convert a color from the hexadecimal string to the RGB color space.
    *
-   * @param value The value to be clamped.
-   * @return The clamped value.
+   * @param value - The color in hexadecimal string.
+   * @returns The color in RGB color space.
+   * @throws {TypeError} If the value is not a valid hexadecimal string.
    */
-  static clampValue(value: number): number {
-    if (!Number.isFinite(value)) {
-      return MIN_RGB;
+  static fromHexString(value: string): RGB {
+    if (!value.startsWith('#')) {
+      throw new TypeError(`The value(${value}) is not a valid hexadecimal color string`);
     }
-    return clamp(value, MIN_RGB, MAX_RGB);
+
+    let r = NaN;
+    let g = NaN;
+    let b = NaN;
+
+    if (value.length === 4) {
+      // #rgb
+      r = Number.parseInt(value[1], 16);
+      g = Number.parseInt(value[2], 16);
+      b = Number.parseInt(value[3], 16);
+    } else if (value.length === 7) {
+      // #rrggbb
+      r = Number.parseInt(value.slice(1, 3), 16);
+      g = Number.parseInt(value.slice(3, 5), 16);
+      b = Number.parseInt(value.slice(5, 7), 16);
+    }
+
+    if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) {
+      throw new TypeError(`The value(${value}) is not a valid hexadecimal color string`);
+    }
+    return { r, g, b };
+  }
+
+  /**
+   * Convert a color from the RGB color space to the hexadecimal string.
+   *
+   * @param r The red component of the color.
+   * @param g The green component of the color.
+   * @param b The blue component of the color.
+   * @returns The hexadecimal string.
+   * @throws {TypeError} If the r, g, or b is not finite number.
+   */
+  static toHexString({ r, g, b }: RGB): string {
+    return [r, g, b].reduce((string, value) => {
+      if (!Number.isFinite(value)) {
+        throw new TypeError(`The r, g, and b components must be finite numbers: ${r}, ${g}, ${b}`);
+      }
+      const hex = this.clampValue(value).toString(16).padStart(2, '0');
+      return string + hex;
+    }, '#');
   }
 }

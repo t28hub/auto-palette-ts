@@ -1,43 +1,61 @@
 import { describe, expect, it } from 'vitest';
 
-import { HSLColor } from '../../color/hsl';
+import { Color } from '../../color';
 
 describe('.toBeSimilarColor', () => {
   it('should pass when expected color is same color', () => {
-    expect(new HSLColor(120, 1.0, 0.5, 1.0)).toBeSimilarColor(new HSLColor(120, 1.0, 0.5, 1.0));
+    // Act
+    const actual = Color.parse('#ff0000');
+    expect(actual).toBeSimilarColor('#ff0000');
   });
 
   it('should pass when expected color is similar color', () => {
-    expect(new HSLColor(120, 1.0, 0.5, 1.0)).toBeSimilarColor(new HSLColor(120, 0.8, 0.5, 1.0));
+    // Act
+    const actual = Color.parse('#ff0000');
+    expect(actual).toBeSimilarColor('#ff0020');
   });
 
   it('should throw Error when expected color is not similar color', () => {
+    // Assert
     expect(() => {
-      expect(new HSLColor(120, 1.0, 0.5, 1.0)).toBeSimilarColor(new HSLColor(0, 1.0, 0.5, 1.0));
-    }).toThrowError();
+      // Act
+      const actual = Color.parse('#ff0000');
+      expect(actual).toBeSimilarColor('#0000ff');
+    }).toThrow(/a/);
   });
 
   it('should throw Error when expected valid is not parseable', () => {
+    // Assert
     expect(() => {
-      expect(new HSLColor(120, 1.0, 0.5, 1.0)).toBeSimilarColor({});
+      // Act
+      const actual = Color.parse('#ff0000');
+      expect(actual).toBeSimilarColor(null);
     }).toThrowError();
   });
 });
 
 describe('.not.toBeSimilarColor', () => {
   it('should pass when expected color is not similar color', () => {
-    expect(new HSLColor(120, 1.0, 0.5, 1.0)).not.toBeSimilarColor(new HSLColor(0, 1.0, 0.5, 1.0));
+    // Act
+    const actual = Color.parse('#ff0000');
+    expect(actual).not.toBeSimilarColor('#0000ff');
   });
 
   it('should throw Error when expected color is similar color', () => {
+    // Assert
     expect(() => {
-      expect(new HSLColor(120, 1.0, 0.5, 1.0)).not.toBeSimilarColor(new HSLColor(1200, 0.8, 0.5, 1.0));
+      // Act
+      const actual = Color.parse('#ff0000');
+      expect(actual).not.toBeSimilarColor('#ff0020');
     }).toThrowError();
   });
 
   it('should throw Error when expected valid is not parseable', () => {
+    // Assert
     expect(() => {
-      expect(new HSLColor(120, 1.0, 0.5, 1.0)).toBeSimilarColor({});
+      // Act
+      const actual = Color.parse('#ff0000');
+      expect(actual).toBeSimilarColor(null);
     }).toThrowError();
   });
 });

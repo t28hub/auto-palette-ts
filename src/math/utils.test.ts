@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { clamp, degreeToRadian, radianToDegree } from './utils';
+import { clamp, degreeToRadian, denormalize, normalize, radianToDegree } from './utils';
 
 describe('utils', () => {
   describe('clamp', () => {
@@ -32,6 +32,38 @@ describe('utils', () => {
         // Act
         clamp(value, min, max);
       }).toThrowError(TypeError);
+    });
+  });
+
+  describe('normalize', () => {
+    it.each([
+      { value: 0, min: 0, max: 100, expected: 0 },
+      { value: 1, min: 0, max: 100, expected: 0.01 },
+      { value: 50, min: 0, max: 100, expected: 0.5 },
+      { value: 99, min: 0, max: 100, expected: 0.99 },
+      { value: 100, min: 0, max: 100, expected: 1.0 },
+    ])('should normalize the given value($value) in [$min, $max] to $expected', ({ value, min, max, expected }) => {
+      // Act
+      const actual = normalize(value, min, max);
+
+      // Assert
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe('denormalize', () => {
+    it.each([
+      { value: 0, min: 0, max: 100, expected: 0 },
+      { value: 0.01, min: 0, max: 100, expected: 1 },
+      { value: 0.5, min: 0, max: 100, expected: 50 },
+      { value: 0.99, min: 0, max: 100, expected: 99 },
+      { value: 1.0, min: 0, max: 100, expected: 100 },
+    ])('should denormalize the given value($value) in [$min, $max] to $expected', ({ value, min, max, expected }) => {
+      // Act
+      const actual = denormalize(value, min, max);
+
+      // Assert
+      expect(actual).toEqual(expected);
     });
   });
 

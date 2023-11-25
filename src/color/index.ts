@@ -1,54 +1,155 @@
-import { Color } from '../types';
+import { radianToDegree } from '../math';
 
-import { HSLColor } from './hsl';
-import { asPackedColor, hsl, rgb } from './space';
+import { cie76, ColorDifference, DifferenceFunction } from './difference';
+import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
+import { HSL, LAB, RGB } from './types';
 
-export { ciede2000 } from './deltae';
-export { hsl, lab, rgb, xyz } from './space';
-
-function parseNumber(number: number): Color {
-  const packed = asPackedColor(number);
-  const decoded = hsl().decode(packed);
-  return new HSLColor(decoded.h, decoded.s, decoded.l, decoded.opacity);
-}
-
-function parseString(string: string): Color {
-  const value = string.replace(/^#/, '');
-  if (value.length === 6) {
-    const r = Number.parseInt(value.slice(0, 2), 16);
-    const g = Number.parseInt(value.slice(2, 4), 16);
-    const b = Number.parseInt(value.slice(4, 6), 16);
-    const number = rgb().encode({ r, g, b, opacity: 1.0 });
-    return parseNumber(number);
-  }
-
-  if (value.length === 8) {
-    const r = Number.parseInt(value.slice(0, 2), 16);
-    const g = Number.parseInt(value.slice(2, 4), 16);
-    const b = Number.parseInt(value.slice(4, 6), 16);
-    const opacity = Number.parseInt(value.slice(6, 8), 16) / 0xff;
-    const number = rgb().encode({ r, g, b, opacity });
-    return parseNumber(number);
-  }
-  throw new TypeError(`The given string is not parseable: '${string}'`);
-}
+export * from './difference';
+export * from './space';
+export * from './types';
 
 /**
- * Parse the given value as a color.
- *
- * @param value The value to be parsed.
- * @return The parsed color.
- * @throws {TypeError} if the value is not supported type.
+ * Color class represents a color in any color space.
  */
-export function parse(value: unknown): Color {
-  if (typeof value === 'number') {
-    return parseNumber(value);
+export class Color {
+  /**
+   * Create a new color instance.
+   * @param l The lightness component of the color.
+   * @param a The a component of the color.
+   * @param b The b component of the color.
+   * @throws {TypeError} If the l, a, or b is not finite number.
+   */
+  constructor(
+    private readonly l: number,
+    private readonly a: number,
+    private readonly b: number,
+  ) {
+    if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
+      throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
+    }
+    this.l = CIELabSpace.clampL(l);
+    this.a = CIELabSpace.clampA(a);
+    this.b = CIELabSpace.clampB(b);
   }
-  if (typeof value === 'string') {
-    return parseString(value);
+
+  /**
+   * Check if the color is light.
+   *
+   * @returns True if the color is light, false otherwise.
+   * @see isDark
+   */
+  get isLight() {
+    return this.l > 50;
   }
-  if (value instanceof HSLColor) {
-    return value.clone();
+
+  /**
+   * Check if the color is dark.
+   *
+   * @returns True if the color is dark, false otherwise.
+   * @see isLight
+   */
+  get isDark() {
+    return !this.isLight;
   }
-  throw new TypeError(`Unrecognized type of value: ${value}`);
+
+  /**
+   * Calculate the lightness of the color.
+   *
+   * @returns The lightness of the color.
+   */
+  get luminance() {
+    return this.l;
+  }
+
+  /**
+   * Clone the color.
+   *
+   * @returns The cloned color.
+   */
+  clone(): Color {
+    return new Color(this.l, this.a, this.b);
+  }
+
+  /**
+   * Calculate the chroma of the color.
+   *
+   * @returns The chroma of the color.
+   */
+  chroma() {
+    return Math.sqrt(this.a ** 2 + this.b ** 2);
+  }
+
+  /**
+   * Calculate the hue of the color.
+   *
+   * @returns The hue of the color.
+   */
+  hue() {
+    return radianToDegree(Math.atan2(this.b, this.a));
+  }
+
+  /**
+   * Compute the color difference between this color and the other color.
+   *
+   * @param other The other color.
+   * @param formula The formula to use to compute the color difference.
+   * @returns The color difference.
+   */
+  differenceTo(other: Color, formula: DifferenceFunction<LAB> = cie76): ColorDifference {
+    return formula({ l: this.l, a: this.a, b: this.b }, { l: other.l, a: other.a, b: other.b });
+  }
+
+  /**
+   * Convert the color to RGB color space.
+   *
+   * @returns The color in RGB color space.
+   */
+  toRGB(): RGB {
+    const xyz = CIELabSpace.toXYZ({ l: this.l, a: this.a, b: this.b });
+    return XYZSpace.toRGB(xyz);
+  }
+
+  /**
+   * Convert the color to HSL color space.
+   *
+   * @returns The color in HSL color space.
+   */
+  toHSL(): HSL {
+    const rgb = this.toRGB();
+    return HSLSpace.fromRGB(rgb);
+  }
+
+  /**
+   * Convert the color to hex decimal string.
+   *
+   * @returns The color in hex decimal string.
+   */
+  toHexString(): string {
+    const rgb = this.toRGB();
+    return RGBSpace.toHexString(rgb);
+  }
+
+  /**
+   * Parse the value to a color.
+   *
+   * @param value - The value to be parsed to a color.
+   * @returns The parsed color.
+   * @throws {TypeError} If the value is not parsable to a color.
+   */
+  static parse(value: unknown): Color {
+    if (value instanceof Color) {
+      return value.clone();
+    }
+
+    if (typeof value === 'string') {
+      if (value.startsWith('#')) {
+        const rgb = RGBSpace.fromHexString(value);
+        const xyz = XYZSpace.fromRGB(rgb);
+        const lab = CIELabSpace.fromXYZ(xyz);
+        return new Color(lab.l, lab.a, lab.b);
+      }
+    }
+
+    throw new TypeError(`The value(${value}) is not parsable to a color.`);
+  }
 }

@@ -7,8 +7,7 @@ import {
   printWithType,
 } from 'jest-matcher-utils';
 
-import { parse } from '../../color';
-import { Color } from '../../types';
+import { ciede2000, Color } from '../../color';
 
 import { MatcherResult } from './types';
 
@@ -23,7 +22,7 @@ import { MatcherResult } from './types';
 export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): MatcherResult {
   let expectedColor: Color | undefined;
   try {
-    expectedColor = parse(expected);
+    expectedColor = Color.parse(expected);
   } catch (e) {
     expectedColor = undefined;
   }
@@ -37,7 +36,7 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
     throw new Error(errorMessage);
   }
 
-  const difference = received.difference(expectedColor);
+  const difference = received.differenceTo(expectedColor, ciede2000);
   const pass = difference < threshold;
 
   const passMessage =

@@ -1,122 +1,143 @@
 import { clamp } from '../../math';
-import { ColorSpace, Lab, PackedColor, XYZ } from '../../types';
+import { LAB, XYZ } from '../types';
 
-import { WhitePoint, XYZColorSpace } from './xyz';
-
-export const MIN_L = 0;
-export const MIN_A = -128;
-export const MIN_B = -128;
-
-export const MAX_L = 100;
-export const MAX_A = 127;
-export const MAX_B = 127;
-
-const DELTA = 6.0 / 29.0;
+import { D65, XYZSpace } from './xyz';
 
 /**
- * The CIE L*a*b* color space implementation.
- *
- * [CIELAB color space](https://en.wikipedia.org/wiki/CIELAB_color_space#From_CIEXYZ_to_CIELAB)
- * [Range of coordinates](https://en.wikipedia.org/wiki/CIELAB_color_space#Range_of_coordinates)
+ * Class representing operations in the CIELab color space.
  */
-export class LabColorSpace implements ColorSpace<Lab> {
+export class CIELabSpace {
   /**
-   * Create a new LabColorSpace.
-   *
-   * @param whitePoint The white point.
-   * @param xyzColorSpace The XYZ color space.
+   * The minimum value of the 'l' component.
    */
-  constructor(
-    private readonly whitePoint: WhitePoint,
-    private readonly xyzColorSpace: ColorSpace<XYZ> = new XYZColorSpace(),
-  ) {}
-
-  encode(color: Lab): PackedColor {
-    const l = LabColorSpace.clampL(color.l);
-    const a = LabColorSpace.clampA(color.a);
-    const b = LabColorSpace.clampB(color.b);
-
-    const l2 = (l + 16.0) / 116.0;
-    const a2 = a / 500.0;
-    const b2 = b / 200.0;
-
-    const f = (t: number): number => {
-      if (t > DELTA) {
-        return Math.pow(t, 3.0);
-      }
-      return 3.0 * DELTA * DELTA * (t - 4.0 / 29.0);
-    };
-
-    const x = this.whitePoint.x * f(l2 + a2);
-    const y = this.whitePoint.y * f(l2);
-    const z = this.whitePoint.z * f(l2 - b2);
-    return this.xyzColorSpace.encode({ x, y, z, opacity: color.opacity });
-  }
-
-  decode(packed: PackedColor): Lab {
-    const f = (t: number): number => {
-      if (t > Math.pow(DELTA, 3.0)) {
-        return Math.cbrt(t);
-      }
-      return (Math.pow(29.0 / 6.0, 2.0) / 3.0) * t + 4.0 / 29.0;
-    };
-
-    const xyz = this.xyzColorSpace.decode(packed);
-    const fx = f(xyz.x / this.whitePoint.x);
-    const fy = f(xyz.y / this.whitePoint.y);
-    const fz = f(xyz.z / this.whitePoint.z);
-
-    const l = LabColorSpace.clampL(116.0 * fy - 16.0);
-    const a = LabColorSpace.clampA(500.0 * (fx - fy));
-    const b = LabColorSpace.clampB(200.0 * (fy - fz));
-    return { l, a, b, opacity: xyz.opacity };
-  }
+  static readonly MIN_L = 0;
 
   /**
-   * Clamp the given value to lightness.
+   * The maximum value of the 'l' component.
+   */
+  static readonly MAX_L = 100;
+
+  /**
+   * The minimum value of the 'a' component.
+   */
+  static readonly MIN_A = -128;
+
+  /**
+   * The maximum value of the 'a' component.
+   */
+  static readonly MAX_A = 127;
+
+  /**
+   * The minimum value of the 'b' component.
+   */
+  static readonly MIN_B = -128;
+
+  /**
+   * The maximum value of the 'b' component.
+   */
+  static readonly MAX_B = 127;
+
+  /**
+   * Clamp the 'l' component of the color.
    *
-   * @param value The value to be clamped.
-   * @return The clamped value.
-   *
-   * @see clampA
-   * @see clampB
+   * @param value The 'l' component of the color.
+   * @returns The clamped 'l' component.
+   * @see {@link clampA}
+   * @see {@link clampB}
    */
   static clampL(value: number): number {
-    if (!Number.isFinite(value)) {
-      return MIN_L;
-    }
-    return clamp(value, MIN_L, MAX_L);
+    return clamp(value, CIELabSpace.MIN_L, CIELabSpace.MAX_L);
   }
 
   /**
-   * Clamp the given value to a.
+   * Clamp the 'a' component of the color.
    *
-   * @param value The value to be clamped.
-   * @return The clamped value.
-   *
-   * @see clampL
-   * @see clampB
+   * @param value The 'a' component of the color.
+   * @returns The clamped 'a' component.
+   * @see {@link clampL}
+   * @see {@link clampB}
    */
   static clampA(value: number): number {
-    if (!Number.isFinite(value)) {
-      return MIN_A;
-    }
-    return clamp(value, MIN_A, MAX_A);
+    return clamp(value, CIELabSpace.MIN_A, CIELabSpace.MAX_A);
   }
 
   /**
-   * Clamp the given value to b.
+   * Clamp the 'b' component of the color.
    *
-   * @param value The value to be clamped.
-   * @return The clamped value.
-   *
-   * @see clampA
-   * @see clampB
+   * @param value The 'b' component of the color.
+   * @returns The clamped 'b' component.
+   * @see {@link clampL}
+   * @see {@link clampA}
    */
   static clampB(value: number): number {
-    if (!Number.isFinite(value)) {
-      return MIN_B;
+    return clamp(value, CIELabSpace.MIN_B, CIELabSpace.MAX_B);
+  }
+
+  /**
+   * Convert a color from the XYZ color space to the CIELab color space.
+   *
+   * @param xyz - The color in the XYZ color space.
+   * @returns The converted color in the CIELab color space.
+   * @throws {TypeError} If any of the XYZ components is not a finite number.
+   * @see {@link toXYZ}
+   */
+  static fromXYZ({ x, y, z }: XYZ): LAB {
+    if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
+      throw new TypeError(`The x, y, and z components must be finite numbers: ${x}, ${y}, ${z}`);
     }
-    return clamp(value, MIN_B, MAX_B);
+
+    // Function to covert a component of XYZ to CIELab.
+    const epsilon = Math.pow(6.0 / 29.0, 3.0);
+    const kappa = 841.0 / 108.0;
+    const delta = 4.0 / 29.0;
+    const f = (t: number): number => {
+      if (t > epsilon) {
+        return Math.cbrt(t);
+      }
+      return kappa * t + delta;
+    };
+
+    const fx = f(x / D65.x);
+    const fy = f(y / D65.y);
+    const fz = f(z / D65.z);
+
+    const l = this.clampL(116.0 * fy - 16.0);
+    const a = this.clampA(500.0 * (fx - fy));
+    const b = this.clampB(200.0 * (fy - fz));
+    return { l, a, b };
+  }
+
+  /**
+   * Convert a color from CIELab color space to the RGB color space.
+   *
+   * @param lab - The color in the CIELab color space.
+   * @returns The converted color in the RGB color space.
+   * @throws {TypeError} If any of the CIELab components is not a finite number.
+   * @see {@link fromXYZ}
+   */
+  static toXYZ({ l, a, b }: LAB): XYZ {
+    if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
+      throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
+    }
+
+    // Function to covert a component of CIELab to XYZ.
+    const epsilon = 6.0 / 29.0;
+    const kappa = 108.0 / 841.0;
+    const delta = 4.0 / 29.0;
+    const f = (t: number): number => {
+      if (t > epsilon) {
+        return Math.pow(t, 3.0);
+      }
+      return kappa * (t - delta);
+    };
+
+    const l2 = (this.clampL(l) + 16.0) / 116.0;
+    const a2 = this.clampA(a) / 500.0;
+    const b2 = this.clampB(b) / 200.0;
+
+    const x = XYZSpace.clampX(D65.x * f(l2 + a2));
+    const y = XYZSpace.clampY(D65.y * f(l2));
+    const z = XYZSpace.clampZ(D65.z * f(l2 - b2));
+    return { x, y, z };
   }
 }
