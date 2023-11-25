@@ -77,3 +77,8 @@ export type XYZ = {
    */
   readonly z: number;
 };
+
+/**
+ * Color type represents a color in any color space.
+ */
+export type ColorType = RGB | HSL | LAB | XYZ;

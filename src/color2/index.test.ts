@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Color } from './index';
+import { cie94, Color } from './index';
 
 describe('Color', () => {
   describe('constructor', () => {
@@ -119,6 +119,28 @@ describe('Color', () => {
 
       // Assert
       expect(actual).toEqual(90);
+    });
+  });
+
+  describe('distanceTo', () => {
+    it('should compute the color difference between two colors', () => {
+      // Act
+      const color1 = new Color(50, 0, 0);
+      const color2 = new Color(100, 0, 0);
+      const actual = color1.distanceTo(color2);
+
+      // Assert
+      expect(actual).toEqual(50);
+    });
+
+    it('should compute the color difference between two colors using the specified formula', () => {
+      // Act
+      const color1 = new Color(30, 0, 0);
+      const color2 = new Color(100, 0, 0);
+      const actual = color1.distanceTo(color2, cie94);
+
+      // Assert
+      expect(actual).toEqual(70);
     });
   });
 

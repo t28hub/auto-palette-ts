@@ -1,10 +1,14 @@
 import { radianToDegree } from '../math';
 
+import { cie76, ColorDifference, DifferenceFunction } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
-import { HSL, RGB } from './types';
+import { HSL, LAB, RGB } from './types';
+
+export * from './difference';
+export * from './types';
 
 /**
- * Class representing a color in the CIELAB color space.
+ * Color class represents a color in any color space.
  */
 export class Color {
   /**
@@ -72,6 +76,17 @@ export class Color {
    */
   hue() {
     return radianToDegree(Math.atan2(this.b, this.a));
+  }
+
+  /**
+   * Compute the color difference between this color and the other color.
+   *
+   * @param other The other color.
+   * @param formula The formula to use to compute the color difference.
+   * @returns The color difference.
+   */
+  distanceTo(other: Color, formula: DifferenceFunction<LAB> = cie76): ColorDifference {
+    return formula({ l: this.l, a: this.a, b: this.b }, { l: other.l, a: other.a, b: other.b });
   }
 
   /**
