@@ -1,5 +1,5 @@
 import { ciede2000, DifferenceFunction, LAB } from './color';
-import { dbscanExtractor } from './extractor';
+import { alphaFilter, dbscanExtractor, luminanceFilter } from './extractor';
 import { createImageData, ImageSource } from './image';
 import { Distance, HierarchicalClustering, toDistance } from './math';
 import { Swatch } from './swatch';
@@ -95,7 +95,9 @@ export class Palette {
    */
   static extract(source: ImageSource): Palette {
     const imageData = createImageData(source);
-    const extractor = dbscanExtractor();
+    const extractor = dbscanExtractor({
+      colorFilters: [alphaFilter(), luminanceFilter()],
+    });
     const swatches = extractor.extract(imageData);
     return new Palette(swatches, ciede2000);
   }

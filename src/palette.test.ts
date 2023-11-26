@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ciede2000, Color } from './color';
 import { Palette } from './palette';
 import { Swatch } from './swatch';
-import { loadImageData } from './test';
+import { loadImageDataFromURL } from './test';
 
 const swatches: Swatch[] = [
   {
@@ -76,12 +76,12 @@ describe('Palette', () => {
   describe('extract', () => {
     it('should extract a new Palette from image', async () => {
       // Act
-      const imageData = await loadImageData('flag_za.png');
-      const actual = Palette.extract(imageData);
+      const image = await loadImageDataFromURL('https://picsum.photos/id/376/320/180');
+      const actual = Palette.extract(image);
 
       // Assert
       expect(actual.isEmpty()).toBeFalsy();
-      expect(actual.size()).toEqual(6);
+      expect(actual.size()).toBeGreaterThan(16);
       actual.getSwatches(6).forEach((swatch) => {
         console.info({
           color: swatch.color.toHexString(),
@@ -89,6 +89,6 @@ describe('Palette', () => {
           coordinate: swatch.position,
         });
       });
-    });
+    }, 10000);
   });
 });

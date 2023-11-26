@@ -3,17 +3,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ciede2000, Color } from '../color';
 import { DBSCAN, euclidean, Kmeans, Point5 } from '../math';
 import { Swatch } from '../swatch';
-import { loadImageData } from '../test';
+import { loadImageDataFromFile } from '../test';
 
 import { Extractor } from './extractor';
-import { opacity } from './filter';
+import { alphaFilter } from './filter';
 
 describe('Extractor', () => {
   describe('constructor', () => {
     it('should create a new Extractor', () => {
       // Act
       const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
-      const actual = new Extractor(kmeans, [opacity()]);
+      const actual = new Extractor(kmeans, [alphaFilter()]);
 
       // Assert
       expect(actual).toBeDefined();
@@ -25,10 +25,10 @@ describe('Extractor', () => {
     let kmeansExtractor: Extractor;
     beforeEach(() => {
       const dbscan = new DBSCAN<Point5>(16, 0.05, euclidean);
-      dbscanExtractor = new Extractor(dbscan, [opacity()]);
+      dbscanExtractor = new Extractor(dbscan, [alphaFilter()]);
 
       const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
-      kmeansExtractor = new Extractor(kmeans, [opacity()]);
+      kmeansExtractor = new Extractor(kmeans, [alphaFilter()]);
     });
 
     it.each([
@@ -54,7 +54,7 @@ describe('Extractor', () => {
       },
     ])('should extract swatches from $filename', async ({ filename, expected }) => {
       // Arrange
-      const imageData = await loadImageData(filename);
+      const imageData = await loadImageDataFromFile(filename);
 
       // Act
       const actual = dbscanExtractor.extract(imageData).sort((swatch1: Swatch, swatch2: Swatch) => {

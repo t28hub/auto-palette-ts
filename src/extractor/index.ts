@@ -1,31 +1,42 @@
-import { RGBA } from '../color';
 import { DBSCAN, Kmeans, Point5, squaredEuclidean } from '../math';
 
 import { Extractor } from './extractor';
-import { type ColorFilter, opacity } from './filter';
+import { ColorFilterFunction } from './filter';
 
-export type { ColorFilter } from './filter';
+export { alphaFilter, type ColorFilterFunction, luminanceFilter } from './filter';
 
 /**
- * Type representing DBSCAN options.
+ * Options for the DBSCAN color extractor.
  */
 export type DBSCANOptions = {
+  /**
+   * The minimum number of points required to form a dense region.
+   */
   readonly minPoints: number;
+
+  /**
+   * The maximum distance between two points for them to be considered as in the same dense region.
+   */
   readonly threshold: number;
-  readonly colorFilters: ColorFilter<RGBA>[];
+
+  /**
+   * The color filters to apply.
+   */
+  readonly colorFilters: ColorFilterFunction[];
 };
 
+// Default options for the DBSCAN color extractor.
 const DEFAULT_DBSCAN_OPTIONS: DBSCANOptions = {
-  minPoints: 16,
-  threshold: 0.0016,
-  colorFilters: [opacity()],
+  minPoints: 16, // 4 * 4
+  threshold: 0.0016, // 0.04 * 0.04
+  colorFilters: [],
 };
 
 /**
- * Create a new extractor using DBSCAN.
+ * Create a new color extractor using DBSCAN algorithm.
  *
- * @param options The options for the extractor.
- * @return The DBSCAN extractor.
+ * @param options - The options for the DBSCAN color extractor.
+ * @returns The color extractor.
  */
 export function dbscanExtractor(options: Partial<DBSCANOptions> = {}): Extractor {
   const { minPoints, threshold, colorFilters } = { ...DEFAULT_DBSCAN_OPTIONS, ...options };
@@ -34,27 +45,43 @@ export function dbscanExtractor(options: Partial<DBSCANOptions> = {}): Extractor
 }
 
 /**
- * Type representing Kmeans options.
+ * Options for the Kmeans color extractor.
  */
 export type KmeansOptions = {
+  /**
+   * The maximum number of colors to extract.
+   */
   readonly maxColors: number;
+
+  /**
+   * The maximum number of iterations.
+   */
   readonly maxIterations: number;
+
+  /**
+   * The tolerance for convergence.
+   */
   readonly tolerance: number;
-  readonly colorFilters: ColorFilter<RGBA>[];
+
+  /**
+   * The color filters to apply.
+   */
+  readonly colorFilters: ColorFilterFunction[];
 };
 
+// Default options for the Kmeans color extractor.
 const DEFAULT_KMEANS_OPTIONS: KmeansOptions = {
-  maxColors: 25,
+  maxColors: 32,
   maxIterations: 10,
   tolerance: 0.25,
-  colorFilters: [opacity()],
+  colorFilters: [],
 };
 
 /**
- * Create a new extractor using Kmeans.
+ * Create a new color extractor using K-means algorithm.
  *
- * @param options The options for the extractor.
- * @return The Kmeans extractor.
+ * @param options - The options for the K-means color extractor.
+ * @returns The color extractor.
  */
 export function kmeansExtractor(options: Partial<KmeansOptions> = {}): Extractor {
   const { maxColors, maxIterations, tolerance, colorFilters } = { ...DEFAULT_KMEANS_OPTIONS, ...options };

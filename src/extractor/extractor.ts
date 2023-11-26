@@ -1,26 +1,26 @@
-import { CIELabSpace, Color, RGB, RGBA, XYZSpace } from '../color';
+import { CIELabSpace, Color, RGBA, XYZSpace } from '../color';
 import { Cluster, ClusteringAlgorithm, DBSCAN, denormalize, euclidean, normalize, Point3, Point5 } from '../math';
 import { Swatch } from '../swatch';
 
-import { ColorFilter, composite } from './filter';
+import { ColorFilterFunction, composeFilters } from './filter';
 
 /**
  * Class to extract swatches from image data.
  */
 export class Extractor {
-  private readonly filter: ColorFilter<RGB>;
+  private readonly filter: ColorFilterFunction;
 
   /**
    * Create a new Extractor.
    *
    * @param clustering The clustering algorithm.
-   * @param filters The color filters.
+   * @param filters The color filter functions
    */
   constructor(
     private readonly clustering: ClusteringAlgorithm<Point5>,
-    filters: ColorFilter<RGB>[],
+    filters: ColorFilterFunction[],
   ) {
-    this.filter = composite(...filters);
+    this.filter = composeFilters(...filters);
   }
 
   /**
@@ -45,7 +45,7 @@ export class Extractor {
       };
 
       // Exclude colors that do not meet the filter criteria.
-      if (!this.filter.test(rgba)) {
+      if (!this.filter(rgba)) {
         continue;
       }
 
