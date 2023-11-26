@@ -14,12 +14,13 @@ import { MatcherResult } from './types';
 /**
  * Check whether the received color is similar to the expected color.
  *
- * @param received The received color to be checked.
- * @param expected The expected color.
- * @param threshold The allowed threshold.
+ * @param received - The received color to be checked.
+ * @param expected - The expected color.
+ * @param threshold - The threshold of the color difference. The default value is 10.0.
  * @return The matcher result.
+ * @throws {Error} If the expected value is not a valid color.
  */
-export function toBeSimilarColor(received: Color, expected: unknown, threshold = 40.0): MatcherResult {
+export function toBeSimilarColor(received: Color, expected: unknown, threshold = 10.0): MatcherResult {
   let expectedColor: Color | undefined;
   try {
     expectedColor = Color.parse(expected);
@@ -30,7 +31,7 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
   if (!expectedColor) {
     const errorMessage = matcherErrorMessage(
       matcherHint('toBeSimilarColor', 'received', 'expected'),
-      `${EXPECTED_COLOR('expected')} value must be a Color or string`,
+      `${EXPECTED_COLOR('expected')} value is not parseable as a color:`,
       printWithType('Expected', expected, printExpected),
     );
     throw new Error(errorMessage);

@@ -4,10 +4,11 @@ import { join } from 'node:path';
 import { createCanvas, Image } from '@napi-rs/canvas';
 
 /**
- * Load the image from the given filename.
+ * Load the image from a given file.
  *
- * @param filename The image filename.
- * @return The loaded image.
+ * @param filename - The name of the image file.
+ * @return A Promise that resolves to the loaded image.
+ * @see {@link loadImageData}
  */
 export async function loadImage(filename: string): Promise<Image> {
   const filepath = join(__dirname, 'fixtures', filename);
@@ -19,10 +20,11 @@ export async function loadImage(filename: string): Promise<Image> {
 }
 
 /**
- * Load the image data from the given filename.
+ * Load the image from a given file as ImageData object.
  *
- * @param filename The image filename.
- * @return The loaded image data.
+ * @param filename - The name of the image file.
+ * @return A Promise that resolves to the loaded image as ImageData object.
+ * @see {@link loadImage}
  */
 export async function loadImageData(filename: string): Promise<ImageData> {
   const image = await loadImage(filename);

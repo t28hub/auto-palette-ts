@@ -48,6 +48,10 @@ describe('Extractor', () => {
         filename: 'flag_sc.png',
         expected: ['#003f87', '#fcd856', '#d62828', '#ffffff', '#007a3d'],
       },
+      {
+        filename: 'flag_za.png',
+        expected: ['#e03c31', '#ffffff', '#007749', '#001489', '#ffb81c', '#000000'],
+      },
     ])('should extract swatches from $filename', async ({ filename, expected }) => {
       // Arrange
       const imageData = await loadImageData(filename);
