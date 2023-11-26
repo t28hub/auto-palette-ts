@@ -43,9 +43,9 @@ export class RGBSpace {
 
     if (value.length === 4) {
       // #rgb
-      r = Number.parseInt(value[1], 16);
-      g = Number.parseInt(value[2], 16);
-      b = Number.parseInt(value[3], 16);
+      r = Number.parseInt(value[1], 16) * 0x11;
+      g = Number.parseInt(value[2], 16) * 0x11;
+      b = Number.parseInt(value[3], 16) * 0x11;
     } else if (value.length === 7) {
       // #rrggbb
       r = Number.parseInt(value.slice(1, 3), 16);

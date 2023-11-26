@@ -42,7 +42,7 @@ export function normalize(value: number, min: number, max: number): number {
     throw new TypeError(`The maximum value(${max}) is not a finite number`);
   }
 
-  if (min > max) {
+  if (min >= max) {
     throw new RangeError(`The minimum value(${min}) is greater than the maximum value(${max})`);
   }
   return (value - min) / (max - min);
@@ -70,7 +70,7 @@ export function denormalize(value: number, min: number, max: number): number {
     throw new TypeError(`The maximum value(${max}) is not a finite number`);
   }
 
-  if (min > max) {
+  if (min >= max) {
     throw new RangeError(`The minimum value(${min}) is greater than the maximum value(${max})`);
   }
   return value * (max - min) + min;

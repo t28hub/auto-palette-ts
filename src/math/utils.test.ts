@@ -49,6 +49,29 @@ describe('utils', () => {
       // Assert
       expect(actual).toEqual(expected);
     });
+
+    it.each([
+      { value: NaN, min: 0, max: 100 },
+      { value: 50, min: NaN, max: 100 },
+      { value: 50, min: 0, max: NaN },
+    ])('should throw a TypeError if the value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
+      // Assert
+      expect(() => {
+        // Act
+        normalize(value, min, max);
+      }).toThrowError(TypeError);
+    });
+
+    it.each([
+      { value: 50, min: 0, max: 0 },
+      { value: 50, min: 100, max: 0 },
+    ])('should throw a RangeError if min($min) is not less than max($max)', ({ value, min, max }) => {
+      // Assert
+      expect(() => {
+        // Act
+        normalize(value, min, max);
+      }).toThrowError(RangeError);
+    });
   });
 
   describe('denormalize', () => {
@@ -64,6 +87,29 @@ describe('utils', () => {
 
       // Assert
       expect(actual).toEqual(expected);
+    });
+
+    it.each([
+      { value: NaN, min: 0, max: 100 },
+      { value: 0.5, min: NaN, max: 100 },
+      { value: 0.5, min: 0, max: NaN },
+    ])('should throw a TypeError if the value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
+      // Assert
+      expect(() => {
+        // Act
+        denormalize(value, min, max);
+      }).toThrowError(TypeError);
+    });
+
+    it.each([
+      { value: 0, min: 0, max: 0 },
+      { value: 0, min: 100, max: 0 },
+    ])('should throw a RangeError if min($min) is not less than max($max)', ({ value, min, max }) => {
+      // Assert
+      expect(() => {
+        // Act
+        denormalize(value, min, max);
+      }).toThrowError(RangeError);
     });
   });
 

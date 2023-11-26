@@ -21,6 +21,14 @@ describe('RGBSpace', () => {
 
   describe('fromHexString', () => {
     it.each([
+      { value: '#000', expected: { r: 0, g: 0, b: 0 } },
+      { value: '#fff', expected: { r: 255, g: 255, b: 255 } },
+      { value: '#f00', expected: { r: 255, g: 0, b: 0 } },
+      { value: '#0f0', expected: { r: 0, g: 255, b: 0 } },
+      { value: '#00f', expected: { r: 0, g: 0, b: 255 } },
+      { value: '#ff0', expected: { r: 255, g: 255, b: 0 } },
+      { value: '#0ff', expected: { r: 0, g: 255, b: 255 } },
+      { value: '#f0f', expected: { r: 255, g: 0, b: 255 } },
       { value: '#000000', expected: { r: 0, g: 0, b: 0 } },
       { value: '#ffffff', expected: { r: 255, g: 255, b: 255 } },
       { value: '#ff0000', expected: { r: 255, g: 0, b: 0 } },
@@ -37,7 +45,7 @@ describe('RGBSpace', () => {
       expect(actual).toEqual(expected);
     });
 
-    it.each(['000000', '#00000', '#0000', 'ff0050', '#ff00gg'])(
+    it.each(['000000', '#00000', '#0000', '#00g', 'ff0050', '#ff00gg'])(
       'should throw TypeError when the value is %s',
       (value) => {
         // Assert

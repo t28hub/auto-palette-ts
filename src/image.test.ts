@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createImageData } from './image';
 
@@ -45,6 +45,30 @@ describe('image', () => {
       // Assert
       expect(actual).toBeInstanceOf(ImageData);
       expect(actual).not.toBe(imageData);
+    });
+
+    it('should throw an Error if the 2D context is not supported', () => {
+      // Arrange
+      const canvasElement = document.createElement('canvas');
+      vi.spyOn(canvasElement, 'getContext').mockReturnValueOnce(null);
+
+      // Assert
+      expect(() => {
+        // Act
+        createImageData(canvasElement);
+      }).toThrow(Error);
+    });
+
+    it('should throw an Error if the image element has not loaded', () => {
+      // Arrange
+      const imageElement = document.createElement('img');
+      vi.spyOn(imageElement, 'complete', 'get').mockImplementationOnce(() => false);
+
+      // Assert
+      expect(() => {
+        // Act
+        createImageData(imageElement);
+      }).toThrow(Error);
     });
   });
 });
