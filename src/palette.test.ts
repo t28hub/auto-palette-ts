@@ -89,6 +89,14 @@ describe('Palette', () => {
           coordinate: swatch.position,
         });
       });
+
+      actual.findSwatch(6).forEach((swatch) => {
+        console.info({
+          color: swatch.color.toHexString(),
+          population: swatch.population,
+          coordinate: swatch.position,
+        });
+      });
     }, 10000);
   });
 });

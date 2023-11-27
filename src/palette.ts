@@ -88,6 +88,74 @@ export class Palette {
   }
 
   /**
+   * Find the best swatches from this palette.
+   *
+   * @param limit The max number of swatches.
+   * @return The best swatches within the given limit.
+   * @throws TypeError If the limit is less than or equal to 0.
+   */
+  findSwatch(limit: number = DEFAULT_SWATCH_COUNT): Swatch[] {
+    if (limit <= 0) {
+      throw new TypeError(`The limit must be greater than 0: ${limit}`);
+    }
+
+    if (limit >= this.swatches.length) {
+      return Array.from(this.swatches);
+    }
+
+    // Select best swatches using the Furthest Point Sampling algorithm.
+    const selected = new Map<number, Swatch>();
+    const distances = new Array<number>(this.swatches.length).fill(Number.POSITIVE_INFINITY);
+
+    const initialIndex = 0;
+    selected.set(initialIndex, this.swatches[initialIndex]);
+    distances[initialIndex] = 0.0;
+    this.swatches.forEach((swatch, index) => {
+      distances[index] = swatch.color.differenceTo(this.swatches[initialIndex].color, this.differenceFormula);
+    });
+
+    while (selected.size < limit) {
+      // Find the farthest swatch from the selected swatches.
+      let maxDistance = 0.0;
+      let farthestIndex = -1;
+      for (let i = 0; i < this.swatches.length; i++) {
+        if (selected.has(i)) {
+          continue;
+        }
+
+        const distance = distances[i];
+        if (distance > maxDistance) {
+          maxDistance = distance;
+          farthestIndex = i;
+        }
+      }
+
+      // If no swatch can be selected, stop the algorithm.
+      if (farthestIndex < 0) {
+        break;
+      }
+
+      selected.set(farthestIndex, this.swatches[farthestIndex]);
+      distances[farthestIndex] = 0.0;
+
+      // Update minimum distance to the selected swatches.
+      for (let i = 0; i < this.swatches.length; i++) {
+        if (selected.has(i)) {
+          continue;
+        }
+
+        const previousDistance = distances[i];
+        const currentDistance = this.swatches[farthestIndex].color.differenceTo(
+          this.swatches[i].color,
+          this.differenceFormula,
+        );
+        distances[i] = Math.min(previousDistance, currentDistance);
+      }
+    }
+    return Array.from(selected.values());
+  }
+
+  /**
    * Extract a color palette from the given image source.
    *
    * @param source The source of the image.
