@@ -1,13 +1,12 @@
 import { ciede2000, DifferenceFunction, LAB } from './color';
-import { alphaFilter, dbscanExtractor, luminanceFilter } from './extractor';
+import { ColorFilterFunction, dbscanExtractor } from './extractor';
 import { createImageData, ImageSource } from './image';
-import { Distance, HierarchicalClustering, toDistance } from './math';
 import { Swatch } from './swatch';
 
 const DEFAULT_SWATCH_COUNT = 6;
 
 /**
- * Color palette class.
+ * Palette class represents a color palette.
  */
 export class Palette {
   private readonly swatches: Swatch[];
@@ -16,28 +15,29 @@ export class Palette {
    * Create a new Palette instance.
    *
    * @param swatches - The swatches of the palette.
-   * @param differenceFormula - The color difference formula.
+   * @param differenceFormula - The function to calculate the color difference between two colors.
    */
   constructor(
     swatches: Swatch[],
     private readonly differenceFormula: DifferenceFunction<LAB>,
   ) {
+    // Sort the swatches by population in descending order.
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
     });
   }
 
   /**
-   * Return the size of swatches.
+   * Return the number of swatches.
    *
-   * @return The size of swatches.
+   * @return The number of swatches.
    */
   size(): number {
     return this.swatches.length;
   }
 
   /**
-   * Checks if the palette is empty.
+   * Check whether the palette is empty.
    *
    * @return True if the palette is empty, false otherwise.
    */
@@ -46,7 +46,7 @@ export class Palette {
   }
 
   /**
-   * Return the dominant swatch of this palette.
+   * Return the dominant swatch of the palette.
    *
    * @return The dominant swatch.
    */
@@ -55,55 +55,23 @@ export class Palette {
   }
 
   /**
-   * Return the given number of swatches.
+   * Find the best swatches from the palette.
    *
-   * @param count The max number of swatches.
-   * @return The swatches within the given count.
-   */
-  getSwatches(count: number = DEFAULT_SWATCH_COUNT): Swatch[] {
-    const algorithm = new HierarchicalClustering((swatch1: Swatch, swatch2: Swatch): Distance => {
-      const difference = swatch1.color.differenceTo(swatch2.color, this.differenceFormula);
-      return toDistance(difference);
-    });
-    const dendrogram = algorithm.fit(this.swatches);
-    const labels = dendrogram.partition(Math.min(count, dendrogram.length));
-    const merged = labels.reduce((merged, label, index): Map<number, Swatch> => {
-      const swatch = this.swatches[index];
-      const previous = merged.get(label);
-      if (!previous) {
-        merged.set(label, swatch);
-        return merged;
-      }
-
-      const population = previous.population + swatch.population;
-      const fraction = swatch.population / population;
-      if (fraction <= 0.5) {
-        merged.set(label, { color: swatch.color.clone(), population, position: swatch.position });
-      } else {
-        merged.set(label, { color: previous.color.clone(), population, position: previous.position });
-      }
-      return merged;
-    }, new Map<number, Swatch>());
-    return Array.from(merged.values());
-  }
-
-  /**
-   * Find the best swatches from this palette.
-   *
-   * @param limit The max number of swatches.
+   * @param limit The maximum number of swatches to find.
    * @return The best swatches within the given limit.
-   * @throws TypeError If the limit is less than or equal to 0.
+   * @throws {TypeError} If the limit is less than or equal to 0.
    */
   findSwatch(limit: number = DEFAULT_SWATCH_COUNT): Swatch[] {
     if (limit <= 0) {
       throw new TypeError(`The limit must be greater than 0: ${limit}`);
     }
 
+    // If the limit exceeds the number of swatches, return all swatches.
     if (limit >= this.swatches.length) {
       return Array.from(this.swatches);
     }
 
-    // Select best swatches using the Furthest Point Sampling algorithm.
+    // Select best swatches using the Farthest Point Sampling algorithm.
     const selected = new Map<number, Swatch>();
     const distances = new Array<number>(this.swatches.length).fill(Number.POSITIVE_INFINITY);
 
@@ -159,12 +127,14 @@ export class Palette {
    * Extract a color palette from the given image source.
    *
    * @param source The source of the image.
+   * @param filters The color filter functions.
    * @return A new Palette instance containing the extracted swatches.
    */
-  static extract(source: ImageSource): Palette {
+  static extract(source: ImageSource, filters: ColorFilterFunction[] = []): Palette {
     const imageData = createImageData(source);
     const extractor = dbscanExtractor({
-      colorFilters: [alphaFilter(), luminanceFilter()],
+      // Copy the filters array to prevent mutation.
+      filters: [...filters],
     });
     const swatches = extractor.extract(imageData);
     return new Palette(swatches, ciede2000);

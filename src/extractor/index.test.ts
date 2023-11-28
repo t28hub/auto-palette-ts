@@ -19,7 +19,7 @@ describe('extractor', () => {
       const actual = dbscanExtractor({
         minPoints: 36,
         threshold: 0.1,
-        colorFilters: [alphaFilter(0.5), luminanceFilter()],
+        filters: [alphaFilter(0.5), luminanceFilter()],
       });
 
       // Assert
@@ -41,7 +41,7 @@ describe('extractor', () => {
       const actual = kmeansExtractor({
         maxIterations: 5,
         tolerance: 0.01,
-        colorFilters: [alphaFilter(0.5), luminanceFilter()],
+        filters: [alphaFilter(0.5), luminanceFilter()],
       });
 
       // Assert

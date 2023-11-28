@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { ciede2000, Color } from './color';
+import { alphaFilter, luminanceFilter } from './extractor';
 import { Palette } from './palette';
 import { Swatch } from './swatch';
-import { loadImageDataFromURL } from './test';
+import { loadImageDataFromFile, loadImageDataFromURL } from './test';
 
 const swatches: Swatch[] = [
   {
@@ -25,7 +26,7 @@ const swatches: Swatch[] = [
 
 describe('Palette', () => {
   describe('constructor', () => {
-    it('should create a new Palette instance', () => {
+    it('should create a new Palette instance with given swatches and difference formula', () => {
       // Act
       const actual = new Palette(swatches, ciede2000);
 
@@ -35,7 +36,7 @@ describe('Palette', () => {
   });
 
   describe('getDominantSwatch', () => {
-    it('should return the swatch of the max population', () => {
+    it('should return the dominant swatch', () => {
       // Act
       const palette = new Palette(swatches, ciede2000);
       const actual = palette.getDominantSwatch();
@@ -47,49 +48,63 @@ describe('Palette', () => {
     });
   });
 
-  describe('getSwatches', () => {
+  describe('findSwatches', () => {
     let palette: Palette;
-    beforeEach(() => {
-      palette = new Palette(swatches, ciede2000);
-    });
+    beforeEach(async () => {
+      const image = await loadImageDataFromFile('flag_za.png');
+      palette = Palette.extract(image);
+    }, 10000);
 
-    it('should return the all swatches', () => {
+    it('should return swatches', async () => {
       // Act
-      const actual = palette.getSwatches();
+      const actual = palette.findSwatch(3);
 
       // Assert
       expect(actual).toBeArrayOfSize(3);
-      expect(actual[0]).toMatchObject(swatches[1]);
-      expect(actual[1]).toMatchObject(swatches[0]);
-      expect(actual[2]).toMatchObject(swatches[2]);
+      expect(actual[0].color).toBeSimilarColor('#007749');
+      expect(actual[1].color).toBeSimilarColor('#E03C31');
+      expect(actual[2].color).toBeSimilarColor('#001489');
     });
 
-    it('should return the given number of swatches', () => {
+    it('should return all swatches if limit exceeds the number of swatches', () => {
       // Act
-      const actual = palette.getSwatches(2);
+      const actual = palette.findSwatch(1024);
 
       // Assert
-      expect(actual).toBeArrayOfSize(2);
+      expect(actual).toBeArrayOfSize(6);
+    });
+
+    it('should throw a TypeError if limit is less than or equal to 0', () => {
+      // Assert
+      expect(() => {
+        // Act
+        palette.findSwatch(0);
+      }).toThrowError(TypeError);
     });
   });
 
   describe('extract', () => {
-    it('should extract a new Palette from image', async () => {
+    let image: ImageData;
+    beforeEach(async () => {
+      image = await loadImageDataFromURL('https://picsum.photos/id/376/320/180');
+    }, 10000);
+
+    it('should extract a new Palette from given image', async () => {
       // Act
-      const image = await loadImageDataFromURL('https://picsum.photos/id/376/320/180');
       const actual = Palette.extract(image);
 
       // Assert
       expect(actual.isEmpty()).toBeFalsy();
       expect(actual.size()).toBeGreaterThan(16);
-      actual.getSwatches(6).forEach((swatch) => {
-        console.info({
-          color: swatch.color.toHexString(),
-          population: swatch.population,
-          coordinate: swatch.position,
-        });
-      });
+    });
 
+    it('should extract a new Palette from given image and filers', async () => {
+      // Act
+      const actual = Palette.extract(image, [alphaFilter(), luminanceFilter()]);
+
+      // Assert
+      expect(actual.isEmpty()).toBeFalsy();
+      expect(actual.size()).toBeGreaterThan(16);
       actual.findSwatch(6).forEach((swatch) => {
         console.info({
           color: swatch.color.toHexString(),

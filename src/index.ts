@@ -10,6 +10,7 @@ export {
   type XYZ,
   type LAB,
 } from './color';
+export { alphaFilter, luminanceFilter, type ColorFilterFunction } from './extractor';
 export type { ImageSource } from './image';
 export { Palette } from './palette';
 export type { Swatch } from './swatch';
