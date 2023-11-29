@@ -57,7 +57,7 @@ describe('Palette', () => {
 
     it('should return swatches', async () => {
       // Act
-      const actual = palette.findSwatch(3);
+      const actual = palette.findSwatches(3);
 
       // Assert
       expect(actual).toBeArrayOfSize(3);
@@ -68,7 +68,7 @@ describe('Palette', () => {
 
     it('should return all swatches if limit exceeds the number of swatches', () => {
       // Act
-      const actual = palette.findSwatch(1024);
+      const actual = palette.findSwatches(1024);
 
       // Assert
       expect(actual).toBeArrayOfSize(6);
@@ -78,7 +78,7 @@ describe('Palette', () => {
       // Assert
       expect(() => {
         // Act
-        palette.findSwatch(0);
+        palette.findSwatches(0);
       }).toThrowError(TypeError);
     });
   });
@@ -105,13 +105,13 @@ describe('Palette', () => {
       // Assert
       expect(actual.isEmpty()).toBeFalsy();
       expect(actual.size()).toBeGreaterThan(16);
-      actual.findSwatch(6).forEach((swatch) => {
+      actual.findSwatches(6).forEach((swatch) => {
         console.info({
           color: swatch.color.toHexString(),
           population: swatch.population,
           coordinate: swatch.position,
         });
       });
-    }, 10000);
+    });
   });
 });

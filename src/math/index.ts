@@ -4,5 +4,6 @@ export * from './error';
 export * from './neighbor';
 export * from './matrix';
 export * from './point';
+export * from './sampling';
 export * from './utils';
 export * from './vector';
