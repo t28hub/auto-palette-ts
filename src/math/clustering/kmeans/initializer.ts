@@ -1,4 +1,4 @@
-import { Distance, DistanceFunction, Point, toDistance } from '../../index';
+import { Distance, DistanceFunction, Point } from '../../index';
 
 /**
  * Interface for initializing center points for Kmeans algorithm.
@@ -97,7 +97,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitial
   }
 
   private computeNearestDistance(point: P, selected: Map<number, P>): Distance {
-    let minDistance: Distance = toDistance(Number.MAX_VALUE);
+    let minDistance: Distance = Number.MAX_VALUE as Distance;
     for (const selectedPoint of selected.values()) {
       const distance = this.distanceFunction(point, selectedPoint);
       if (distance < minDistance) {
