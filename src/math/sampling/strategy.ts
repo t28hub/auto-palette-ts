@@ -1,9 +1,11 @@
+import { Point } from '../point';
+
 /**
  * SamplingStrategy interface represents a strategy for sampling a set of data points.
  *
- * @typeParam T - The type of the data points.
+ * @typeParam P - The type of the point.
  */
-export interface SamplingStrategy<T> {
+export interface SamplingStrategy<P extends Point> {
   /**
    * Downsample the data points according to the strategy.
    *
@@ -12,5 +14,5 @@ export interface SamplingStrategy<T> {
    * @returns The downsampled data points.
    * @throws {RangeError} If the `n` is less than or equal to 0.
    */
-  sample(points: T[], n: number): T[];
+  sample(points: P[], n: number): P[];
 }

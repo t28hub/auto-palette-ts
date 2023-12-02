@@ -50,6 +50,18 @@ describe('Color', () => {
     });
   });
 
+  describe('clone', () => {
+    it('should return a cloned color', () => {
+      // Act
+      const color = new Color(50, 0, 0);
+      const actual = color.clone();
+
+      // Assert
+      expect(actual).not.toBe(color);
+      expect(actual).toMatchObject(color);
+    });
+  });
+
   describe('isLight', () => {
     it('should return true for light colors', () => {
       // Act
@@ -63,7 +75,7 @@ describe('Color', () => {
     it('should return false for dark colors', () => {
       // Act
       const color = new Color(50, 0, 0);
-      const actual = color.isLight;
+      const actual = color.isLight();
 
       // Assert
       expect(actual).toBeFalsy();
@@ -74,7 +86,7 @@ describe('Color', () => {
     it('should return true for dark colors', () => {
       // Act
       const color = new Color(50, 0, 0);
-      const actual = color.isDark;
+      const actual = color.isDark();
 
       // Assert
       expect(actual).toBeTruthy();
@@ -82,7 +94,7 @@ describe('Color', () => {
 
     it('should return false for light colors', () => {
       const color = new Color(50.1, 0, 0);
-      const actual = color.isDark;
+      const actual = color.isDark();
 
       // Assert
       expect(actual).toBeFalsy();
@@ -93,22 +105,10 @@ describe('Color', () => {
     it('should return the luminance of the color', () => {
       // Act
       const color = new Color(50, 0, 0);
-      const actual = color.luminance;
+      const actual = color.luminance();
 
       // Assert
       expect(actual).toEqual(50);
-    });
-  });
-
-  describe('clone', () => {
-    it('should return a cloned color', () => {
-      // Act
-      const color = new Color(50, 0, 0);
-      const actual = color.clone();
-
-      // Assert
-      expect(actual).not.toBe(color);
-      expect(actual).toMatchObject(color);
     });
   });
 
@@ -142,7 +142,7 @@ describe('Color', () => {
       const actual = color1.differenceTo(color2);
 
       // Assert
-      expect(actual).toEqual(50);
+      expect(actual).toBeCloseTo(36.5193);
     });
 
     it('should compute the color difference between two colors using the specified formula', () => {
@@ -153,6 +153,26 @@ describe('Color', () => {
 
       // Assert
       expect(actual).toEqual(70);
+    });
+  });
+
+  describe('toHex', () => {
+    it.each([
+      { l: 0, a: 0, b: 0, expected: '#000000' }, // Black
+      { l: 100, a: 0, b: 0, expected: '#ffffff' }, // White
+      { l: 53.2371, a: 80.1106, b: 67.2237, expected: '#ff0000' }, // Red
+      { l: 87.7355, a: -86.1822, b: 83.1866, expected: '#00ff00' }, // Green
+      { l: 32.3008, a: 79.1952, b: -107.8554, expected: '#0000ff' }, // Blue
+      { l: 91.1132, a: -48.0875, b: -14.1312, expected: '#00ffff' }, // Cyan
+      { l: 60.3242, a: 98.2557, b: -60.8249, expected: '#ff00ff' }, // Magenta
+      { l: 97.1393, a: -21.5537, b: 94.4896, expected: '#ffff00' }, // Yellow
+    ])('should convert color($l, $a, $b) to hex decimal string($expected)', ({ l, a, b, expected }) => {
+      // Act
+      const color = new Color(l, a, b);
+      const actual = color.toHex();
+
+      // Assert
+      expect(actual).toEqual(expected);
     });
   });
 
@@ -196,23 +216,23 @@ describe('Color', () => {
     });
   });
 
-  describe('toHexString', () => {
+  describe('toLAB', () => {
     it.each([
-      { l: 0, a: 0, b: 0, expected: '#000000' }, // Black
-      { l: 100, a: 0, b: 0, expected: '#ffffff' }, // White
-      { l: 53.2371, a: 80.1106, b: 67.2237, expected: '#ff0000' }, // Red
-      { l: 87.7355, a: -86.1822, b: 83.1866, expected: '#00ff00' }, // Green
-      { l: 32.3008, a: 79.1952, b: -107.8554, expected: '#0000ff' }, // Blue
-      { l: 91.1132, a: -48.0875, b: -14.1312, expected: '#00ffff' }, // Cyan
-      { l: 60.3242, a: 98.2557, b: -60.8249, expected: '#ff00ff' }, // Magenta
-      { l: 97.1393, a: -21.5537, b: 94.4896, expected: '#ffff00' }, // Yellow
-    ])('should convert color($l, $a, $b) to hex decimal string($expected)', ({ l, a, b, expected }) => {
+      { l: 0, a: 0, b: 0 },
+      { l: 100, a: 0, b: 0 },
+      { l: 53.2371, a: 80.1106, b: 67.2237 },
+      { l: 87.7355, a: -86.1822, b: 83.1866 },
+      { l: 32.3008, a: 79.1952, b: -107.8554 },
+      { l: 91.1132, a: -48.0875, b: -14.1312 },
+      { l: 60.3242, a: 98.2557, b: -60.8249 },
+      { l: 97.1393, a: -21.5537, b: 94.4896 },
+    ])('should return the color($l, $a, $b) in CIELAB color space', ({ l, a, b }) => {
       // Act
       const color = new Color(l, a, b);
-      const actual = color.toHexString();
+      const actual = color.toLAB();
 
       // Assert
-      expect(actual).toEqual(expected);
+      expect(actual).toMatchObject({ l, a, b });
     });
   });
 

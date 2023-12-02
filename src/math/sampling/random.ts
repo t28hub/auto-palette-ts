@@ -1,15 +1,17 @@
+import { Point } from '../point';
+
 import { SamplingStrategy } from './strategy';
 
 /**
  * RandomSampling implements the random sampling strategy.
  *
- * @typeParam T - The type of the data points.
+ * @typeParam P - The type of the point.
  */
-export class RandomSampling<T> implements SamplingStrategy<T> {
+export class RandomSampling<P extends Point> implements SamplingStrategy<P> {
   /**
    * {@inheritDoc SamplingStrategy.sample}
    */
-  sample(points: T[], n: number): T[] {
+  sample(points: P[], n: number): P[] {
     if (n <= 0) {
       throw new RangeError(`The number of data points to downsample must be greater than 0: ${n}`);
     }
@@ -18,7 +20,7 @@ export class RandomSampling<T> implements SamplingStrategy<T> {
       return [...points];
     }
 
-    const sampled = new Set<T>();
+    const sampled = new Set<P>();
     while (sampled.size < n) {
       const index = Math.floor(Math.random() * points.length);
       sampled.add(points[index]);

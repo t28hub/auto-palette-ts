@@ -1,6 +1,6 @@
 import { radianToDegree } from '../math';
 
-import { cie76, ColorDifference, DifferenceFunction } from './difference';
+import { ciede2000, ColorDifference, DifferenceFunction } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
 
@@ -33,35 +33,6 @@ export class Color {
   }
 
   /**
-   * Check if the color is light.
-   *
-   * @returns True if the color is light, false otherwise.
-   * @see isDark
-   */
-  get isLight() {
-    return this.l > 50;
-  }
-
-  /**
-   * Check if the color is dark.
-   *
-   * @returns True if the color is dark, false otherwise.
-   * @see isLight
-   */
-  get isDark() {
-    return !this.isLight;
-  }
-
-  /**
-   * Calculate the lightness of the color.
-   *
-   * @returns The lightness of the color.
-   */
-  get luminance() {
-    return this.l;
-  }
-
-  /**
    * Clone the color.
    *
    * @returns The cloned color.
@@ -71,9 +42,42 @@ export class Color {
   }
 
   /**
+   * Check if the color is light.
+   *
+   * @returns True if the color is light, false otherwise.
+   * @see isDark
+   */
+  isLight() {
+    return this.l > 50;
+  }
+
+  /**
+   * Check if the color is dark.
+   *
+   * @returns True if the color is dark, false otherwise.
+   * @see isLight
+   */
+  isDark() {
+    return !this.isLight();
+  }
+
+  /**
+   * Calculate the lightness of the color.
+   *
+   * @returns The lightness of the color.
+   * @see chroma
+   * @see hue
+   */
+  luminance() {
+    return this.l;
+  }
+
+  /**
    * Calculate the chroma of the color.
    *
    * @returns The chroma of the color.
+   * @see luminance
+   * @see hue
    */
   chroma() {
     return Math.sqrt(this.a ** 2 + this.b ** 2);
@@ -83,6 +87,8 @@ export class Color {
    * Calculate the hue of the color.
    *
    * @returns The hue of the color.
+   * @see luminance
+   * @see chroma
    */
   hue() {
     return radianToDegree(Math.atan2(this.b, this.a));
@@ -92,11 +98,30 @@ export class Color {
    * Compute the color difference between this color and the other color.
    *
    * @param other The other color.
-   * @param formula The formula to use to compute the color difference.
+   * @param formula The formula to use to compute the color difference. Default is CIEDE2000.
    * @returns The color difference.
    */
-  differenceTo(other: Color, formula: DifferenceFunction<LAB> = cie76): ColorDifference {
+  differenceTo(other: Color, formula: DifferenceFunction<LAB> = ciede2000): ColorDifference {
     return formula({ l: this.l, a: this.a, b: this.b }, { l: other.l, a: other.a, b: other.b });
+  }
+
+  /**
+   * Return the string representation of the color.
+   *
+   * @returns The string representation of the color.
+   */
+  toString() {
+    return this.toHex();
+  }
+
+  /**
+   * Convert the color to hex decimal string.
+   *
+   * @returns The color in hex decimal string.
+   */
+  toHex(): string {
+    const rgb = this.toRGB();
+    return RGBSpace.toHexString(rgb);
   }
 
   /**
@@ -120,13 +145,12 @@ export class Color {
   }
 
   /**
-   * Convert the color to hex decimal string.
+   * Convert the color to CIELAB color space.
    *
-   * @returns The color in hex decimal string.
+   * @returns The color in CIELAB color space.
    */
-  toHexString(): string {
-    const rgb = this.toRGB();
-    return RGBSpace.toHexString(rgb);
+  toLAB(): LAB {
+    return { l: this.l, a: this.a, b: this.b };
   }
 
   /**

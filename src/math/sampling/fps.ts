@@ -1,22 +1,27 @@
+import assert from 'assert';
+
+import { DistanceFunction } from '../distance';
+import { Point } from '../point';
+
 import { SamplingStrategy } from './strategy';
 
 /**
  * FarthestPointSampling implements the farthest point sampling strategy.
  *
- * @typeParam T - The type of the data points.
+ * @typeParam P - The type of the point.
  */
-export class FarthestPointSampling<T> implements SamplingStrategy<T> {
+export class FarthestPointSampling<P extends Point> implements SamplingStrategy<P> {
   /**
    * Create a new FarthestPointSampling instance.
    *
    * @param distanceFunction - The distance function to calculate the distance between two data points.
    */
-  constructor(private readonly distanceFunction: (point1: T, point2: T) => number) {}
+  constructor(private readonly distanceFunction: DistanceFunction) {}
 
   /**
    * {@inheritDoc SamplingStrategy.sample}
    */
-  sample(points: T[], n: number): T[] {
+  sample(points: P[], n: number): P[] {
     if (n <= 0) {
       throw new RangeError(`The number of data points to downsample must be greater than 0: ${n}`);
     }
@@ -25,7 +30,7 @@ export class FarthestPointSampling<T> implements SamplingStrategy<T> {
       return [...points];
     }
 
-    const sampled = new Map<number, T>();
+    const sampled = new Map<number, P>();
     const distances = new Array(points.length);
 
     const initialIndex = 0;
@@ -38,10 +43,7 @@ export class FarthestPointSampling<T> implements SamplingStrategy<T> {
 
     while (sampled.size < n) {
       const farthestIndex = this.findFarthestIndex(distances, sampled);
-      // If no data point can be selected, stop sampling.
-      if (farthestIndex < 0) {
-        break;
-      }
+      assert(farthestIndex >= 0, 'No data point can be selected.');
 
       const farthestPoint = points[farthestIndex];
       sampled.set(farthestIndex, farthestPoint);
@@ -67,7 +69,7 @@ export class FarthestPointSampling<T> implements SamplingStrategy<T> {
    * @param sampled - The sampled data points.
    * @returns The index of the farthest data point. If no data point can be selected, returns -1.
    */
-  private findFarthestIndex(distances: number[], sampled: Map<number, T>): number {
+  private findFarthestIndex(distances: number[], sampled: Map<number, P>): number {
     let farthestIndex = -1;
     let farthestDistance = 0.0;
     for (let i = 0; i < distances.length; i++) {
