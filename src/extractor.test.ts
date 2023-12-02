@@ -1,19 +1,18 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { ciede2000, Color } from '../color';
-import { DBSCAN, euclidean, Kmeans, Point5 } from '../math';
-import { Swatch } from '../swatch';
-import { loadImageDataFromFile } from '../test';
-
-import { Extractor } from './extractor';
+import { ciede2000, Color } from './color';
+import { SwatchExtractor } from './extractor';
 import { alphaFilter } from './filter';
+import { DBSCAN, euclidean, Kmeans, Point5, squaredEuclidean } from './math';
+import { Swatch } from './swatch';
+import { loadImageDataFromFile } from './test';
 
-describe('Extractor', () => {
+describe('SwatchExtractor', () => {
   describe('constructor', () => {
     it('should create a new Extractor', () => {
       // Act
       const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
-      const actual = new Extractor(kmeans, [alphaFilter()]);
+      const actual = new SwatchExtractor(kmeans, [alphaFilter()]);
 
       // Assert
       expect(actual).toBeDefined();
@@ -21,14 +20,14 @@ describe('Extractor', () => {
   });
 
   describe('extract', () => {
-    let dbscanExtractor: Extractor;
-    let kmeansExtractor: Extractor;
+    let dbscanExtractor: SwatchExtractor;
+    let kmeansExtractor: SwatchExtractor;
     beforeEach(() => {
-      const dbscan = new DBSCAN<Point5>(16, 0.05, euclidean);
-      dbscanExtractor = new Extractor(dbscan, [alphaFilter()]);
+      const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      dbscanExtractor = new SwatchExtractor(dbscan, [alphaFilter()]);
 
-      const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean);
-      kmeansExtractor = new Extractor(kmeans, [alphaFilter()]);
+      const kmeans = new Kmeans<Point5>(16, 16, 0.0025, squaredEuclidean);
+      kmeansExtractor = new SwatchExtractor(kmeans, [alphaFilter()]);
     });
 
     it.each([

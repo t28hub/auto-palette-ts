@@ -1,10 +1,30 @@
 import { SwatchCollection } from './collection';
-import { ColorFilterFunction, dbscanExtractor } from './extractor';
+import { SwatchExtractor } from './extractor';
+import { ColorFilterFunction } from './filter';
 import { createImageData, ImageSource } from './image';
-import { euclidean, FarthestPointSampling, Point3 } from './math';
+import {
+  DBSCAN,
+  euclidean,
+  FarthestPointSampling,
+  Kmeans,
+  KmeansPlusPlusInitializer,
+  Point3,
+  Point5,
+  squaredEuclidean,
+} from './math';
 import { Swatch } from './swatch';
 
 const DEFAULT_SWATCH_COUNT = 6;
+
+/**
+ * The algorithm to use for palette extraction.
+ * dbscan: Density-based spatial clustering of applications with noise(DBSCAN) clustering.
+ * kmeans: K-means clustering.
+ *
+ * @see [DBSCAN - Wikipedia](https://en.wikipedia.org/wiki/DBSCAN)
+ * @see [k-means clustering - Wikipedia](https://en.wikipedia.org/wiki/K-means_clustering)
+ */
+export type Algorithm = 'dbscan' | 'kmeans';
 
 /**
  * Palette class represents a color palette.
@@ -69,15 +89,24 @@ export class Palette {
    *
    * @param source The source of the image.
    * @param filters The color filter functions.
+   * @param algorithm The algorithm to use for palette extraction. Default is dbscan.
    * @return A new Palette instance containing the extracted swatches.
    */
-  static extract(source: ImageSource, filters: ColorFilterFunction[] = []): Palette {
+  static extract(source: ImageSource, filters: ColorFilterFunction[] = [], algorithm: Algorithm = 'dbscan'): Palette {
     const imageData = createImageData(source);
-    const extractor = dbscanExtractor({
-      // Copy the filters array to prevent mutation.
-      filters: [...filters],
-    });
+    const extractor = Palette.createExtractor(algorithm, filters);
     const swatches = extractor.extract(imageData);
     return new Palette(swatches);
+  }
+
+  private static createExtractor(algorithm: Algorithm, filters: ColorFilterFunction[]): SwatchExtractor {
+    if (algorithm === 'kmeans') {
+      const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
+      const kmeans = new Kmeans<Point5>(32, 10, 0.0025, squaredEuclidean, strategy);
+      return new SwatchExtractor(kmeans, [...filters]);
+    } else {
+      const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      return new SwatchExtractor(dbscan, [...filters]);
+    }
   }
 }

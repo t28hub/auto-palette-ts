@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Color } from './color';
-import { alphaFilter, luminanceFilter } from './extractor';
+import { alphaFilter, luminanceFilter } from './filter';
 import { Palette } from './palette';
 import { Swatch } from './swatch';
 import { loadImageDataFromFile, loadImageDataFromURL } from './test';

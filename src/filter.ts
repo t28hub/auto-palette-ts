@@ -1,4 +1,4 @@
-import { RGBA } from '../color';
+import { RGBA } from './color';
 
 /**
  * Color filter function that filters colors.

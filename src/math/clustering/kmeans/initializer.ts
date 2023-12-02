@@ -5,7 +5,7 @@ import { Distance, DistanceFunction, Point } from '../../index';
  *
  * @param P The type of point.
  */
-export interface CenterInitializer<P extends Point> {
+export interface InitializationStrategy<P extends Point> {
   /**
    * Initialize center points.
    *
@@ -23,7 +23,7 @@ const NO_INDEX = -1;
  *
  * @param P The type of point.
  */
-export class KmeansPlusPlusInitializer<P extends Point> implements CenterInitializer<P> {
+export class KmeansPlusPlusInitializer<P extends Point> implements InitializationStrategy<P> {
   /**
    * Create a new Kmeans++ center initializer
    *

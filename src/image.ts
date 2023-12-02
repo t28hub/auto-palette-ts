@@ -16,7 +16,6 @@ export function createImageData(source: ImageSource): ImageData {
   if (source instanceof HTMLImageElement) {
     return fromImageElement(source);
   }
-  // If
   return new ImageData(source.data, source.width, source.height);
 }
 

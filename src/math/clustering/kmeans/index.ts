@@ -4,9 +4,9 @@ import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
-import { CenterInitializer, KmeansPlusPlusInitializer } from './initializer';
+import { InitializationStrategy, KmeansPlusPlusInitializer } from './initializer';
 
-export { type CenterInitializer, KmeansPlusPlusInitializer } from './initializer';
+export { type InitializationStrategy, KmeansPlusPlusInitializer } from './initializer';
 
 /**
  * Implementation of the k-means clustering algorithm.
@@ -22,7 +22,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
    * @param maxIterations The maximum number of iterations.
    * @param tolerance The tolerance for convergence conditions.
    * @param distanceFunction The function to measure the distance between two points.
-   * @param centerInitializer The strategy to initialize center points.
+   * @param initializationStrategy The strategy to initialize center points.
    * @throws {TypeError} if any constructor arguments are invalid.
    */
   constructor(
@@ -30,7 +30,9 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     private readonly maxIterations: number,
     private readonly tolerance: number,
     private readonly distanceFunction: DistanceFunction,
-    private readonly centerInitializer: CenterInitializer<P> = new KmeansPlusPlusInitializer(distanceFunction),
+    private readonly initializationStrategy: InitializationStrategy<P> = new KmeansPlusPlusInitializer(
+      distanceFunction,
+    ),
   ) {
     if (!Number.isInteger(k) || k <= 0) {
       throw new TypeError(`The number of cluster must be a positive integer: ${k}`);
@@ -59,7 +61,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
       });
     }
 
-    const clusters = this.centerInitializer
+    const clusters = this.initializationStrategy
       .initialize(points, this.k)
       .map((centroid: P): Cluster<P> => new Cluster(centroid));
     for (let i = 0; i < this.maxIterations; i++) {

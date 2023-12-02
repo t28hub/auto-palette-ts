@@ -1,33 +1,32 @@
-import { CIELabSpace, Color, RGBA, XYZSpace } from '../color';
-import { Cluster, ClusteringAlgorithm, DBSCAN, denormalize, euclidean, normalize, Point3, Point5 } from '../math';
-import { Swatch } from '../swatch';
-
+import { CIELabSpace, Color, RGBA, XYZSpace } from './color';
 import { ColorFilterFunction, composeFilters } from './filter';
+import { Cluster, ClusteringAlgorithm, DBSCAN, denormalize, euclidean, normalize, Point3, Point5 } from './math';
+import { Swatch } from './swatch';
 
 /**
- * Class to extract swatches from image data.
+ * SwatchExtractor class extracts swatches from an image.
  */
-export class Extractor {
+export class SwatchExtractor {
   private readonly filter: ColorFilterFunction;
 
   /**
-   * Create a new Extractor.
+   * Create a new SwatchExtractor instance.
    *
-   * @param clustering The clustering algorithm.
-   * @param filters The color filter functions
+   * @param algorithm - The clustering algorithm to use.
+   * @param filters - The color filter functions to use.
    */
   constructor(
-    private readonly clustering: ClusteringAlgorithm<Point5>,
+    private readonly algorithm: ClusteringAlgorithm<Point5>,
     filters: ColorFilterFunction[],
   ) {
     this.filter = composeFilters(...filters);
   }
 
   /**
-   * Extract colors from image data.
+   * Extract swatches from the given image data.
    *
-   * @param imageData The image data.
-   * @return The extracted swatches.
+   * @param imageData - The image data to extract swatches from.
+   * @return The extracted swatches. If no swatches are extracted, an empty array is returned.
    */
   extract(imageData: ImageData): Swatch[] {
     const { data, width, height } = imageData;
@@ -58,8 +57,8 @@ export class Extractor {
         normalize(lab.l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
         normalize(lab.a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
         normalize(lab.b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
-        normalize(x, 0, width),
-        normalize(y, 0, height),
+        x / width,
+        y / height,
       ]);
     }
 
@@ -67,12 +66,12 @@ export class Extractor {
       return [];
     }
 
-    const pixelCluster = this.clustering.fit(pixels);
-    if (pixelCluster.length === 0) {
+    const pixelClusters = this.algorithm.fit(pixels);
+    if (pixelClusters.length === 0) {
       return [];
     }
 
-    const colors = pixelCluster.map((cluster: Cluster<Point5>): Point3 => {
+    const colors = pixelClusters.map((cluster: Cluster<Point5>): Point3 => {
       const pixel = cluster.getCentroid();
       const l = denormalize(pixel[0], CIELabSpace.MIN_L, CIELabSpace.MAX_L);
       const a = denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A);
@@ -83,7 +82,7 @@ export class Extractor {
     const colorClusters = dbscan.fit(colors);
 
     return colorClusters.map((cluster: Cluster<Point3>): Swatch => {
-      const [l, a, b, x, y, population] = Extractor.createSwatch(cluster, pixelCluster);
+      const [l, a, b, x, y, population] = SwatchExtractor.createSwatch(cluster, pixelClusters);
       const color = new Color(
         denormalize(l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
         denormalize(a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
@@ -97,6 +96,13 @@ export class Extractor {
     });
   }
 
+  /**
+   * Create best swatch from the given color cluster and pixel clusters.
+   *
+   * @param colorCluster - The color cluster to create a swatch from.
+   * @param pixelClusters - The pixel clusters to create a swatch from.
+   * @return The array of the best swatch properties.
+   */
   private static createSwatch(colorCluster: Cluster<Point3>, pixelClusters: Cluster<Point5>[]): number[] {
     const bestSwatch = {
       l: 0.0,
