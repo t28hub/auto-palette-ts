@@ -7,7 +7,7 @@ import { toBeSimilarColor } from './toBeSimilarColor';
  *
  * These matchers are automatically extended to the global scope.
  */
-export interface AutoPaletteMatchers<R = unknown> {
+interface AutoPaletteMatchers<R = unknown> {
   /**
    * Check whether the received color is similar to the expected color.
    *

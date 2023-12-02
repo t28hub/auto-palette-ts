@@ -30,7 +30,6 @@ export default defineConfig({
         resources: 'usable',
       },
     },
-    reporters: ['default', 'html'],
     setupFiles: ['vitest.setup.ts'],
     testTimeout: 3000,
     coverage: {

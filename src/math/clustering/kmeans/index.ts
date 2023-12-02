@@ -6,7 +6,7 @@ import { Cluster } from '../cluster';
 
 import { InitializationStrategy } from './initializer';
 
-export { type InitializationStrategy, KmeansPlusPlusInitializer } from './initializer';
+export { KmeansPlusPlusInitializer } from './initializer';
 
 /**
  * Implementation of the k-means clustering algorithm.

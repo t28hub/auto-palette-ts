@@ -3,6 +3,5 @@
   "entry": ["src/index.ts"],
   "project": ["src/**/*.ts"],
   "ignore": ["**/*.d.ts"],
-  "ignoreBinaries": ["only-allow"],
-  "ignoreDependencies": ["html"]
+  "ignoreBinaries": ["only-allow"]
 }
