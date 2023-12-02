@@ -71,29 +71,42 @@ export class SwatchExtractor {
       return [];
     }
 
-    const colors = pixelClusters.map((cluster: Cluster<Point5>): Point3 => {
+    const colors = pixelClusters.reduce((acc: Point3[], cluster: Cluster<Point5>): Point3[] => {
+      if (cluster.size === 0) {
+        return acc;
+      }
+
       const pixel = cluster.getCentroid();
-      const l = denormalize(pixel[0], CIELabSpace.MIN_L, CIELabSpace.MAX_L);
-      const a = denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A);
-      const b = denormalize(pixel[2], CIELabSpace.MIN_B, CIELabSpace.MAX_B);
-      return [l, a, b];
-    });
+      const color: Point3 = [
+        denormalize(pixel[0], CIELabSpace.MIN_L, CIELabSpace.MAX_L), // L
+        denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A), // a
+        denormalize(pixel[2], CIELabSpace.MIN_B, CIELabSpace.MAX_B), // b
+      ];
+      return [...acc, color];
+    }, []);
     const dbscan = new DBSCAN<Point3>(1, 2.3, euclidean);
     const colorClusters = dbscan.fit(colors);
 
-    return colorClusters.map((cluster: Cluster<Point3>): Swatch => {
+    return colorClusters.reduce((swatches: Swatch[], cluster: Cluster<Point3>): Swatch[] => {
       const [l, a, b, x, y, population] = SwatchExtractor.createSwatch(cluster, pixelClusters);
-      const color = new Color(
-        denormalize(l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
-        denormalize(a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
-        denormalize(b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
-      );
-      const coordinate = {
-        x: Math.floor(x * width),
-        y: Math.floor(y * height),
+      if (population === 0) {
+        return swatches;
+      }
+
+      const swatch: Swatch = {
+        color: new Color(
+          denormalize(l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
+          denormalize(a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
+          denormalize(b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
+        ),
+        position: {
+          x: Math.floor(x * width),
+          y: Math.floor(y * height),
+        },
+        population,
       };
-      return { color, position: coordinate, population };
-    });
+      return [...swatches, swatch];
+    }, []);
   }
 
   /**
@@ -115,6 +128,9 @@ export class SwatchExtractor {
     let population = 0;
     colorCluster.getMemberships().forEach((index: number) => {
       const pixelCluster = pixelClusters[index];
+      if (pixelCluster.size === 0) {
+        return;
+      }
       const fraction = pixelCluster.size / (pixelCluster.size + bestSwatch.size);
 
       const [l, a, b, x, y] = pixelCluster.getCentroid();

@@ -1,6 +1,6 @@
 import { SwatchCollection } from './collection';
 import { SwatchExtractor } from './extractor';
-import { ColorFilterFunction } from './filter';
+import { alphaFilter, ColorFilterFunction, luminanceFilter } from './filter';
 import { createImageData, ImageSource } from './image';
 import {
   DBSCAN,
@@ -14,8 +14,6 @@ import {
 } from './math';
 import { Swatch } from './swatch';
 
-const DEFAULT_SWATCH_COUNT = 6;
-
 /**
  * The algorithm to use for palette extraction.
  * dbscan: Density-based spatial clustering of applications with noise(DBSCAN) clustering.
@@ -25,6 +23,33 @@ const DEFAULT_SWATCH_COUNT = 6;
  * @see [k-means clustering - Wikipedia](https://en.wikipedia.org/wiki/K-means_clustering)
  */
 export type Algorithm = 'dbscan' | 'kmeans';
+
+/**
+ * Options interface for palette extraction.
+ *
+ * @see {@link Palette.extract}
+ */
+export interface Options {
+  /**
+   * The algorithm to use for palette extraction. Default is dbscan.
+   */
+  readonly algorithm: Algorithm;
+
+  /**
+   * The color filter functions. Default is [alphaFilter(), luminanceFilter()].
+   *
+   * @see {@link alphaFilter}
+   * @see {@link luminanceFilter}
+   */
+  readonly filters: ColorFilterFunction[];
+}
+
+const DEFAULT_SWATCH_COUNT = 6;
+
+const DEFAULT_OPTIONS: Options = {
+  algorithm: 'dbscan',
+  filters: [alphaFilter(), luminanceFilter()],
+};
 
 /**
  * Palette class represents a color palette.
@@ -88,21 +113,28 @@ export class Palette {
    * Extract a color palette from the given image source.
    *
    * @param source The source of the image.
-   * @param filters The color filter functions.
-   * @param algorithm The algorithm to use for palette extraction. Default is dbscan.
+   * @param options The options for palette extraction.
    * @return A new Palette instance containing the extracted swatches.
    */
-  static extract(source: ImageSource, filters: ColorFilterFunction[] = [], algorithm: Algorithm = 'dbscan'): Palette {
-    const imageData = createImageData(source);
+  static extract(source: ImageSource, options: Partial<Options> = {}): Palette {
+    const { algorithm, filters } = { ...DEFAULT_OPTIONS, ...options };
     const extractor = Palette.createExtractor(algorithm, filters);
+    const imageData = createImageData(source);
     const swatches = extractor.extract(imageData);
     return new Palette(swatches);
   }
 
+  /**
+   * Create a new SwatchExtractor instance with the given algorithm and filters.
+   *
+   * @param algorithm - The clustering algorithm to use.
+   * @param filters - The color filter functions to use.
+   * @return A new SwatchExtractor instance.
+   */
   private static createExtractor(algorithm: Algorithm, filters: ColorFilterFunction[]): SwatchExtractor {
     if (algorithm === 'kmeans') {
       const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
-      const kmeans = new Kmeans<Point5>(32, 10, 0.0025, squaredEuclidean, strategy);
+      const kmeans = new Kmeans<Point5>(32, 10, 0.0001, squaredEuclidean, strategy);
       return new SwatchExtractor(kmeans, [...filters]);
     } else {
       const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);

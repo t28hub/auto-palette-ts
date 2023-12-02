@@ -28,7 +28,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     private readonly distanceFunction: DistanceFunction,
   ) {
     // Copy the points array to avoid side effects.
-    this.points = [...points];
+    this.points = Array.from(points);
   }
 
   /**
@@ -98,23 +98,23 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     }
 
     const point = this.points[index];
-    if (node.isLeaf) {
-      const distance = this.distanceFunction(query, point);
-      if (distance < neighbor.distance) {
-        neighbor.index = index;
-        neighbor.distance = distance;
-      }
-      return;
+    const distance = this.distanceFunction(query, point);
+    if (distance < neighbor.distance) {
+      neighbor.index = index;
+      neighbor.distance = distance;
     }
 
     const delta = query[node.axis] - point[node.axis];
-    if (Math.abs(delta) <= neighbor.distance) {
+    if (delta < 0) {
       this.nearestRecursively(node.left, query, neighbor);
-      this.nearestRecursively(node.right, query, neighbor);
-    } else if (delta < 0) {
-      this.nearestRecursively(node.left, query, neighbor);
+      if (neighbor.distance >= Math.abs(delta)) {
+        this.nearestRecursively(node.right, query, neighbor);
+      }
     } else {
       this.nearestRecursively(node.right, query, neighbor);
+      if (neighbor.distance >= Math.abs(delta)) {
+        this.nearestRecursively(node.left, query, neighbor);
+      }
     }
   }
 

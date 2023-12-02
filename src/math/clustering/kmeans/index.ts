@@ -4,7 +4,7 @@ import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
-import { InitializationStrategy, KmeansPlusPlusInitializer } from './initializer';
+import { InitializationStrategy } from './initializer';
 
 export { type InitializationStrategy, KmeansPlusPlusInitializer } from './initializer';
 
@@ -30,9 +30,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     private readonly maxIterations: number,
     private readonly tolerance: number,
     private readonly distanceFunction: DistanceFunction,
-    private readonly initializationStrategy: InitializationStrategy<P> = new KmeansPlusPlusInitializer(
-      distanceFunction,
-    ),
+    private readonly initializationStrategy: InitializationStrategy<P>,
   ) {
     if (!Number.isInteger(k) || k <= 0) {
       throw new TypeError(`The number of cluster must be a positive integer: ${k}`);

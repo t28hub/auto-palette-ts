@@ -96,8 +96,8 @@ describe('KDTree', () => {
 
       // Assert
       expect(actual).toMatchObject({
-        index: 8,
-        distance: 3.0,
+        index: 2,
+        distance: 0.0,
       });
     });
 
