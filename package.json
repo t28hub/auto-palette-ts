@@ -1,6 +1,6 @@
 {
   "name": "auto-palette",
-  "description": "Extract color palette from your image automatically",
+  "description": "Extract prominent color palette from your image automatically",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.umd.js",
@@ -30,12 +30,13 @@
     "url": "https://github.com/t28hub"
   },
   "keywords": [
-    "frontend",
     "color",
-    "color-palette",
     "palette",
     "canvas",
-    "image"
+    "image",
+    "imagedata",
+    "jpg",
+    "png"
   ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",
