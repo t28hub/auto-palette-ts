@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { DistanceFunction } from '../distance';
 import { Point } from '../point';
 
@@ -43,7 +41,9 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
 
     while (sampled.size < n) {
       const farthestIndex = this.findFarthestIndex(distances, sampled);
-      assert(farthestIndex >= 0, 'No data point can be selected.');
+      if (farthestIndex < 0) {
+        throw new Error('No data point can be selected.');
+      }
 
       const farthestPoint = points[farthestIndex];
       sampled.set(farthestIndex, farthestPoint);

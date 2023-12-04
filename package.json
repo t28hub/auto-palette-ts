@@ -3,9 +3,9 @@
   "description": "Extract prominent color palette from your image automatically",
   "version": "0.1.0",
   "license": "MIT",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -13,8 +13,9 @@
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
     }
   },
   "repository": {
@@ -41,6 +42,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
+    "prebuild": "pnpm clean",
+    "build": "tsc && vite build",
     "clean": "rimraf dist",
     "dev": "vite",
     "lint": "pnpm lint:ts && pnpm lint:knip",
@@ -51,9 +54,7 @@
     "lint:knip:production": "knip --production --strict",
     "test": "vitest run --coverage",
     "test:ui": "vitest run --coverage --ui",
-    "format": "prettier --list-different --write .",
-    "prebuild": "pnpm clean",
-    "build": "tsc && vite build"
+    "format": "prettier --list-different --write ."
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.44",
