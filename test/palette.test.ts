@@ -1,7 +1,8 @@
-import { alphaFilter, Color, Options, Palette, Swatch } from 'auto-palette';
+import { alphaFilter, Color, luminanceFilter, Options, Palette, Swatch } from 'auto-palette';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { loadImageDataFromFile, loadImageDataFromURL } from './utils';
+import fixtures from './fixtures';
+import { loadImageDataFromFile } from './utils';
 
 const swatches: Swatch[] = [
   {
@@ -48,7 +49,7 @@ describe('Palette', () => {
   describe('findSwatches', () => {
     let palette: Palette;
     beforeEach(async () => {
-      const image = await loadImageDataFromFile('flag_za.png');
+      const image = await loadImageDataFromFile(fixtures.flags.za);
       palette = Palette.extract(image, { filters: [] });
     }, 10000);
 
@@ -88,7 +89,7 @@ describe('Palette', () => {
   describe('extract', () => {
     let image: ImageData;
     beforeEach(async () => {
-      image = await loadImageDataFromURL('https://picsum.photos/id/376/320/180');
+      image = await loadImageDataFromFile(fixtures.photos.tulips);
     }, 10000);
 
     it('should extract a new Palette from the provided image using default options', () => {
@@ -114,7 +115,7 @@ describe('Palette', () => {
       // Act
       const options: Options = {
         algorithm: 'kmeans',
-        filters: [alphaFilter()],
+        filters: [alphaFilter(), luminanceFilter()],
       };
       const actual = Palette.extract(image, options);
 

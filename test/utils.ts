@@ -1,33 +1,18 @@
 import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 
-import { createCanvas, Image, loadImage } from '@napi-rs/canvas';
+import { createCanvas, Image } from '@napi-rs/canvas';
 
 /**
  * Load the image from a given file as ImageData object.
  *
- * @param filename - The name of the image file.
+ * @param filepath - The path to the image file.
  * @return A Promise that resolves to the loaded image as ImageData object.
  * @see {@link loadImageDataFromUrl}
  */
-export async function loadImageDataFromFile(filename: string): Promise<ImageData> {
-  const filepath = join(__dirname, 'fixtures', filename);
+export async function loadImageDataFromFile(filepath: string): Promise<ImageData> {
   const contents = await readFile(filepath, { flag: 'r' });
-
   const image = new Image();
   image.src = contents;
-  return toImageData(image);
-}
-
-/**
- * Load the image from a given URL as ImageData object.
- *
- * @param url - The URL of the image.
- * @return A Promise that resolves to the loaded image as ImageData object.
- * @see {@link loadImageDataFromFile}
- */
-export async function loadImageDataFromURL(url: string): Promise<ImageData> {
-  const image = await loadImage(url);
   return toImageData(image);
 }
 

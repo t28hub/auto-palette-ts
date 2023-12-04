@@ -3,6 +3,7 @@ import { DBSCAN, euclidean, Kmeans, KmeansPlusPlusInitializer, Point5, squaredEu
 import { alphaFilter, ciede2000, Color, Swatch } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
+import fixtures from './fixtures';
 import { loadImageDataFromFile } from './utils';
 
 describe('SwatchExtractor', () => {
@@ -21,23 +22,23 @@ describe('SwatchExtractor', () => {
   describe('extract', () => {
     it.each([
       {
-        filename: 'flag_gr.png',
+        filename: fixtures.flags.gr,
         expected: ['#005bae', '#ffffff'],
       },
       {
-        filename: 'flag_de.png',
+        filename: fixtures.flags.de,
         expected: ['#dd0000', '#ffcc00', '#000000'],
       },
       {
-        filename: 'flag_ae.png',
+        filename: fixtures.flags.ae,
         expected: ['#ff0000', '#00732f', '#ffffff', '#000000'],
       },
       {
-        filename: 'flag_sc.png',
+        filename: fixtures.flags.sc,
         expected: ['#003f87', '#fcd856', '#d62828', '#ffffff', '#007a3d'],
       },
       {
-        filename: 'flag_za.png',
+        filename: fixtures.flags.za,
         expected: ['#e03c31', '#ffffff', '#007749', '#001489', '#ffb81c', '#000000'],
       },
     ])('should extract swatches from $filename using DBSCAN', async ({ filename, expected }) => {
@@ -65,7 +66,7 @@ describe('SwatchExtractor', () => {
       'should extract swatches from the given image data using Kmeans',
       async () => {
         // Arrange
-        const imageData = await loadImageDataFromFile('flag_za.png');
+        const imageData = await loadImageDataFromFile(fixtures.flags.za);
 
         // Act
         const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
