@@ -32,19 +32,25 @@ export default defineConfig({
   test: {
     globals: true,
     threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740
-    include: ['src/**/*.test.{ts,tsx}'],
+    dir: 'test',
+    include: ['**/*.test.{ts,tsx}'],
+    alias: {
+      'auto-palette': resolve(__dirname, 'src/index.ts'),
+      '@internal': resolve(__dirname, 'src'),
+    },
     environment: 'jsdom',
     environmentOptions: {
       jsdom: {
         resources: 'usable',
       },
     },
-    setupFiles: ['vitest.setup.ts'],
-    testTimeout: 3000,
+    setupFiles: ['./test/setup.ts'],
+    testTimeout: 1000,
     coverage: {
+      provider: 'v8',
       include: ['src'],
-      exclude: ['**/*.test.ts', '**/*.d.ts', '**/*/types.ts'],
-      reporter: ['clover', 'cobertura', 'lcov', 'html'],
+      exclude: ['**/*.test.ts', '**/*.d.ts'],
+      reporter: ['lcov', 'html', 'json'],
       reportsDirectory: 'coverage',
     },
   },

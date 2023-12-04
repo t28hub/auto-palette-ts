@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "paths": {
+      "auto-palette": ["../src/index.ts"],
+      "@internal/*": ["../src/*"]
+    }
+  },
+  "include": ["**/*.ts"]
+}
