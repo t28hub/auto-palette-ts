@@ -11,7 +11,7 @@ const flags = {
 // The photos are licensed under the Creative Commons Zero (CC0) license.
 const photos = {
   // https://www.pexels.com/photo/close-up-photo-of-perched-kingfisher-326900/
-  kingfisher: resolve(__dirname, 'pexels-pixabay-326990.jpg'),
+  kingfisher: resolve(__dirname, 'pexels-pixabay-326900.jpg'),
   // https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
   tulips: resolve(__dirname, 'pexels-pixabay-52508.jpg'),
 } as const;

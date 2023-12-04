@@ -33,7 +33,7 @@ export interface Options {
   /**
    * The algorithm to use for palette extraction. Default is dbscan.
    */
-  readonly algorithm: Algorithm;
+  readonly algorithm?: Algorithm;
 
   /**
    * The color filter functions. Default is [alphaFilter(), luminanceFilter()].
@@ -41,12 +41,12 @@ export interface Options {
    * @see {@link alphaFilter}
    * @see {@link luminanceFilter}
    */
-  readonly filters: ColorFilterFunction[];
+  readonly filters?: ColorFilterFunction[];
 }
 
 const DEFAULT_SWATCH_COUNT = 6;
 
-const DEFAULT_OPTIONS: Options = {
+const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
   filters: [alphaFilter(), luminanceFilter()],
 };

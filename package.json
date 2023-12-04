@@ -52,7 +52,9 @@
     "lint:knip": "pnpm lint:knip:development && pnpm lint:knip:production",
     "lint:knip:development": "knip",
     "lint:knip:production": "knip --production --strict",
-    "test": "vitest run --coverage",
+    "test": "pnpm test:coverage",
+    "test:coverage": "vitest run --coverage",
+    "test:benchmark": "vitest bench --run",
     "test:ui": "vitest run --coverage --ui",
     "format": "prettier --list-different --write ."
   },

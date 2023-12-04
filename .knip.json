@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@2/schema.json",
-  "entry": ["src/index.ts"],
+  "entry": ["src/index.ts", "**/*.test.ts", "**/*.bench.ts"],
   "paths": {
     "auto-palette": ["src/index.ts"],
     "@internal/*": ["./src/*"]
