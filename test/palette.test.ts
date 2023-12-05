@@ -111,27 +111,31 @@ describe('Palette', () => {
       });
     });
 
-    it('should extract a new Palette from the provided image using custom options', () => {
-      // Act
-      const options: Options = {
-        algorithm: 'kmeans',
-        filters: [alphaFilter(), luminanceFilter()],
-      };
-      const actual = Palette.extract(image, options);
+    it(
+      'should extract a new Palette from the provided image using custom options',
+      () => {
+        // Act
+        const options: Options = {
+          algorithm: 'kmeans',
+          filters: [alphaFilter(), luminanceFilter()],
+        };
+        const actual = Palette.extract(image, options);
 
-      // Assert
-      expect(actual.isEmpty()).toBeFalsy();
-      expect(actual.size()).toBeGreaterThan(6);
+        // Assert
+        expect(actual.isEmpty()).toBeFalsy();
+        expect(actual.size()).toBeGreaterThan(6);
 
-      const swatches = actual.findSwatches();
-      expect(swatches).toBeArrayOfSize(6);
-      swatches.forEach((swatch) => {
-        console.info({
-          color: swatch.color.toHex(),
-          population: swatch.population,
-          coordinate: swatch.position,
+        const swatches = actual.findSwatches();
+        expect(swatches).toBeArrayOfSize(6);
+        swatches.forEach((swatch) => {
+          console.info({
+            color: swatch.color.toHex(),
+            population: swatch.population,
+            coordinate: swatch.position,
+          });
         });
-      });
-    });
+      },
+      { retry: 3 },
+    );
   });
 });

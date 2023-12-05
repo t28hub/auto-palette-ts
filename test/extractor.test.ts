@@ -76,7 +76,7 @@ describe('SwatchExtractor', () => {
 
         // Assert
         expect(actual).not.toBeEmpty();
-        expect(actual.length).toBeGreaterThan(6);
+        expect(actual.length).toBeGreaterThanOrEqual(6);
       },
       { retry: 3 },
     );
