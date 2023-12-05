@@ -1,5 +1,9 @@
-import { euclidean, LinearSearch, Point3, RandomSampling, SamplingStrategy } from './math';
+import { euclidean, KDTreeSearch, Neighbor, Point3, RandomSampling, SamplingStrategy } from './math';
 import { Swatch } from './swatch';
+
+const SIMILAR_COLOR_THRESHOLD = 20.0;
+const DEFAULT_SCORE_COEFFICIENT = 1.0;
+const REDUCED_SCORE_COEFFICIENT = 0.25;
 
 /**
  * SwatchCollection class represents a collection of swatches.
@@ -82,33 +86,34 @@ export class SwatchCollection {
 
     const sampled = this.samplingStrategy.sample(this.colors, n);
 
-    // Find the best swatches from the all swatches.
-    const bestSwatches = new Array<Swatch>(sampled.length);
-    const neighborSearch = new LinearSearch(sampled, euclidean);
-    for (let i = 0; i < this.swatches.length; i++) {
-      const color = this.colors[i];
-      const nearest = neighborSearch.searchNearest(color);
-      // If the nearest color is too far away, skip this swatch.
-      if (nearest.distance > 20.0) {
-        continue;
-      }
+    const marked = new Set<number>();
+    const neighborSearch = KDTreeSearch.build(this.colors, euclidean);
+    return sampled.map((color: Point3): Swatch => {
+      // Find the neighbors of the color within the radius of 20.0 in the LAB color space.
+      // The radius is determined by the experiment.
+      const neighbors = neighborSearch.searchRadius(color, SIMILAR_COLOR_THRESHOLD);
+      // Sort the neighbors by distance in ascending order.
+      neighbors.sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
+        return neighbor1.distance - neighbor2.distance;
+      });
 
-      const swatch = this.swatches[i];
-      const bestSwatch = bestSwatches[nearest.index];
+      // Find the best neighbor which has the largest score.
+      const bestNeighbor = neighbors.reduce((best: Neighbor, neighbor: Neighbor): Neighbor => {
+        const bestSwatch = this.swatches[best.index];
+        const currentSwatch = this.swatches[neighbor.index];
 
-      // If there is no best swatch, set the swatch as the best swatch.
-      if (!bestSwatch) {
-        bestSwatches[nearest.index] = { ...swatch };
-        continue;
-      }
+        // If the neighbor is already marked, the score is reduced by REDUCED_SCORE_COEFFICIENT to avoid duplication.
+        const coefficient = marked.has(neighbor.index) ? REDUCED_SCORE_COEFFICIENT : DEFAULT_SCORE_COEFFICIENT;
+        marked.add(neighbor.index);
 
-      // If the swatch is better than the best swatch, set the swatch as the best swatch.
-      const score = swatch.population * swatch.color.chroma();
-      const bestScore = bestSwatch.population * bestSwatch.color.chroma();
-      if (score > bestScore) {
-        bestSwatches[nearest.index] = { ...swatch };
-      }
-    }
-    return bestSwatches;
+        const bestScore = bestSwatch.population * bestSwatch.color.chroma();
+        const currentScore = currentSwatch.population * currentSwatch.color.chroma() * coefficient;
+        if (bestScore > currentScore) {
+          return best;
+        }
+        return neighbor;
+      });
+      return this.swatches[bestNeighbor.index];
+    });
   }
 }
