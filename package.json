@@ -67,7 +67,7 @@
     "@vitest/ui": "^0.34.7",
     "canvas": "^2.11.2",
     "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.3",
