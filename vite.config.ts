@@ -31,7 +31,10 @@ export default defineConfig({
   ],
   test: {
     globals: true,
-    threads: false, // Workaround https://github.com/vitest-dev/vitest/issues/740
+    // The 'pool' option needs to be set to 'forks' when the project depends on a library written in a native language.
+    // In this project, we are using the 'canvas' library, which is written in a native language.
+    // Reference: https://vitest.dev/config/#threads
+    pool: 'forks',
     dir: 'test',
     include: ['**/*.test.{ts,tsx}'],
     alias: {
