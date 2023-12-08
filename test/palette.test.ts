@@ -6,30 +6,57 @@ import { loadImageDataFromFile } from './utils';
 
 const swatches: Swatch[] = [
   {
-    color: Color.parse('#FF0000'),
-    population: 64,
-    position: { x: 45, y: 30 },
+    color: Color.parse('#F42222'),
+    population: 3529,
+    position: { x: 107, y: 15 },
   },
   {
-    color: Color.parse('#FAFAFA'),
-    population: 128,
-    position: { x: 18, y: 72 },
+    color: Color.parse('#FFFFFF'),
+    population: 1781,
+    position: { x: 89, y: 29 },
   },
   {
-    color: Color.parse('#FF0050'),
-    population: 48,
-    position: { x: 9, y: 54 },
+    color: Color.parse('#007944'),
+    population: 5147,
+    position: { x: 65, y: 53 },
+  },
+  {
+    color: Color.parse('#00158F'),
+    population: 3528,
+    position: { x: 107, y: 90 },
+  },
+  {
+    color: Color.parse('#FFB400'),
+    population: 799,
+    position: { x: 27, y: 53 },
+  },
+  {
+    color: Color.parse('#000000'),
+    population: 1481,
+    position: { x: 15, y: 52 },
   },
 ];
 
 describe('Palette', () => {
   describe('constructor', () => {
-    it('should create a new Palette instance with the provided swatches and difference formula', () => {
+    it('should create a new Palette instance with the provided swatches', () => {
       // Act
       const actual = new Palette(swatches);
 
       // Assert
       expect(actual).toBeDefined();
+      expect(actual.size()).toBe(6);
+      expect(actual.isEmpty()).toBeFalsy();
+    });
+
+    it('should create a new Palette instance with no swatches', () => {
+      // Act
+      const actual = new Palette([]);
+
+      // Assert
+      expect(actual).toBeDefined();
+      expect(actual.size()).toBe(0);
+      expect(actual.isEmpty()).toBeTruthy();
     });
   });
 
@@ -40,50 +67,63 @@ describe('Palette', () => {
       const actual = palette.getDominantSwatch();
 
       // Assert
-      expect(actual.color.toRGB()).toMatchObject({ r: 250, g: 250, b: 250 });
-      expect(actual.population).toEqual(128);
-      expect(actual.position).toMatchObject({ x: 18, y: 72 });
+      expect(actual?.color.toHex()).toEqual('#007944');
+      expect(actual?.population).toEqual(5147);
+      expect(actual?.position).toMatchObject({ x: 65, y: 53 });
+    });
+
+    it('should return undefined if the palette is empty', () => {
+      // Act
+      const palette = new Palette([]);
+      const actual = palette.getDominantSwatch();
+
+      // Assert
+      expect(actual).toBeUndefined();
     });
   });
 
   describe('findSwatches', () => {
-    let palette: Palette;
-    beforeEach(async () => {
-      const image = await loadImageDataFromFile(fixtures.flags.za);
-      palette = Palette.extract(image, { filters: [] });
-    }, 10000);
-
-    it('should find the default number of swatches from the palette by default', () => {
+    it('should find the default number of swatches from the palette', () => {
       // Act
+      const palette = new Palette(swatches);
       const actual = palette.findSwatches();
 
       // Assert
       expect(actual).toBeArrayOfSize(6);
+      expect(actual).toContainAllValues(swatches);
     });
 
     it('should find the specified number of swatches from the palette', () => {
       // Act
+      const palette = new Palette(swatches);
       const actual = palette.findSwatches(3);
 
       // Assert
       expect(actual).toBeArrayOfSize(3);
     });
 
-    it('should return all swatches if the specified limit exceeds the number of swatches in the palette', () => {
+    it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {
       // Act
-      const actual = palette.findSwatches(1024);
+      const palette = new Palette(swatches);
+      const actual = palette.findSwatches(palette.size() + 1);
 
       // Assert
       expect(actual).toBeArrayOfSize(6);
     });
 
-    it('should throw a TypeError if the specified limit is less than or equal to 0', () => {
-      // Assert
-      expect(() => {
-        // Act
-        palette.findSwatches(0);
-      }).toThrowError(TypeError);
-    });
+    it.each([Infinity, NaN, -1, 0])(
+      'should throw a TypeError if the specified number(%d) is not an integer or less than 0',
+      (n) => {
+        // Arrange
+        const palette = new Palette(swatches);
+
+        // Assert
+        expect(() => {
+          // Act
+          palette.findSwatches(n);
+        }).toThrowError(TypeError);
+      },
+    );
   });
 
   describe('extract', () => {
@@ -92,7 +132,7 @@ describe('Palette', () => {
       image = await loadImageDataFromFile(fixtures.photos.tulips);
     }, 10000);
 
-    it('should extract a new Palette from the provided image using default options', () => {
+    it('should extract a Palette from the provided image using default options', () => {
       // Act
       const actual = Palette.extract(image);
 
@@ -112,7 +152,7 @@ describe('Palette', () => {
     });
 
     it(
-      'should extract a new Palette from the provided image using custom options',
+      'should extract a Palette from the provided image using custom options',
       () => {
         // Act
         const options: Options = {
@@ -137,5 +177,5 @@ describe('Palette', () => {
       },
       { retry: 3 },
     );
-  });
+  }, 3000);
 });
