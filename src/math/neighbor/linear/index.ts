@@ -18,10 +18,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * @param distanceFunction The function to measure the distance between two points.
    * @throws {TypeError} if the provided points array is empty.
    */
-  constructor(
-    points: P[],
-    private readonly distanceFunction: DistanceFunction,
-  ) {
+  constructor(points: P[], private readonly distanceFunction: DistanceFunction) {
     if (points.length === 0) {
       throw new TypeError('The points is empty');
     }
@@ -47,19 +44,20 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
       return 0;
     });
 
-    this.points.forEach((point: P, index: number) => {
+    for (let i = 0; i < this.points.length; i++) {
+      const point = this.points[i];
       const distance = this.distanceFunction(point, query);
       if (queue.size < k) {
-        queue.push({ index, distance });
-        return;
+        queue.push({ index: i, distance });
+        continue;
       }
 
       const neighbor = queue.peek();
       if (neighbor && distance < neighbor.distance) {
         queue.pop();
-        queue.push({ index, distance });
+        queue.push({ index: i, distance });
       }
-    });
+    }
     return this.extractNeighbors(queue, k);
   }
 
@@ -71,17 +69,14 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
       index: 0,
       distance: this.distanceFunction(this.points[0], query),
     };
-    this.points.forEach((point: P, index: number) => {
-      if (index === 0) {
-        return;
-      }
-
+    for (let i = 1; i < this.points.length; i++) {
+      const point = this.points[i];
       const distance = this.distanceFunction(point, query);
       if (distance < nearest.distance) {
-        nearest.index = index;
+        nearest.index = i;
         nearest.distance = distance;
       }
-    });
+    }
     return nearest;
   }
 
@@ -94,12 +89,13 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
     }
 
     const neighbors = new Array<Neighbor>();
-    this.points.forEach((point: P, index: number) => {
+    for (let i = 0; i < this.points.length; i++) {
+      const point = this.points[i];
       const distance = this.distanceFunction(point, query);
       if (distance <= radius) {
-        neighbors.push({ index, distance });
+        neighbors.push({ index: i, distance });
       }
-    });
+    }
 
     return neighbors.sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
       return neighbor1.distance - neighbor2.distance;

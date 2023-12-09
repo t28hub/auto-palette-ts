@@ -1,7 +1,7 @@
-import { RGBSpace } from '@internal/color';
+import { clampValue, fromHexString, toHexString } from '@internal/color/space/rgb';
 import { describe, expect, it } from 'vitest';
 
-describe('RGBSpace', () => {
+describe('RGB', () => {
   describe('clampValue', () => {
     it.each([
       { value: -1, expected: 0 },
@@ -11,7 +11,7 @@ describe('RGBSpace', () => {
       { value: 256, expected: 255 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = RGBSpace.clampValue(value);
+      const actual = clampValue(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -38,7 +38,7 @@ describe('RGBSpace', () => {
       { value: '#ff00ff', expected: { r: 255, g: 0, b: 255 } },
     ])('should return $expected when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = RGBSpace.fromHexString(value);
+      const actual = fromHexString(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -50,7 +50,7 @@ describe('RGBSpace', () => {
         // Assert
         expect(() => {
           // Act
-          RGBSpace.fromHexString(value);
+          fromHexString(value);
         }).toThrow(TypeError);
       },
     );
@@ -68,7 +68,7 @@ describe('RGBSpace', () => {
       { r: 255, g: 0, b: 255, expected: '#ff00ff' },
     ])('should return $expected when the color is ($r, $g, $b)', ({ r, g, b, expected }) => {
       // Act
-      const actual = RGBSpace.toHexString({ r, g, b });
+      const actual = toHexString({ r, g, b });
 
       // Assert
       expect(actual).toEqual(expected);
@@ -88,7 +88,7 @@ describe('RGBSpace', () => {
       // Assert
       expect(() => {
         // Act
-        RGBSpace.toHexString({ r, g, b });
+        toHexString({ r, g, b });
       }).toThrow(TypeError);
     });
   });

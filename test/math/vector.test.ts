@@ -1,4 +1,4 @@
-import { Point, squaredEuclidean, Vector } from '@internal/math';
+import { Point, Vector, squaredEuclidean } from '@internal/math';
 import { describe, expect, it } from 'vitest';
 
 describe('Vector', () => {

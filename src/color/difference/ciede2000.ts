@@ -8,7 +8,7 @@ import { ColorDifference, DifferenceFunction } from './function';
 const kL = 1.0;
 const kC = 1.0;
 const kH = 1.0;
-const POW7_25 = Math.pow(25, 7);
+const POW7_25 = 25 ** 7;
 
 /**
  * Calculate the hue prime for the given x and y values.
@@ -85,7 +85,7 @@ export const ciede2000: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): Co
   const c2 = Math.sqrt(color2.a ** 2 + color2.b ** 2);
   const cBar = (c1 + c2) / 2.0;
 
-  const g = Math.sqrt(Math.pow(cBar, 7.0) / (Math.pow(cBar, 7.0) + POW7_25));
+  const g = Math.sqrt(cBar ** 7.0 / (cBar ** 7.0 + POW7_25));
   const aPrime1 = color1.a + (color1.a / 2.0) * (1.0 - g);
   const aPrime2 = color2.a + (color2.a / 2.0) * (1.0 - g);
 
@@ -107,15 +107,15 @@ export const ciede2000: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): Co
     0.32 * Math.cos(degreeToRadian(3.0 * hBarPrime + 6.0)) -
     0.2 * Math.cos(degreeToRadian(4.0 * hBarPrime - 63.0));
 
-  const sL = 1.0 + (0.015 * Math.pow(lBar - 50.0, 2)) / Math.sqrt(20.0 + Math.pow(lBar - 50.0, 2));
+  const sL = 1.0 + (0.015 * (lBar - 50.0) ** 2) / Math.sqrt(20.0 + (lBar - 50.0) ** 2);
   const sC = 1.0 + 0.045 * cBarPrime;
   const sH = 1.0 + 0.015 * cBarPrime * t;
 
-  const pow7CBarPrime = Math.pow(cBarPrime, 7);
+  const pow7CBarPrime = cBarPrime ** 7;
   const rT =
     -2.0 *
     Math.sqrt(pow7CBarPrime / (pow7CBarPrime + POW7_25)) *
-    Math.sin(degreeToRadian(60.0 * Math.exp(-1.0 * Math.pow((hBarPrime - 275.0) / 25.0, 2))));
+    Math.sin(degreeToRadian(60.0 * Math.exp(-1.0 * ((hBarPrime - 275.0) / 25.0) ** 2)));
 
   const l = deltaLPrime / (kL * sL);
   const c = deltaCPrime / (kC * sC);

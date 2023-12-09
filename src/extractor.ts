@@ -1,6 +1,6 @@
 import { CIELabSpace, Color, RGBA, XYZSpace } from './color';
 import { ColorFilterFunction, composeFilters } from './filter';
-import { Cluster, ClusteringAlgorithm, DBSCAN, denormalize, euclidean, normalize, Point3, Point5 } from './math';
+import { Cluster, ClusteringAlgorithm, DBSCAN, Point3, Point5, denormalize, euclidean, normalize } from './math';
 import { Swatch } from './swatch';
 
 /**
@@ -15,10 +15,7 @@ export class SwatchExtractor {
    * @param algorithm - The clustering algorithm to use.
    * @param filters - The color filter functions to use.
    */
-  constructor(
-    private readonly algorithm: ClusteringAlgorithm<Point5>,
-    filters: ColorFilterFunction[],
-  ) {
+  constructor(private readonly algorithm: ClusteringAlgorithm<Point5>, filters: ColorFilterFunction[]) {
     this.filter = composeFilters(...filters);
   }
 
@@ -71,9 +68,9 @@ export class SwatchExtractor {
       return [];
     }
 
-    const colors = pixelClusters.reduce((acc: Point3[], cluster: Cluster<Point5>): Point3[] => {
+    const colors = pixelClusters.reduce((accumulator: Point3[], cluster: Cluster<Point5>): Point3[] => {
       if (cluster.size === 0) {
-        return acc;
+        return accumulator;
       }
 
       const pixel = cluster.getCentroid();
@@ -82,69 +79,75 @@ export class SwatchExtractor {
         denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A), // a
         denormalize(pixel[2], CIELabSpace.MIN_B, CIELabSpace.MAX_B), // b
       ];
-      return [...acc, color];
+      accumulator.push(color);
+      return accumulator;
     }, []);
     const dbscan = new DBSCAN<Point3>(1, 2.3, euclidean);
     const colorClusters = dbscan.fit(colors);
 
     return colorClusters.reduce((swatches: Swatch[], cluster: Cluster<Point3>): Swatch[] => {
-      const [l, a, b, x, y, population] = SwatchExtractor.createSwatch(cluster, pixelClusters);
-      if (population === 0) {
-        return swatches;
+      const swatch = SwatchExtractor.createSwatch(cluster, pixelClusters, width, height);
+      if (swatch.population !== 0) {
+        swatches.push(swatch);
       }
-
-      const swatch: Swatch = {
-        color: new Color(
-          denormalize(l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
-          denormalize(a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
-          denormalize(b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
-        ),
-        position: {
-          x: Math.floor(x * width),
-          y: Math.floor(y * height),
-        },
-        population,
-      };
-      return [...swatches, swatch];
+      return swatches;
     }, []);
   }
 
   /**
-   * Create best swatch from the given color cluster and pixel clusters.
+   * Create optimal swatch from the given color cluster and pixel clusters.
    *
    * @param colorCluster - The color cluster to create a swatch from.
    * @param pixelClusters - The pixel clusters to create a swatch from.
-   * @return The array of the best swatch properties.
+   * @param width - The width of the source image.
+   * @param height - The height of the source image.
+   * @returns The optimal swatch.
    */
-  private static createSwatch(colorCluster: Cluster<Point3>, pixelClusters: Cluster<Point5>[]): number[] {
-    const bestSwatch = {
+  private static createSwatch(
+    colorCluster: Cluster<Point3>,
+    pixelClusters: Cluster<Point5>[],
+    width: number,
+    height: number,
+  ): Swatch {
+    const optimalSwatch = {
       l: 0.0,
       a: 0.0,
       b: 0.0,
       x: 0.0,
       y: 0.0,
-      size: 0.0,
+      size: 0,
+      population: 0,
     };
-    let population = 0;
-    colorCluster.getMemberships().forEach((index: number) => {
+    for (const index of colorCluster.getMemberships().values()) {
       const pixelCluster = pixelClusters[index];
       if (pixelCluster.size === 0) {
-        return;
+        continue;
       }
-      const fraction = pixelCluster.size / (pixelCluster.size + bestSwatch.size);
 
+      const fraction = pixelCluster.size / (pixelCluster.size + optimalSwatch.size);
       const [l, a, b, x, y] = pixelCluster.getCentroid();
-      bestSwatch.l += (l - bestSwatch.l) * fraction;
-      bestSwatch.a += (a - bestSwatch.a) * fraction;
-      bestSwatch.b += (b - bestSwatch.b) * fraction;
+      optimalSwatch.l += (l - optimalSwatch.l) * fraction;
+      optimalSwatch.a += (a - optimalSwatch.a) * fraction;
+      optimalSwatch.b += (b - optimalSwatch.b) * fraction;
 
       if (fraction >= 0.5) {
-        bestSwatch.x = x;
-        bestSwatch.y = y;
-        bestSwatch.size = pixelCluster.size;
+        optimalSwatch.x = x;
+        optimalSwatch.y = y;
+        optimalSwatch.size = pixelCluster.size;
       }
-      population += pixelCluster.size;
-    });
-    return [bestSwatch.l, bestSwatch.a, bestSwatch.b, bestSwatch.x, bestSwatch.y, population];
+      optimalSwatch.population += pixelCluster.size;
+    }
+
+    const color = new Color(
+      denormalize(optimalSwatch.l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
+      denormalize(optimalSwatch.a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
+      denormalize(optimalSwatch.b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
+    );
+    const position = {
+      x: Math.floor(optimalSwatch.x * width),
+      y: Math.floor(optimalSwatch.y * height),
+    };
+    const population = optimalSwatch.population;
+    return { color, position, population };
   }
 }

@@ -1,6 +1,6 @@
 import { radianToDegree } from '../math';
 
-import { ciede2000, ColorDifference, DifferenceFunction } from './difference';
+import { ColorDifference, DifferenceFunction, ciede2000 } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
 
@@ -19,11 +19,7 @@ export class Color {
    * @param b The b component of the color.
    * @throws {TypeError} If the l, a, or b is not finite number.
    */
-  constructor(
-    private readonly l: number,
-    private readonly a: number,
-    private readonly b: number,
-  ) {
+  constructor(private readonly l: number, private readonly a: number, private readonly b: number) {
     if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
       throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
     }

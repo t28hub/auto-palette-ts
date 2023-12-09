@@ -1,4 +1,4 @@
-import { cie94, Color } from 'auto-palette';
+import { Color, cie94 } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
 describe('Color', () => {

@@ -1,4 +1,4 @@
-import { euclidean, FarthestPointSampling, Point2 } from '@internal/math';
+import { FarthestPointSampling, Point2, euclidean } from '@internal/math';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [

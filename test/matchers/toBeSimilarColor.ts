@@ -7,7 +7,7 @@ import {
   printWithType,
 } from 'jest-matcher-utils';
 
-import { ciede2000, Color } from '../../src';
+import { Color, ciede2000 } from '../../src';
 
 import { MatcherResult } from './types';
 
@@ -40,23 +40,23 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
   const difference = received.differenceTo(expectedColor, ciede2000);
   const pass = difference < threshold;
 
-  const passMessage =
-    matcherHint('.not.toBeSimilarColor', 'received', 'expected') +
-    '\n\n' +
-    'Expected color to not be similar:\n\n' +
-    `Expected: ${printExpected(expectedColor.toString())}\n` +
-    `Received: ${printReceived(received.toString())}\n\n` +
-    `Expected difference: > ${printExpected(threshold)}\n` +
-    `Received difference:   ${printReceived(difference)}`;
+  const passMessage = `${matcherHint('.not.toBeSimilarColor', 'received', 'expected')}
+    
+    Expected color to not be similar:
+      Expected: ${printExpected(expectedColor.toString())}
+      Received: ${printReceived(received.toString())}
+      
+      Expected difference: > ${printExpected(threshold)}
+      Received difference:   ${printReceived(difference)}`;
 
-  const failMessage =
-    matcherHint('.toBeSimilarColor', 'received', 'expected') +
-    '\n\n' +
-    'Expected color to be similar:\n\n' +
-    `Expected: ${printExpected(expectedColor.toString())}\n` +
-    `Received: ${printReceived(received.toString())}\n\n` +
-    `Expected difference: < ${printExpected(threshold)}\n` +
-    `Received difference:   ${printReceived(difference)}`;
+  const failMessage = `${matcherHint('.toBeSimilarColor', 'received', 'expected')}
+    
+    Expected color to be similar:
+      Expected: ${printExpected(expectedColor.toString())}
+      Received: ${printReceived(received.toString())}
+      
+      Expected difference: < ${printExpected(threshold)}
+      Received difference:   ${printReceived(difference)}`;
 
   return {
     pass,

@@ -1,4 +1,4 @@
-import { euclidean, KDTreeSearch, Point3 } from '@internal/math';
+import { KDTreeSearch, Point3, euclidean } from '@internal/math';
 import { describe, expect, it } from 'vitest';
 
 // Arrange

@@ -1,4 +1,4 @@
-import { getWeightFunction, Theme } from '@internal/theme';
+import { Theme, getWeightFunction } from '@internal/theme';
 import { Color, Swatch } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 

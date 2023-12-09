@@ -1,7 +1,7 @@
 import { Comparator, Ordering, PriorityQueue } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
-const elements = ['Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank'];
+const names = ['Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank'];
 
 const stringComparator: Comparator<string> = (value1: string, value2: string): Ordering => {
   if (value1.length < value2.length) {
@@ -32,7 +32,9 @@ describe('PriorityQueue', () => {
     it('should push the given elements', () => {
       // Act
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.push(name));
+      for (const name of names) {
+        queue.push(name);
+      }
 
       // Assert
       expect(queue.size).toEqual(6);
@@ -45,7 +47,9 @@ describe('PriorityQueue', () => {
     it('should pop the highest priority element', () => {
       // Arrange
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.push(name));
+      for (const name of names) {
+        queue.push(name);
+      }
 
       // Act & Assert
       expect(queue.pop()).toEqual('Charlie');
@@ -66,7 +70,9 @@ describe('PriorityQueue', () => {
     it('should return the highest priority element', () => {
       // Arrange
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.push(name));
+      for (const name of names) {
+        queue.push(name);
+      }
 
       // Act & Assert
       expect(queue.peek()).toEqual('Charlie');
@@ -98,7 +104,9 @@ describe('PriorityQueue', () => {
     it('should return an array of all elements', () => {
       // Arrange
       const queue = new PriorityQueue<string>(stringComparator);
-      elements.forEach((name) => queue.push(name));
+      for (const name of names) {
+        queue.push(name);
+      }
 
       // Act
       const actual = queue.toArray();

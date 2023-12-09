@@ -1,4 +1,4 @@
-import { alphaFilter, Color, luminanceFilter, Options, Palette, Swatch } from 'auto-palette';
+import { Color, Options, Palette, Swatch, alphaFilter, luminanceFilter } from 'auto-palette';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import fixtures from './fixtures';
@@ -145,13 +145,14 @@ describe('Palette', () => {
 
       const swatches = actual.findSwatches(6);
       expect(swatches).toBeArrayOfSize(6);
-      swatches.forEach((swatch) => {
+
+      for (const swatch of swatches) {
         console.info({
           color: swatch.color.toHex(),
           population: swatch.population,
           coordinate: swatch.position,
         });
-      });
+      }
     });
 
     it(
@@ -170,13 +171,14 @@ describe('Palette', () => {
 
         const swatches = actual.findSwatches(6);
         expect(swatches).toBeArrayOfSize(6);
-        swatches.forEach((swatch) => {
+
+        for (const swatch of swatches) {
           console.info({
             color: swatch.color.toHex(),
             population: swatch.population,
             coordinate: swatch.position,
           });
-        });
+        }
       },
       { retry: 3 },
     );

@@ -1,9 +1,0 @@
-*.d.ts
-.DS_Store
-package.json
-pnpm-lock.yaml
-node_modules
-coverage
-demo
-dist
-html

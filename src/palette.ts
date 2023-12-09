@@ -1,24 +1,24 @@
 import { Color } from './color';
 import { SwatchExtractor } from './extractor';
-import { alphaFilter, ColorFilterFunction, luminanceFilter } from './filter';
-import { createImageData, ImageSource } from './image';
+import { ColorFilterFunction, alphaFilter, luminanceFilter } from './filter';
+import { ImageSource, createImageData } from './image';
 import {
   DBSCAN,
-  euclidean,
   FarthestPointSampling,
   KDTreeSearch,
   Kmeans,
   KmeansPlusPlusInitializer,
   Neighbor,
   NeighborSearch,
-  normalize,
   Point3,
   Point5,
   SamplingStrategy,
+  euclidean,
+  normalize,
   squaredEuclidean,
 } from './math';
 import { Swatch } from './swatch';
-import { getWeightFunction, Theme, WeightFunction } from './theme';
+import { Theme, WeightFunction, getWeightFunction } from './theme';
 
 /**
  * The algorithm to use for palette extraction.
@@ -230,9 +230,8 @@ export class Palette {
       const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
       const kmeans = new Kmeans<Point5>(32, 10, 0.0001, squaredEuclidean, strategy);
       return new SwatchExtractor(kmeans, [...filters]);
-    } else {
-      const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
-      return new SwatchExtractor(dbscan, [...filters]);
     }
+    const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+    return new SwatchExtractor(dbscan, [...filters]);
   }
 }

@@ -35,9 +35,9 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
     const initialPoint = points[initialIndex];
     sampled.set(initialIndex, initialPoint);
 
-    points.forEach((point, index) => {
-      distances[index] = this.distanceFunction(point, initialPoint);
-    });
+    for (let i = 0; i < distances.length; i++) {
+      distances[i] = this.distanceFunction(points[i], initialPoint);
+    }
 
     while (sampled.size < n) {
       const farthestIndex = this.findFarthestIndex(distances, sampled);
@@ -49,15 +49,15 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
       sampled.set(farthestIndex, farthestPoint);
       distances[farthestIndex] = 0.0;
 
-      points.forEach((point, index) => {
-        if (sampled.has(index)) {
-          return;
+      for (let i = 0; i < points.length; i++) {
+        if (sampled.has(i)) {
+          continue;
         }
 
-        const previousDistance = distances[index];
-        const currentDistance = this.distanceFunction(farthestPoint, point);
-        distances[index] = Math.min(previousDistance, currentDistance);
-      });
+        const previousDistance = distances[i];
+        const currentDistance = this.distanceFunction(farthestPoint, points[i]);
+        distances[i] = Math.min(previousDistance, currentDistance);
+      }
     }
     return Array.from(sampled.values());
   }

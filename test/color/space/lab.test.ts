@@ -1,7 +1,7 @@
-import { CIELabSpace } from '@internal/color';
+import { clampA, clampB, clampL, fromXYZ, toXYZ } from '@internal/color/space/lab';
 import { describe, expect, it } from 'vitest';
 
-describe('CIELabSpace', () => {
+describe('CIELab', () => {
   describe('clampL', () => {
     it.each([
       { value: -1, expected: 0 },
@@ -11,7 +11,7 @@ describe('CIELabSpace', () => {
       { value: 101, expected: 100 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = CIELabSpace.clampL(value);
+      const actual = clampL(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -27,7 +27,7 @@ describe('CIELabSpace', () => {
       { value: 129, expected: 128 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = CIELabSpace.clampA(value);
+      const actual = clampA(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -43,7 +43,7 @@ describe('CIELabSpace', () => {
       { value: 129, expected: 128 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
-      const actual = CIELabSpace.clampB(value);
+      const actual = clampB(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -62,7 +62,7 @@ describe('CIELabSpace', () => {
       { xyz: { x: 0.77, y: 0.9278, z: 0.1385 }, expected: { l: 97.1382, a: -21.5559, b: 94.4825 } }, // Yellow
     ])('should convert XYZ(%o) to LAB(%o)', ({ xyz, expected }) => {
       // Act
-      const actual = CIELabSpace.fromXYZ(xyz);
+      const actual = fromXYZ(xyz);
 
       // Assert
       expect(actual.l).toBeCloseTo(expected.l, 4);
@@ -84,7 +84,7 @@ describe('CIELabSpace', () => {
       // Assert
       expect(() => {
         // Act
-        CIELabSpace.fromXYZ(xyz);
+        fromXYZ(xyz);
       }).toThrowError(TypeError);
     });
   });
@@ -101,7 +101,7 @@ describe('CIELabSpace', () => {
       { lab: { l: 97.1393, a: -21.5537, b: 94.4896 }, expected: { x: 0.77, y: 0.9278, z: 0.1385 } }, // Yellow
     ])('should convert LAB(%o) to XYZ(%o)', ({ lab, expected }) => {
       // Act
-      const actual = CIELabSpace.toXYZ(lab);
+      const actual = toXYZ(lab);
 
       // Assert
       expect(actual.x).toBeCloseTo(expected.x, 4);
@@ -123,7 +123,7 @@ describe('CIELabSpace', () => {
       // Assert
       expect(() => {
         // Act
-        CIELabSpace.toXYZ(lab);
+        toXYZ(lab);
       }).toThrowError(TypeError);
     });
   });

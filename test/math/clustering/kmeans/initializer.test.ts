@@ -1,4 +1,4 @@
-import { euclidean, KmeansPlusPlusInitializer, Point2 } from '@internal/math';
+import { KmeansPlusPlusInitializer, Point2, euclidean } from '@internal/math';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [

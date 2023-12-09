@@ -1,7 +1,7 @@
-import { XYZSpace } from '@internal/color';
+import { clampX, clampY, clampZ, fromRGB, toRGB } from '@internal/color/space/xyz';
 import { describe, expect, it } from 'vitest';
 
-describe('XYZSpace', () => {
+describe('XYZ', () => {
   describe('clampX', () => {
     it.each([
       { value: -0.1, expected: 0.0 },
@@ -15,7 +15,7 @@ describe('XYZSpace', () => {
       { value: 1.1, expected: 0.950456 },
     ])('should clamp value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = XYZSpace.clampX(value);
+      const actual = clampX(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -32,7 +32,7 @@ describe('XYZSpace', () => {
       { value: 1.1, expected: 1.0 },
     ])('should clamp value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = XYZSpace.clampY(value);
+      const actual = clampY(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -50,7 +50,7 @@ describe('XYZSpace', () => {
       { value: 1.1, expected: 1.088644 },
     ])('should clamp value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = XYZSpace.clampZ(value);
+      const actual = clampZ(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -69,7 +69,7 @@ describe('XYZSpace', () => {
       { rgb: { r: 255, g: 255, b: 0 }, expected: { x: 0.77, y: 0.9278, z: 0.1385 } }, // Yellow
     ])('should convert RGB(%o) to XYZ(%o)', ({ rgb, expected }) => {
       // Act
-      const actual = XYZSpace.fromRGB(rgb);
+      const actual = fromRGB(rgb);
 
       // Assert
       expect(actual.x).toBeCloseTo(expected.x, 4);
@@ -91,7 +91,7 @@ describe('XYZSpace', () => {
       // Assert
       expect(() => {
         // Act
-        XYZSpace.fromRGB(rgb);
+        fromRGB(rgb);
       }).toThrowError(TypeError);
     });
   });
@@ -108,7 +108,7 @@ describe('XYZSpace', () => {
       { xyz: { x: 0.77, y: 0.9278, z: 0.1385 }, expected: { r: 255, g: 255, b: 0 } }, // Yellow
     ])('should convert XYZ(%o) to RGB(%o)', ({ xyz, expected }) => {
       // Act
-      const actual = XYZSpace.toRGB(xyz);
+      const actual = toRGB(xyz);
 
       // Assert
       expect(actual.r).toBe(expected.r);
@@ -130,7 +130,7 @@ describe('XYZSpace', () => {
       // Assert
       expect(() => {
         // Act
-        XYZSpace.toRGB(xyz);
+        toRGB(xyz);
       }).toThrowError(TypeError);
     });
   });

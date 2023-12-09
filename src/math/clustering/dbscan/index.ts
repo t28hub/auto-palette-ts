@@ -53,30 +53,28 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     const labels = new Array<Label>(points.length).fill(UNDEFINED);
     const clusters = new Array<Cluster<P>>();
     const neighborSearch = KDTreeSearch.build(points, this.distanceFunction);
-    points.forEach((point: P, index: number) => {
+    for (let i = 0; i < points.length; i++) {
       // Skip if the point has already been visited.
-      if (labels[index] !== UNDEFINED) {
-        return;
+      if (labels[i] !== UNDEFINED) {
+        continue;
       }
 
+      const point = points[i];
       const neighbors = neighborSearch.searchRadius(point, this.radius);
       // Mark as noise point if there are not enough neighbors.
       if (neighbors.length < this.minPoints) {
-        labels[index] = OUTLIER;
-        return;
+        labels[i] = OUTLIER;
+        continue;
       }
 
-      neighbors.forEach((neighbor: Neighbor) => {
-        const index = neighbor.index;
-        labels[index] = MARKED;
-      });
+      DBSCAN.markNeighbors(neighbors, labels);
 
       const cluster = this.expandCluster(label, labels, points, neighbors, neighborSearch);
       if (cluster.size >= this.minPoints) {
         clusters.push(cluster);
       }
       label++;
-    });
+    }
     return clusters;
   }
 
@@ -127,17 +125,32 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
         continue;
       }
 
-      secondaryNeighbors.forEach((secondaryNeighbor: Neighbor) => {
-        const secondaryIndex = secondaryNeighbor.index;
-        const secondaryLabel = labels[secondaryIndex];
-        if (secondaryLabel === UNDEFINED) {
-          labels[secondaryIndex] = MARKED;
+      for (let i = 0; i < secondaryNeighbors.length; i++) {
+        const secondaryNeighbor = secondaryNeighbors[i];
+        const secondaryNeighborIndex = secondaryNeighbor.index;
+        const secondaryNeighborLabel = labels[secondaryNeighborIndex];
+        if (secondaryNeighborLabel === UNDEFINED) {
+          labels[secondaryNeighborIndex] = MARKED;
           queue.push(secondaryNeighbor);
-        } else if (secondaryLabel === OUTLIER) {
+        } else if (secondaryNeighborLabel === OUTLIER) {
           queue.push(secondaryNeighbor);
         }
-      });
+      }
     }
     return cluster;
+  }
+
+  /**
+   * Mark the neighbors of a point as marked.
+   *
+   * @param neighbors The neighbors to mark.
+   * @param labels The labels of the points.
+   */
+  private static markNeighbors(neighbors: Neighbor[], labels: Label[]): void {
+    for (let i = 0; i < neighbors.length; i++) {
+      const neighbor = neighbors[i];
+      const neighborIndex = neighbor.index;
+      labels[neighborIndex] = MARKED;
+    }
   }
 }

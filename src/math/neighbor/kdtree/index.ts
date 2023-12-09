@@ -22,11 +22,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param distanceFunction The function to measure the distance between two points.
    * @see build
    */
-  private constructor(
-    private readonly root: Node,
-    points: P[],
-    private readonly distanceFunction: DistanceFunction,
-  ) {
+  private constructor(private readonly root: Node, points: P[], private readonly distanceFunction: DistanceFunction) {
     // Copy the points array to avoid side effects.
     this.points = Array.from(points);
   }
@@ -212,7 +208,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    */
   static build<P extends Point>(points: P[], distanceFunction: DistanceFunction = euclidean): KDTreeSearch<P> {
     const indices = new Uint32Array(points.length).map((_: number, index: number) => index);
-    const root = this.buildNode(points, indices, 0);
+    const root = KDTreeSearch.buildNode(points, indices, 0);
     if (!root) {
       throw new Error('The given points is empty');
     }
@@ -246,8 +242,8 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
       return points[index1][axis] - points[index2][axis];
     });
 
-    const left = this.buildNode(points, indices.slice(0, median), depth + 1);
-    const right = this.buildNode(points, indices.slice(median + 1), depth + 1);
+    const left = KDTreeSearch.buildNode(points, indices.slice(0, median), depth + 1);
+    const right = KDTreeSearch.buildNode(points, indices.slice(median + 1), depth + 1);
     return new Node(indices[median], axis, left, right);
   }
 }

@@ -1,4 +1,4 @@
-import { DBSCAN, euclidean, Point2, Vector } from '@internal/math';
+import { DBSCAN, Point2, Vector, euclidean } from '@internal/math';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [

@@ -1,8 +1,8 @@
-import { HSLSpace } from '@internal/color';
+import { clampLightness, clampSaturation, fromRGB, normalizeHue, toRGB } from '@internal/color/space/hsl';
 import { describe, expect, it } from 'vitest';
 
-describe('HSLSpace', () => {
-  describe('normalizeH', () => {
+describe('HSL', () => {
+  describe('normalizeHue', () => {
     it.each([
       { value: -120, expected: 240 },
       { value: -1, expected: 359 },
@@ -13,14 +13,14 @@ describe('HSLSpace', () => {
       { value: 480, expected: 120 },
     ])('should normalize hue value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLSpace.normalizeH(value);
+      const actual = normalizeHue(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('clampS', () => {
+  describe('clampSaturation', () => {
     it.each([
       { value: -0.1, expected: 0.0 },
       { value: 0.0, expected: 0.0 },
@@ -29,14 +29,14 @@ describe('HSLSpace', () => {
       { value: 1.1, expected: 1.0 },
     ])('should clamp saturation value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLSpace.clampS(value);
+      const actual = clampSaturation(value);
 
       // Assert
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('clampL', () => {
+  describe('clampLightness', () => {
     it.each([
       { value: -0.1, expected: 0.0 },
       { value: 0.0, expected: 0.0 },
@@ -45,7 +45,7 @@ describe('HSLSpace', () => {
       { value: 1.1, expected: 1.0 },
     ])('should clamp lightness value($value) to $expected', ({ value, expected }) => {
       // Act
-      const actual = HSLSpace.clampL(value);
+      const actual = clampLightness(value);
 
       // Assert
       expect(actual).toEqual(expected);
@@ -64,7 +64,7 @@ describe('HSLSpace', () => {
       { hsl: { h: 60, s: 1, l: 0.5 }, expected: { r: 255, g: 255, b: 0 } }, // Yellow
     ])('should convert HSL($hsl) to RGB($expected)', ({ hsl, expected }) => {
       // Act
-      const actual = HSLSpace.toRGB(hsl);
+      const actual = toRGB(hsl);
 
       // Assert
       expect(actual).toMatchObject(expected);
@@ -84,7 +84,7 @@ describe('HSLSpace', () => {
       // Assert
       expect(() => {
         // Act
-        HSLSpace.toRGB(hsl);
+        toRGB(hsl);
       }).toThrowError(TypeError);
     });
   });
@@ -101,7 +101,7 @@ describe('HSLSpace', () => {
       { rgb: { r: 255, g: 255, b: 0 }, expected: { h: 60, s: 1, l: 0.5 } }, // Yellow
     ])('should convert RGB($rgb) to HSL($expected)', ({ rgb, expected }) => {
       // Act
-      const actual = HSLSpace.fromRGB(rgb);
+      const actual = fromRGB(rgb);
 
       // Assert
       expect(actual).toMatchObject(expected);
@@ -121,7 +121,7 @@ describe('HSLSpace', () => {
       // Assert
       expect(() => {
         // Act
-        HSLSpace.fromRGB(rgb);
+        fromRGB(rgb);
       }).toThrowError(TypeError);
     });
   });

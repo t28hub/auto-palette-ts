@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-import { createCanvas, Image } from '@napi-rs/canvas';
+import { Image, createCanvas } from '@napi-rs/canvas';
 
 /**
  * Load the image from a given file as ImageData object.

@@ -47,38 +47,32 @@
     "build": "tsc && vite build",
     "clean": "rimraf dist",
     "dev": "vite",
-    "lint": "pnpm lint:ts && pnpm lint:knip",
-    "lint:ts": "eslint .",
-    "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
+    "format": "biome format --write .",
+    "lint": "pnpm lint:biome && pnpm lint:knip",
+    "lint:biome": "biome lint .",
+    "lint:biome:fix": "biome check --apply .",
     "lint:knip": "pnpm lint:knip:development && pnpm lint:knip:production",
     "lint:knip:development": "knip",
     "lint:knip:production": "knip --production --strict",
     "test": "pnpm test:coverage",
     "test:benchmark": "vitest bench --run",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest run --coverage --ui",
-    "format": "prettier --list-different --write ."
+    "test:ui": "vitest run --coverage --ui"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.4.1",
     "@codspeed/vitest-plugin": "^2.3.1",
     "@napi-rs/canvas": "^0.1.44",
     "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
     "@vitest/coverage-v8": "^1.0.2",
     "@vitest/ui": "^1.0.2",
     "canvas": "^2.11.2",
-    "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.3",
     "jest-extended": "^4.0.2",
     "jest-matcher-utils": "^29.7.0",
     "jsdom": "^23.0.1",
     "knip": "^3.6.0",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.7",
@@ -87,12 +81,12 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "pnpm lint:fix",
+      "pnpm lint:biome:fix",
       "pnpm format"
     ],
     "*.{json,yml,md,html,css}": [
       "pnpm format"
     ]
   },
-  "packageManager": "pnpm@8.10.5"
+  "packageManager": "pnpm@8.11.0"
 }
