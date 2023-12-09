@@ -23,8 +23,8 @@ describe('CIELabSpace', () => {
       { value: -129, expected: -128 },
       { value: -128, expected: -128 },
       { value: 0, expected: 0 },
-      { value: 127, expected: 127 },
-      { value: 128, expected: 127 },
+      { value: 128, expected: 128 },
+      { value: 129, expected: 128 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
       const actual = CIELabSpace.clampA(value);
@@ -39,8 +39,8 @@ describe('CIELabSpace', () => {
       { value: -129, expected: -128 },
       { value: -128, expected: -128 },
       { value: 0, expected: 0 },
-      { value: 127, expected: 127 },
-      { value: 128, expected: 127 },
+      { value: 128, expected: 128 },
+      { value: 129, expected: 128 },
     ])('should return clamped value($expected) when the value is $value', ({ value, expected }) => {
       // Act
       const actual = CIELabSpace.clampB(value);

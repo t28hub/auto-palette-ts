@@ -19,9 +19,9 @@ describe('Color', () => {
       [-1, 0, 0, { l: 0, a: 0, b: 0 }],
       [101, 0, 0, { l: 100, a: 0, b: 0 }],
       [0, -129, 0, { l: 0, a: -128, b: 0 }],
-      [0, 128, 0, { l: 0, a: 127, b: 0 }],
+      [0, 129, 0, { l: 0, a: 128, b: 0 }],
       [0, 0, -129, { l: 0, a: 0, b: -128 }],
-      [0, 0, 128, { l: 0, a: 0, b: 127 }],
+      [0, 0, 129, { l: 0, a: 0, b: 128 }],
     ])('should clamp the component if the l(%d), a(%d), or b(%d) is out of range', (l, a, b, expected) => {
       // Act
       const actual = new Color(l, a, b);
@@ -104,7 +104,7 @@ describe('Color', () => {
     it('should return the luminance of the color', () => {
       // Act
       const color = new Color(50, 0, 0);
-      const actual = color.luminance();
+      const actual = color.lightness();
 
       // Assert
       expect(actual).toEqual(50);

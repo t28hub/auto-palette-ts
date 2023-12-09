@@ -45,7 +45,8 @@ export function normalize(value: number, min: number, max: number): number {
   if (min >= max) {
     throw new RangeError(`The minimum value(${min}) is greater than the maximum value(${max})`);
   }
-  return (value - min) / (max - min);
+
+  return Math.max(Math.min((value - min) / (max - min), 1.0), 0.0);
 }
 
 /**

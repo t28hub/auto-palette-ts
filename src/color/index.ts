@@ -68,7 +68,7 @@ export class Color {
    * @see chroma
    * @see hue
    */
-  luminance() {
+  lightness() {
     return this.l;
   }
 
@@ -76,7 +76,7 @@ export class Color {
    * Calculate the chroma of the color.
    *
    * @returns The chroma of the color.
-   * @see luminance
+   * @see lightness
    * @see hue
    */
   chroma() {
@@ -87,7 +87,7 @@ export class Color {
    * Calculate the hue of the color.
    *
    * @returns The hue of the color.
-   * @see luminance
+   * @see lightness
    * @see chroma
    */
   hue() {
@@ -152,6 +152,38 @@ export class Color {
   toLAB(): LAB {
     return { l: this.l, a: this.a, b: this.b };
   }
+
+  /**
+   * The minimum lightness of the color.
+   *
+   * @see {@link MAX_LIGHTNESS}
+   * @see {@link lightness}
+   */
+  static MIN_LIGHTNESS = 0;
+
+  /**
+   * The maximum lightness of the color.
+   *
+   * @see {@link MIN_LIGHTNESS
+   * @see {@link lightness}
+   */
+  static MAX_LIGHTNESS = 100;
+
+  /**
+   * The minimum chroma of the color.
+   *
+   * @see {@link MAX_CHROMA}
+   * @see {@link chroma}
+   */
+  static MIN_CHROMA = 0;
+
+  /**
+   * The maximum chroma of the color.
+   *
+   * @see {@link MIN_CHROMA}
+   * @see {@link chroma}
+   */
+  static MAX_CHROMA = 180;
 
   /**
    * Parse the value to a color.

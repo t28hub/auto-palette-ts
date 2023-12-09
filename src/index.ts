@@ -14,3 +14,4 @@ export { alphaFilter, luminanceFilter, type ColorFilterFunction } from './filter
 export { type ImageSource } from './image';
 export { type Algorithm, type Options, Palette } from './palette';
 export { type Swatch } from './swatch';
+export { type Theme } from './theme';

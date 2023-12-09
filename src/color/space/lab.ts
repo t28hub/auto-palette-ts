@@ -25,7 +25,7 @@ export class CIELabSpace {
   /**
    * The maximum value of the 'a' component.
    */
-  static readonly MAX_A = 127;
+  static readonly MAX_A = 128;
 
   /**
    * The minimum value of the 'b' component.
@@ -35,7 +35,7 @@ export class CIELabSpace {
   /**
    * The maximum value of the 'b' component.
    */
-  static readonly MAX_B = 127;
+  static readonly MAX_B = 128;
 
   /**
    * Clamp the 'l' component of the color.

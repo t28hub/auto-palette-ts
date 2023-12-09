@@ -1,3 +1,4 @@
+import { Color } from './color';
 import { SwatchExtractor } from './extractor';
 import { alphaFilter, ColorFilterFunction, luminanceFilter } from './filter';
 import { createImageData, ImageSource } from './image';
@@ -10,12 +11,14 @@ import {
   KmeansPlusPlusInitializer,
   Neighbor,
   NeighborSearch,
+  normalize,
   Point3,
   Point5,
   SamplingStrategy,
   squaredEuclidean,
 } from './math';
 import { Swatch } from './swatch';
+import { getWeightFunction, Theme, WeightFunction } from './theme';
 
 /**
  * The algorithm to use for palette extraction.
@@ -50,7 +53,6 @@ export interface Options {
 const SIMILAR_COLOR_THRESHOLD = 20.0;
 const DEFAULT_SCORE_COEFFICIENT = 1.0;
 const REDUCED_SCORE_COEFFICIENT = 0.25;
-const DEFAULT_SWATCH_COUNT = 6;
 
 const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
@@ -62,8 +64,6 @@ const DEFAULT_OPTIONS: Required<Options> = {
  */
 export class Palette {
   private readonly swatches: Swatch[];
-
-  private readonly colors: Point3[];
 
   private readonly samplingStrategy: SamplingStrategy<Point3>;
 
@@ -77,10 +77,6 @@ export class Palette {
     // Sort the swatches by population in descending order to make the dominant swatch easier to find.
     this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
       return swatch2.population - swatch1.population;
-    });
-    this.colors = this.swatches.map((swatch: Swatch): Point3 => {
-      const { l, a, b } = swatch.color.toLAB();
-      return [l, a, b];
     });
     this.samplingStrategy = new FarthestPointSampling<Point3>(euclidean);
   }
@@ -121,10 +117,11 @@ export class Palette {
    * Find the best swatches from the palette.
    *
    * @param n The number of swatches to find.
+   * @param theme The theme of the swatches.
    * @return The best swatches. If the palette is empty, an empty array is returned.
    * @throws {TypeError} If the number of swatches to find is not an integer or less than 0.
    */
-  findSwatches(n: number = DEFAULT_SWATCH_COUNT): Swatch[] {
+  findSwatches(n: number, theme?: Theme): Swatch[] {
     if (!Number.isInteger(n)) {
       throw new TypeError(`The number of swatches to find must be an integer: ${n}`);
     }
@@ -136,38 +133,74 @@ export class Palette {
       return [...this.swatches];
     }
 
-    const neighborSearch = KDTreeSearch.build(this.colors, euclidean);
+    const weightFunction = this.createWeightFunction(theme);
+    const sortedSwatches = Array.from(this.swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
+      const weight1 = weightFunction(swatch1);
+      const weight2 = weightFunction(swatch2);
+      return weight2 - weight1;
+    });
+    const colors = sortedSwatches.map((swatch: Swatch): Point3 => {
+      const { l, a, b } = swatch.color.toLAB();
+      return [l, a, b];
+    });
+
+    const neighborSearch = KDTreeSearch.build(colors, euclidean);
     const markedIndices = new Set<number>();
-    const sampledColors = this.samplingStrategy.sample(this.colors, n);
-    return sampledColors.map((color: Point3): Swatch => this.findBestSwatch(color, neighborSearch, markedIndices));
+    const sampledColors = this.samplingStrategy.sample(colors, n);
+    return sampledColors.map(
+      (color: Point3): Swatch =>
+        Palette.findOptimalSwatch(sortedSwatches, color, neighborSearch, markedIndices, weightFunction),
+    );
   }
 
-  private findBestSwatch(color: Point3, neighborSearch: NeighborSearch<Point3>, marked: Set<number>): Swatch {
+  private static findOptimalSwatch(
+    swatches: Swatch[],
+    color: Point3,
+    neighborSearch: NeighborSearch<Point3>,
+    markedIndices: Set<number>,
+    weightFunction: WeightFunction,
+  ): Swatch {
     // Find the neighbors of the color within the radius of 20.0 in the LAB color space.
     // The radius is determined by the experiment.
     const neighbors = neighborSearch.searchRadius(color, SIMILAR_COLOR_THRESHOLD);
-    // Sort the neighbors by distance in ascending order.
-    neighbors.sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
-      return neighbor1.distance - neighbor2.distance;
-    });
 
     // Find the best neighbor which has the largest score.
-    const bestNeighbor = neighbors.reduce((best: Neighbor, neighbor: Neighbor): Neighbor => {
-      const bestSwatch = this.swatches[best.index];
-      const currentSwatch = this.swatches[neighbor.index];
+    const bestNeighbor = neighbors.reduce((optimal: Neighbor, neighbor: Neighbor): Neighbor => {
+      const optimalSwatch = swatches[optimal.index];
+      const currentSwatch = swatches[neighbor.index];
 
       // If the neighbor is already marked, the score is reduced by REDUCED_SCORE_COEFFICIENT to avoid duplication.
-      const coefficient = marked.has(neighbor.index) ? REDUCED_SCORE_COEFFICIENT : DEFAULT_SCORE_COEFFICIENT;
-      marked.add(neighbor.index);
+      const coefficient = markedIndices.has(neighbor.index) ? REDUCED_SCORE_COEFFICIENT : DEFAULT_SCORE_COEFFICIENT;
+      markedIndices.add(neighbor.index);
 
-      const bestScore = bestSwatch.population * bestSwatch.color.chroma();
-      const currentScore = currentSwatch.population * currentSwatch.color.chroma() * coefficient;
-      if (bestScore > currentScore) {
-        return best;
+      const optimalWeight = weightFunction(optimalSwatch);
+      const currentWeight = weightFunction(currentSwatch) * coefficient;
+      if (optimalWeight > currentWeight) {
+        return optimal;
       }
       return neighbor;
     });
-    return this.swatches[bestNeighbor.index];
+    return swatches[bestNeighbor.index];
+  }
+
+  /**
+   * Create a new WeightFunction instance with the given theme.
+   *
+   * @param theme - The theme of the swatches.
+   * @return A new WeightFunction instance. If the theme is not specified, a default WeightFunction instance is returned.
+   */
+  private createWeightFunction(theme?: Theme): WeightFunction {
+    if (theme) {
+      return getWeightFunction(theme);
+    }
+
+    // The swatch at the first index is the dominant swatch and has the largest population.
+    const maxPopulation = this.swatches[0].population;
+    return (swatch: Swatch): number => {
+      const population = normalize(swatch.population, 0, maxPopulation);
+      const chroma = normalize(swatch.color.chroma(), Color.MIN_CHROMA, Color.MAX_CHROMA);
+      return population * 0.8 + chroma * 0.2;
+    };
   }
 
   /**

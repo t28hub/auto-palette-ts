@@ -83,23 +83,25 @@ describe('Palette', () => {
   });
 
   describe('findSwatches', () => {
-    it('should find the default number of swatches from the palette', () => {
+    it('should find the specified number of swatches from the palette', () => {
       // Act
       const palette = new Palette(swatches);
-      const actual = palette.findSwatches();
+      const actual = palette.findSwatches(6);
 
       // Assert
       expect(actual).toBeArrayOfSize(6);
       expect(actual).toContainAllValues(swatches);
     });
 
-    it('should find the specified number of swatches from the palette', () => {
+    it('should find the swatches based on specified theme', () => {
       // Act
       const palette = new Palette(swatches);
-      const actual = palette.findSwatches(3);
+      const actual = palette.findSwatches(2, 'light');
 
       // Assert
-      expect(actual).toBeArrayOfSize(3);
+      expect(actual).toBeArrayOfSize(2);
+      expect(actual[0].color.toHex()).toEqual('#ffffff');
+      expect(actual[1].color.toHex()).toEqual('#00158f');
     });
 
     it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {
@@ -109,6 +111,7 @@ describe('Palette', () => {
 
       // Assert
       expect(actual).toBeArrayOfSize(6);
+      expect(actual).toContainAllValues(swatches);
     });
 
     it.each([Infinity, NaN, -1, 0])(
@@ -140,7 +143,7 @@ describe('Palette', () => {
       expect(actual.isEmpty()).toBeFalsy();
       expect(actual.size()).toBeGreaterThan(16);
 
-      const swatches = actual.findSwatches();
+      const swatches = actual.findSwatches(6);
       expect(swatches).toBeArrayOfSize(6);
       swatches.forEach((swatch) => {
         console.info({
@@ -165,7 +168,7 @@ describe('Palette', () => {
         expect(actual.isEmpty()).toBeFalsy();
         expect(actual.size()).toBeGreaterThan(6);
 
-        const swatches = actual.findSwatches();
+        const swatches = actual.findSwatches(6);
         expect(swatches).toBeArrayOfSize(6);
         swatches.forEach((swatch) => {
           console.info({
