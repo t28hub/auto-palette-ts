@@ -1,0 +1,48 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8.x'
+
+      - name: Set up Node.js with ${{ matrix.node-version }} version
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run benchmark tests
+        uses: CodSpeedHQ/action@v2
+        with:
+          run: pnpm test:benchmark
+          token: ${{ secrets.CODSPEED_TOKEN }}

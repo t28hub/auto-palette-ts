@@ -3,6 +3,7 @@
   "description": "Extract prominent color palette from your image automatically",
   "version": "0.1.0",
   "license": "MIT",
+  "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -53,12 +54,13 @@
     "lint:knip:development": "knip",
     "lint:knip:production": "knip --production --strict",
     "test": "pnpm test:coverage",
-    "test:coverage": "vitest run --coverage",
     "test:benchmark": "vitest bench --run",
+    "test:coverage": "vitest run --coverage",
     "test:ui": "vitest run --coverage --ui",
     "format": "prettier --list-different --write ."
   },
   "devDependencies": {
+    "@codspeed/vitest-plugin": "^2.3.1",
     "@napi-rs/canvas": "^0.1.44",
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.13.2",

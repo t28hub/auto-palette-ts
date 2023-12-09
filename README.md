@@ -3,9 +3,10 @@
 [![NPM Version](https://img.shields.io/npm/v/auto-palette)](https://www.npmjs.com/package/auto-palette)
 [![License](https://img.shields.io/npm/l/auto-palette)](https://github.com/t28hub/auto-palette-ts/blob/main/LICENSE)
 [![GitHub Actions](https://github.com/t28hub/auto-palette-ts/actions/workflows/build.yml/badge.svg)](https://github.com/t28hub/auto-palette-ts/actions/workflows/build.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f133835017b04752aa3758dc62a8602e)](https://app.codacy.com/gh/t28hub/auto-palette-ts/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![codecov](https://codecov.io/gh/t28hub/auto-palette-ts/graph/badge.svg?token=F5obdWWvEt)](https://codecov.io/gh/t28hub/auto-palette-ts)
-[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts.svg?type=shield&issueType=license)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts?ref=badge_shield&issueType=license)
+[![Codacy](https://app.codacy.com/project/badge/Grade/f133835017b04752aa3758dc62a8602e)](https://app.codacy.com/gh/t28hub/auto-palette-ts/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codecov](https://codecov.io/gh/t28hub/auto-palette-ts/graph/badge.svg?token=F5obdWWvEt)](https://codecov.io/gh/t28hub/auto-palette-ts)
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/t28hub/auto-palette-ts)
+[![FOSSA](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts.svg?type=shield&issueType=license)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts?ref=badge_shield&issueType=license)
 
 ## Features
 
