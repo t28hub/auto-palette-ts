@@ -18,7 +18,6 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     strategy:
       matrix:
         node-version: [20.x]
@@ -44,5 +43,5 @@ jobs:
       - name: Run benchmark tests
         uses: CodSpeedHQ/action@v2
         with:
-          run: pnpm test:benchmark
+          run: pnpm vitest bench --run
           token: ${{ secrets.CODSPEED_TOKEN }}
