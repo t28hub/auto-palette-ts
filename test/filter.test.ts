@@ -44,7 +44,7 @@ describe('filter', () => {
 
       // Assert
       expect(actual).toBeDefined();
-      expect(actual({ r: 247, g: 12, b: 164, a: 255 })).toBeTruthy();
+      expect(actual({ r: 173, g: 248, b: 65, a: 255 })).toBeTruthy();
       expect(actual({ r: 0, g: 0, b: 0, a: 255 })).toBeFalsy();
       expect(actual({ r: 255, g: 255, b: 255, a: 255 })).toBeFalsy();
     });

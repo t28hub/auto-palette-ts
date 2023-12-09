@@ -1,4 +1,4 @@
-import { RGBA } from './color';
+import { RGBA, RGBSpace } from './color';
 
 /**
  * Color filter function that filters colors.
@@ -71,10 +71,15 @@ export function luminanceFilter(
     );
   }
 
+  // The relative luminance calculation is based on the WCAG 2.0 definition:
+  // https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
   return (color: RGBA) => {
-    // The luminance calculation is based on the WCAG 2.0 definition:
-    // https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
-    const luminance = (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) / 255;
+    const normalized = [color.r / RGBSpace.MAX_RGB, color.g / RGBSpace.MAX_RGB, color.b / RGBSpace.MAX_RGB];
+
+    const r = normalized[0] <= 0.03928 ? normalized[0] / 12.92 : ((normalized[0] + 0.055) / 1.055) ** 2.4;
+    const g = normalized[1] <= 0.03928 ? normalized[1] / 12.92 : ((normalized[1] + 0.055) / 1.055) ** 2.4;
+    const b = normalized[2] <= 0.03928 ? normalized[2] / 12.92 : ((normalized[2] + 0.055) / 1.055) ** 2.4;
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
     return luminance >= minThreshold && luminance <= maxThreshold;
   };
 }
