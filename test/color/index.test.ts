@@ -1,3 +1,4 @@
+import { AssertionError } from '@internal/utils';
 import { Color, cie94 } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
@@ -40,12 +41,12 @@ describe('Color', () => {
       [0, 0, NaN],
       [0, 0, Infinity],
       [0, 0, -Infinity],
-    ])('should throw an error if the l(%d), a(%d), or b(%d) is not finite number', (l, a, b) => {
+    ])('should throw an AssertionError if the l(%d), a(%d), or b(%d) is not finite number', (l, a, b) => {
       // Assert
       expect(() => {
         // Act
         new Color(l, a, b);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 

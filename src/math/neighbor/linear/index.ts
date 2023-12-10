@@ -1,4 +1,4 @@
-import { Mutable, Ordering, PriorityQueue, Queue } from '../../../utils';
+import { assert, Mutable, Ordering, PriorityQueue, Queue } from '../../../utils';
 import { DistanceFunction } from '../../distance';
 import { Point } from '../../point';
 import { Neighbor, NeighborSearch } from '../search';
@@ -16,12 +16,9 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    *
    * @param points The points to be searched.
    * @param distanceFunction The function to measure the distance between two points.
-   * @throws {TypeError} if the provided points array is empty.
    */
   constructor(points: P[], private readonly distanceFunction: DistanceFunction) {
-    if (points.length === 0) {
-      throw new TypeError('The points is empty');
-    }
+    assert(points.length > 0, 'The provided points array is empty');
     // Copy the points array to avoid side effects.
     this.points = [...points];
   }
@@ -30,10 +27,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * {@inheritDoc NeighborSearch.search}
    */
   search(query: P, k: number): Neighbor[] {
-    if (k < 1) {
-      throw new RangeError(`The k is less than 1: ${k}`);
-    }
-
+    assert(k >= 1, `The number of neighbors to be searched(${k}) must be greater than or equal to 1`);
     const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
       if (neighbor1.distance < neighbor2.distance) {
         return 1;
@@ -84,10 +78,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * {@inheritDoc NeighborSearch.searchRadius}
    */
   searchRadius(query: P, radius: number): Neighbor[] {
-    if (radius < 0.0) {
-      throw new RangeError(`The given radius is not positive: ${radius}`);
-    }
-
+    assert(radius > 0.0, `The radius(${radius}) must be greater than 0.0`);
     const neighbors = new Array<Neighbor>();
     for (let i = 0; i < this.points.length; i++) {
       const point = this.points[i];

@@ -1,4 +1,5 @@
 import { clampA, clampB, clampL, fromXYZ, toXYZ } from '@internal/color/space/lab';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('CIELab', () => {
@@ -80,12 +81,12 @@ describe('CIELab', () => {
       { x: 0, y: 0, z: NaN },
       { x: 0, y: 0, z: Infinity },
       { x: 0, y: 0, z: -Infinity },
-    ])('should throw an error if the x, y, or z component(%o) is not a finite number', (xyz) => {
+    ])('should throw an AssertionError if the x, y, or z component(%o) is not a finite number', (xyz) => {
       // Assert
       expect(() => {
         // Act
         fromXYZ(xyz);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -119,12 +120,12 @@ describe('CIELab', () => {
       { l: 0, a: 0, b: NaN },
       { l: 0, a: 0, b: Infinity },
       { l: 0, a: 0, b: -Infinity },
-    ])('should throw an error if the l, a, or b component(%o) is not a finite number', (lab) => {
+    ])('should throw an AssertionError if the l, a, or b component(%o) is not a finite number', (lab) => {
       // Assert
       expect(() => {
         // Act
         toXYZ(lab);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 });

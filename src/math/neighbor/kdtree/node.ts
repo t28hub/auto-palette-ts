@@ -1,3 +1,5 @@
+import { assert } from '../../../utils';
+
 /**
  * The node of KDTree
  */
@@ -18,12 +20,8 @@ export class Node {
     readonly left: Node | undefined,
     readonly right: Node | undefined,
   ) {
-    if (index < 0) {
-      throw new RangeError(`The index is negative: ${index}`);
-    }
-    if (axis < 0) {
-      throw new RangeError(`The axis is negative: ${index}`);
-    }
+    assert(index >= 0, `The index must be non-negative: ${index}`);
+    assert(axis >= 0, `The axis must be non-negative: ${axis}`);
   }
 
   /**

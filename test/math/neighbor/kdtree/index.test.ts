@@ -1,4 +1,5 @@
 import { KDTreeSearch, Point3, euclidean } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 // Arrange
@@ -29,17 +30,17 @@ describe('KDTree', () => {
       expect(actual).toBeDefined();
     });
 
-    it('should throw an Error if the points array is empty', () => {
+    it('should throw an AssertionError if no points are provided', () => {
       // Assert
       expect(() => {
         // Act
         KDTreeSearch.build([], euclidean);
-      }).toThrowError(Error);
+      }).toThrowError(AssertionError);
     });
   });
 
   describe('search', () => {
-    it('should return the k nearest neighbors to the specified point', () => {
+    it('should return the k nearest neighbors to the given point', () => {
       // Act
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
       const actual = kdtreeSearch.search([2, 5, 6], 3);
@@ -60,7 +61,7 @@ describe('KDTree', () => {
       });
     });
 
-    it('should return all neighbors if the k is greater than or equal to the number of points', () => {
+    it('should return all neighbors if the specified k is greater than or equal to the total number of points', () => {
       // Act
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
       const actual = kdtreeSearch.search([3, 5, 7], points.length + 1);
@@ -73,7 +74,7 @@ describe('KDTree', () => {
       });
     });
 
-    it('should throw a RangeError if the k is not a positive integer', () => {
+    it('should throw an AssertionError if the specified k is not a positive integer', () => {
       // Arrange
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
 
@@ -81,12 +82,12 @@ describe('KDTree', () => {
       expect(() => {
         // Act
         kdtreeSearch.search([0, 1, 2], 0);
-      }).toThrowError(RangeError);
+      }).toThrowError(AssertionError);
     });
   });
 
   describe('searchNearest', () => {
-    it('should return the nearest neighbors to the specified point', () => {
+    it('should return the nearest neighbors to the given point', () => {
       // Act
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
       const actual = kdtreeSearch.searchNearest([9, 3, 4]);
@@ -98,7 +99,7 @@ describe('KDTree', () => {
       });
     });
 
-    it('should return the nearest neighbors if the specified point exists in the points array', () => {
+    it('should return the nearest neighbor even if the given point exists in the points array', () => {
       // Act
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
       const actual = kdtreeSearch.searchNearest([5, 0, 0]);
@@ -147,14 +148,14 @@ describe('KDTree', () => {
       expect(actual).toHaveLength(14);
     });
 
-    it('should throw a RangeError if the specified radius is not a positive number', () => {
+    it('should throw an AssertionError if the specified radius is not a positive number', () => {
       // Arrange
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
 
       // Assert
       expect(() => {
         kdtreeSearch.searchRadius([2, 5, 6], 0.0);
-      }).toThrowError(RangeError);
+      }).toThrowError(AssertionError);
     });
   });
 });

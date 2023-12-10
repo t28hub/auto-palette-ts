@@ -1,4 +1,5 @@
 import { Kmeans, KmeansPlusPlusInitializer, Point3, squaredEuclidean } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const points: Point3[] = [
@@ -30,14 +31,17 @@ describe('Kmeans', () => {
       { k: 10, maxIterations: 0, tolerance: 0.01 },
       { k: 10, maxIterations: 10, tolerance: NaN },
       { k: 10, maxIterations: 10, tolerance: -1.0 },
-    ])('should throw a TypeError if constructor parameters are invalid %p', ({ k, maxIterations, tolerance }) => {
-      // Assert
-      expect(() => {
-        // Act
-        const strategy = new KmeansPlusPlusInitializer(squaredEuclidean);
-        new Kmeans(k, maxIterations, tolerance, squaredEuclidean, strategy);
-      }).toThrowError(TypeError);
-    });
+    ])(
+      'should throw an AssertionError if constructor parameters are invalid %p',
+      ({ k, maxIterations, tolerance }) => {
+        // Assert
+        expect(() => {
+          // Act
+          const strategy = new KmeansPlusPlusInitializer(squaredEuclidean);
+          new Kmeans(k, maxIterations, tolerance, squaredEuclidean, strategy);
+        }).toThrowError(AssertionError);
+      },
+    );
   });
 
   describe('fit', () => {

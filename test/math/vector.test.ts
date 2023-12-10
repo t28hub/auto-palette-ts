@@ -1,9 +1,10 @@
 import { Point, Vector, squaredEuclidean } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('Vector', () => {
   describe('constructor', () => {
-    it('should instantiate with a source point', () => {
+    it('should create a Vector instance with given point', () => {
       // Act
       const actual = new Vector([1, 2]);
 
@@ -14,19 +15,19 @@ describe('Vector', () => {
       });
     });
 
-    it.each([{ point: [NaN, 0] }, { point: [1, NaN] }, { point: [NaN, NaN] }])(
-      'should throw TypeError if source === [$point]',
+    it.each([{ point: [NaN, 0] }, { point: [1, Infinity] }, { point: [NaN, Infinity] }])(
+      'should throw an AssertionError if the source point($point) contains infinite number',
       ({ point }) => {
         // Assert
         expect(() => {
           new Vector(point as Point);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
       },
     );
   });
 
   describe('toString', () => {
-    it('should return string representation', () => {
+    it('should return a string representation of the Vector', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.toString();
@@ -37,7 +38,7 @@ describe('Vector', () => {
   });
 
   describe('toArray', () => {
-    it('should return array representation', () => {
+    it('should return an array representation of the Vector', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.toArray();
@@ -48,7 +49,7 @@ describe('Vector', () => {
   });
 
   describe('clone', () => {
-    it('should return cloned vector', () => {
+    it('should return a clone of the Vector', () => {
       // Act
       const vector = new Vector([2, 3, 5, 7, 11]);
       const actual = vector.clone();
@@ -60,7 +61,7 @@ describe('Vector', () => {
   });
 
   describe('setZero', () => {
-    it('should set vector to zero vector', () => {
+    it('should set all components of the Vector to zero', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.setZero();
@@ -74,7 +75,7 @@ describe('Vector', () => {
   });
 
   describe('add', () => {
-    it('should add the other vector', () => {
+    it('should add the components of another Vector', () => {
       // Act
       const vector = new Vector([1, 2, 3, 4, 5]);
       const other = new Vector([3, 4, 5, 6, 7]);
@@ -87,7 +88,7 @@ describe('Vector', () => {
       });
     });
 
-    it('should add the other point', () => {
+    it('should add the components of a given point', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.add([4, 5, 6]);
@@ -99,14 +100,14 @@ describe('Vector', () => {
       });
     });
 
-    it('should throw TypeError if the given point contains infinite number', () => {
+    it('should throw an AssertionError if the given point contains an infinite number', () => {
       const vector = new Vector([1, 2, 3]);
 
       // Assert
       expect(() => {
         // Act
         vector.add([4, 5, NaN]);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -119,7 +120,7 @@ describe('Vector', () => {
       { scalar: -2.0, expected: [-2, -4, -6] },
       { scalar: 0.5, expected: [1 / 2, 2 / 2, 3 / 2] },
       { scalar: 0.25, expected: [1 / 4, 2 / 4, 3 / 4] },
-    ])('should scale by the scalar(%d)', ({ scalar, expected }) => {
+    ])('should scale the Vector by a given scalar($scalar)', ({ scalar, expected }) => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.scale(scalar);
@@ -131,21 +132,21 @@ describe('Vector', () => {
       });
     });
 
-    it.each([{ scalar: NaN }, { scalar: Number.POSITIVE_INFINITY }, { scalar: Number.NEGATIVE_INFINITY }])(
-      'should throw TypeError if the given scalar(%d) is not finite number',
+    it.each([{ scalar: NaN }, { scalar: Infinity }])(
+      'should throw an AssertionError if the given scalar($scalar) is not a finite number',
       ({ scalar }) => {
         const vector = new Vector([1, 2, 3]);
 
         // Assert
         expect(() => {
           vector.scale(scalar);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
       },
     );
   });
 
   describe('distanceTo', () => {
-    it('should compute distance to the other vector', () => {
+    it('should compute the distance to another Vector', () => {
       // Act
       const vector1 = new Vector([1, 2, 3]);
       const vector2 = new Vector([4, 5, 6]);
@@ -155,7 +156,7 @@ describe('Vector', () => {
       expect(actual).toEqual(Math.sqrt(27));
     });
 
-    it('should compute distance to the other point', () => {
+    it('should compute the distance to a given point', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.distanceTo([3, 4, 5]);
@@ -164,7 +165,7 @@ describe('Vector', () => {
       expect(actual).toEqual(Math.sqrt(12));
     });
 
-    it('should compute distance with the distance function to the other point', () => {
+    it('should compute the distance to the given point using a specified distance function', () => {
       // Act
       const vector = new Vector([1, 2, 3]);
       const actual = vector.distanceTo([3, 4, 5], squaredEuclidean);

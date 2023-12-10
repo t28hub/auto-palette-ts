@@ -1,4 +1,5 @@
 import { alphaFilter, composeFilters, luminanceFilter } from '@internal/filter';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('filter', () => {
@@ -25,14 +26,25 @@ describe('filter', () => {
       expect(actual({ r: 0, g: 0, b: 0, a: 255 })).toBeTruthy();
     });
 
-    it.each([-1, 1.1, NaN, Infinity, -Infinity])(
-      'should throw a TypeError if the threshold(%d) is not within the range [0.0, 1.0]',
+    it.each([NaN, Infinity])(
+      'should throw an AssertionError if the threshold(%d) is not a finite number',
       (threshold) => {
         // Assert
         expect(() => {
           // Act
           alphaFilter(threshold);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
+      },
+    );
+
+    it.each([-1, 1.1])(
+      'should throw a RangeError if the threshold(%d) is not within the range [0.0, 1.0]',
+      (threshold) => {
+        // Assert
+        expect(() => {
+          // Act
+          alphaFilter(threshold);
+        }).toThrowError(RangeError);
       },
     );
   });
@@ -59,25 +71,25 @@ describe('filter', () => {
       expect(actual({ r: 255, g: 255, b: 255, a: 255 })).toBeTruthy();
     });
 
-    it.each([-1, 1.1, NaN, Infinity, -Infinity])(
-      'should throw a TypeError if the minThreshold(%d) is not within the range [0.0, 1.0]',
+    it.each([NaN, Infinity])(
+      'should throw an AssertionError if the minThreshold(%d) is not a finite number',
       (minThreshold) => {
         // Assert
         expect(() => {
           // Act
           luminanceFilter(minThreshold, 1.0);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
       },
     );
 
-    it.each([-1, 1.1, NaN, Infinity, -Infinity])(
-      'should throw a TypeError if the maxThreshold(%d) is not within the range [0.0, 1.0]',
+    it.each([NaN, Infinity])(
+      'should throw an AssertionError if the maxThreshold(%d) is not a finite number',
       (maxThreshold) => {
         // Assert
         expect(() => {
           // Act
           luminanceFilter(0.0, maxThreshold);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
       },
     );
 

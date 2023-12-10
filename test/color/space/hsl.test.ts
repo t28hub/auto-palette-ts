@@ -1,4 +1,5 @@
 import { clampLightness, clampSaturation, fromRGB, normalizeHue, toRGB } from '@internal/color/space/hsl';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('HSL', () => {
@@ -80,12 +81,12 @@ describe('HSL', () => {
       { h: 0, s: 0, l: NaN },
       { h: 0, s: 0, l: Infinity },
       { h: 0, s: 0, l: -Infinity },
-    ])('should throw an error if the h, s, or l component(%o) is not a finite number', (hsl) => {
+    ])('should throw an AssertionError if the h, s, or l component(%o) is not a finite number', (hsl) => {
       // Assert
       expect(() => {
         // Act
         toRGB(hsl);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -117,12 +118,12 @@ describe('HSL', () => {
       { r: 0, g: 0, b: NaN },
       { r: 0, g: 0, b: Infinity },
       { r: 0, g: 0, b: -Infinity },
-    ])('should throw an error if the r, g, or b component(%o) is not a finite number', (rgb) => {
+    ])('should throw an AssertionError if the r, g, or b component(%o) is not a finite number', (rgb) => {
       // Assert
       expect(() => {
         // Act
         fromRGB(rgb);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 });

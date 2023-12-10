@@ -1,6 +1,7 @@
 import { clamp } from '../../math';
 import { LAB, XYZ } from '../types';
 
+import { assertFiniteNumber } from '../../utils';
 import { D65, clampX, clampY, clampZ } from './xyz';
 
 /**
@@ -96,9 +97,9 @@ export function clampB(value: number): number {
  * @see {@link toXYZ}
  */
 export function fromXYZ({ x, y, z }: XYZ): LAB {
-  if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
-    throw new TypeError(`The x, y, and z components must be finite numbers: ${x}, ${y}, ${z}`);
-  }
+  assertFiniteNumber(x, `The x(${x}) must be a finite number`);
+  assertFiniteNumber(y, `The y(${y}) must be a finite number`);
+  assertFiniteNumber(z, `The z(${z}) must be a finite number`);
 
   // Function to covert a component of XYZ to CIELab.
   const epsilon = (6.0 / 29.0) ** 3.0;
@@ -130,9 +131,9 @@ export function fromXYZ({ x, y, z }: XYZ): LAB {
  * @see {@link fromXYZ}
  */
 export function toXYZ({ l, a, b }: LAB): XYZ {
-  if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
-    throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
-  }
+  assertFiniteNumber(l, `The l(${l}) must be a finite number`);
+  assertFiniteNumber(a, `The a(${a}) must be a finite number`);
+  assertFiniteNumber(b, `The b(${b}) must be a finite number`);
 
   // Function to covert a component of CIELab to XYZ.
   const epsilon = 6.0 / 29.0;

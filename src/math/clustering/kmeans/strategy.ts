@@ -1,3 +1,4 @@
+import { assertPositiveInteger } from '../../../utils';
 import { Distance, DistanceFunction, Point } from '../../index';
 
 /**
@@ -35,10 +36,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements Initializatio
    * {@inheritDoc CenterInitializer.initialize}
    */
   initialize(points: P[], k: number): P[] {
-    if (!Number.isInteger(k) || k <= 0) {
-      throw new TypeError(`The k is not positive integer: ${k}`);
-    }
-
+    assertPositiveInteger(k, `The number of center points is not positive integer: ${k}`);
     if (points.length <= k) {
       return [...points];
     }

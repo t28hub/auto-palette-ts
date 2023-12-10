@@ -1,4 +1,5 @@
 import { clamp, degreeToRadian, denormalize, normalize, radianToDegree } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('utils', () => {
@@ -25,12 +26,12 @@ describe('utils', () => {
       { value: NaN, min: 0, max: 100 },
       { value: 50, min: NaN, max: 100 },
       { value: 50, min: 0, max: NaN },
-    ])('should throw TypeError if value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
+    ])('should throw an AssertionError if value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
       // Assert
       expect(() => {
         // Act
         clamp(value, min, max);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -53,13 +54,16 @@ describe('utils', () => {
       { value: NaN, min: 0, max: 100 },
       { value: 50, min: NaN, max: 100 },
       { value: 50, min: 0, max: NaN },
-    ])('should throw a TypeError if the value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
-      // Assert
-      expect(() => {
-        // Act
-        normalize(value, min, max);
-      }).toThrowError(TypeError);
-    });
+    ])(
+      'should throw an AssertionError if the value($value), min($min) or max($max) is invalid',
+      ({ value, min, max }) => {
+        // Assert
+        expect(() => {
+          // Act
+          normalize(value, min, max);
+        }).toThrowError(AssertionError);
+      },
+    );
 
     it.each([
       { value: 50, min: 0, max: 0 },
@@ -92,13 +96,16 @@ describe('utils', () => {
       { value: NaN, min: 0, max: 100 },
       { value: 0.5, min: NaN, max: 100 },
       { value: 0.5, min: 0, max: NaN },
-    ])('should throw a TypeError if the value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
-      // Assert
-      expect(() => {
-        // Act
-        denormalize(value, min, max);
-      }).toThrowError(TypeError);
-    });
+    ])(
+      'should throw an AssertionError if the value($value), min($min) or max($max) is invalid',
+      ({ value, min, max }) => {
+        // Assert
+        expect(() => {
+          // Act
+          denormalize(value, min, max);
+        }).toThrowError(AssertionError);
+      },
+    );
 
     it.each([
       { value: 0, min: 0, max: 0 },

@@ -1,4 +1,5 @@
 import { Point2, RandomSampling } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [
@@ -41,7 +42,7 @@ describe('RandomSampling', () => {
       expect(actual).toContainAllValues(points);
     });
 
-    it('should throw a RangeError when n is less than or equal to 0', () => {
+    it('should throw an AssertionError when n is less than or equal to 0', () => {
       // Arrange
       const sampling = new RandomSampling<Point2>();
 
@@ -49,7 +50,7 @@ describe('RandomSampling', () => {
       expect(() => {
         // Act
         sampling.sample(points, 0);
-      }).toThrowError(RangeError);
+      }).toThrowError(AssertionError);
     });
   });
 });

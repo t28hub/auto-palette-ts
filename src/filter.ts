@@ -1,4 +1,5 @@
 import { RGBA, RGBSpace } from './color';
+import { assertFiniteNumber } from './utils';
 
 /**
  * Color filter function that filters colors.
@@ -13,15 +14,12 @@ export type ColorFilterFunction = (color: RGBA) => boolean;
  *
  * @param threshold - The minimum alpha value to pass the filter. The value must be in [0.0, 1.0].
  * @returns The color filter function.
- * @throws {TypeError} If the threshold is not a finite number.
- * @throws {TypeError} If the threshold is not within the range [0.0, 1.0].
+ * @throws {RangeError} If the threshold is not within the range [0.0, 1.0].
  */
 export function alphaFilter(threshold = 1.0): ColorFilterFunction {
-  if (!Number.isFinite(threshold)) {
-    throw new TypeError(`The threshold(${threshold}) must be a finite number`);
-  }
+  assertFiniteNumber(threshold, `The threshold(${threshold}) must be a finite number`);
   if (threshold < 0.0 || threshold > 1.0) {
-    throw new TypeError(`The threshold(${threshold}) must be in [0.0, 1.0]`);
+    throw new RangeError(`The threshold(${threshold}) must be in [0.0, 1.0]`);
   }
 
   return (color: RGBA) => {
@@ -43,26 +41,21 @@ const DEFAULT_MAX_LUMINANCE = 0.85;
  * @param minThreshold - The minimum luminance value to pass the filter. The value must be in [0.0, 1.0].
  * @param maxThreshold - The maximum luminance value to pass the filter. The value must be in [0.0, 1.0].
  * @returns The color filter function.
- * @throws {TypeError} If the minThreshold or maxThreshold is not a finite number.
- * @throws {TypeError} If the minThreshold or maxThreshold is not within the range [0.0, 1.0].
+ * @throws {RangeError} If the minThreshold or maxThreshold is not within the range [0.0, 1.0].
  * @throws {RangeError} If the minThreshold is greater than the maxThreshold.
  */
 export function luminanceFilter(
   minThreshold: number = DEFAULT_MIN_LUMINANCE,
   maxThreshold: number = DEFAULT_MAX_LUMINANCE,
 ): ColorFilterFunction {
-  if (!Number.isFinite(minThreshold)) {
-    throw new TypeError(`The minThreshold(${minThreshold}) must be a finite number`);
-  }
-  if (minThreshold < 0.0 || minThreshold > 1.0) {
-    throw new TypeError(`The minThreshold(${minThreshold}) must be in [0.0, 1.0]`);
-  }
+  assertFiniteNumber(minThreshold, `The minThreshold(${minThreshold}) must be a finite number`);
+  assertFiniteNumber(maxThreshold, `The maxThreshold(${maxThreshold}) must be a finite number`);
 
-  if (!Number.isFinite(maxThreshold)) {
-    throw new TypeError(`The maxThreshold(${maxThreshold}) must be a finite number`);
+  if (minThreshold < 0.0 || minThreshold > 1.0) {
+    throw new RangeError(`The minThreshold(${minThreshold}) must be in [0.0, 1.0]`);
   }
   if (maxThreshold < 0.0 || maxThreshold > 1.0) {
-    throw new TypeError(`The maxThreshold(${maxThreshold}) must be in [0.0, 1.0]`);
+    throw new RangeError(`The maxThreshold(${maxThreshold}) must be in [0.0, 1.0]`);
   }
 
   if (minThreshold > maxThreshold) {

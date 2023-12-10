@@ -1,6 +1,7 @@
 import { DistanceFunction } from '../distance';
 import { Point } from '../point';
 
+import { assert } from '../../utils';
 import { SamplingStrategy } from './strategy';
 
 /**
@@ -20,10 +21,7 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
    * {@inheritDoc SamplingStrategy.sample}
    */
   sample(points: P[], n: number): P[] {
-    if (n <= 0) {
-      throw new RangeError(`The number of data points to downsample must be greater than 0: ${n}`);
-    }
-
+    assert(n > 0, `The number of data points to downsample(${n}) must be greater than 0`);
     if (n >= points.length) {
       return [...points];
     }
@@ -41,9 +39,7 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
 
     while (sampled.size < n) {
       const farthestIndex = this.findFarthestIndex(distances, sampled);
-      if (farthestIndex < 0) {
-        throw new Error('No data point can be selected.');
-      }
+      assert(farthestIndex >= 0, 'No data point can be selected.');
 
       const farthestPoint = points[farthestIndex];
       sampled.set(farthestIndex, farthestPoint);

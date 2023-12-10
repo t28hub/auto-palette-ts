@@ -19,6 +19,7 @@ import {
 } from './math';
 import { Swatch } from './swatch';
 import { Theme, WeightFunction, getWeightFunction } from './theme';
+import { assertPositiveInteger } from './utils';
 
 /**
  * The algorithm to use for palette extraction.
@@ -122,13 +123,7 @@ export class Palette {
    * @throws {TypeError} If the number of swatches to find is not an integer or less than 0.
    */
   findSwatches(n: number, theme?: Theme): Swatch[] {
-    if (!Number.isInteger(n)) {
-      throw new TypeError(`The number of swatches to find must be an integer: ${n}`);
-    }
-    if (n <= 0) {
-      throw new TypeError(`The number of swatches to find must be greater than 0: ${n}`);
-    }
-
+    assertPositiveInteger(n, `The number of swatches to find must be a positive integer: ${n}`);
     if (n >= this.swatches.length) {
       return [...this.swatches];
     }

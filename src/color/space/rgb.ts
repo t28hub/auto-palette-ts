@@ -1,4 +1,5 @@
 import { clamp } from '../../math';
+import { assert, assertInteger } from '../../utils';
 import { RGB } from '../types';
 
 /**
@@ -25,12 +26,9 @@ export function clampValue(value: number): number {
  *
  * @param value - The color in hexadecimal string.
  * @returns The color in RGB color space.
- * @throws {TypeError} If the value is not a valid hexadecimal string.
  */
 export function fromHexString(value: string): RGB {
-  if (!value.startsWith('#')) {
-    throw new TypeError(`The value(${value}) is not a valid hexadecimal color string`);
-  }
+  assert(value.startsWith('#'), `The value(${value}) is not a valid hexadecimal color string`);
 
   let r = NaN;
   let g = NaN;
@@ -48,9 +46,9 @@ export function fromHexString(value: string): RGB {
     b = Number.parseInt(value.slice(5, 7), 16);
   }
 
-  if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) {
-    throw new TypeError(`The value(${value}) is not a valid hexadecimal color string`);
-  }
+  assertInteger(r, `The value(${value}) is not a valid hexadecimal color string`);
+  assertInteger(g, `The value(${value}) is not a valid hexadecimal color string`);
+  assertInteger(b, `The value(${value}) is not a valid hexadecimal color string`);
   return { r, g, b };
 }
 
@@ -61,13 +59,10 @@ export function fromHexString(value: string): RGB {
  * @param g The green component of the color.
  * @param b The blue component of the color.
  * @returns The hexadecimal string.
- * @throws {TypeError} If the r, g, or b is not finite number.
  */
 export function toHexString({ r, g, b }: RGB): string {
   return [r, g, b].reduce((string, value) => {
-    if (!Number.isFinite(value)) {
-      throw new TypeError(`The r, g, and b components must be finite numbers: ${r}, ${g}, ${b}`);
-    }
+    assert(Number.isFinite(value), `The r, g, and b components must be finite numbers: ${r}, ${g}, ${b}`);
     const hex = clampValue(value).toString(16).padStart(2, '0');
     return string + hex;
   }, '#');

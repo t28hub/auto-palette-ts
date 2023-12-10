@@ -1,6 +1,7 @@
 import { clamp } from '../../math';
 import { RGB, XYZ } from '../types';
 
+import { assertFiniteNumber, assertInteger } from '../../utils';
 import { MAX_RGB, clampValue } from './rgb';
 
 /**
@@ -103,13 +104,12 @@ export const D65: XYZ = {
  *
  * @param rgb - The color in the RGB color space.
  * @returns The converted color in the XYZ color space.
- * @throws {TypeError} If any of the RGB components is not a finite number.
  * @see {@link toRGB}
  */
 export function fromRGB({ r, g, b }: RGB): XYZ {
-  if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) {
-    throw new TypeError(`The r, g, and b components must be finite numbers: ${r}, ${g}, ${b}`);
-  }
+  assertInteger(r, `The r(${r}) must be an integer`);
+  assertInteger(g, `The g(${g}) must be an integer`);
+  assertInteger(b, `The b(${b}) must be an integer`);
 
   const f = (value: number): number => {
     if (value <= 0.04045) {
@@ -137,9 +137,9 @@ export function fromRGB({ r, g, b }: RGB): XYZ {
  * @see {@link fromRGB}
  */
 export function toRGB({ x, y, z }: XYZ): RGB {
-  if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
-    throw new TypeError(`The x, y, and z components must be finite numbers: ${x}, ${y}, ${z}`);
-  }
+  assertFiniteNumber(x, `The x(${x}) must be a finite number`);
+  assertFiniteNumber(y, `The y(${y}) must be a finite number`);
+  assertFiniteNumber(z, `The z(${z}) must be a finite number`);
 
   const f = (value: number): number => {
     if (value <= 0.0031308) {

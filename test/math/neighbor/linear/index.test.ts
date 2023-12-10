@@ -1,4 +1,5 @@
 import { LinearSearch, Point2, squaredEuclidean } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [
@@ -25,11 +26,11 @@ describe('LinearSearch', () => {
       expect(actual).toBeDefined();
     });
 
-    it('should throw TypeError if the provided points array is empty', () => {
+    it('should throw an AssertionError if the provided points array is empty', () => {
       // Assert
       expect(() => {
         new LinearSearch([], squaredEuclidean);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -68,7 +69,7 @@ describe('LinearSearch', () => {
       });
     });
 
-    it('should throw RangeError if the specified k is not a positive integer', () => {
+    it('should throw an AssertionError if the specified k is not a positive integer', () => {
       // Arrange
       const linearSearch = new LinearSearch(points, squaredEuclidean);
 
@@ -76,7 +77,7 @@ describe('LinearSearch', () => {
       expect(() => {
         // Act
         linearSearch.search([0, 3], 0);
-      }).toThrowError(RangeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -133,7 +134,7 @@ describe('LinearSearch', () => {
       expect(actual).toBeEmpty();
     });
 
-    it('should throw RangeError if the given radius is negative', () => {
+    it('should throw an AssertionError if the given radius is negative', () => {
       // Arrange
       const linearSearch = new LinearSearch(points, squaredEuclidean);
 
@@ -141,7 +142,7 @@ describe('LinearSearch', () => {
       expect(() => {
         // Act
         linearSearch.searchRadius([2, 2], -1);
-      }).toThrowError(RangeError);
+      }).toThrowError(AssertionError);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { radianToDegree } from '../math';
 
+import { assertFiniteNumber, isString } from '../utils';
 import { ColorDifference, DifferenceFunction, ciede2000 } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
@@ -17,12 +18,11 @@ export class Color {
    * @param l The lightness component of the color.
    * @param a The a component of the color.
    * @param b The b component of the color.
-   * @throws {TypeError} If the l, a, or b is not finite number.
    */
   constructor(private readonly l: number, private readonly a: number, private readonly b: number) {
-    if (!Number.isFinite(l) || !Number.isFinite(a) || !Number.isFinite(b)) {
-      throw new TypeError(`The l, a, and b components must be finite numbers: ${l}, ${a}, ${b}`);
-    }
+    assertFiniteNumber(l, `The l(${l}) must be a finite number`);
+    assertFiniteNumber(a, `The a(${a}) must be a finite number`);
+    assertFiniteNumber(b, `The b(${b}) must be a finite number`);
     this.l = CIELabSpace.clampL(l);
     this.a = CIELabSpace.clampA(a);
     this.b = CIELabSpace.clampB(b);
@@ -193,7 +193,7 @@ export class Color {
       return value.clone();
     }
 
-    if (typeof value === 'string') {
+    if (isString(value)) {
       if (value.startsWith('#')) {
         const rgb = RGBSpace.fromHexString(value);
         const xyz = XYZSpace.fromRGB(rgb);
@@ -201,7 +201,6 @@ export class Color {
         return new Color(lab.l, lab.a, lab.b);
       }
     }
-
     throw new TypeError(`The value(${value}) is not parsable to a color.`);
   }
 }

@@ -1,3 +1,4 @@
+import { assert } from '../../utils';
 import { Point } from '../point';
 import { Vector } from '../vector';
 
@@ -57,13 +58,9 @@ export class Cluster<P extends Point> {
    *
    * @param index The index of the point.
    * @param point The point to add.
-   * @throws {RangeError} If the index is less than 0.
    */
   addMember(index: number, point: P): void {
-    if (index < 0) {
-      throw new RangeError(`The index(${index}) is less than 0`);
-    }
-
+    assert(index >= 0, `The index(${index}) is less than 0`);
     if (this.memberships.has(index)) {
       return;
     }

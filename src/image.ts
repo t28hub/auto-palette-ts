@@ -1,3 +1,5 @@
+import { assertDefined } from './utils';
+
 /**
  * Image source represents the source of a supported image.
  */
@@ -28,9 +30,7 @@ export function createImageData(source: ImageSource): ImageData {
  */
 function ensureContext2D(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const context = canvas.getContext('2d');
-  if (!context) {
-    throw new Error('The 2D context might not supported in this environment');
-  }
+  assertDefined(context, 'The 2D context might not supported in this environment');
   return context;
 }
 

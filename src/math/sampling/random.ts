@@ -1,5 +1,6 @@
 import { Point } from '../point';
 
+import { assert } from '../../utils';
 import { SamplingStrategy } from './strategy';
 
 /**
@@ -12,10 +13,7 @@ export class RandomSampling<P extends Point> implements SamplingStrategy<P> {
    * {@inheritDoc SamplingStrategy.sample}
    */
   sample(points: P[], n: number): P[] {
-    if (n <= 0) {
-      throw new RangeError(`The number of data points to downsample must be greater than 0: ${n}`);
-    }
-
+    assert(n > 0, `The number of data points to downsample(${n}) must be greater than 0`);
     if (n >= points.length) {
       return [...points];
     }

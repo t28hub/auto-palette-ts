@@ -4,9 +4,10 @@ import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
-import { InitializationStrategy } from './initializer';
+import { assert, assertPositiveInteger } from '../../../utils';
+import { InitializationStrategy } from './strategy';
 
-export { KmeansPlusPlusInitializer } from './initializer';
+export { KmeansPlusPlusInitializer } from './strategy';
 
 /**
  * Implementation of the k-means clustering algorithm.
@@ -23,7 +24,6 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
    * @param tolerance The tolerance for convergence conditions.
    * @param distanceFunction The function to measure the distance between two points.
    * @param initializationStrategy The strategy to initialize center points.
-   * @throws {TypeError} if any constructor arguments are invalid.
    */
   constructor(
     private readonly k: number,
@@ -32,25 +32,16 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     private readonly distanceFunction: DistanceFunction,
     private readonly initializationStrategy: InitializationStrategy<P>,
   ) {
-    if (!Number.isInteger(k) || k <= 0) {
-      throw new TypeError(`The number of cluster must be a positive integer: ${k}`);
-    }
-    if (!Number.isInteger(maxIterations) || maxIterations <= 0) {
-      throw new TypeError(`The maximum number of iterations must be a positive integer: ${maxIterations}`);
-    }
-    if (!Number.isFinite(tolerance) || tolerance < 0) {
-      throw new TypeError(`The tolerance must be a positive number: ${tolerance}`);
-    }
+    assertPositiveInteger(k, `The number of cluster must be a positive integer: ${k}`);
+    assert(maxIterations > 0, `The maximum number of iterations must be a positive integer: ${maxIterations}`);
+    assert(tolerance >= 0.0, `The tolerance must be a positive number: ${tolerance}`);
   }
 
   /**
    * {@inheritDoc Clustering.fit}
    */
   fit(points: P[]): Cluster<P>[] {
-    if (points.length === 0) {
-      throw new Error('The points array is empty');
-    }
-
+    assert(points.length > 0, 'The points array is empty');
     if (points.length <= this.k) {
       return points.map((point: P, index: number): Cluster<P> => {
         const cluster = new Cluster(point);

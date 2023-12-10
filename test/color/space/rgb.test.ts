@@ -1,4 +1,5 @@
 import { clampValue, fromHexString, toHexString } from '@internal/color/space/rgb';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('RGB', () => {
@@ -45,13 +46,13 @@ describe('RGB', () => {
     });
 
     it.each(['000000', '#00000', '#0000', '#00g', 'ff0050', '#ff00gg'])(
-      'should throw TypeError when the value is %s',
+      'should throw an AssertionError when the value is %s',
       (value) => {
         // Assert
         expect(() => {
           // Act
           fromHexString(value);
-        }).toThrow(TypeError);
+        }).toThrow(AssertionError);
       },
     );
   });
@@ -84,12 +85,12 @@ describe('RGB', () => {
       { r: 0, g: 0, b: NaN },
       { r: 0, g: 0, b: Infinity },
       { r: 0, g: 0, b: -Infinity },
-    ])('should throw TypeError when the color is ($r, $g, $b)', ({ r, g, b }) => {
+    ])('should throw an AssertionError when the color is ($r, $g, $b)', ({ r, g, b }) => {
       // Assert
       expect(() => {
         // Act
         toHexString({ r, g, b });
-      }).toThrow(TypeError);
+      }).toThrow(AssertionError);
     });
   });
 });

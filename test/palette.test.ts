@@ -1,6 +1,7 @@
 import { Color, Options, Palette, Swatch, alphaFilter, luminanceFilter } from 'auto-palette';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { AssertionError } from '@internal/utils';
 import fixtures from './fixtures';
 import { loadImageDataFromFile } from './utils';
 
@@ -115,7 +116,7 @@ describe('Palette', () => {
     });
 
     it.each([Infinity, NaN, -1, 0])(
-      'should throw a TypeError if the specified number(%d) is not an integer or less than 0',
+      'should throw an AssertionError if the specified number(%d) is not an integer or less than 0',
       (n) => {
         // Arrange
         const palette = new Palette(swatches);
@@ -124,7 +125,7 @@ describe('Palette', () => {
         expect(() => {
           // Act
           palette.findSwatches(n);
-        }).toThrowError(TypeError);
+        }).toThrowError(AssertionError);
       },
     );
   });

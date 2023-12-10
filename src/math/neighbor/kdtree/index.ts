@@ -1,4 +1,4 @@
-import { Mutable, Ordering, PriorityQueue, Queue } from '../../../utils';
+import { assert, Mutable, Ordering, PriorityQueue, Queue, assertDefined } from '../../../utils';
 import { DistanceFunction, euclidean } from '../../distance';
 import { Point } from '../../point';
 import { Neighbor, NeighborSearch } from '../search';
@@ -31,10 +31,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * {@inheritDoc NeighborSearch.search}
    */
   search(query: P, k: number): Neighbor[] {
-    if (k < 1) {
-      throw new RangeError(`The k is less than 1: ${k}`);
-    }
-
+    assert(k >= 1, `The number of neighbors to be searched(${k}) must be greater than or equal to 1`);
     const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
       if (neighbor1.distance < neighbor2.distance) {
         return -1;
@@ -66,10 +63,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * {@inheritDoc NeighborSearch.searchRadius}
    */
   searchRadius(query: P, radius: number): Neighbor[] {
-    if (radius <= 0.0) {
-      throw new RangeError(`The radius is not positive number: ${radius}`);
-    }
-
+    assert(radius > 0.0, `The radius(${radius}) must be greater than 0.0`);
     const result = new Array<Neighbor>();
     this.rangeRecursively(this.root, query, radius, result);
     return result;
@@ -209,9 +203,7 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
   static build<P extends Point>(points: P[], distanceFunction: DistanceFunction = euclidean): KDTreeSearch<P> {
     const indices = new Uint32Array(points.length).map((_: number, index: number) => index);
     const root = KDTreeSearch.buildNode(points, indices, 0);
-    if (!root) {
-      throw new Error('The given points is empty');
-    }
+    assertDefined(root, 'The given points array is empty');
     return new KDTreeSearch<P>(root, points, distanceFunction);
   }
 

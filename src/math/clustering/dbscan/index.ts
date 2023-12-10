@@ -1,4 +1,4 @@
-import { ArrayQueue } from '../../../utils';
+import { assert, ArrayQueue } from '../../../utils';
 import { DistanceFunction } from '../../distance';
 import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbor';
 import { Point } from '../../point';
@@ -25,29 +25,21 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
    * @param minPoints The minimum number of points required to form a cluster.
    * @param radius The radius within which to search for neighboring points.
    * @param distanceFunction The function to measure the distance between two points.
-   * @throws {RangeError} if the given minPoints is less than 1.
-   * @throws {RangeError} if the given radius is less than 0.0.
    */
   constructor(
     private readonly minPoints: number,
     private readonly radius: number,
     private readonly distanceFunction: DistanceFunction,
   ) {
-    if (minPoints < 1) {
-      throw new RangeError(`The minimum size of cluster(${minPoints}) is not greater than or equal to 1`);
-    }
-    if (radius < 0.0) {
-      throw new RangeError(`The radius(${radius}) is not greater than 0.0`);
-    }
+    assert(this.minPoints >= 1, `The minimum size of cluster(${this.minPoints}) is not greater than or equal to 1`);
+    assert(this.radius >= 0.0, `The radius(${this.radius}) is not greater than 0.0`);
   }
 
   /**
    * {@inheritDoc ClusteringAlgorithm.fit}
    */
   fit(points: P[]): Cluster<P>[] {
-    if (points.length === 0) {
-      throw new Error('The points array is empty');
-    }
+    assert(points.length > 0, 'The points array is empty');
 
     let label: Label = 0;
     const labels = new Array<Label>(points.length).fill(UNDEFINED);

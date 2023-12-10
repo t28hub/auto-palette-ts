@@ -1,4 +1,5 @@
 import { Cluster, Point2, Vector } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('Cluster', () => {
@@ -82,14 +83,14 @@ describe('Cluster', () => {
       expect(cluster.getMemberships()).toEqual(new Set([1]));
     });
 
-    it('should throw a RangeError when index is less than 0', () => {
+    it('should throw an AssertionError when index is less than 0', () => {
       // Arrange
       const cluster = new Cluster([0.0, 0.0]);
 
       // Act & Assert
       expect(() => {
         cluster.addMember(-1, [1.0, 2.0]);
-      }).toThrow(RangeError);
+      }).toThrow(AssertionError);
     });
   });
 

@@ -1,6 +1,7 @@
 import { clamp } from '../../math';
 import { HSL, RGB } from '../types';
 
+import { assertFiniteNumber, assertInteger } from '../../utils';
 import { MAX_RGB, clampValue } from './rgb';
 
 /**
@@ -99,9 +100,9 @@ export function clampLightness(value: number): number {
  * @see {@link toRGB}
  */
 export function fromRGB(rgb: RGB): HSL {
-  if (!Number.isFinite(rgb.r) || !Number.isFinite(rgb.g) || !Number.isFinite(rgb.b)) {
-    throw new TypeError(`The r, g, and b components must be finite numbers: ${rgb.r}, ${rgb.g}, ${rgb.b}`);
-  }
+  assertInteger(rgb.r, `The r(${rgb.r}) must be an integer`);
+  assertInteger(rgb.g, `The g(${rgb.g}) must be an integer`);
+  assertInteger(rgb.b, `The b(${rgb.b}) must be an integer`);
 
   // Normalize the RGB values.
   const r = clampValue(rgb.r) / MAX_RGB;
@@ -146,9 +147,9 @@ export function fromRGB(rgb: RGB): HSL {
  * @see {@link fromRGB}
  */
 export function toRGB({ h, s, l }: HSL): RGB {
-  if (!Number.isFinite(h) || !Number.isFinite(s) || !Number.isFinite(l)) {
-    throw new TypeError(`The h, s, and l components must be finite numbers: ${h}, ${s}, ${l}`);
-  }
+  assertFiniteNumber(h, `The h(${h}) must be a finite number`);
+  assertFiniteNumber(s, `The s(${s}) must be a finite number`);
+  assertFiniteNumber(l, `The l(${l}) must be a finite number`);
 
   const hue = normalizeHue(h);
   const saturation = clampSaturation(s);

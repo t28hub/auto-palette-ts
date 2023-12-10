@@ -1,4 +1,5 @@
 import { KmeansPlusPlusInitializer, Point2, euclidean } from '@internal/math';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const points: Point2[] = [
@@ -27,7 +28,7 @@ describe('KmeansPlusPlusInitializer', () => {
     expect(actual).toIncludeAnyMembers(points);
   });
 
-  it.each([{ k: -1 }, { k: 0 }, { k: NaN }])('should throw a TypeError if k($k) is invalid', ({ k }) => {
+  it.each([{ k: -1 }, { k: 0 }, { k: NaN }])('should throw an AssertionError if k($k) is invalid', ({ k }) => {
     // Arrange
     const initializer = new KmeansPlusPlusInitializer(euclidean);
 
@@ -35,6 +36,6 @@ describe('KmeansPlusPlusInitializer', () => {
     expect(() => {
       // Act
       initializer.initialize(points, k);
-    }).toThrowError(TypeError);
+    }).toThrowError(AssertionError);
   });
 });

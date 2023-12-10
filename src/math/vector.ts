@@ -1,3 +1,4 @@
+import { assert, assertFiniteNumber } from '../utils';
 import { Distance, DistanceFunction, euclidean } from './distance';
 import { Point } from './point';
 
@@ -7,16 +8,13 @@ export class Vector<P extends Point> {
   private readonly components: P;
 
   /**
-   * Create a new Vector.
+   * Create a new Vector instance
    *
    * @param source The source point.
-   * @throws {TypeError} if source contain invalid component.
    */
   constructor(source: P) {
     const invalidIndex = source.findIndex((value: number): boolean => !Number.isFinite(value));
-    if (invalidIndex !== NO_INDEX) {
-      throw new TypeError(`The source contain infinite number at ${invalidIndex}`);
-    }
+    assert(invalidIndex === NO_INDEX, `The source point contain infinite number at ${invalidIndex}`);
     this.components = [...source];
   }
 
@@ -75,9 +73,7 @@ export class Vector<P extends Point> {
   add(other: Vector<P> | P): this {
     const components = other instanceof Vector ? other.components : other;
     for (let i = 0; i < this.dimension; i++) {
-      if (!Number.isFinite(components[i])) {
-        throw new TypeError(`Component(${components[i]}) at ${i} is not finite number`);
-      }
+      assertFiniteNumber(components[i], `The component(${components[i]}) at ${i} is not finite number`);
       this.components[i] += components[i];
     }
     return this;
@@ -88,13 +84,9 @@ export class Vector<P extends Point> {
    *
    * @param scalar The scalar.
    * @return The current vector.
-   * @throws {TypeError} if the scalar is not finite number.
    */
   scale(scalar: number): this {
-    if (!Number.isFinite(scalar)) {
-      throw new TypeError(`Scalar(${scalar}) is not finite number`);
-    }
-
+    assertFiniteNumber(scalar, `The scalar(${scalar}) must be a finite number`);
     for (let i = 0; i < this.dimension; i++) {
       this.components[i] *= scalar;
     }

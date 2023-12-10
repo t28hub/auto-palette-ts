@@ -1,4 +1,5 @@
 import { clampX, clampY, clampZ, fromRGB, toRGB } from '@internal/color/space/xyz';
+import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('XYZ', () => {
@@ -87,12 +88,12 @@ describe('XYZ', () => {
       { r: 0, g: 0, b: NaN },
       { r: 0, g: 0, b: Infinity },
       { r: 0, g: 0, b: -Infinity },
-    ])('should throw an error if the r, g, or b component(%o) is not a finite number', (rgb) => {
+    ])('should throw an AssertionError if the r, g, or b component(%o) is not a finite number', (rgb) => {
       // Assert
       expect(() => {
         // Act
         fromRGB(rgb);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 
@@ -126,12 +127,12 @@ describe('XYZ', () => {
       { x: 0, y: 0, z: NaN },
       { x: 0, y: 0, z: Infinity },
       { x: 0, y: 0, z: -Infinity },
-    ])('should throw an error if the x, y, or z component(%o) is not a finite number', (xyz) => {
+    ])('should throw an AssertionError if the x, y, or z component(%o) is not a finite number', (xyz) => {
       // Assert
       expect(() => {
         // Act
         toRGB(xyz);
-      }).toThrowError(TypeError);
+      }).toThrowError(AssertionError);
     });
   });
 });
