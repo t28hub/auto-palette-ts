@@ -22,21 +22,21 @@ describe('RGB', () => {
   describe('fromHexString', () => {
     it.each([
       { value: '#000', expected: { r: 0, g: 0, b: 0 } },
-      { value: '#fff', expected: { r: 255, g: 255, b: 255 } },
-      { value: '#f00', expected: { r: 255, g: 0, b: 0 } },
-      { value: '#0f0', expected: { r: 0, g: 255, b: 0 } },
-      { value: '#00f', expected: { r: 0, g: 0, b: 255 } },
-      { value: '#ff0', expected: { r: 255, g: 255, b: 0 } },
-      { value: '#0ff', expected: { r: 0, g: 255, b: 255 } },
-      { value: '#f0f', expected: { r: 255, g: 0, b: 255 } },
+      { value: '#FFF', expected: { r: 255, g: 255, b: 255 } },
+      { value: '#F00', expected: { r: 255, g: 0, b: 0 } },
+      { value: '#0F0', expected: { r: 0, g: 255, b: 0 } },
+      { value: '#00F', expected: { r: 0, g: 0, b: 255 } },
+      { value: '#FF0', expected: { r: 255, g: 255, b: 0 } },
+      { value: '#0FF', expected: { r: 0, g: 255, b: 255 } },
+      { value: '#F0F', expected: { r: 255, g: 0, b: 255 } },
       { value: '#000000', expected: { r: 0, g: 0, b: 0 } },
-      { value: '#ffffff', expected: { r: 255, g: 255, b: 255 } },
-      { value: '#ff0000', expected: { r: 255, g: 0, b: 0 } },
-      { value: '#00ff00', expected: { r: 0, g: 255, b: 0 } },
-      { value: '#0000ff', expected: { r: 0, g: 0, b: 255 } },
-      { value: '#ffff00', expected: { r: 255, g: 255, b: 0 } },
-      { value: '#00ffff', expected: { r: 0, g: 255, b: 255 } },
-      { value: '#ff00ff', expected: { r: 255, g: 0, b: 255 } },
+      { value: '#FFFFFF', expected: { r: 255, g: 255, b: 255 } },
+      { value: '#FF0000', expected: { r: 255, g: 0, b: 0 } },
+      { value: '#00FF00', expected: { r: 0, g: 255, b: 0 } },
+      { value: '#0000FF', expected: { r: 0, g: 0, b: 255 } },
+      { value: '#FFFF00', expected: { r: 255, g: 255, b: 0 } },
+      { value: '#00FFFF', expected: { r: 0, g: 255, b: 255 } },
+      { value: '#FF00FF', expected: { r: 255, g: 0, b: 255 } },
     ])('should return $expected when the value is $value', ({ value, expected }) => {
       // Act
       const actual = fromHexString(value);
@@ -45,7 +45,7 @@ describe('RGB', () => {
       expect(actual).toEqual(expected);
     });
 
-    it.each(['000000', '#00000', '#0000', '#00g', 'ff0050', '#ff00gg'])(
+    it.each(['000000', '#00000', '#0000', '#00G', 'FF0050', '#FF00GA'])(
       'should throw an AssertionError when the value is %s',
       (value) => {
         // Assert
@@ -60,13 +60,13 @@ describe('RGB', () => {
   describe('toHexString', () => {
     it.each([
       { r: 0, g: 0, b: 0, expected: '#000000' },
-      { r: 255, g: 255, b: 255, expected: '#ffffff' },
-      { r: 255, g: 0, b: 0, expected: '#ff0000' },
-      { r: 0, g: 255, b: 0, expected: '#00ff00' },
-      { r: 0, g: 0, b: 255, expected: '#0000ff' },
-      { r: 255, g: 255, b: 0, expected: '#ffff00' },
-      { r: 0, g: 255, b: 255, expected: '#00ffff' },
-      { r: 255, g: 0, b: 255, expected: '#ff00ff' },
+      { r: 255, g: 255, b: 255, expected: '#FFFFFF' },
+      { r: 255, g: 0, b: 0, expected: '#FF0000' },
+      { r: 0, g: 255, b: 0, expected: '#00FF00' },
+      { r: 0, g: 0, b: 255, expected: '#0000FF' },
+      { r: 255, g: 255, b: 0, expected: '#FFFF00' },
+      { r: 0, g: 255, b: 255, expected: '#00FFFF' },
+      { r: 255, g: 0, b: 255, expected: '#FF00FF' },
     ])('should return $expected when the color is ($r, $g, $b)', ({ r, g, b, expected }) => {
       // Act
       const actual = toHexString({ r, g, b });

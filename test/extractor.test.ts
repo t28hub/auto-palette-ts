@@ -54,7 +54,7 @@ describe('SwatchExtractor', () => {
       expect(actual).not.toBeEmpty();
       expect(actual).toSatisfyAny((swatch: Swatch): boolean => {
         const matches = expected.filter((hexColor) => {
-          const expected = Color.parse(hexColor);
+          const expected = Color.fromString(hexColor);
           const distance = swatch.color.differenceTo(expected, ciede2000);
           return distance < 10.0;
         });

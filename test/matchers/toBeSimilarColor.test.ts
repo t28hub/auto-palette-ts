@@ -5,28 +5,28 @@ import { Color } from '../../src';
 describe('.toBeSimilarColor', () => {
   it('should pass when the expected color is same as the received color', () => {
     // Act
-    const actual = Color.parse('#ff0000');
-    expect(actual).toBeSimilarColor('#ff0000');
+    const actual = Color.fromString('#FF0000');
+    expect(actual).toBeSimilarColor('#FF0000');
   });
 
   it('should pass when the expected color is similar to the received color', () => {
     // Act
-    const actual = Color.parse('#ff0000');
-    expect(actual).toBeSimilarColor('#ff0020');
+    const actual = Color.fromString('#FF0000');
+    expect(actual).toBeSimilarColor('#FF0020');
   });
 
   it('should pass when the color difference is less than the given threshold', () => {
     // Act
-    const actual = Color.parse('#ff0000');
-    expect(actual).toBeSimilarColor('#ff0020', 50.0);
+    const actual = Color.fromString('#FF0000');
+    expect(actual).toBeSimilarColor('#FF0020', 50.0);
   });
 
   it('should throw an Error when the color difference is greater than the given threshold', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
-      expect(actual).toBeSimilarColor('#0000ff', 5.0);
+      const actual = Color.fromString('#FF0000');
+      expect(actual).toBeSimilarColor('#0000FF', 5.0);
     }).toThrowError(/Expected color to be similar:/);
   });
 
@@ -34,8 +34,8 @@ describe('.toBeSimilarColor', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
-      expect(actual).toBeSimilarColor('#0000ff');
+      const actual = Color.fromString('#FF0000');
+      expect(actual).toBeSimilarColor('#0000FF');
     }).toThrow(/Expected color to be similar:/);
   });
 
@@ -43,31 +43,31 @@ describe('.toBeSimilarColor', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
+      const actual = Color.fromString('#FF0000');
       expect(actual).toBeSimilarColor('invalid');
-    }).toThrowError(/value is not parseable as a color:/);
+    }).toThrowError('The value(invalid) is not a valid hexadecimal color string');
   });
 });
 
 describe('.not.toBeSimilarColor', () => {
   it('should pass when expected color is not similar to the received color', () => {
     // Act
-    const actual = Color.parse('#ff0000');
-    expect(actual).not.toBeSimilarColor('#0000ff');
+    const actual = Color.fromString('#FF0000');
+    expect(actual).not.toBeSimilarColor('#0000FF');
   });
 
   it('should pass when the color difference is greater than the given threshold', () => {
     // Act
-    const actual = Color.parse('#ff0000');
-    expect(actual).not.toBeSimilarColor('#0000ff', 5.0);
+    const actual = Color.fromString('#FF0000');
+    expect(actual).not.toBeSimilarColor('#0000FF', 5.0);
   });
 
   it('should throw an Error when the color difference is less than the given threshold', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
-      expect(actual).not.toBeSimilarColor('#ff0020', 50.0);
+      const actual = Color.fromString('#FF0000');
+      expect(actual).not.toBeSimilarColor('#FF0020', 50.0);
     }).toThrowError(/Expected color to not be similar:/);
   });
 
@@ -75,8 +75,8 @@ describe('.not.toBeSimilarColor', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
-      expect(actual).not.toBeSimilarColor('#ff0020');
+      const actual = Color.fromString('#FF0000');
+      expect(actual).not.toBeSimilarColor('#FF0020');
     }).toThrowError(/Expected color to not be similar:/);
   });
 
@@ -84,8 +84,8 @@ describe('.not.toBeSimilarColor', () => {
     // Assert
     expect(() => {
       // Act
-      const actual = Color.parse('#ff0000');
+      const actual = Color.fromString('#FF0000');
       expect(actual).toBeSimilarColor('invalid');
-    }).toThrowError(/value is not parseable as a color:/);
+    }).toThrowError('The value(invalid) is not a valid hexadecimal color string');
   });
 });

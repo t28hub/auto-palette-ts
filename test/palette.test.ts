@@ -7,32 +7,32 @@ import { loadImageData } from './utils';
 
 const swatches: Swatch[] = [
   {
-    color: Color.parse('#F42222'),
+    color: Color.fromString('#F42222'),
     population: 3529,
     position: { x: 107, y: 15 },
   },
   {
-    color: Color.parse('#FFFFFF'),
+    color: Color.fromString('#FFFFFF'),
     population: 1781,
     position: { x: 89, y: 29 },
   },
   {
-    color: Color.parse('#007944'),
+    color: Color.fromString('#007944'),
     population: 5147,
     position: { x: 65, y: 53 },
   },
   {
-    color: Color.parse('#00158F'),
+    color: Color.fromString('#00158F'),
     population: 3528,
     position: { x: 107, y: 90 },
   },
   {
-    color: Color.parse('#FFB400'),
+    color: Color.fromString('#FFB400'),
     population: 799,
     position: { x: 27, y: 53 },
   },
   {
-    color: Color.parse('#000000'),
+    color: Color.fromString('#000000'),
     population: 1481,
     position: { x: 15, y: 52 },
   },
@@ -79,8 +79,8 @@ describe('Palette', () => {
 
       // Assert
       expect(actual).toBeArrayOfSize(2);
-      expect(actual[0].color.toHex()).toEqual('#ffffff');
-      expect(actual[1].color.toHex()).toEqual('#00158f');
+      expect(actual[0].color.toString()).toEqual('#FFFFFF');
+      expect(actual[1].color.toString()).toEqual('#00158F');
     });
 
     it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {
@@ -127,7 +127,7 @@ describe('Palette', () => {
 
       for (const swatch of swatches) {
         console.info({
-          color: swatch.color.toHex(),
+          color: swatch.color.toString(),
           population: swatch.population,
           coordinate: swatch.position,
         });
@@ -155,7 +155,7 @@ describe('Palette', () => {
 
         for (const swatch of swatches) {
           console.info({
-            color: swatch.color.toHex(),
+            color: swatch.color.toString(),
             population: swatch.population,
             coordinate: swatch.position,
           });

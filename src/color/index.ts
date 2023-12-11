@@ -1,6 +1,6 @@
 import { radianToDegree } from '../math';
 
-import { assertFiniteNumber, isString } from '../utils';
+import { assert, assertFiniteNumber } from '../utils';
 import { ColorDifference, DifferenceFunction, ciede2000 } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
@@ -15,11 +15,13 @@ export * from './types';
 export class Color {
   /**
    * Create a new color instance.
+   *
+   * @private
    * @param l The lightness component of the color.
    * @param a The a component of the color.
    * @param b The b component of the color.
    */
-  constructor(private readonly l: number, private readonly a: number, private readonly b: number) {
+  private constructor(private readonly l: number, private readonly a: number, private readonly b: number) {
     assertFiniteNumber(l, `The l(${l}) must be a finite number`);
     assertFiniteNumber(a, `The a(${a}) must be a finite number`);
     assertFiniteNumber(b, `The b(${b}) must be a finite number`);
@@ -107,15 +109,6 @@ export class Color {
    * @returns The string representation of the color.
    */
   toString() {
-    return this.toHex();
-  }
-
-  /**
-   * Convert the color to hex decimal string.
-   *
-   * @returns The color in hex decimal string.
-   */
-  toHex(): string {
     const rgb = this.toRGB();
     return RGBSpace.toHexString(rgb);
   }
@@ -182,25 +175,62 @@ export class Color {
   static MAX_CHROMA = 180;
 
   /**
-   * Parse the value to a color.
+   * Create a new Color instance from the given RGB color.
    *
-   * @param value - The value to be parsed to a color.
-   * @returns The parsed color.
-   * @throws {TypeError} If the value is not parsable to a color.
+   * @param rgb - The RGB color.
+   * @returns The new Color instance.
+   *
+   * @see {@link Color.fromHSL}
+   * @see {@link Color.fromLAB}
    */
-  static parse(value: unknown): Color {
-    if (value instanceof Color) {
-      return value.clone();
-    }
+  static fromRGB(rgb: RGB): Color {
+    const xyz = XYZSpace.fromRGB(rgb);
+    const lab = CIELabSpace.fromXYZ(xyz);
+    return new Color(lab.l, lab.a, lab.b);
+  }
 
-    if (isString(value)) {
-      if (value.startsWith('#')) {
-        const rgb = RGBSpace.fromHexString(value);
-        const xyz = XYZSpace.fromRGB(rgb);
-        const lab = CIELabSpace.fromXYZ(xyz);
-        return new Color(lab.l, lab.a, lab.b);
-      }
-    }
-    throw new TypeError(`The value(${value}) is not parsable to a color.`);
+  /**
+   * Create a new Color instance from the given HSL color.
+   *
+   * @param hsl - The HSL color.
+   * @returns The new Color instance.
+   *
+   * @see {@link Color.fromRGB}
+   * @see {@link Color.fromLAB}
+   */
+  static fromHSL(hsl: HSL): Color {
+    const rgb = HSLSpace.toRGB(hsl);
+    const xyz = XYZSpace.fromRGB(rgb);
+    const lab = CIELabSpace.fromXYZ(xyz);
+    return new Color(lab.l, lab.a, lab.b);
+  }
+
+  /**
+   * Create a new Color instance from the given CIELAB color.
+   *
+   * @param lab - The CIELAB color.
+   * @returns The new Color instance.
+   *
+   * @see {@link Color.fromRGB}
+   * @see {@link Color.fromHSL}
+   */
+  static fromLAB(lab: LAB): Color {
+    return new Color(lab.l, lab.a, lab.b);
+  }
+
+  /**
+   * Create a new Color instance from the given string.
+   *
+   * @param value - The string to parse.
+   * @returns The new Color instance.
+   *
+   * @see {@link Color.toString}
+   */
+  static fromString(value: string): Color {
+    assert(value.startsWith('#'), `The value(${value}) is not a valid hexadecimal color string`);
+    const rgb = RGBSpace.fromHexString(value);
+    const xyz = XYZSpace.fromRGB(rgb);
+    const lab = CIELabSpace.fromXYZ(xyz);
+    return new Color(lab.l, lab.a, lab.b);
   }
 }

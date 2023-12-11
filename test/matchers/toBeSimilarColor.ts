@@ -1,3 +1,4 @@
+import { isString } from '@internal/utils';
 import {
   EXPECTED_COLOR,
   matcherErrorMessage,
@@ -12,6 +13,22 @@ import { Color, ciede2000 } from '../../src';
 import { MatcherResult } from './types';
 
 /**
+ * Parse the received value as a color.
+ *
+ * @param value - The value to be parsed.
+ * @returns The parsed color.
+ */
+function parseColor(value: unknown): Color | undefined {
+  if (value instanceof Color) {
+    return value.clone();
+  }
+  if (isString(value)) {
+    return Color.fromString(value);
+  }
+  return undefined;
+}
+
+/**
  * Check whether the received color is similar to the expected color.
  *
  * @param received - The received color to be checked.
@@ -21,13 +38,7 @@ import { MatcherResult } from './types';
  * @throws {Error} If the expected value is not a valid color.
  */
 export function toBeSimilarColor(received: Color, expected: unknown, threshold = 10.0): MatcherResult {
-  let expectedColor: Color | undefined;
-  try {
-    expectedColor = Color.parse(expected);
-  } catch (e) {
-    expectedColor = undefined;
-  }
-
+  const expectedColor = parseColor(expected);
   if (!expectedColor) {
     const errorMessage = matcherErrorMessage(
       matcherHint('toBeSimilarColor', 'received', 'expected'),

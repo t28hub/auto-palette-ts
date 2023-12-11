@@ -63,7 +63,7 @@ export function fromHexString(value: string): RGB {
 export function toHexString({ r, g, b }: RGB): string {
   return [r, g, b].reduce((string, value) => {
     assert(Number.isFinite(value), `The r, g, and b components must be finite numbers: ${r}, ${g}, ${b}`);
-    const hex = clampValue(value).toString(16).padStart(2, '0');
+    const hex = clampValue(value).toString(16).padStart(2, '0').toUpperCase();
     return string + hex;
   }, '#');
 }
