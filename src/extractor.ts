@@ -141,11 +141,11 @@ export class SwatchExtractor {
       optimalSwatch.population += pixelCluster.size;
     }
 
-    const color = new Color(
-      denormalize(optimalSwatch.l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
-      denormalize(optimalSwatch.a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
-      denormalize(optimalSwatch.b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
-    );
+    const color = Color.fromLAB({
+      l: denormalize(optimalSwatch.l, CIELabSpace.MIN_L, CIELabSpace.MAX_L),
+      a: denormalize(optimalSwatch.a, CIELabSpace.MIN_A, CIELabSpace.MAX_A),
+      b: denormalize(optimalSwatch.b, CIELabSpace.MIN_B, CIELabSpace.MAX_B),
+    });
     const position = {
       x: Math.floor(optimalSwatch.x * width),
       y: Math.floor(optimalSwatch.y * height),
