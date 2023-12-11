@@ -23,16 +23,19 @@ export class SwatchExtractor {
    * Extract swatches from the given image data.
    *
    * @param imageData - The image data to extract swatches from.
+   * @param samplingRate - The sampling rate to sample pixels from the image.
    * @return The extracted swatches. If no swatches are extracted, an empty array is returned.
    */
-  extract(imageData: ImageData): Swatch[] {
+  extract(imageData: ImageData, samplingRate: number): Swatch[] {
     const { data, width, height } = imageData;
     if (data.length === 0) {
       return [];
     }
 
+    // The samplingRate is validated in the Palette.extract method.
+    const steps = Math.max(1, Math.floor(1 / samplingRate));
     const pixels: Point5[] = [];
-    for (let i = 0; i < data.length; i += 4) {
+    for (let i = 0; i < data.length; i += 4 * steps) {
       const rgba: RGBA = {
         r: data[i],
         g: data[i + 1],

@@ -19,7 +19,7 @@ import {
 } from './math';
 import { Swatch } from './swatch';
 import { Theme, WeightFunction, getWeightFunction } from './theme';
-import { assertPositiveInteger } from './utils';
+import { assert, assertPositiveInteger } from './utils';
 
 /**
  * The algorithm to use for palette extraction.
@@ -43,6 +43,16 @@ export interface Options {
   readonly algorithm?: Algorithm;
 
   /**
+   * The sampling rate to sample pixels from the image in the range of (0, 1]. Default is 1.0.
+   */
+  readonly samplingRate?: number;
+
+  /**
+   * The maximum number of swatches to extract in the range of (0, 256]. Default is 32.
+   */
+  readonly maxSwatches?: number;
+
+  /**
    * The color filter functions. Default is [alphaFilter(), luminanceFilter()].
    *
    * @see {@link alphaFilter}
@@ -55,8 +65,15 @@ const SIMILAR_COLOR_THRESHOLD = 20.0;
 const DEFAULT_SCORE_COEFFICIENT = 1.0;
 const REDUCED_SCORE_COEFFICIENT = 0.25;
 
+const LOWER_SAMPLING_RATE = 0.0;
+const UPPER_SAMPLING_RATE = 1.0;
+const LOWER_MAX_SWATCHES = 0;
+const UPPER_MAX_SWATCHES = 256;
+
 const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
+  samplingRate: 1.0,
+  maxSwatches: 32,
   filters: [alphaFilter(), luminanceFilter()],
 };
 
@@ -75,10 +92,7 @@ export class Palette {
    * @see {@link Palette.extract}
    */
   constructor(swatches: Swatch[]) {
-    // Sort the swatches by population in descending order to make the dominant swatch easier to find.
-    this.swatches = Array.from(swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
-      return swatch2.population - swatch1.population;
-    });
+    this.swatches = Array.from(swatches);
     this.samplingStrategy = new FarthestPointSampling<Point3>(euclidean);
   }
 
@@ -100,18 +114,6 @@ export class Palette {
    */
   isEmpty(): boolean {
     return this.swatches.length === 0;
-  }
-
-  /**
-   * Return the dominant swatch of the palette.
-   *
-   * @return The dominant swatch. If the palette is empty, undefined is returned.
-   * @see {@link Palette.isEmpty}
-   * @see {@link Palette.findSwatches}
-   */
-  getDominantSwatch(): Swatch | undefined {
-    const dominantSwatch = this.swatches[0];
-    return dominantSwatch ? { ...dominantSwatch } : undefined;
   }
 
   /**
@@ -206,11 +208,23 @@ export class Palette {
    * @return A new Palette instance containing the extracted swatches.
    */
   static extract(source: ImageSource, options: Partial<Options> = {}): Palette {
-    const { algorithm, filters } = { ...DEFAULT_OPTIONS, ...options };
+    const { algorithm, samplingRate, maxSwatches, filters } = { ...DEFAULT_OPTIONS, ...options };
+    assert(
+      Number.isFinite(samplingRate) && samplingRate > LOWER_SAMPLING_RATE && samplingRate <= UPPER_SAMPLING_RATE,
+      `The sampling rate must be in the range of (${LOWER_SAMPLING_RATE}, ${UPPER_SAMPLING_RATE}]: ${samplingRate}`,
+    );
+    assert(
+      Number.isSafeInteger(maxSwatches) && maxSwatches > LOWER_MAX_SWATCHES && maxSwatches <= UPPER_MAX_SWATCHES,
+      `The maximum number of swatches must be in the range of (${LOWER_MAX_SWATCHES}, ${UPPER_MAX_SWATCHES}]: ${maxSwatches}`,
+    );
+
     const extractor = Palette.createExtractor(algorithm, filters);
     const imageData = createImageData(source);
-    const swatches = extractor.extract(imageData);
-    return new Palette(swatches);
+    const swatches = extractor.extract(imageData, samplingRate);
+    swatches.sort((swatch1: Swatch, swatch2: Swatch): number => {
+      return swatch2.population - swatch1.population;
+    });
+    return new Palette(swatches.slice(0, maxSwatches));
   }
 
   /**

@@ -2,12 +2,12 @@ import { Options, Palette, luminanceFilter } from 'auto-palette';
 import { bench, describe } from 'vitest';
 
 import fixtures from './fixtures';
-import { loadImageDataFromFile } from './utils';
+import { loadImageData } from './utils';
 
 describe('Palette', () => {
   bench('extract colors from image using DBSCAN', async () => {
     // Arrange
-    const image = await loadImageDataFromFile(fixtures.photos.kingfisher);
+    const image = await loadImageData(fixtures.photos.kingfisher);
 
     // Act
     const options: Options = {
@@ -19,7 +19,7 @@ describe('Palette', () => {
 
   bench('extract colors from image using K-means', async () => {
     // Arrange
-    const image = await loadImageDataFromFile(fixtures.photos.kingfisher);
+    const image = await loadImageData(fixtures.photos.kingfisher);
 
     // Act
     const options: Options = {

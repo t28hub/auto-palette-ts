@@ -1,9 +1,9 @@
 import { Color, Options, Palette, Swatch, alphaFilter, luminanceFilter } from 'auto-palette';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { AssertionError } from '@internal/utils';
 import fixtures from './fixtures';
-import { loadImageDataFromFile } from './utils';
+import { loadImageData } from './utils';
 
 const swatches: Swatch[] = [
   {
@@ -61,28 +61,6 @@ describe('Palette', () => {
     });
   });
 
-  describe('getDominantSwatch', () => {
-    it('should return the dominant swatch from the palette', () => {
-      // Act
-      const palette = new Palette(swatches);
-      const actual = palette.getDominantSwatch();
-
-      // Assert
-      expect(actual?.color.toHex()).toEqual('#007944');
-      expect(actual?.population).toEqual(5147);
-      expect(actual?.position).toMatchObject({ x: 65, y: 53 });
-    });
-
-    it('should return undefined if the palette is empty', () => {
-      // Act
-      const palette = new Palette([]);
-      const actual = palette.getDominantSwatch();
-
-      // Assert
-      expect(actual).toBeUndefined();
-    });
-  });
-
   describe('findSwatches', () => {
     it('should find the specified number of swatches from the palette', () => {
       // Act
@@ -132,8 +110,8 @@ describe('Palette', () => {
 
   describe('extract', () => {
     let image: ImageData;
-    beforeEach(async () => {
-      image = await loadImageDataFromFile(fixtures.photos.tulips);
+    beforeAll(async () => {
+      image = await loadImageData(fixtures.photos.tulips);
     }, 10000);
 
     it('should extract a Palette from the provided image using default options', () => {
@@ -160,15 +138,17 @@ describe('Palette', () => {
       'should extract a Palette from the provided image using custom options',
       () => {
         // Act
-        const options: Options = {
+        const options: Required<Options> = {
           algorithm: 'kmeans',
+          samplingRate: 0.5,
+          maxSwatches: 16,
           filters: [alphaFilter(), luminanceFilter()],
         };
         const actual = Palette.extract(image, options);
 
         // Assert
         expect(actual.isEmpty()).toBeFalsy();
-        expect(actual.size()).toBeGreaterThan(6);
+        expect(actual.size()).toBeLessThanOrEqual(options.maxSwatches);
 
         const swatches = actual.findSwatches(6);
         expect(swatches).toBeArrayOfSize(6);
@@ -183,5 +163,22 @@ describe('Palette', () => {
       },
       { retry: 3 },
     );
+
+    it.each([
+      { samplingRate: 0.0 },
+      { samplingRate: 1.1 },
+      { samplingRate: NaN },
+      { samplingRate: Infinity },
+      { maxSwatches: -1 },
+      { maxSwatches: 0 },
+      { maxSwatches: NaN },
+      { maxSwatches: Infinity },
+    ])('should throw an AssertionError if the options(%o) are invalid', (options) => {
+      // Assert
+      expect(() => {
+        // Act
+        Palette.extract(image, options);
+      }).toThrowError(AssertionError);
+    });
   }, 3000);
 });

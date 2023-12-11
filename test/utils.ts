@@ -9,7 +9,7 @@ import { Image, createCanvas } from '@napi-rs/canvas';
  * @return A Promise that resolves to the loaded image as ImageData object.
  * @see {@link loadImageDataFromUrl}
  */
-export async function loadImageDataFromFile(filepath: string): Promise<ImageData> {
+export async function loadImageData(filepath: string): Promise<ImageData> {
   const contents = await readFile(filepath, { flag: 'r' });
   const image = new Image();
   image.src = contents;

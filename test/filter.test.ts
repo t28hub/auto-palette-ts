@@ -71,25 +71,35 @@ describe('filter', () => {
       expect(actual({ r: 255, g: 255, b: 255, a: 255 })).toBeTruthy();
     });
 
-    it.each([NaN, Infinity])(
-      'should throw an AssertionError if the minThreshold(%d) is not a finite number',
-      (minThreshold) => {
+    it.each([
+      { minThreshold: NaN, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: NaN },
+      { minThreshold: Infinity, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: Infinity },
+    ])(
+      'should throw an AssertionError if the minThreshold(%d) or maxThreshold(%d) is not a finite number',
+      ({ minThreshold, maxThreshold }) => {
         // Assert
         expect(() => {
           // Act
-          luminanceFilter(minThreshold, 1.0);
+          luminanceFilter(minThreshold, maxThreshold);
         }).toThrowError(AssertionError);
       },
     );
 
-    it.each([NaN, Infinity])(
-      'should throw an AssertionError if the maxThreshold(%d) is not a finite number',
-      (maxThreshold) => {
+    it.each([
+      { minThreshold: -1.0, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: -1.0 },
+      { minThreshold: 1.1, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: 1.1 },
+    ])(
+      'should throw a RangeError if the minThreshold(%d) or maxThreshold(%d) is not within the range [0.0, 1.0]',
+      ({ minThreshold, maxThreshold }) => {
         // Assert
         expect(() => {
           // Act
-          luminanceFilter(0.0, maxThreshold);
-        }).toThrowError(AssertionError);
+          luminanceFilter(minThreshold, maxThreshold);
+        }).toThrowError(RangeError);
       },
     );
 

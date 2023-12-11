@@ -4,7 +4,7 @@ import { Color, Swatch, alphaFilter, ciede2000 } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
 import fixtures from './fixtures';
-import { loadImageDataFromFile } from './utils';
+import { loadImageData } from './utils';
 
 describe('SwatchExtractor', () => {
   describe('constructor', () => {
@@ -23,32 +23,32 @@ describe('SwatchExtractor', () => {
     it.each([
       {
         filename: fixtures.flags.gr,
-        expected: ['#005bae', '#ffffff'],
+        expected: ['#005BAE', '#FFFFFF'],
       },
       {
         filename: fixtures.flags.de,
-        expected: ['#dd0000', '#ffcc00', '#000000'],
+        expected: ['#DD0000', '#FFCC00', '#000000'],
       },
       {
         filename: fixtures.flags.ae,
-        expected: ['#ff0000', '#00732f', '#ffffff', '#000000'],
+        expected: ['#FF0000', '#00732F', '#FFFFFF', '#000000'],
       },
       {
         filename: fixtures.flags.sc,
-        expected: ['#003f87', '#fcd856', '#d62828', '#ffffff', '#007a3d'],
+        expected: ['#003F87', '#FCD856', '#D62828', '#FFFFFF', '#007A3D'],
       },
       {
         filename: fixtures.flags.za,
-        expected: ['#e03c31', '#ffffff', '#007749', '#001489', '#ffb81c', '#000000'],
+        expected: ['#E03C31', '#FFFFFF', '#007749', '#001489', '#FFB81C', '#000000'],
       },
     ])('should extract swatches from $filename using DBSCAN', async ({ filename, expected }) => {
       // Arrange
-      const imageData = await loadImageDataFromFile(filename);
+      const imageData = await loadImageData(filename);
 
       // Act
       const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
       const extractor = new SwatchExtractor(algorithm, []);
-      const actual = extractor.extract(imageData);
+      const actual = extractor.extract(imageData, 1.0);
 
       // Assert
       expect(actual).not.toBeEmpty();
@@ -62,17 +62,37 @@ describe('SwatchExtractor', () => {
       });
     });
 
+    it('should extract swatches when a sampling rate is less than 1.0', async () => {
+      // Arrange
+      const imageData = await loadImageData(fixtures.flags.za);
+      const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      const extractor = new SwatchExtractor(algorithm, []);
+
+      // Act
+      const actual = extractor.extract(imageData, 0.5);
+
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual).toHaveLength(6);
+      expect(actual[0].color).toBeSimilarColor('#007749');
+      expect(actual[1].color).toBeSimilarColor('#FFFFFF');
+      expect(actual[2].color).toBeSimilarColor('#E03C31');
+      expect(actual[3].color).toBeSimilarColor('#FFB81C');
+      expect(actual[4].color).toBeSimilarColor('#000000');
+      expect(actual[5].color).toBeSimilarColor('#001489');
+    });
+
     it(
       'should extract swatches from the given image data using Kmeans',
       async () => {
         // Arrange
-        const imageData = await loadImageDataFromFile(fixtures.flags.za);
+        const imageData = await loadImageData(fixtures.flags.za);
 
         // Act
         const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
         const algorithm = new Kmeans<Point5>(8, 10, 0.0001, squaredEuclidean, strategy);
         const extractor = new SwatchExtractor(algorithm, []);
-        const actual = extractor.extract(imageData);
+        const actual = extractor.extract(imageData, 1.0);
 
         // Assert
         expect(actual).not.toBeEmpty();
@@ -97,7 +117,7 @@ describe('SwatchExtractor', () => {
         return false;
       };
       const extractor = new SwatchExtractor(algorithm, [customFilter]);
-      const actual = extractor.extract(imageData);
+      const actual = extractor.extract(imageData, 10);
 
       // Assert
       expect(actual).toBeEmpty();
@@ -115,7 +135,7 @@ describe('SwatchExtractor', () => {
       // Act
       const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
       const extractor = new SwatchExtractor(algorithm, []);
-      const actual = extractor.extract(imageData);
+      const actual = extractor.extract(imageData, 1.0);
 
       // Assert
       expect(actual).toBeEmpty();
