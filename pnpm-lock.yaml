@@ -18,8 +18,8 @@ devDependencies:
     specifier: ^20.10.4
     version: 20.10.4
   '@vitest/coverage-v8':
-    specifier: ^1.0.2
-    version: 1.0.2(vitest@1.0.4)
+    specifier: ^1.0.4
+    version: 1.0.4(vitest@1.0.4)
   '@vitest/ui':
     specifier: ^1.0.2
     version: 1.0.2(vitest@1.0.4)
@@ -1026,8 +1026,8 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@vitest/coverage-v8@1.0.2(vitest@1.0.4):
-    resolution: {integrity: sha512-WCTbfnvFPqH8TGVPNnPXcLBK/tbMX5GGZ/Lc9EuYvVX4xbO0ULKLzWDbVU37C2Y2YIlNu/VP1kp7QKUZolUDgA==}
+  /@vitest/coverage-v8@1.0.4(vitest@1.0.4):
+    resolution: {integrity: sha512-xD6Yuql6RW0Ir/JJIs6rVrmnG2/KOWJF+IRX1oJQk5wGKGxbtdrYPbl+WTUn/4ICCQ2G20zbE1e8/nPNyAG5Vg==}
     peerDependencies:
       vitest: ^1.0.0
     dependencies:
