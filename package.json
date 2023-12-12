@@ -71,7 +71,7 @@
     "jest-extended": "^4.0.2",
     "jest-matcher-utils": "^29.7.0",
     "jsdom": "^23.0.1",
-    "knip": "^3.6.0",
+    "knip": "^3.7.0",
     "lint-staged": "^15.2.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
