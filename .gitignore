@@ -8,6 +8,7 @@ dist-ssr/
 html/
 package/
 *.local
+.nojekyll
 
 logs
 *.log

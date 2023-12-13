@@ -12,7 +12,7 @@ export type ColorDifference = number & {
 /**
  * Difference function calculates the color difference between two colors.
  *
- * @param T - The color type.
+ * @typeParam T - The color type.
  * @param color1 - The 1st color.
  * @param color2 - The 2nd color.
  * @returns The color difference between the two colors.

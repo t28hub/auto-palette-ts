@@ -97,8 +97,3 @@ export type AlphaChannel<T> = T & {
  * RGBA type represents a color in RGBA color space.
  */
 export type RGBA = AlphaChannel<RGB>;
-
-/**
- * HSLA type represents a color in HSLA color space.
- */
-export type HSLA = AlphaChannel<HSL>;

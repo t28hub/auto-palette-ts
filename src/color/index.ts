@@ -43,7 +43,7 @@ export class Color {
    * Check if the color is light.
    *
    * @returns True if the color is light, false otherwise.
-   * @see isDark
+   * @see {@link Color.isDark}
    */
   isLight() {
     return this.l > 50;
@@ -53,7 +53,7 @@ export class Color {
    * Check if the color is dark.
    *
    * @returns True if the color is dark, false otherwise.
-   * @see isLight
+   * @see {@link Color.isLight}
    */
   isDark() {
     return !this.isLight();
@@ -63,8 +63,8 @@ export class Color {
    * Calculate the lightness of the color.
    *
    * @returns The lightness of the color.
-   * @see chroma
-   * @see hue
+   * @see {@link Color.chroma}
+   * @see {@link Color.hue}
    */
   lightness() {
     return this.l;
@@ -74,8 +74,8 @@ export class Color {
    * Calculate the chroma of the color.
    *
    * @returns The chroma of the color.
-   * @see lightness
-   * @see hue
+   * @see {@link Color.lightness}
+   * @see {@link Color.hue}
    */
   chroma() {
     return Math.sqrt(this.a ** 2 + this.b ** 2);
@@ -85,8 +85,8 @@ export class Color {
    * Calculate the hue of the color.
    *
    * @returns The hue of the color.
-   * @see lightness
-   * @see chroma
+   * @see {@link Color.lightness}
+   * @see {@link Color.chroma}
    */
   hue() {
     return radianToDegree(Math.atan2(this.b, this.a));
@@ -107,6 +107,7 @@ export class Color {
    * Return the string representation of the color.
    *
    * @returns The string representation of the color.
+   * @see {@link Color.fromString}
    */
   toString() {
     const rgb = this.toRGB();
@@ -117,6 +118,7 @@ export class Color {
    * Convert the color to RGB color space.
    *
    * @returns The color in RGB color space.
+   * @see {@link Color.fromRGB}
    */
   toRGB(): RGB {
     const xyz = CIELabSpace.toXYZ({ l: this.l, a: this.a, b: this.b });
@@ -127,6 +129,7 @@ export class Color {
    * Convert the color to HSL color space.
    *
    * @returns The color in HSL color space.
+   * @see {@link Color.fromHSL}
    */
   toHSL(): HSL {
     const rgb = this.toRGB();
@@ -137,6 +140,7 @@ export class Color {
    * Convert the color to CIELAB color space.
    *
    * @returns The color in CIELAB color space.
+   * @see {@link Color.fromLAB}
    */
   toLAB(): LAB {
     return { l: this.l, a: this.a, b: this.b };
@@ -144,33 +148,25 @@ export class Color {
 
   /**
    * The minimum lightness of the color.
-   *
-   * @see {@link MAX_LIGHTNESS}
-   * @see {@link lightness}
+   * @internal
    */
   static MIN_LIGHTNESS = 0;
 
   /**
    * The maximum lightness of the color.
-   *
-   * @see {@link MIN_LIGHTNESS}
-   * @see {@link lightness}
+   * @internal
    */
   static MAX_LIGHTNESS = 100;
 
   /**
    * The minimum chroma of the color.
-   *
-   * @see {@link MAX_CHROMA}
-   * @see {@link chroma}
+   * @internal
    */
   static MIN_CHROMA = 0;
 
   /**
    * The maximum chroma of the color.
-   *
-   * @see {@link MIN_CHROMA}
-   * @see {@link chroma}
+   * @internal
    */
   static MAX_CHROMA = 180;
 
@@ -179,9 +175,7 @@ export class Color {
    *
    * @param rgb - The RGB color.
    * @returns The new Color instance.
-   *
-   * @see {@link Color.fromHSL}
-   * @see {@link Color.fromLAB}
+   * @see {@link Color.toRGB}
    */
   static fromRGB(rgb: RGB): Color {
     const xyz = XYZSpace.fromRGB(rgb);
@@ -194,9 +188,7 @@ export class Color {
    *
    * @param hsl - The HSL color.
    * @returns The new Color instance.
-   *
-   * @see {@link Color.fromRGB}
-   * @see {@link Color.fromLAB}
+   * @see {@link Color.toHSL}
    */
   static fromHSL(hsl: HSL): Color {
     const rgb = HSLSpace.toRGB(hsl);
@@ -210,9 +202,7 @@ export class Color {
    *
    * @param lab - The CIELAB color.
    * @returns The new Color instance.
-   *
-   * @see {@link Color.fromRGB}
-   * @see {@link Color.fromHSL}
+   * @see {@link Color.toLAB}
    */
   static fromLAB(lab: LAB): Color {
     return new Color(lab.l, lab.a, lab.b);
@@ -223,7 +213,6 @@ export class Color {
    *
    * @param value - The string to parse.
    * @returns The new Color instance.
-   *
    * @see {@link Color.toString}
    */
   static fromString(value: string): Color {
