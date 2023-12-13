@@ -153,7 +153,7 @@ export class Color {
   /**
    * The maximum lightness of the color.
    *
-   * @see {@link MIN_LIGHTNESS
+   * @see {@link MIN_LIGHTNESS}
    * @see {@link lightness}
    */
   static MAX_LIGHTNESS = 100;
