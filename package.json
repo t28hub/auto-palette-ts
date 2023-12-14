@@ -84,7 +84,6 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "pnpm run docs",
       "pnpm run lint:biome:fix",
       "pnpm run format"
     ],

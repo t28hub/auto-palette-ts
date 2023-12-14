@@ -28,12 +28,12 @@ export type LAB = {
   readonly l: number;
 
   /**
-   * The a value in [-128, 127].
+   * The a value in [-128, 128].
    */
   readonly a: number;
 
   /**
-   * The b value in [-128, 127].
+   * The b value in [-128, 128].
    */
   readonly b: number;
 };

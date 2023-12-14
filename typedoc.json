@@ -1,15 +1,20 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "name": "Auto Palette",
   "tsconfig": "tsconfig.json",
   "entryPoints": ["./src/index.ts"],
+  "exclude": ["./src/color/types.ts"],
   "out": "docs",
-  "logLevel": "Error",
   "plugin": ["typedoc-plugin-markdown"],
-  "readme": "none",
+  "disableSources": true,
   "excludeExternals": true,
   "excludeInternal": true,
   "excludePrivate": true,
   "excludeProtected": true,
+  "sort": ["kind", "source-order", "alphabetical"],
+  "readme": "none",
+  "githubPages": false,
+  "hideGenerator": true,
   "hideBreadcrumbs": true,
-  "hideInPageTOC": true
+  "logLevel": "Error"
 }

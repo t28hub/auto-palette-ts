@@ -2,30 +2,27 @@
 
 Color class represents a color in any color space.
 
+## Table of contents
+
+### Methods
+
+- [clone](Color.md#clone)
+- [isLight](Color.md#islight)
+- [isDark](Color.md#isdark)
+- [lightness](Color.md#lightness)
+- [chroma](Color.md#chroma)
+- [hue](Color.md#hue)
+- [differenceTo](Color.md#differenceto)
+- [toString](Color.md#tostring)
+- [toRGB](Color.md#torgb)
+- [toHSL](Color.md#tohsl)
+- [toLAB](Color.md#tolab)
+- [fromRGB](Color.md#fromrgb)
+- [fromHSL](Color.md#fromhsl)
+- [fromLAB](Color.md#fromlab)
+- [fromString](Color.md#fromstring)
+
 ## Methods
-
-### chroma
-
-▸ **chroma**(): `number`
-
-Calculate the chroma of the color.
-
-#### Returns
-
-`number`
-
-The chroma of the color.
-
-**`See`**
-
- - [Color.lightness](Color.md#lightness)
- - [Color.hue](Color.md#hue)
-
-#### Defined in
-
-[color/index.ts:80](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L80)
-
-___
 
 ### clone
 
@@ -38,80 +35,6 @@ Clone the color.
 [`Color`](Color.md)
 
 The cloned color.
-
-#### Defined in
-
-[color/index.ts:38](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L38)
-
-___
-
-### differenceTo
-
-▸ **differenceTo**(`other`, `formula?`): [`ColorDifference`](../README.md#colordifference)
-
-Compute the color difference between this color and the other color.
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `other` | [`Color`](Color.md) | `undefined` | The other color. |
-| `formula` | [`DifferenceFunction`](../README.md#differencefunction)\<[`LAB`](../README.md#lab)\> | `ciede2000` | The formula to use to compute the color difference. Default is CIEDE2000. |
-
-#### Returns
-
-[`ColorDifference`](../README.md#colordifference)
-
-The color difference.
-
-#### Defined in
-
-[color/index.ts:102](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L102)
-
-___
-
-### hue
-
-▸ **hue**(): `number`
-
-Calculate the hue of the color.
-
-#### Returns
-
-`number`
-
-The hue of the color.
-
-**`See`**
-
- - [Color.lightness](Color.md#lightness)
- - [Color.chroma](Color.md#chroma)
-
-#### Defined in
-
-[color/index.ts:91](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L91)
-
-___
-
-### isDark
-
-▸ **isDark**(): `boolean`
-
-Check if the color is dark.
-
-#### Returns
-
-`boolean`
-
-True if the color is dark, false otherwise.
-
-**`See`**
-
-[Color.isLight](Color.md#islight)
-
-#### Defined in
-
-[color/index.ts:58](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L58)
 
 ___
 
@@ -131,9 +54,23 @@ True if the color is light, false otherwise.
 
 [Color.isDark](Color.md#isdark)
 
-#### Defined in
+___
 
-[color/index.ts:48](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L48)
+### isDark
+
+▸ **isDark**(): `boolean`
+
+Check if the color is dark.
+
+#### Returns
+
+`boolean`
+
+True if the color is dark, false otherwise.
+
+**`See`**
+
+[Color.isLight](Color.md#islight)
 
 ___
 
@@ -154,75 +91,64 @@ The lightness of the color.
  - [Color.chroma](Color.md#chroma)
  - [Color.hue](Color.md#hue)
 
-#### Defined in
-
-[color/index.ts:69](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L69)
-
 ___
 
-### toHSL
+### chroma
 
-▸ **toHSL**(): [`HSL`](../README.md#hsl)
+▸ **chroma**(): `number`
 
-Convert the color to HSL color space.
+Calculate the chroma of the color.
 
 #### Returns
 
-[`HSL`](../README.md#hsl)
+`number`
 
-The color in HSL color space.
+The chroma of the color.
 
 **`See`**
 
-[Color.fromHSL](Color.md#fromhsl)
-
-#### Defined in
-
-[color/index.ts:134](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L134)
+ - [Color.lightness](Color.md#lightness)
+ - [Color.hue](Color.md#hue)
 
 ___
 
-### toLAB
+### hue
 
-▸ **toLAB**(): [`LAB`](../README.md#lab)
+▸ **hue**(): `number`
 
-Convert the color to CIELAB color space.
+Calculate the hue of the color.
 
 #### Returns
 
-[`LAB`](../README.md#lab)
+`number`
 
-The color in CIELAB color space.
+The hue of the color.
 
 **`See`**
 
-[Color.fromLAB](Color.md#fromlab)
-
-#### Defined in
-
-[color/index.ts:145](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L145)
+ - [Color.lightness](Color.md#lightness)
+ - [Color.chroma](Color.md#chroma)
 
 ___
 
-### toRGB
+### differenceTo
 
-▸ **toRGB**(): [`RGB`](../README.md#rgb)
+▸ **differenceTo**(`other`, `formula?`): [`ColorDifference`](../README.md#colordifference)
 
-Convert the color to RGB color space.
+Compute the color difference between this color and the other color.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `other` | [`Color`](Color.md) | `undefined` | The other color. |
+| `formula` | [`DifferenceFunction`](../README.md#differencefunction)\<`LAB`\> | `ciede2000` | The formula to use to compute the color difference. Default is CIEDE2000. |
 
 #### Returns
 
-[`RGB`](../README.md#rgb)
+[`ColorDifference`](../README.md#colordifference)
 
-The color in RGB color space.
-
-**`See`**
-
-[Color.fromRGB](Color.md#fromrgb)
-
-#### Defined in
-
-[color/index.ts:123](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L123)
+The color difference.
 
 ___
 
@@ -242,65 +168,59 @@ The string representation of the color.
 
 [Color.fromString](Color.md#fromstring)
 
-#### Defined in
-
-[color/index.ts:112](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L112)
-
 ___
 
-### fromHSL
+### toRGB
 
-▸ **fromHSL**(`hsl`): [`Color`](Color.md)
+▸ **toRGB**(): `RGB`
 
-Create a new Color instance from the given HSL color.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `hsl` | [`HSL`](../README.md#hsl) | The HSL color. |
+Convert the color to RGB color space.
 
 #### Returns
 
-[`Color`](Color.md)
+`RGB`
 
-The new Color instance.
+The color in RGB color space.
 
 **`See`**
 
-[Color.toHSL](Color.md#tohsl)
-
-#### Defined in
-
-[color/index.ts:193](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L193)
+[Color.fromRGB](Color.md#fromrgb)
 
 ___
 
-### fromLAB
+### toHSL
 
-▸ **fromLAB**(`lab`): [`Color`](Color.md)
+▸ **toHSL**(): `HSL`
 
-Create a new Color instance from the given CIELAB color.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `lab` | [`LAB`](../README.md#lab) | The CIELAB color. |
+Convert the color to HSL color space.
 
 #### Returns
 
-[`Color`](Color.md)
+`HSL`
 
-The new Color instance.
+The color in HSL color space.
 
 **`See`**
 
-[Color.toLAB](Color.md#tolab)
+[Color.fromHSL](Color.md#fromhsl)
 
-#### Defined in
+___
 
-[color/index.ts:207](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L207)
+### toLAB
+
+▸ **toLAB**(): `LAB`
+
+Convert the color to CIELAB color space.
+
+#### Returns
+
+`LAB`
+
+The color in CIELAB color space.
+
+**`See`**
+
+[Color.fromLAB](Color.md#fromlab)
 
 ___
 
@@ -314,7 +234,7 @@ Create a new Color instance from the given RGB color.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `rgb` | [`RGB`](../README.md#rgb) | The RGB color. |
+| `rgb` | `RGB` | The RGB color. |
 
 #### Returns
 
@@ -326,9 +246,53 @@ The new Color instance.
 
 [Color.toRGB](Color.md#torgb)
 
-#### Defined in
+___
 
-[color/index.ts:180](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L180)
+### fromHSL
+
+▸ **fromHSL**(`hsl`): [`Color`](Color.md)
+
+Create a new Color instance from the given HSL color.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `hsl` | `HSL` | The HSL color. |
+
+#### Returns
+
+[`Color`](Color.md)
+
+The new Color instance.
+
+**`See`**
+
+[Color.toHSL](Color.md#tohsl)
+
+___
+
+### fromLAB
+
+▸ **fromLAB**(`lab`): [`Color`](Color.md)
+
+Create a new Color instance from the given CIELAB color.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `lab` | `LAB` | The CIELAB color. |
+
+#### Returns
+
+[`Color`](Color.md)
+
+The new Color instance.
+
+**`See`**
+
+[Color.toLAB](Color.md#tolab)
 
 ___
 
@@ -353,7 +317,3 @@ The new Color instance.
 **`See`**
 
 [Color.toString](Color.md#tostring)
-
-#### Defined in
-
-[color/index.ts:218](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/color/index.ts#L218)

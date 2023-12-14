@@ -2,6 +2,19 @@
 
 Palette class represents a color palette.
 
+## Table of contents
+
+### Constructors
+
+- [constructor](Palette.md#constructor)
+
+### Methods
+
+- [size](Palette.md#size)
+- [isEmpty](Palette.md#isempty)
+- [findSwatches](Palette.md#findswatches)
+- [extract](Palette.md#extract)
+
 ## Constructors
 
 ### constructor
@@ -24,11 +37,43 @@ Create a new Palette instance.
 
 [Palette.extract](Palette.md#extract)
 
-#### Defined in
-
-[palette.ts:94](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/palette.ts#L94)
-
 ## Methods
+
+### size
+
+▸ **size**(): `number`
+
+Return the number of swatches.
+
+#### Returns
+
+`number`
+
+The number of swatches.
+
+**`See`**
+
+[Palette.isEmpty](Palette.md#isempty)
+
+___
+
+### isEmpty
+
+▸ **isEmpty**(): `boolean`
+
+Check whether the palette is empty.
+
+#### Returns
+
+`boolean`
+
+True if the palette is empty, false otherwise.
+
+**`See`**
+
+[Palette.size](Palette.md#size)
+
+___
 
 ### findSwatches
 
@@ -53,54 +98,6 @@ The best swatches. If the palette is empty, an empty array is returned.
 
 If the number of swatches to find is not an integer or less than 0.
 
-#### Defined in
-
-[palette.ts:127](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/palette.ts#L127)
-
-___
-
-### isEmpty
-
-▸ **isEmpty**(): `boolean`
-
-Check whether the palette is empty.
-
-#### Returns
-
-`boolean`
-
-True if the palette is empty, false otherwise.
-
-**`See`**
-
-[Palette.size](Palette.md#size)
-
-#### Defined in
-
-[palette.ts:115](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/palette.ts#L115)
-
-___
-
-### size
-
-▸ **size**(): `number`
-
-Return the number of swatches.
-
-#### Returns
-
-`number`
-
-The number of swatches.
-
-**`See`**
-
-[Palette.isEmpty](Palette.md#isempty)
-
-#### Defined in
-
-[palette.ts:105](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/palette.ts#L105)
-
 ___
 
 ### extract
@@ -121,7 +118,3 @@ Extract a color palette from the given image source.
 [`Palette`](Palette.md)
 
 A new Palette instance containing the extracted swatches.
-
-#### Defined in
-
-[palette.ts:210](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/palette.ts#L210)

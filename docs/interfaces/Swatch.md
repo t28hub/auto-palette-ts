@@ -2,6 +2,14 @@
 
 Swatch interface represents a color swatch.
 
+## Table of contents
+
+### Properties
+
+- [color](Swatch.md#color)
+- [position](Swatch.md#position)
+- [population](Swatch.md#population)
+
 ## Properties
 
 ### color
@@ -10,9 +18,20 @@ Swatch interface represents a color swatch.
 
 The color of the swatch.
 
-#### Defined in
+___
 
-[swatch.ts:25](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/swatch.ts#L25)
+### position
+
+• `Readonly` **position**: `Object`
+
+The position of the swatch in the image.
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `x` | `number` | The x-coordinate of the swatch. |
+| `y` | `number` | The y-coordinate of the swatch. |
 
 ___
 
@@ -21,19 +40,3 @@ ___
 • `Readonly` **population**: `number`
 
 The population of the swatch.
-
-#### Defined in
-
-[swatch.ts:35](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/swatch.ts#L35)
-
-___
-
-### position
-
-• `Readonly` **position**: [`Position`](Position.md)
-
-The position of the swatch in the image.
-
-#### Defined in
-
-[swatch.ts:30](https://github.com/t28hub/auto-palette-ts/blob/6bb2d1f/src/swatch.ts#L30)
