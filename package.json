@@ -47,7 +47,7 @@
     "build": "tsc && vite build",
     "clean": "rimraf dist",
     "docs": "typedoc",
-    "dev": "vite",
+    "dev": "vitest dev",
     "format": "biome format --write .",
     "lint": "pnpm lint:biome && pnpm lint:knip",
     "lint:biome": "biome lint .",

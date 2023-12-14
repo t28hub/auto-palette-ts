@@ -43,8 +43,19 @@ autoPalette
   });
 ```
 
+## Development
+
+Follow these steps to get started with development:
+
+1. Clone this repository
+2. Install the latest LTS version of [Node.js](https://nodejs.org/en)
+3. Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
+4. Install dependencies using `pnpm install`
+5. Run unit tests and watch for changes using `pnpm dev`
+
 ## 📜License
 
-This library is distributed under the MIT License.See the [LICENSE](https://github.com/t28hub/auto-palette-ts/blob/main/LICENSE).
+This library is distributed under the MIT License.See
+the [LICENSE](https://github.com/t28hub/auto-palette-ts/blob/main/LICENSE).
 
 [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts.svg?type=large&issueType=license)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts?ref=badge_large&issueType=license)
