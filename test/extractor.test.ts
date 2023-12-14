@@ -123,13 +123,18 @@ describe('SwatchExtractor', () => {
       expect(actual).toBeEmpty();
     });
 
-    it('should return an empty array if the given image data is empty', () => {
+    it.each([
+      { width: 0, height: 0, data: new Uint8ClampedArray(0) },
+      { width: 0, height: 0, data: new Uint8ClampedArray(1) },
+      { width: 0, height: 1, data: new Uint8ClampedArray(1) },
+      { width: 1, height: 0, data: new Uint8ClampedArray(1) },
+    ])('should return an empty array if the given image data is empty: %o', ({ width, height, data }) => {
       // Arrange
       const imageData: ImageData = {
         colorSpace: 'srgb',
-        width: 0,
-        height: 0,
-        data: new Uint8ClampedArray(0),
+        width,
+        height,
+        data,
       };
 
       // Act

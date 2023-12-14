@@ -1,4 +1,3 @@
-import { Color } from './color';
 import { SwatchExtractor } from './extractor';
 import { ColorFilterFunction, alphaFilter, luminanceFilter } from './filter';
 import { ImageSource, createImageData } from './image';
@@ -48,7 +47,7 @@ export interface Options {
   readonly samplingRate?: number;
 
   /**
-   * The maximum number of swatches to extract in the range of (0, 256]. Default is 32.
+   * The maximum number of swatches to extract. Default is 256.
    */
   readonly maxSwatches?: number;
 
@@ -67,13 +66,11 @@ const REDUCED_SCORE_COEFFICIENT = 0.25;
 
 const LOWER_SAMPLING_RATE = 0.0;
 const UPPER_SAMPLING_RATE = 1.0;
-const LOWER_MAX_SWATCHES = 0;
-const UPPER_MAX_SWATCHES = 256;
 
 const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
   samplingRate: 1.0,
-  maxSwatches: 32,
+  maxSwatches: 256,
   filters: [alphaFilter(), luminanceFilter()],
 };
 
@@ -130,12 +127,26 @@ export class Palette {
       return [...this.swatches];
     }
 
-    const weightFunction = this.createWeightFunction(theme);
-    const sortedSwatches = Array.from(this.swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
-      const weight1 = weightFunction(swatch1);
-      const weight2 = weightFunction(swatch2);
-      return weight2 - weight1;
-    });
+    let weightFunction: WeightFunction;
+    let sortedSwatches: Swatch[];
+    if (theme) {
+      weightFunction = getWeightFunction(theme);
+      sortedSwatches = Array.from(this.swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
+        const weight1 = weightFunction(swatch1);
+        const weight2 = weightFunction(swatch2);
+        return weight2 - weight1;
+      });
+    } else {
+      // The swatch at the first index is the dominant swatch and has the largest population.
+      const maxPopulation = this.swatches[0].population;
+      weightFunction = (swatch: Swatch): number => {
+        return normalize(swatch.population, 0, maxPopulation);
+      };
+
+      // The 'this.swatches' is already sorted by population in descending order in the constructor.
+      sortedSwatches = this.swatches;
+    }
+
     const colors = sortedSwatches.map((swatch: Swatch): Point3 => {
       const { l, a, b } = swatch.color.toLAB();
       return [l, a, b];
@@ -181,26 +192,6 @@ export class Palette {
   }
 
   /**
-   * Create a new WeightFunction instance with the given theme.
-   *
-   * @param theme - The theme of the swatches.
-   * @return A new WeightFunction instance. If the theme is not specified, a default WeightFunction instance is returned.
-   */
-  private createWeightFunction(theme?: Theme): WeightFunction {
-    if (theme) {
-      return getWeightFunction(theme);
-    }
-
-    // The swatch at the first index is the dominant swatch and has the largest population.
-    const maxPopulation = this.swatches[0].population;
-    return (swatch: Swatch): number => {
-      const population = normalize(swatch.population, 0, maxPopulation);
-      const chroma = normalize(swatch.color.chroma(), Color.MIN_CHROMA, Color.MAX_CHROMA);
-      return population * 0.8 + chroma * 0.2;
-    };
-  }
-
-  /**
    * Extract a color palette from the given image source.
    *
    * @param source The source of the image.
@@ -213,10 +204,7 @@ export class Palette {
       Number.isFinite(samplingRate) && samplingRate > LOWER_SAMPLING_RATE && samplingRate <= UPPER_SAMPLING_RATE,
       `The sampling rate must be in the range of (${LOWER_SAMPLING_RATE}, ${UPPER_SAMPLING_RATE}]: ${samplingRate}`,
     );
-    assert(
-      Number.isSafeInteger(maxSwatches) && maxSwatches > LOWER_MAX_SWATCHES && maxSwatches <= UPPER_MAX_SWATCHES,
-      `The maximum number of swatches must be in the range of (${LOWER_MAX_SWATCHES}, ${UPPER_MAX_SWATCHES}]: ${maxSwatches}`,
-    );
+    assertPositiveInteger(maxSwatches, `The maximum number of swatches must be a positive integer: ${maxSwatches}`);
 
     const extractor = Palette.createExtractor(algorithm, filters);
     const imageData = createImageData(source);

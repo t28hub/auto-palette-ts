@@ -1,7 +1,14 @@
-import { CIELabSpace, Color, RGBA, XYZSpace } from './color';
+import { CIELabSpace, Color, RGBA, RGBSpace, XYZSpace } from './color';
 import { ColorFilterFunction, composeFilters } from './filter';
 import { Cluster, ClusteringAlgorithm, DBSCAN, Point3, Point5, denormalize, euclidean, normalize } from './math';
 import { Swatch } from './swatch';
+
+/**
+ * The color similarity threshold to deduplicate colors.
+ *
+ * @see {@link https://zschuessler.github.io/DeltaE/learn/#toc-delta-e-101}
+ */
+const COLOR_DIFFERENCE_THRESHOLD = 2.5;
 
 /**
  * SwatchExtractor class extracts swatches from an image.
@@ -28,19 +35,43 @@ export class SwatchExtractor {
    */
   extract(imageData: ImageData, samplingRate: number): Swatch[] {
     const { data, width, height } = imageData;
-    if (data.length === 0) {
+    if (data.length === 0 || width === 0 || height === 0) {
       return [];
     }
 
-    // The samplingRate is validated in the Palette.extract method.
+    const pixels = this.convertToPixels(imageData, samplingRate);
+    if (pixels.length === 0) {
+      return [];
+    }
+
+    const pixelClusters = this.algorithm.fit(pixels);
+    if (pixelClusters.length === 0) {
+      return [];
+    }
+
+    const colors = this.convertToColors(pixelClusters);
+    const dbscan = new DBSCAN<Point3>(1, COLOR_DIFFERENCE_THRESHOLD, euclidean);
+    const colorClusters = dbscan.fit(colors);
+    return colorClusters.reduce((swatches: Swatch[], cluster: Cluster<Point3>): Swatch[] => {
+      const swatch = SwatchExtractor.createSwatch(cluster, pixelClusters, width, height);
+      if (swatch.population !== 0) {
+        swatches.push(swatch);
+      }
+      return swatches;
+    }, []);
+  }
+
+  private convertToPixels(imageData: ImageData, samplingRate: number): Point5[] {
+    const { data, width, height } = imageData;
     const steps = Math.max(1, Math.floor(1 / samplingRate));
     const pixels: Point5[] = [];
-    for (let i = 0; i < data.length; i += 4 * steps) {
+    const channels = Math.floor(data.length / (width * height)); // 4 for RGBA, 3 for RGB
+    for (let i = 0; i < data.length; i += channels * steps) {
       const rgba: RGBA = {
         r: data[i],
         g: data[i + 1],
         b: data[i + 2],
-        a: data[i + 3],
+        a: channels === 4 ? data[i + 3] : RGBSpace.MAX_RGB,
       };
 
       // Exclude colors that do not meet the filter criteria.
@@ -61,19 +92,13 @@ export class SwatchExtractor {
         y / height,
       ]);
     }
+    return pixels;
+  }
 
-    if (pixels.length === 0) {
-      return [];
-    }
-
-    const pixelClusters = this.algorithm.fit(pixels);
-    if (pixelClusters.length === 0) {
-      return [];
-    }
-
-    const colors = pixelClusters.reduce((accumulator: Point3[], cluster: Cluster<Point5>): Point3[] => {
+  private convertToColors(pixelClusters: Cluster<Point5>[]): Point3[] {
+    return pixelClusters.reduce((colors: Point3[], cluster: Cluster<Point5>): Point3[] => {
       if (cluster.size === 0) {
-        return accumulator;
+        return colors;
       }
 
       const pixel = cluster.getCentroid();
@@ -82,18 +107,8 @@ export class SwatchExtractor {
         denormalize(pixel[1], CIELabSpace.MIN_A, CIELabSpace.MAX_A), // a
         denormalize(pixel[2], CIELabSpace.MIN_B, CIELabSpace.MAX_B), // b
       ];
-      accumulator.push(color);
-      return accumulator;
-    }, []);
-    const dbscan = new DBSCAN<Point3>(1, 2.3, euclidean);
-    const colorClusters = dbscan.fit(colors);
-
-    return colorClusters.reduce((swatches: Swatch[], cluster: Cluster<Point3>): Swatch[] => {
-      const swatch = SwatchExtractor.createSwatch(cluster, pixelClusters, width, height);
-      if (swatch.population !== 0) {
-        swatches.push(swatch);
-      }
-      return swatches;
+      colors.push(color);
+      return colors;
     }, []);
   }
 
