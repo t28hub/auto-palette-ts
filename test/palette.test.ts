@@ -112,7 +112,7 @@ describe('Palette', () => {
     let image: ImageData;
     beforeAll(async () => {
       image = await loadImageData(fixtures.photos.tulips);
-    }, 10000);
+    }, 3000);
 
     it('should extract a Palette from the provided image using default options', () => {
       // Act

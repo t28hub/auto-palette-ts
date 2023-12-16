@@ -37,7 +37,7 @@ ___
 
 • `Optional` `Readonly` **maxSwatches**: `number`
 
-The maximum number of swatches to extract in the range of (0, 256]. Default is 32.
+The maximum number of swatches to extract. Default is 256.
 
 ___
 
