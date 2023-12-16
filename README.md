@@ -14,7 +14,8 @@
 > Photo by Pixabay from Pexels: https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
  
 ❯ Automatically extracts color palette from image<br>
-❯ Supports multiple color extraction algorithms (`kmeans`, `dbscan`)<br>
+❯ Provides detailed color information color, position and population<br>
+❯ Supports multiple color extraction algorithms (`dbscan`, `kmeans` )<br>
 ❯ Supports multiple image sources (`HTMLImageElement`, `HTMLCanvasElement`, `ImageData`)<br>
 ❯ Supports both Browser and Node.js<br>
 ❯ Zero dependencies<br>
@@ -45,27 +46,27 @@ const palette = Palette.extract(image);
 const swatches = palette.findSwatches(8, 'vivid');
 for (const swatch of swatches) {
   console.log({
-    color: swatch.color, // The color of the swatch
-    position: swatch.position, // The position of the swatch in the image
-    population: swatch.population, // The pixel count of the swatch
+    color: swatch.color.toString(), // The color of the swatch
+    position: swatch.position,      // The position of the swatch in the image
+    population: swatch.population,  // The pixel count of the swatch
   });
 }
 ```
 
 ## Examples
 
-|                                                       Image                                                        |                    Default                     |                    Vivid                     |                    Muted                     |                    Light                     |                    Dark                     |
-|:------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------:|:--------------------------------------------:|:--------------------------------------------:|:--------------------------------------------:|:-------------------------------------------:|
-|  [![](./docs/assets/pexels-132468.webp)](https://www.pexels.com/photo/two-pink-and-green-orchid-flowers-132468/)   | ![](./docs/assets/pexels-132468-default.webp)  | ![](./docs/assets/pexels-132468-vivid.webp)  | ![](./docs/assets/pexels-132468-muted.webp)  | ![](./docs/assets/pexels-132468-light.webp)  | ![](./docs/assets/pexels-132468-dark.webp)  |
-|     [![](./docs/assets/pexels-1191639.webp)](https://www.pexels.com/photo/closeup-photo-of-doughnuts-1191639/)     | ![](./docs/assets/pexels-1191639-default.webp) | ![](./docs/assets/pexels-1191639-vivid.webp) | ![](./docs/assets/pexels-1191639-muted.webp) | ![](./docs/assets/pexels-1191639-light.webp) | ![](./docs/assets/pexels-1191639-dark.webp) |
-| [![](./docs/assets/pexels-326900.webp)](https://www.pexels.com/photo/close-up-photo-of-perched-kingfisher-326900/) | ![](./docs/assets/pexels-326900-default.webp)  | ![](./docs/assets/pexels-326900-vivid.webp)  | ![](./docs/assets/pexels-326900-muted.webp)  | ![](./docs/assets/pexels-326900-light.webp)  | ![](./docs/assets/pexels-326900-dark.webp)  |
+|                                                                      Source Image                                                                       |                                   Default Palette                                   |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
+|    [![Two pink and green orchid flowers](./docs/assets/pexels-132468.webp)](https://www.pexels.com/photo/two-pink-and-green-orchid-flowers-132468/)     | ![Color palette extracted from an image](./docs/assets/pexels-132468-default.webp)  |
+|          [![Closeup photo of doughnuts](./docs/assets/pexels-1191639.webp)](https://www.pexels.com/photo/closeup-photo-of-doughnuts-1191639/)           | ![Color palette extracted from an image](./docs/assets/pexels-1191639-default.webp) |
+| [![Closeup photo of perched king fishier](./docs/assets/pexels-326900.webp)](https://www.pexels.com/photo/close-up-photo-of-perched-kingfisher-326900/) | ![Color palette extracted from an image](./docs/assets/pexels-326900-default.webp)  |
 
 ## API
 
 For more detailed information, please refer to the [documentations](https://github.com/t28hub/auto-palette-ts/tree/main/docs) in the `docs` directory.
 
 ### Palette
-#### `extract(image: ImageSource, options?: Options)`
+#### `extract(image: ImageSource, options?: Options): Palette`
 Extracts a color palette from the given image source(HTMLImageElement, HTMLCanvasElement or ImageData).  
 It takes an image source and an optional `Options` object as parameters.
 ```ts
@@ -88,12 +89,12 @@ interface Options {
   samplingRate?: number;
   // The maximum number of swatches to extract. Default is 256.
   maxSwatches?: number;
-  // The color filters to apply. Default is [alphaFilter(), luminanceFilter()].
-  filters?: ColorFilterFunction[];
+  // The color filters to apply. Default is [opacityFilter(), luminanceFilter()].
+  filters?: ColorFilter[];
 }
 ```
 
-#### `findSwatches(n: number, theme?: Theme)`
+#### `findSwatches(n: number, theme?: Theme): Swatch[]`
 Finds the best `n` swatches in the palette.  
 The “best” swatches are determined based on their population and optionally a theme.
 The theme can be `vivid`, `muted`, `light` or `dark`.

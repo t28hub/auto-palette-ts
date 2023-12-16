@@ -1,5 +1,5 @@
 import { SwatchExtractor } from './extractor';
-import { ColorFilterFunction, alphaFilter, luminanceFilter } from './filter';
+import { ColorFilter, luminanceFilter, opacityFilter } from './filter';
 import { ImageSource, createImageData } from './image';
 import {
   DBSCAN,
@@ -52,12 +52,12 @@ export interface Options {
   readonly maxSwatches?: number;
 
   /**
-   * The color filter functions. Default is [alphaFilter(), luminanceFilter()].
+   * The color filter functions. Default is [opacityFilter(), luminanceFilter()].
    *
-   * @see {@link alphaFilter}
+   * @see {@link opacityFilter}
    * @see {@link luminanceFilter}
    */
-  readonly filters?: ColorFilterFunction[];
+  readonly filters?: ColorFilter[];
 }
 
 const SIMILAR_COLOR_THRESHOLD = 20.0;
@@ -71,7 +71,7 @@ const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
   samplingRate: 1.0,
   maxSwatches: 256,
-  filters: [alphaFilter(), luminanceFilter()],
+  filters: [opacityFilter(), luminanceFilter()],
 };
 
 /**
@@ -222,7 +222,7 @@ export class Palette {
    * @param filters - The color filter functions to use.
    * @return A new SwatchExtractor instance.
    */
-  private static createExtractor(algorithm: Algorithm, filters: ColorFilterFunction[]): SwatchExtractor {
+  private static createExtractor(algorithm: Algorithm, filters: ColorFilter[]): SwatchExtractor {
     if (algorithm === 'kmeans') {
       const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
       const kmeans = new Kmeans<Point5>(32, 10, 0.0001, squaredEuclidean, strategy);

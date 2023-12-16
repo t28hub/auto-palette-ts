@@ -10,7 +10,7 @@ export type Distance = number & {
 };
 
 /**
- * DistanceFunction type represents a function that calculates distance between two points.
+ * DistanceMeasure type represents a function that calculates distance between two points.
  *
  * @typeParam P - The type of the point.
  * @param point1 - The first point.
@@ -18,4 +18,4 @@ export type Distance = number & {
  * @return The distance between two points.
  * @throws {TypeError} If either point1 or point2 contains infinite number.
  */
-export type DistanceFunction = <P extends Point>(point1: P, point2: P) => Distance;
+export type DistanceMeasure = <P extends Point>(point1: P, point2: P) => Distance;

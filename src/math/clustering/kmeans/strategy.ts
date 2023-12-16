@@ -1,17 +1,17 @@
 import { assertPositiveInteger } from '../../../utils';
-import { Distance, DistanceFunction, Point } from '../../index';
+import { Distance, DistanceMeasure, Point } from '../../index';
 
 /**
  * Interface for initializing center points for Kmeans algorithm.
  *
- * @param P The type of point.
+ * @typeParam P - The type of the point.
  */
 export interface InitializationStrategy<P extends Point> {
   /**
    * Initialize center points.
    *
-   * @param points The candidate points.
-   * @param k The number of center points.
+   * @param points - The candidate points.
+   * @param k - The number of center points to initialize.
    * @return The initial center points.
    */
   initialize(points: P[], k: number): P[];
@@ -20,17 +20,17 @@ export interface InitializationStrategy<P extends Point> {
 const NO_INDEX = -1;
 
 /**
- * Kmeans++ center points initializer.
+ * Kmeans++ center points initialization strategy.
  *
- * @param P The type of point.
+ * @typeParam P - The type of the point.
  */
 export class KmeansPlusPlusInitializer<P extends Point> implements InitializationStrategy<P> {
   /**
    * Create a new Kmeans++ center initializer
    *
-   * @param distanceFunction The distance function.
+   * @param distanceMeasure - The distance measure.
    */
-  constructor(private readonly distanceFunction: DistanceFunction) {}
+  constructor(private readonly distanceMeasure: DistanceMeasure) {}
 
   /**
    * {@inheritDoc CenterInitializer.initialize}
@@ -97,7 +97,7 @@ export class KmeansPlusPlusInitializer<P extends Point> implements Initializatio
   private computeNearestDistance(point: P, selected: Map<number, P>): Distance {
     let minDistance: Distance = Number.MAX_VALUE as Distance;
     for (const selectedPoint of selected.values()) {
-      const distance = this.distanceFunction(point, selectedPoint);
+      const distance = this.distanceMeasure(point, selectedPoint);
       if (distance < minDistance) {
         minDistance = distance;
       }

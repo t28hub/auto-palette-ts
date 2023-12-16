@@ -43,11 +43,11 @@ ___
 
 ### filters
 
-• `Optional` `Readonly` **filters**: [`ColorFilterFunction`](../README.md#colorfilterfunction)[]
+• `Optional` `Readonly` **filters**: [`ColorFilter`](../README.md#colorfilter)[]
 
-The color filter functions. Default is [alphaFilter(), luminanceFilter()].
+The color filter functions. Default is [opacityFilter(), luminanceFilter()].
 
 **`See`**
 
- - [alphaFilter](../README.md#alphafilter)
+ - [opacityFilter](../README.md#opacityfilter)
  - [luminanceFilter](../README.md#luminancefilter)

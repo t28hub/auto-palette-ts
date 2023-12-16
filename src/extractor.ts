@@ -1,5 +1,5 @@
 import { CIELabSpace, Color, RGBA, RGBSpace, XYZSpace } from './color';
-import { ColorFilterFunction, composeFilters } from './filter';
+import { ColorFilter, composeFilters } from './filter';
 import { Cluster, ClusteringAlgorithm, DBSCAN, Point3, Point5, denormalize, euclidean, normalize } from './math';
 import { Swatch } from './swatch';
 
@@ -14,7 +14,7 @@ const COLOR_DIFFERENCE_THRESHOLD = 2.5;
  * SwatchExtractor class extracts swatches from an image.
  */
 export class SwatchExtractor {
-  private readonly filter: ColorFilterFunction;
+  private readonly filter: ColorFilter;
 
   /**
    * Create a new SwatchExtractor instance.
@@ -22,7 +22,7 @@ export class SwatchExtractor {
    * @param algorithm - The clustering algorithm to use.
    * @param filters - The color filter functions to use.
    */
-  constructor(private readonly algorithm: ClusteringAlgorithm<Point5>, filters: ColorFilterFunction[]) {
+  constructor(private readonly algorithm: ClusteringAlgorithm<Point5>, filters: ColorFilter[]) {
     this.filter = composeFilters(...filters);
   }
 

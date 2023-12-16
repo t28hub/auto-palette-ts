@@ -14,9 +14,9 @@
 
 ### Type Aliases
 
-- [ColorDifference](README.md#colordifference)
-- [DifferenceFunction](README.md#differencefunction)
-- [ColorFilterFunction](README.md#colorfilterfunction)
+- [ColorDelta](README.md#colordelta)
+- [ColorDeltaMeasure](README.md#colordeltameasure)
+- [ColorFilter](README.md#colorfilter)
 - [ImageSource](README.md#imagesource)
 - [Algorithm](README.md#algorithm)
 - [Theme](README.md#theme)
@@ -26,22 +26,22 @@
 - [cie76](README.md#cie76)
 - [cie94](README.md#cie94)
 - [ciede2000](README.md#ciede2000)
-- [alphaFilter](README.md#alphafilter)
+- [opacityFilter](README.md#opacityfilter)
 - [luminanceFilter](README.md#luminancefilter)
 
 ## Type Aliases
 
-### ColorDifference
+### ColorDelta
 
-Ƭ **ColorDifference**: `number` & \{ `[validDifference]`: ``true``  }
+Ƭ **ColorDelta**: `number` & \{ `[validDifference]`: ``true``  }
 
-Color difference type represents a color difference.
+ColorDelta type represents a color difference.
 
 ___
 
-### DifferenceFunction
+### ColorDeltaMeasure
 
-Ƭ **DifferenceFunction**\<`T`\>: (`color1`: `T`, `color2`: `T`) => [`ColorDifference`](README.md#colordifference)
+Ƭ **ColorDeltaMeasure**\<`T`\>: (`color1`: `T`, `color2`: `T`) => [`ColorDelta`](README.md#colordelta)
 
 #### Type parameters
 
@@ -51,9 +51,9 @@ ___
 
 #### Type declaration
 
-▸ (`color1`, `color2`): [`ColorDifference`](README.md#colordifference)
+▸ (`color1`, `color2`): [`ColorDelta`](README.md#colordelta)
 
-Difference function calculates the color difference between two colors.
+ColorDeltaMeasure calculates the color difference between two colors.
 
 ##### Parameters
 
@@ -64,15 +64,15 @@ Difference function calculates the color difference between two colors.
 
 ##### Returns
 
-[`ColorDifference`](README.md#colordifference)
+[`ColorDelta`](README.md#colordelta)
 
 The color difference between the two colors.
 
 ___
 
-### ColorFilterFunction
+### ColorFilter
 
-Ƭ **ColorFilterFunction**: (`color`: `RGBA`) => `boolean`
+Ƭ **ColorFilter**: (`color`: `RGBA`) => `boolean`
 
 #### Type declaration
 
@@ -131,7 +131,7 @@ Theme type represents a color theme.
 
 ### cie76
 
-▸ **cie76**(`color1`, `color2`): [`ColorDifference`](README.md#colordifference)
+▸ **cie76**(`color1`, `color2`): [`ColorDelta`](README.md#colordelta)
 
 Calculate the color difference between two colors using the CIE76 formula.
 
@@ -144,7 +144,7 @@ Calculate the color difference between two colors using the CIE76 formula.
 
 #### Returns
 
-[`ColorDifference`](README.md#colordifference)
+[`ColorDelta`](README.md#colordelta)
 
 The color difference.
 
@@ -156,7 +156,7 @@ ___
 
 ### cie94
 
-▸ **cie94**(`color1`, `color2`): [`ColorDifference`](README.md#colordifference)
+▸ **cie94**(`color1`, `color2`): [`ColorDelta`](README.md#colordelta)
 
 Calculate the color difference between two colors using the CIE94 formula.
 
@@ -169,7 +169,7 @@ Calculate the color difference between two colors using the CIE94 formula.
 
 #### Returns
 
-[`ColorDifference`](README.md#colordifference)
+[`ColorDelta`](README.md#colordelta)
 
 The color difference.
 
@@ -181,7 +181,7 @@ ___
 
 ### ciede2000
 
-▸ **ciede2000**(`color1`, `color2`): [`ColorDifference`](README.md#colordifference)
+▸ **ciede2000**(`color1`, `color2`): [`ColorDelta`](README.md#colordelta)
 
 Calculate the color difference between two colors using the CIEDE2000 formula.
 
@@ -194,7 +194,7 @@ Calculate the color difference between two colors using the CIEDE2000 formula.
 
 #### Returns
 
-[`ColorDifference`](README.md#colordifference)
+[`ColorDelta`](README.md#colordelta)
 
 The color difference.
 
@@ -204,11 +204,11 @@ The color difference.
 
 ___
 
-### alphaFilter
+### opacityFilter
 
-▸ **alphaFilter**(`threshold?`): [`ColorFilterFunction`](README.md#colorfilterfunction)
+▸ **opacityFilter**(`threshold?`): [`ColorFilter`](README.md#colorfilter)
 
-Create a new color filter function that checks the alpha value of the color.
+Create a new color filter function that checks the opacity of the color.
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Create a new color filter function that checks the alpha value of the color.
 
 #### Returns
 
-[`ColorFilterFunction`](README.md#colorfilterfunction)
+[`ColorFilter`](README.md#colorfilter)
 
 The color filter function.
 
@@ -230,7 +230,7 @@ ___
 
 ### luminanceFilter
 
-▸ **luminanceFilter**(`minThreshold?`, `maxThreshold?`): [`ColorFilterFunction`](README.md#colorfilterfunction)
+▸ **luminanceFilter**(`minThreshold?`, `maxThreshold?`): [`ColorFilter`](README.md#colorfilter)
 
 Create a new color filter function that checks the luminance of the color.
 
@@ -243,7 +243,7 @@ Create a new color filter function that checks the luminance of the color.
 
 #### Returns
 
-[`ColorFilterFunction`](README.md#colorfilterfunction)
+[`ColorFilter`](README.md#colorfilter)
 
 The color filter function.
 

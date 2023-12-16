@@ -1,4 +1,4 @@
-import { DistanceFunction } from '../../distance';
+import { DistanceMeasure } from '../../distance';
 import { KDTreeSearch } from '../../neighbor';
 import { Point } from '../../point';
 import { ClusteringAlgorithm } from '../algorithm';
@@ -12,24 +12,24 @@ export { KmeansPlusPlusInitializer } from './strategy';
 /**
  * Implementation of the k-means clustering algorithm.
  *
- * @param P The type of point.
+ * @typeParam P - The type of point.
  * @see [Wikipedia - k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
  */
 export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new Kmeans instance.
    *
-   * @param k The number of clusters.
-   * @param maxIterations The maximum number of iterations.
-   * @param tolerance The tolerance for convergence conditions.
-   * @param distanceFunction The function to measure the distance between two points.
-   * @param initializationStrategy The strategy to initialize center points.
+   * @param k - The number of clusters.
+   * @param maxIterations - The maximum number of iterations.
+   * @param tolerance - The tolerance for convergence conditions.
+   * @param distanceMeasure - The function to measure the distance between two points.
+   * @param initializationStrategy - The strategy to initialize center points.
    */
   constructor(
     private readonly k: number,
     private readonly maxIterations: number,
     private readonly tolerance: number,
-    private readonly distanceFunction: DistanceFunction,
+    private readonly distanceMeasure: DistanceMeasure,
     private readonly initializationStrategy: InitializationStrategy<P>,
   ) {
     assertPositiveInteger(k, `The number of cluster must be a positive integer: ${k}`);
@@ -65,8 +65,8 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Performs one iteration of the Kmeans algorithm.
    *
-   * @param clusters The current clusters.
-   * @param points The points to cluster.
+   * @param clusters - The current clusters.
+   * @param points - The points to cluster.
    * @returns Whether any cluster was updated.
    */
   private iterate(clusters: Cluster<P>[], points: P[]): boolean {
@@ -82,7 +82,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
     for (let i = 0; i < clusters.length; i++) {
       const oldCentroid = centroids[i];
       const newCentroid = clusters[i].getCentroid();
-      const difference = this.distanceFunction(oldCentroid, newCentroid);
+      const difference = this.distanceMeasure(oldCentroid, newCentroid);
       if (difference >= this.tolerance) {
         updated = true;
       }
@@ -93,12 +93,12 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Assigns each point to the nearest cluster.
    *
-   * @param clusters The clusters to which to assign points.
-   * @param centroids The centroids of the clusters.
-   * @param points The points to assign.
+   * @param clusters - The clusters to which to assign points.
+   * @param centroids - The centroids of the clusters.
+   * @param points - The points to assign.
    */
   private assignPoints(clusters: Cluster<P>[], centroids: P[], points: P[]): void {
-    const neighborSearch = KDTreeSearch.build(centroids, this.distanceFunction);
+    const neighborSearch = KDTreeSearch.build(centroids, this.distanceMeasure);
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
       const neighbor = neighborSearch.searchNearest(point);

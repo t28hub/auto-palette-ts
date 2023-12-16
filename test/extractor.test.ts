@@ -1,6 +1,6 @@
 import { SwatchExtractor } from '@internal/extractor';
 import { DBSCAN, Kmeans, KmeansPlusPlusInitializer, Point5, euclidean, squaredEuclidean } from '@internal/math';
-import { Color, Swatch, alphaFilter, ciede2000 } from 'auto-palette';
+import { Color, Swatch, ciede2000, opacityFilter } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
 import fixtures from './fixtures';
@@ -12,7 +12,7 @@ describe('SwatchExtractor', () => {
       // Act
       const strategy = new KmeansPlusPlusInitializer<Point5>(euclidean);
       const kmeans = new Kmeans<Point5>(10, 20, 0.01, euclidean, strategy);
-      const actual = new SwatchExtractor(kmeans, [alphaFilter()]);
+      const actual = new SwatchExtractor(kmeans, [opacityFilter()]);
 
       // Assert
       expect(actual).toBeDefined();

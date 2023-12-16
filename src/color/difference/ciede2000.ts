@@ -1,7 +1,7 @@
 import { degreeToRadian, radianToDegree } from '../../math';
 import { LAB } from '../types';
 
-import { ColorDifference, DifferenceFunction } from './function';
+import { ColorDelta, ColorDeltaMeasure } from './function';
 
 // Constants for the CIEDE2000 color difference formula.
 // kL, kC and kH are usually both unity.
@@ -77,7 +77,7 @@ function toDeltaHPrime(c1: number, c2: number, h1: number, h2: number): number {
  * @returns The color difference.
  * @see [CIEDE2000 - Color difference](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000)
  */
-export const ciede2000: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): ColorDifference => {
+export const ciede2000: ColorDeltaMeasure<LAB> = (color1: LAB, color2: LAB): ColorDelta => {
   const deltaLPrime = color2.l - color1.l;
   const lBar = (color1.l + color2.l) / 2.0;
 
@@ -122,5 +122,5 @@ export const ciede2000: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): Co
   const h = deltaHPrime / (kH * sH);
 
   const squared = l ** 2 + c ** 2 + h ** 2 + rT * c * h;
-  return Math.sqrt(squared) as ColorDifference;
+  return Math.sqrt(squared) as ColorDelta;
 };

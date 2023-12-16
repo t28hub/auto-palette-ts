@@ -7,16 +7,16 @@ import { assertFiniteNumber } from './utils';
  * @param color - The color to test.
  * @returns True if the color passes the filter, false otherwise.
  */
-export type ColorFilterFunction = (color: RGBA) => boolean;
+export type ColorFilter = (color: RGBA) => boolean;
 
 /**
- * Create a new color filter function that checks the alpha value of the color.
+ * Create a new color filter function that checks the opacity of the color.
  *
  * @param threshold - The minimum alpha value to pass the filter. The value must be in [0.0, 1.0].
  * @returns The color filter function.
  * @throws {RangeError} If the threshold is not within the range [0.0, 1.0].
  */
-export function alphaFilter(threshold = 1.0): ColorFilterFunction {
+export function opacityFilter(threshold = 1.0): ColorFilter {
   assertFiniteNumber(threshold, `The threshold(${threshold}) must be a finite number`);
   if (threshold < 0.0 || threshold > 1.0) {
     throw new RangeError(`The threshold(${threshold}) must be in [0.0, 1.0]`);
@@ -47,7 +47,7 @@ const DEFAULT_MAX_LUMINANCE = 0.85;
 export function luminanceFilter(
   minThreshold: number = DEFAULT_MIN_LUMINANCE,
   maxThreshold: number = DEFAULT_MAX_LUMINANCE,
-): ColorFilterFunction {
+): ColorFilter {
   assertFiniteNumber(minThreshold, `The minThreshold(${minThreshold}) must be a finite number`);
   assertFiniteNumber(maxThreshold, `The maxThreshold(${maxThreshold}) must be a finite number`);
 
@@ -83,7 +83,7 @@ export function luminanceFilter(
  * @param filters - The color filter functions to be composed.
  * @returns The composite color filter function.
  */
-export function composeFilters(...filters: ColorFilterFunction[]): ColorFilterFunction {
+export function composeFilters(...filters: ColorFilter[]): ColorFilter {
   return (color: RGBA) => {
     return filters.every((filter) => filter(color));
   };

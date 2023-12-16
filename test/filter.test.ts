@@ -1,12 +1,12 @@
-import { alphaFilter, composeFilters, luminanceFilter } from '@internal/filter';
+import { composeFilters, luminanceFilter, opacityFilter } from '@internal/filter';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('filter', () => {
-  describe('alphaFilter', () => {
+  describe('opacityFilter', () => {
     it('should create a new color filter function', () => {
       // Act
-      const actual = alphaFilter();
+      const actual = opacityFilter();
 
       // Assert
       expect(actual).toBeDefined();
@@ -16,7 +16,7 @@ describe('filter', () => {
 
     it('should create a new color filter function with the given threshold', () => {
       // Act
-      const actual = alphaFilter(0.5);
+      const actual = opacityFilter(0.5);
 
       // Assert
       expect(actual).toBeDefined();
@@ -32,7 +32,7 @@ describe('filter', () => {
         // Assert
         expect(() => {
           // Act
-          alphaFilter(threshold);
+          opacityFilter(threshold);
         }).toThrowError(AssertionError);
       },
     );
@@ -43,7 +43,7 @@ describe('filter', () => {
         // Assert
         expect(() => {
           // Act
-          alphaFilter(threshold);
+          opacityFilter(threshold);
         }).toThrowError(RangeError);
       },
     );
@@ -115,7 +115,7 @@ describe('filter', () => {
   describe('composeFilters', () => {
     it('should create a new color filter function that combines the given filters', () => {
       // Arrange
-      const filter1 = alphaFilter(0.5);
+      const filter1 = opacityFilter(0.5);
       const filter2 = luminanceFilter(0.5, 1.0);
 
       // Act

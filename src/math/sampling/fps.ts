@@ -1,4 +1,4 @@
-import { DistanceFunction } from '../distance';
+import { DistanceMeasure } from '../distance';
 import { Point } from '../point';
 
 import { assert } from '../../utils';
@@ -13,9 +13,9 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
   /**
    * Create a new FarthestPointSampling instance.
    *
-   * @param distanceFunction - The distance function to calculate the distance between two data points.
+   * @param distanceMeasure - The distance measure to measure the distance between two points.
    */
-  constructor(private readonly distanceFunction: DistanceFunction) {}
+  constructor(private readonly distanceMeasure: DistanceMeasure) {}
 
   /**
    * {@inheritDoc SamplingStrategy.sample}
@@ -34,7 +34,7 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
     sampled.set(initialIndex, initialPoint);
 
     for (let i = 0; i < distances.length; i++) {
-      distances[i] = this.distanceFunction(points[i], initialPoint);
+      distances[i] = this.distanceMeasure(points[i], initialPoint);
     }
 
     while (sampled.size < n) {
@@ -51,7 +51,7 @@ export class FarthestPointSampling<P extends Point> implements SamplingStrategy<
         }
 
         const previousDistance = distances[i];
-        const currentDistance = this.distanceFunction(farthestPoint, points[i]);
+        const currentDistance = this.distanceMeasure(farthestPoint, points[i]);
         distances[i] = Math.min(previousDistance, currentDistance);
       }
     }

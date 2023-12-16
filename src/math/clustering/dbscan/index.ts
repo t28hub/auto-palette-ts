@@ -1,5 +1,5 @@
 import { assert, ArrayQueue } from '../../../utils';
-import { DistanceFunction } from '../../distance';
+import { DistanceMeasure } from '../../distance';
 import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbor';
 import { Point } from '../../point';
 import { Vector } from '../../vector';
@@ -22,17 +22,17 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
   /**
    * Create a new DBSCAN instance.
    *
-   * @param minPoints The minimum number of points required to form a cluster.
-   * @param radius The radius within which to search for neighboring points.
-   * @param distanceFunction The function to measure the distance between two points.
+   * @param minPoints - The minimum number of points required to form a cluster.
+   * @param epsilon - The radius within which to search for neighboring points.
+   * @param distanceMeasure - The function to measure the distance between two points.
    */
   constructor(
     private readonly minPoints: number,
-    private readonly radius: number,
-    private readonly distanceFunction: DistanceFunction,
+    private readonly epsilon: number,
+    private readonly distanceMeasure: DistanceMeasure,
   ) {
     assert(this.minPoints >= 1, `The minimum size of cluster(${this.minPoints}) is not greater than or equal to 1`);
-    assert(this.radius >= 0.0, `The radius(${this.radius}) is not greater than 0.0`);
+    assert(this.epsilon >= 0.0, `The epsilon(${this.epsilon}) is not greater than 0.0`);
   }
 
   /**
@@ -44,7 +44,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     let label: Label = 0;
     const labels = new Array<Label>(points.length).fill(UNDEFINED);
     const clusters = new Array<Cluster<P>>();
-    const neighborSearch = KDTreeSearch.build(points, this.distanceFunction);
+    const neighborSearch = KDTreeSearch.build(points, this.distanceMeasure);
     for (let i = 0; i < points.length; i++) {
       // Skip if the point has already been visited.
       if (labels[i] !== UNDEFINED) {
@@ -52,7 +52,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
       }
 
       const point = points[i];
-      const neighbors = neighborSearch.searchRadius(point, this.radius);
+      const neighbors = neighborSearch.searchRadius(point, this.epsilon);
       // Mark as noise point if there are not enough neighbors.
       if (neighbors.length < this.minPoints) {
         labels[i] = OUTLIER;
@@ -112,7 +112,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
       labels[neighborIndex] = label;
       cluster.addMember(neighborIndex, neighborPoint);
 
-      const secondaryNeighbors = neighborSearch.searchRadius(neighborPoint, this.radius);
+      const secondaryNeighbors = neighborSearch.searchRadius(neighborPoint, this.epsilon);
       if (secondaryNeighbors.length < this.minPoints) {
         continue;
       }

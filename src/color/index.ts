@@ -1,7 +1,7 @@
 import { radianToDegree } from '../math';
 
 import { assert, assertFiniteNumber } from '../utils';
-import { ColorDifference, DifferenceFunction, ciede2000 } from './difference';
+import { ColorDelta, ColorDeltaMeasure, ciede2000 } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
 
@@ -99,7 +99,7 @@ export class Color {
    * @param formula The formula to use to compute the color difference. Default is CIEDE2000.
    * @returns The color difference.
    */
-  differenceTo(other: Color, formula: DifferenceFunction<LAB> = ciede2000): ColorDifference {
+  differenceTo(other: Color, formula: ColorDeltaMeasure<LAB> = ciede2000): ColorDelta {
     return formula({ l: this.l, a: this.a, b: this.b }, { l: other.l, a: other.a, b: other.b });
   }
 

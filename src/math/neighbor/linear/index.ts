@@ -1,5 +1,5 @@
 import { assert, Mutable, Ordering, PriorityQueue, Queue } from '../../../utils';
-import { DistanceFunction } from '../../distance';
+import { DistanceMeasure } from '../../distance';
 import { Point } from '../../point';
 import { Neighbor, NeighborSearch } from '../search';
 
@@ -15,9 +15,9 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * Create a new LinearSearch instance.
    *
    * @param points The points to be searched.
-   * @param distanceFunction The function to measure the distance between two points.
+   * @param distanceMeasure The distance measure to measure the distance between two points.
    */
-  constructor(points: P[], private readonly distanceFunction: DistanceFunction) {
+  constructor(points: P[], private readonly distanceMeasure: DistanceMeasure) {
     assert(points.length > 0, 'The provided points array is empty');
     // Copy the points array to avoid side effects.
     this.points = [...points];
@@ -40,7 +40,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
 
     for (let i = 0; i < this.points.length; i++) {
       const point = this.points[i];
-      const distance = this.distanceFunction(point, query);
+      const distance = this.distanceMeasure(point, query);
       if (queue.size < k) {
         queue.push({ index: i, distance });
         continue;
@@ -61,11 +61,11 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
   searchNearest(query: P): Neighbor {
     const nearest: Mutable<Neighbor> = {
       index: 0,
-      distance: this.distanceFunction(this.points[0], query),
+      distance: this.distanceMeasure(this.points[0], query),
     };
     for (let i = 1; i < this.points.length; i++) {
       const point = this.points[i];
-      const distance = this.distanceFunction(point, query);
+      const distance = this.distanceMeasure(point, query);
       if (distance < nearest.distance) {
         nearest.index = i;
         nearest.distance = distance;
@@ -82,7 +82,7 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
     const neighbors = new Array<Neighbor>();
     for (let i = 0; i < this.points.length; i++) {
       const point = this.points[i];
-      const distance = this.distanceFunction(point, query);
+      const distance = this.distanceMeasure(point, query);
       if (distance <= radius) {
         neighbors.push({ index: i, distance });
       }

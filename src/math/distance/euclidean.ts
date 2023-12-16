@@ -1,7 +1,7 @@
 import { Point } from '../point';
 
 import { assertFiniteNumber } from '../../utils';
-import { Distance, DistanceFunction } from './function';
+import { Distance, DistanceMeasure } from './function';
 
 /**
  * Calculate the Euclidean distance between two points.
@@ -10,7 +10,7 @@ import { Distance, DistanceFunction } from './function';
  * @param point2 The second point.
  * @return The Euclidean distance between two points.
  */
-export const euclidean: DistanceFunction = <P extends Point>(point1: P, point2: P): Distance => {
+export const euclidean: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
   const squared = squaredEuclidean(point1, point2);
   return Math.sqrt(squared) as Distance;
 };
@@ -22,7 +22,7 @@ export const euclidean: DistanceFunction = <P extends Point>(point1: P, point2: 
  * @param point2 The second point.
  * @return The squared Euclidean distance between two points.
  */
-export const squaredEuclidean: DistanceFunction = <P extends Point>(point1: P, point2: P): Distance => {
+export const squaredEuclidean: DistanceMeasure = <P extends Point>(point1: P, point2: P): Distance => {
   const distance = point1.reduce((total: number, value: number, index: number): number => {
     const delta = point2[index] - value;
     return total + delta * delta;

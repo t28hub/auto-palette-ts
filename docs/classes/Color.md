@@ -133,7 +133,7 @@ ___
 
 ### differenceTo
 
-▸ **differenceTo**(`other`, `formula?`): [`ColorDifference`](../README.md#colordifference)
+▸ **differenceTo**(`other`, `formula?`): [`ColorDelta`](../README.md#colordelta)
 
 Compute the color difference between this color and the other color.
 
@@ -142,11 +142,11 @@ Compute the color difference between this color and the other color.
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `other` | [`Color`](Color.md) | `undefined` | The other color. |
-| `formula` | [`DifferenceFunction`](../README.md#differencefunction)\<`LAB`\> | `ciede2000` | The formula to use to compute the color difference. Default is CIEDE2000. |
+| `formula` | [`ColorDeltaMeasure`](../README.md#colordeltameasure)\<`LAB`\> | `ciede2000` | The formula to use to compute the color difference. Default is CIEDE2000. |
 
 #### Returns
 
-[`ColorDifference`](../README.md#colordifference)
+[`ColorDelta`](../README.md#colordelta)
 
 The color difference.
 

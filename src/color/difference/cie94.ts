@@ -1,6 +1,6 @@
 import { LAB } from '../types';
 
-import { ColorDifference, DifferenceFunction } from './function';
+import { ColorDelta, ColorDeltaMeasure } from './function';
 
 // kL, K1 and K2 are constants. The values are taken from the wikipedia page:
 // https://en.wikipedia.org/wiki/Color_difference#CIE94
@@ -20,7 +20,7 @@ const kH = 1.0;
  * @returns The color difference.
  * @see [CIE94 - Color difference](https://en.wikipedia.org/wiki/Color_difference#CIE94)
  */
-export const cie94: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): ColorDifference => {
+export const cie94: ColorDeltaMeasure<LAB> = (color1: LAB, color2: LAB): ColorDelta => {
   const deltaL = color1.l - color2.l;
   const deltaA = color1.a - color2.a;
   const deltaB = color1.b - color2.b;
@@ -35,5 +35,5 @@ export const cie94: DifferenceFunction<LAB> = (color1: LAB, color2: LAB): ColorD
   const sH = 1 + K2 * c1;
 
   const squared = (deltaL / (kL * sL)) ** 2 + (deltaC / (kC * sC)) ** 2 + (deltaH / (kH * sH)) ** 2;
-  return Math.sqrt(squared) as ColorDifference;
+  return Math.sqrt(squared) as ColorDelta;
 };

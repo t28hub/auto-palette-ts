@@ -1,4 +1,4 @@
-import { Color, Options, Palette, Swatch, alphaFilter, luminanceFilter } from 'auto-palette';
+import { Color, Options, Palette, Swatch, luminanceFilter, opacityFilter } from 'auto-palette';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { AssertionError } from '@internal/utils';
@@ -142,7 +142,7 @@ describe('Palette', () => {
           algorithm: 'kmeans',
           samplingRate: 0.5,
           maxSwatches: 16,
-          filters: [alphaFilter(), luminanceFilter()],
+          filters: [opacityFilter(), luminanceFilter()],
         };
         const actual = Palette.extract(image, options);
 
