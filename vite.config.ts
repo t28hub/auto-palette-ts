@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'AutoPalette',
-      formats: ['cjs', 'es', 'iife'],
+      formats: ['cjs', 'es'],
       fileName: (format) => {
         if (format === 'cjs') {
           return 'index.cjs';
@@ -21,7 +21,6 @@ export default defineConfig({
       },
     },
     sourcemap: true,
-    // minify: process.env.NODE_ENV === 'production',
   },
   plugins: [
     dts({
