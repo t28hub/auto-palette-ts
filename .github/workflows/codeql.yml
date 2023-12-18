@@ -28,6 +28,7 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
+
       - name: Run CodeQL analysis for ${{ matrix.language }}
         uses: github/codeql-action/analyze@v2
         with:
