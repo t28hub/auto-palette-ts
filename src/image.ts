@@ -1,4 +1,5 @@
 import { assertDefined } from './utils';
+import { isBrowser } from './utils/browser';
 
 /**
  * Image source represents the source of a supported image.
@@ -6,19 +7,54 @@ import { assertDefined } from './utils';
 export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
 
 /**
+ * Check if the given value is a canvas element.
+ *
+ * @param value - The value to check.
+ * @return True if the value is a canvas element, false otherwise.
+ */
+export function isCanvasElement(value: ImageSource): value is HTMLCanvasElement {
+  return isBrowser() && value instanceof HTMLCanvasElement;
+}
+
+/**
+ * Check if the given value is an image element.
+ *
+ * @param value - The value to check.
+ * @return True if the value is an image element, false otherwise.
+ */
+export function isImageElement(value: ImageSource): value is HTMLImageElement {
+  return isBrowser() && value instanceof HTMLImageElement;
+}
+
+/**
+ * Check if the given value is an ImageData object.
+ *
+ * @param value - The value to check.
+ * @return True if the value is an ImageData object, false otherwise.
+ */
+export function isImageData(value: ImageSource): value is ImageData {
+  // Check required properties of ImageData
+  return 'data' in value && 'width' in value && 'height' in value;
+}
+
+/**
  * Create an ImageData object from the given source.
  *
  * @param source - The source of the image.
  * @return The ImageData object.
+ * @throws {TypeError} If the source is not supported.
  */
 export function createImageData(source: ImageSource): ImageData {
-  if (source instanceof HTMLCanvasElement) {
+  if (isCanvasElement(source)) {
     return fromCanvasElement(source);
   }
-  if (source instanceof HTMLImageElement) {
+  if (isImageElement(source)) {
     return fromImageElement(source);
   }
-  return new ImageData(source.data, source.width, source.height);
+  if (isImageData(source)) {
+    return source;
+  }
+  throw new TypeError('The source of the image is not supported');
 }
 
 /**
