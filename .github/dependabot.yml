@@ -6,6 +6,9 @@ updates:
       interval: 'daily'
     assignees:
       - 't28hub'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
@@ -13,3 +16,6 @@ updates:
       interval: 'weekly'
     assignees:
       - 't28hub'
+    commit-message:
+        prefix: 'chore(ci)'
+        include: 'scope'
