@@ -28,7 +28,7 @@ devDependencies:
     version: 1.0.4(vitest@1.0.4)
   '@vitest/ui':
     specifier: ^1.0.4
-    version: 1.0.4(vitest@1.0.4)
+    version: 1.1.0(vitest@1.0.4)
   canvas:
     specifier: ^2.11.2
     version: 2.11.2
@@ -70,7 +70,7 @@ devDependencies:
     version: 3.6.4(@types/node@20.10.4)(typescript@5.3.3)(vite@5.0.10)
   vitest:
     specifier: ^1.0.4
-    version: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.0.4)(jsdom@23.0.1)
+    version: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.1.0)(jsdom@23.0.1)
 
 packages:
 
@@ -213,7 +213,7 @@ packages:
     dependencies:
       '@codspeed/core': 2.3.1
       vite: 5.0.10(@types/node@20.10.4)
-      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.0.4)(jsdom@23.0.1)
+      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.1.0)(jsdom@23.0.1)
     dev: true
 
   /@commitlint/cli@18.4.3(typescript@5.3.3):
@@ -1234,7 +1234,7 @@ packages:
       std-env: 3.6.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.0.4)(jsdom@23.0.1)
+      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.1.0)(jsdom@23.0.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1269,23 +1269,31 @@ packages:
       tinyspy: 2.2.0
     dev: true
 
-  /@vitest/ui@1.0.4(vitest@1.0.4):
-    resolution: {integrity: sha512-gd4p6e7pjukSe4joWS5wpnm/JcEfzCZUYkYWQOORqJK1mDJ0MOaXa/9BbPOEVO5TcvdnKvFJUdJpFHnqoyYwZA==}
+  /@vitest/ui@1.1.0(vitest@1.0.4):
+    resolution: {integrity: sha512-7yU1QRFBplz0xJqcgt+agcbrNFdBmLo8UUppdKkFmYx+Ih0+yMYQOyr7kOB+YoggJY/p5ZzXxdbiOz7NBX2y+w==}
     peerDependencies:
       vitest: ^1.0.0
     dependencies:
-      '@vitest/utils': 1.0.4
+      '@vitest/utils': 1.1.0
       fast-glob: 3.3.2
       fflate: 0.8.1
       flatted: 3.2.9
       pathe: 1.1.1
       picocolors: 1.0.0
       sirv: 2.0.3
-      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.0.4)(jsdom@23.0.1)
+      vitest: 1.0.4(@types/node@20.10.4)(@vitest/ui@1.1.0)(jsdom@23.0.1)
     dev: true
 
   /@vitest/utils@1.0.4:
     resolution: {integrity: sha512-gsswWDXxtt0QvtK/y/LWukN7sGMYmnCcv1qv05CsY6cU/Y1zpGX1QuvLs+GO1inczpE6Owixeel3ShkjhYtGfA==}
+    dependencies:
+      diff-sequences: 29.6.3
+      loupe: 2.3.7
+      pretty-format: 29.7.0
+    dev: true
+
+  /@vitest/utils@1.1.0:
+    resolution: {integrity: sha512-z+s510fKmYz4Y41XhNs3vcuFTFhcij2YF7F8VQfMEYAAUfqQh0Zfg7+w9xdgFGhPf3tX3TicAe+8BDITk6ampQ==}
     dependencies:
       diff-sequences: 29.6.3
       loupe: 2.3.7
@@ -4525,7 +4533,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@1.0.4(@types/node@20.10.4)(@vitest/ui@1.0.4)(jsdom@23.0.1):
+  /vitest@1.0.4(@types/node@20.10.4)(@vitest/ui@1.1.0)(jsdom@23.0.1):
     resolution: {integrity: sha512-s1GQHp/UOeWEo4+aXDOeFBJwFzL6mjycbQwwKWX2QcYfh/7tIerS59hWQ20mxzupTJluA2SdwiBuWwQHH67ckg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -4555,7 +4563,7 @@ packages:
       '@vitest/runner': 1.0.4
       '@vitest/snapshot': 1.0.4
       '@vitest/spy': 1.0.4
-      '@vitest/ui': 1.0.4(vitest@1.0.4)
+      '@vitest/ui': 1.1.0(vitest@1.0.4)
       '@vitest/utils': 1.0.4
       acorn-walk: 8.3.1
       cac: 6.7.14
