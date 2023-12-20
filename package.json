@@ -78,6 +78,7 @@
     "@vitest/coverage-v8": "^1.1.0",
     "@vitest/ui": "^1.1.0",
     "canvas": "^2.11.2",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
     "husky": "^8.0.3",
     "jest-extended": "^4.0.2",
     "jest-matcher-utils": "^29.7.0",

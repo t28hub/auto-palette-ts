@@ -50,6 +50,9 @@ devDependencies:
   canvas:
     specifier: ^2.11.2
     version: 2.11.2
+  conventional-changelog-conventionalcommits:
+    specifier: ^7.0.2
+    version: 7.0.2
   husky:
     specifier: ^8.0.3
     version: 8.0.3

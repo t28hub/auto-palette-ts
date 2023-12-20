@@ -7,5 +7,6 @@
   },
   "project": ["**/*.ts"],
   "ignore": ["**/*.d.ts"],
-  "ignoreBinaries": ["only-allow"]
+  "ignoreBinaries": ["only-allow"],
+  "ignoreDependencies": ["conventional-changelog-conventionalcommits"]
 }
