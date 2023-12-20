@@ -57,5 +57,5 @@ jobs:
       - name: Publish the built package to npm
         run: pnpm run release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
