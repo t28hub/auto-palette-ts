@@ -3,6 +3,10 @@ name: Release
 on:
   workflow_dispatch:
 
+concurrency:
+  group: release
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
