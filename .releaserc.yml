@@ -12,6 +12,5 @@ plugins:
     - assets:
       - 'CHANGELOG.md'
       - 'package.json'
-      - 'pnpm-lock.yaml'
-      message: 'chore(release): ${nextRelease.version} [skip ci]'
+      message: 'chore(release): ${nextRelease.version}'
   - '@semantic-release/github'
