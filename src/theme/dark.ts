@@ -13,7 +13,6 @@ export const DarkThemeStrategy: ThemeStrategy = {
   filter(swatch: Swatch): boolean {
     return swatch.color.isDark();
   },
-
   /**
    * {@inheritDoc ThemeStrategy.score}
    */

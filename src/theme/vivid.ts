@@ -16,7 +16,6 @@ export const VividThemeStrategy: ThemeStrategy = {
     const chroma = swatch.color.chroma();
     return chroma >= MIN_CHROMA;
   },
-
   /**
    * {@inheritDoc ThemeStrategy.score}
    */

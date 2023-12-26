@@ -13,7 +13,6 @@ export const LightThemeStrategy: ThemeStrategy = {
   filter(swatch: Swatch): boolean {
     return swatch.color.isLight();
   },
-
   /**
    * {@inheritDoc ThemeStrategy.score}
    */

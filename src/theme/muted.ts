@@ -16,7 +16,6 @@ export const MutedThemeStrategy: ThemeStrategy = {
     const chroma = swatch.color.chroma();
     return chroma < MAX_CHROMA;
   },
-
   /**
    * {@inheritDoc ThemeStrategy.score}
    */

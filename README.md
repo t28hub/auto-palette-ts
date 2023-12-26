@@ -10,9 +10,10 @@
 [![FOSSA](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts.svg?type=shield&issueType=license)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts?ref=badge_shield&issueType=license)
 
 ## Features
+
 ![Color palette extracted from an image using Auto Palette](./docs/assets/screenshot.webp)
 > Photo by Pixabay from Pexels: https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
- 
+
 ❯ Automatically extracts color palette from image<br>
 ❯ Provides detailed color information color, position and population<br>
 ❯ Supports multiple color extraction algorithms (`dbscan`, `kmeans` )<br>
@@ -21,20 +22,27 @@
 ❯ Zero dependencies<br>
 
 ## Installation
+
 Using npm:
+
 ```bash
 $ npm install auto-palette
 ```
+
 Using yarn:
+
 ```bash
 $ yarn add auto-palette
 ```
+
 Using pnpm:
+
 ```bash
 $ pnpm add auto-palette
 ```
 
 ## Usage
+
 ```ts
 // ESM
 import { Palette } from 'auto-palette';
@@ -63,12 +71,16 @@ for (const swatch of swatches) {
 
 ## API
 
-For more detailed information, please refer to the [documentations](https://github.com/t28hub/auto-palette-ts/tree/main/docs) in the `docs` directory.
+For more detailed information, please refer to
+the [documentations](https://github.com/t28hub/auto-palette-ts/tree/main/docs) in the `docs` directory.
 
 ### Palette
+
 #### `extract(image: ImageSource, options?: Options): Palette`
+
 Extracts a color palette from the given image source(HTMLImageElement, HTMLCanvasElement or ImageData).  
 It takes an image source and an optional `Options` object as parameters.
+
 ```ts
 const options: Options = {
   algorithm: 'dbscan',
@@ -95,9 +107,11 @@ interface Options {
 ```
 
 #### `findSwatches(n: number, theme?: Theme): Swatch[]`
+
 Finds the best `n` swatches in the palette.  
 The “best” swatches are determined based on their population and optionally a theme.
 The theme can be `vivid`, `muted`, `light` or `dark`.
+
 ```ts
 const swatches = palette.findSwatches(5, 'light');
 ```
@@ -114,6 +128,7 @@ Follow these steps to get started with development:
 
 ## License
 
-This library is distributed under the MIT License.See the [LICENSE](https://github.com/t28hub/auto-palette-ts/blob/main/LICENSE).
+This library is distributed under the MIT License.See
+the [LICENSE](https://github.com/t28hub/auto-palette-ts/blob/main/LICENSE).
 
 [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts.svg?type=large&issueType=license)](https://app.fossa.com/projects/custom%2B14538%2Fgithub.com%2Ft28hub%2Fauto-palette-ts?ref=badge_large&issueType=license)
