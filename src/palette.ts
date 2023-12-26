@@ -13,11 +13,10 @@ import {
   Point5,
   SamplingStrategy,
   euclidean,
-  normalize,
   squaredEuclidean,
 } from './math';
 import { Swatch } from './swatch';
-import { Theme, WeightFunction, getWeightFunction } from './theme';
+import { Theme, ThemeStrategy, defaultThemeStrategy, getThemeStrategy } from './theme';
 import { assert, assertPositiveInteger } from './utils';
 
 /**
@@ -127,27 +126,20 @@ export class Palette {
       return [...this.swatches];
     }
 
-    let weightFunction: WeightFunction;
-    let sortedSwatches: Swatch[];
+    let themeStrategy: ThemeStrategy;
     if (theme) {
-      weightFunction = getWeightFunction(theme);
-      sortedSwatches = Array.from(this.swatches).sort((swatch1: Swatch, swatch2: Swatch): number => {
-        const weight1 = weightFunction(swatch1);
-        const weight2 = weightFunction(swatch2);
-        return weight2 - weight1;
-      });
+      themeStrategy = getThemeStrategy(theme);
     } else {
       // The swatch at the first index is the dominant swatch and has the largest population.
-      const maxPopulation = this.swatches[0].population;
-      weightFunction = (swatch: Swatch): number => {
-        return normalize(swatch.population, 0, maxPopulation);
-      };
-
-      // The 'this.swatches' is already sorted by population in descending order in the constructor.
-      sortedSwatches = this.swatches;
+      themeStrategy = defaultThemeStrategy(this.swatches[0].population);
     }
 
-    const colors = sortedSwatches.map((swatch: Swatch): Point3 => {
+    const candidates = this.swatches.filter((swatch: Swatch) => themeStrategy.filter(swatch));
+    if (candidates.length === 0) {
+      return [];
+    }
+
+    const colors = candidates.map((swatch: Swatch): Point3 => {
       const { l, a, b } = swatch.color.toLAB();
       return [l, a, b];
     });
@@ -155,10 +147,9 @@ export class Palette {
     const neighborSearch = KDTreeSearch.build(colors, euclidean);
     const markedIndices = new Set<number>();
     const sampledColors = this.samplingStrategy.sample(colors, n);
-    return sampledColors.map(
-      (color: Point3): Swatch =>
-        Palette.findOptimalSwatch(sortedSwatches, color, neighborSearch, markedIndices, weightFunction),
-    );
+    return sampledColors.map((color: Point3): Swatch => {
+      return Palette.findOptimalSwatch(candidates, color, neighborSearch, markedIndices, themeStrategy);
+    });
   }
 
   private static findOptimalSwatch(
@@ -166,7 +157,7 @@ export class Palette {
     color: Point3,
     neighborSearch: NeighborSearch<Point3>,
     markedIndices: Set<number>,
-    weightFunction: WeightFunction,
+    strategy: ThemeStrategy,
   ): Swatch {
     // Find the neighbors of the color within the radius of 20.0 in the LAB color space.
     // The radius is determined by the experiment.
@@ -181,8 +172,8 @@ export class Palette {
       const coefficient = markedIndices.has(neighbor.index) ? REDUCED_SCORE_COEFFICIENT : DEFAULT_SCORE_COEFFICIENT;
       markedIndices.add(neighbor.index);
 
-      const optimalWeight = weightFunction(optimalSwatch);
-      const currentWeight = weightFunction(currentSwatch) * coefficient;
+      const optimalWeight = strategy.score(optimalSwatch);
+      const currentWeight = strategy.score(currentSwatch) * coefficient;
       if (optimalWeight > currentWeight) {
         return optimal;
       }

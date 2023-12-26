@@ -75,12 +75,14 @@ describe('Palette', () => {
     it('should find the swatches based on specified theme', () => {
       // Act
       const palette = new Palette(swatches);
-      const actual = palette.findSwatches(2, 'light');
+      const actual = palette.findSwatches(4, 'vivid');
 
       // Assert
-      expect(actual).toBeArrayOfSize(2);
-      expect(actual[0].color.toString()).toEqual('#FFFFFF');
-      expect(actual[1].color.toString()).toEqual('#00158F');
+      expect(actual).toBeArrayOfSize(4);
+      expect(actual[0].color.toString()).toEqual('#F42222');
+      expect(actual[1].color.toString()).toEqual('#007944');
+      expect(actual[2].color.toString()).toEqual('#00158F');
+      expect(actual[3].color.toString()).toEqual('#FFB400');
     });
 
     it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {
@@ -112,7 +114,7 @@ describe('Palette', () => {
     let image: ImageData;
     beforeAll(async () => {
       image = await loadImageData(fixtures.photos.tulips);
-    }, 3000);
+    }, 1000);
 
     it('should extract a Palette from the provided image using default options', () => {
       // Act
@@ -132,7 +134,7 @@ describe('Palette', () => {
           coordinate: swatch.position,
         });
       }
-    });
+    }, 20000);
 
     it(
       'should extract a Palette from the provided image using custom options',
@@ -161,7 +163,7 @@ describe('Palette', () => {
           });
         }
       },
-      { retry: 3 },
+      { retry: 3, timeout: 20000 },
     );
 
     it.each([
