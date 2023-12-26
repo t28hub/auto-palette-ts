@@ -60,8 +60,10 @@ export interface Options {
 }
 
 const SIMILAR_COLOR_THRESHOLD = 20.0;
-const DEFAULT_SCORE_COEFFICIENT = 1.0;
-const REDUCED_SCORE_COEFFICIENT = 0.25;
+
+const MIN_SCORE_COEFFICIENT = 0.0;
+const MAX_SCORE_COEFFICIENT = 1.0;
+const REDUCED_SCORE_COEFFICIENT = 0.5;
 
 const LOWER_SAMPLING_RATE = 0.0;
 const UPPER_SAMPLING_RATE = 1.0;
@@ -145,10 +147,10 @@ export class Palette {
     });
 
     const neighborSearch = KDTreeSearch.build(colors, euclidean);
-    const markedIndices = new Set<number>();
+    const coefficients = new Array<number>(colors.length).fill(MAX_SCORE_COEFFICIENT);
     const sampledColors = this.samplingStrategy.sample(colors, n);
     return sampledColors.map((color: Point3): Swatch => {
-      return Palette.findOptimalSwatch(candidates, color, neighborSearch, markedIndices, themeStrategy);
+      return Palette.findOptimalSwatch(candidates, color, neighborSearch, coefficients, themeStrategy);
     });
   }
 
@@ -156,7 +158,7 @@ export class Palette {
     swatches: Swatch[],
     color: Point3,
     neighborSearch: NeighborSearch<Point3>,
-    markedIndices: Set<number>,
+    coefficients: number[],
     strategy: ThemeStrategy,
   ): Swatch {
     // Find the neighbors of the color within the radius of 20.0 in the LAB color space.
@@ -168,17 +170,20 @@ export class Palette {
       const optimalSwatch = swatches[optimal.index];
       const currentSwatch = swatches[neighbor.index];
 
-      // If the neighbor is already marked, the score is reduced by REDUCED_SCORE_COEFFICIENT to avoid duplication.
-      const coefficient = markedIndices.has(neighbor.index) ? REDUCED_SCORE_COEFFICIENT : DEFAULT_SCORE_COEFFICIENT;
-      markedIndices.add(neighbor.index);
+      const optimalCoefficient = coefficients[optimal.index];
+      const currentCoefficient = coefficients[neighbor.index];
 
-      const optimalWeight = strategy.score(optimalSwatch);
-      const currentWeight = strategy.score(currentSwatch) * coefficient;
+      // Reduce the score coefficient of the current swatch to avoid selecting the same color.
+      coefficients[neighbor.index] = currentCoefficient * REDUCED_SCORE_COEFFICIENT;
+
+      const optimalWeight = strategy.score(optimalSwatch) * optimalCoefficient;
+      const currentWeight = strategy.score(currentSwatch) * currentCoefficient;
       if (optimalWeight > currentWeight) {
         return optimal;
       }
       return neighbor;
     });
+    coefficients[bestNeighbor.index] = MIN_SCORE_COEFFICIENT;
     return swatches[bestNeighbor.index];
   }
 
