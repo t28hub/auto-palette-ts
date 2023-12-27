@@ -11,7 +11,7 @@
 
 ## Features
 
-![Color palette extracted from an image using Auto Palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/screenshot.webp)
+![Color palette extracted from an image using Auto Palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/palette.webp)
 
 > [!NOTE]
 > Photo by Pixabay from Pexels: https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
