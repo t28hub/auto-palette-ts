@@ -1,3 +1,11 @@
+## [1.1.0](https://github.com/t28hub/auto-palette-ts/compare/v1.0.1...v1.1.0) (2023-12-27)
+
+
+### Features
+
+* improve swatch selection algorithm by pre-filtering candidates based on theme ([c46e614](https://github.com/t28hub/auto-palette-ts/commit/c46e614887aaf60b90e15d2fd630844a0742c472))
+* improve swatch selection algorithm by revising coefficients to avoid selecting the same color ([2e9ff81](https://github.com/t28hub/auto-palette-ts/commit/2e9ff8197fca0850ca4137d92a6779b5056ea99e))
+
 ## [1.0.1](https://github.com/t28hub/auto-palette-ts/compare/v1.0.0...v1.0.1) (2023-12-22)
 
 
