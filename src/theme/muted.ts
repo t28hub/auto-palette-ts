@@ -3,7 +3,7 @@ import { normalize } from '../math';
 import { Swatch } from '../swatch';
 import { ThemeStrategy } from './strategy';
 
-const MAX_CHROMA = 40;
+const MAX_CHROMA = 0.45;
 
 /**
  * The muted theme strategy.
@@ -14,7 +14,8 @@ export const MutedThemeStrategy: ThemeStrategy = {
    */
   filter(swatch: Swatch): boolean {
     const chroma = swatch.color.chroma();
-    return chroma < MAX_CHROMA;
+    const normalized = normalize(chroma, Color.MIN_CHROMA, Color.MAX_CHROMA);
+    return normalized < MAX_CHROMA;
   },
   /**
    * {@inheritDoc ThemeStrategy.score}

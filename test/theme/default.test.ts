@@ -52,7 +52,7 @@ describe('DefaultThemeStrategy', () => {
       });
 
       // Assert
-      expect(actual).toBe(0.25);
+      expect(actual).toBe(0.125);
     });
   });
 });

@@ -11,7 +11,9 @@
 
 ## Features
 
-![Color palette extracted from an image using Auto Palette](./docs/assets/screenshot.webp)
+![Color palette extracted from an image using Auto Palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/screenshot.webp)
+
+> [!NOTE]
 > Photo by Pixabay from Pexels: https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
 
 ❯ Automatically extracts color palette from image<br>
@@ -63,11 +65,11 @@ for (const swatch of swatches) {
 
 ## Examples
 
-|                                                                      Source Image                                                                       |                                   Default Palette                                   |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
-|    [![Two pink and green orchid flowers](./docs/assets/pexels-132468.webp)](https://www.pexels.com/photo/two-pink-and-green-orchid-flowers-132468/)     | ![Color palette extracted from an image](./docs/assets/pexels-132468-default.webp)  |
-|          [![Closeup photo of doughnuts](./docs/assets/pexels-1191639.webp)](https://www.pexels.com/photo/closeup-photo-of-doughnuts-1191639/)           | ![Color palette extracted from an image](./docs/assets/pexels-1191639-default.webp) |
-| [![Closeup photo of perched king fishier](./docs/assets/pexels-326900.webp)](https://www.pexels.com/photo/close-up-photo-of-perched-kingfisher-326900/) | ![Color palette extracted from an image](./docs/assets/pexels-326900-default.webp)  |
+|                                                                                                          Source Image                                                                                                           |                                                             Default                                                             |                                                            Vivid                                                            |                                                            Muted                                                            |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|
+|               [![Yellow Pink and Violet Tulips](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-52508.webp)](https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/)                |  ![Default color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-52508-default.webp)  |  ![Vivid color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-52508-vivid.webp)  |  ![Muted color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-52508-muted.webp)  |
+|                [![Closeup photo of doughnuts](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1191639.webp)](https://www.pexels.com/photo/closeup-photo-of-doughnuts-1191639/)                 | ![Default color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1191639-default.webp) | ![Vivid color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1191639-vivid.webp) | ![Muted color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1191639-muted.webp) |
+| [![Close-up Photo of Assorted Colored Chalks](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1153895.webp))](https://www.pexels.com/photo/close-up-photo-of-assorted-colored-chalks-1153895/) | ![Default color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1153895-default.webp) | ![Vivid color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1153895-vivid.webp) | ![Muted color palette](https://raw.githubusercontent.com/t28hub/auto-palette-ts/main/docs/assets/pexels-1153895-muted.webp) |
 
 ## API
 

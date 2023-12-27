@@ -75,14 +75,13 @@ describe('Palette', () => {
     it('should find the swatches based on specified theme', () => {
       // Act
       const palette = new Palette(swatches);
-      const actual = palette.findSwatches(4, 'vivid');
+      const actual = palette.findSwatches(3, 'vivid');
 
       // Assert
-      expect(actual).toBeArrayOfSize(4);
+      expect(actual).toBeArrayOfSize(3);
       expect(actual[0].color.toString()).toEqual('#F42222');
-      expect(actual[1].color.toString()).toEqual('#007944');
-      expect(actual[2].color.toString()).toEqual('#00158F');
-      expect(actual[3].color.toString()).toEqual('#FFB400');
+      expect(actual[1].color.toString()).toEqual('#00158F');
+      expect(actual[2].color.toString()).toEqual('#FFB400');
     });
 
     it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {
@@ -124,8 +123,8 @@ describe('Palette', () => {
       expect(actual.isEmpty()).toBeFalsy();
       expect(actual.size()).toBeGreaterThan(16);
 
-      const swatches = actual.findSwatches(6);
-      expect(swatches).toBeArrayOfSize(6);
+      const swatches = actual.findSwatches(8);
+      expect(swatches).toBeArrayOfSize(8);
 
       for (const swatch of swatches) {
         console.info({

@@ -1,10 +1,15 @@
+import { Color } from '../color';
 import { normalize } from '../math';
 import { Swatch } from '../swatch';
 import { assertPositiveInteger } from '../utils';
 import { ThemeStrategy } from './strategy';
 
+const WEIGHT_CHROMA = 0.25;
+const WEIGHT_LIGHTNESS = 0.25;
+const WEIGHT_POPULATION = 0.5;
+
 /**
- * The population-based default theme strategy.
+ * The default theme strategy.
  */
 export class DefaultThemeStrategy implements ThemeStrategy {
   /**
@@ -28,6 +33,9 @@ export class DefaultThemeStrategy implements ThemeStrategy {
    * {@inheritDoc ThemeStrategy.score}
    */
   score(swatch: Swatch): number {
-    return normalize(swatch.population, 0, this.maxPopulation);
+    const chroma = normalize(swatch.color.chroma(), Color.MIN_CHROMA, Color.MAX_CHROMA);
+    const lightness = normalize(swatch.color.lightness(), Color.MIN_LIGHTNESS, Color.MAX_LIGHTNESS);
+    const population = normalize(swatch.population, 0, this.maxPopulation);
+    return WEIGHT_CHROMA * chroma + WEIGHT_LIGHTNESS * lightness + WEIGHT_POPULATION * population;
   }
 }

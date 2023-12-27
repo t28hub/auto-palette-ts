@@ -3,7 +3,7 @@ import { normalize } from '../math';
 import { Swatch } from '../swatch';
 import { ThemeStrategy } from './strategy';
 
-const MIN_CHROMA = 40;
+const MIN_CHROMA = 0.35;
 
 /**
  * The vivid theme strategy.
@@ -14,7 +14,8 @@ export const VividThemeStrategy: ThemeStrategy = {
    */
   filter(swatch: Swatch): boolean {
     const chroma = swatch.color.chroma();
-    return chroma >= MIN_CHROMA;
+    const normalized = normalize(chroma, Color.MIN_CHROMA, Color.MAX_CHROMA);
+    return normalized >= MIN_CHROMA;
   },
   /**
    * {@inheritDoc ThemeStrategy.score}
