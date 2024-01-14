@@ -22,7 +22,11 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    * @param distanceMeasure - The function to measure the distance between two points.
    * @see build
    */
-  private constructor(private readonly root: Node, points: P[], private readonly distanceMeasure: DistanceMeasure) {
+  private constructor(
+    private readonly root: Node,
+    points: P[],
+    private readonly distanceMeasure: DistanceMeasure,
+  ) {
     // Copy the points array to avoid side effects.
     this.points = Array.from(points);
   }

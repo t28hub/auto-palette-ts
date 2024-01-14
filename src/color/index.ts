@@ -21,7 +21,11 @@ export class Color {
    * @param a The a component of the color.
    * @param b The b component of the color.
    */
-  private constructor(private readonly l: number, private readonly a: number, private readonly b: number) {
+  private constructor(
+    private readonly l: number,
+    private readonly a: number,
+    private readonly b: number,
+  ) {
     assertFiniteNumber(l, `The l(${l}) must be a finite number`);
     assertFiniteNumber(a, `The a(${a}) must be a finite number`);
     assertFiniteNumber(b, `The b(${b}) must be a finite number`);

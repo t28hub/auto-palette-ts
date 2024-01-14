@@ -22,7 +22,10 @@ export class SwatchExtractor {
    * @param algorithm - The clustering algorithm to use.
    * @param filters - The color filter functions to use.
    */
-  constructor(private readonly algorithm: ClusteringAlgorithm<Point5>, filters: ColorFilter[]) {
+  constructor(
+    private readonly algorithm: ClusteringAlgorithm<Point5>,
+    filters: ColorFilter[],
+  ) {
     this.filter = composeFilters(...filters);
   }
 

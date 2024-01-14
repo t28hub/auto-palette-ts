@@ -17,7 +17,10 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    * @param points The points to be searched.
    * @param distanceMeasure The distance measure to measure the distance between two points.
    */
-  constructor(points: P[], private readonly distanceMeasure: DistanceMeasure) {
+  constructor(
+    points: P[],
+    private readonly distanceMeasure: DistanceMeasure,
+  ) {
     assert(points.length > 0, 'The provided points array is empty');
     // Copy the points array to avoid side effects.
     this.points = [...points];

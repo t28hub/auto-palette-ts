@@ -113,7 +113,7 @@ export function fromRGB(rgb: RGB): HSL {
   const min = Math.min(r, g, b);
   const delta = max - min;
 
-  let hue;
+  let hue: number;
   if (delta === 0) {
     hue = 0;
   } else if (max === r) {
