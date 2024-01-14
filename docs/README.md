@@ -119,9 +119,10 @@ ___
 
 ### Theme
 
-Ƭ **Theme**: ``"vivid"`` \| ``"muted"`` \| ``"light"`` \| ``"dark"``
+Ƭ **Theme**: ``"basic"`` \| ``"vivid"`` \| ``"muted"`` \| ``"light"`` \| ``"dark"``
 
 Theme type represents a color theme.
+- basic: The theme with basic colors.
 - vivid: The theme with vivid colors.
 - muted: The theme with muted colors.
 - light: The theme with light colors.

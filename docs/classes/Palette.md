@@ -83,10 +83,10 @@ Find the best swatches from the palette.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `n` | `number` | The number of swatches to find. |
-| `theme?` | [`Theme`](../README.md#theme) | The theme of the swatches. |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `n` | `number` | `undefined` | The number of swatches to find. |
+| `theme` | [`Theme`](../README.md#theme) | `'basic'` | The theme of the swatches. Default is basic. |
 
 #### Returns
 

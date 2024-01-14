@@ -49,5 +49,4 @@ The color filter functions. Default is [opacityFilter()].
 
 **`See`**
 
- - [opacityFilter](../README.md#opacityfilter)
- - [luminanceFilter](../README.md#luminancefilter)
+[opacityFilter](../README.md#opacityfilter)
