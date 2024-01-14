@@ -45,7 +45,7 @@ export class Color {
    * @returns True if the color is light, false otherwise.
    * @see {@link Color.isDark}
    */
-  isLight() {
+  isLight(): boolean {
     return this.l > 50;
   }
 
@@ -55,7 +55,7 @@ export class Color {
    * @returns True if the color is dark, false otherwise.
    * @see {@link Color.isLight}
    */
-  isDark() {
+  isDark(): boolean {
     return !this.isLight();
   }
 
@@ -66,7 +66,7 @@ export class Color {
    * @see {@link Color.chroma}
    * @see {@link Color.hue}
    */
-  lightness() {
+  lightness(): number {
     return this.l;
   }
 
@@ -77,7 +77,7 @@ export class Color {
    * @see {@link Color.lightness}
    * @see {@link Color.hue}
    */
-  chroma() {
+  chroma(): number {
     return Math.sqrt(this.a ** 2 + this.b ** 2);
   }
 
@@ -88,7 +88,7 @@ export class Color {
    * @see {@link Color.lightness}
    * @see {@link Color.chroma}
    */
-  hue() {
+  hue(): number {
     return radianToDegree(Math.atan2(this.b, this.a));
   }
 
@@ -109,7 +109,7 @@ export class Color {
    * @returns The string representation of the color.
    * @see {@link Color.fromString}
    */
-  toString() {
+  toString(): string {
     const rgb = this.toRGB();
     return RGBSpace.toHexString(rgb);
   }
