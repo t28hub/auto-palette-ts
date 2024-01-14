@@ -112,7 +112,7 @@ interface Options {
 
 Finds the best `n` swatches in the palette.  
 The “best” swatches are determined based on their population and optionally a theme.
-The theme can be `vivid`, `muted`, `light` or `dark`.
+The theme can be `basic`, `vivid`, `muted`, `light` or `dark`. Default is `basic`.
 
 ```ts
 const swatches = palette.findSwatches(5, 'light');
