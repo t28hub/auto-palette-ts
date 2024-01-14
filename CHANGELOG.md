@@ -1,3 +1,15 @@
+## [1.2.0](https://github.com/t28hub/auto-palette-ts/compare/v1.1.0...v1.2.0) (2024-01-14)
+
+
+### Features
+
+* change default Theme from undefined to 'basic' and refactor ThemeStrategy implementation ([1a42357](https://github.com/t28hub/auto-palette-ts/commit/1a423571a5e73953b7b9c9e1abd52b06f39b6c7f))
+
+
+### Bug Fixes
+
+* correct conditions for 'if' keyword in .github/workflows/build.yml ([12a24d6](https://github.com/t28hub/auto-palette-ts/commit/12a24d69288885aeecac795be4c30c42d0677e35))
+
 ## [1.1.0](https://github.com/t28hub/auto-palette-ts/compare/v1.0.1...v1.1.0) (2023-12-27)
 
 
