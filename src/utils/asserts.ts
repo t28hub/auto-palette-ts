@@ -71,3 +71,17 @@ export function assertPositiveInteger(value: unknown, message: string): asserts 
   assertInteger(value, message);
   assert(value > 0, message);
 }
+
+/**
+ * Assert the given value is a number in the range [min, max].
+ *
+ * @param value - The value to check.
+ * @param min - The minimum value.
+ * @param max - The maximum value.
+ * @param message - The error message.
+ * @throws {AssertionError} if the value is not a number in the range [min, max].
+ */
+export function assertRange(value: unknown, min: number, max: number, message: string): asserts value is number {
+  assertFiniteNumber(value, message);
+  assert(min <= value && value <= max, message);
+}

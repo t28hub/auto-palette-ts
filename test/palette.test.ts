@@ -1,4 +1,4 @@
-import { Color, Options, Palette, Swatch, luminanceFilter, opacityFilter } from 'auto-palette';
+import { Color, Options, Palette, Swatch, Theme, luminanceFilter, opacityFilter } from 'auto-palette';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { AssertionError } from '@internal/utils';
@@ -72,16 +72,20 @@ describe('Palette', () => {
       expect(actual).toContainAllValues(swatches);
     });
 
-    it('should find the swatches based on specified theme', () => {
+    it.each([
+      { theme: 'basic', expected: ['#F42222', '#007944', '#FFB400'] },
+      { theme: 'vivid', expected: ['#F42222', '#00158F', '#FFB400'] },
+      { theme: 'muted', expected: ['#FFFFFF', '#00158F', '#000000'] },
+      { theme: 'light', expected: ['#F42222', '#FFFFFF', '#FFB400'] },
+      { theme: 'dark', expected: ['#007944', '#00158F', '#000000'] },
+    ])('should find the swatches based on the specified theme($theme)', ({ theme, expected }) => {
       // Act
       const palette = new Palette(swatches);
-      const actual = palette.findSwatches(3, 'vivid');
+      const actual = palette.findSwatches(3, theme as Theme);
 
       // Assert
       expect(actual).toBeArrayOfSize(3);
-      expect(actual[0].color.toString()).toEqual('#F42222');
-      expect(actual[1].color.toString()).toEqual('#00158F');
-      expect(actual[2].color.toString()).toEqual('#FFB400');
+      expect(actual.map((swatch) => swatch.color.toString())).toEqual(expected);
     });
 
     it('should return all swatches if the specified number exceeds the number of swatches in the palette', () => {

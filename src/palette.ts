@@ -16,7 +16,16 @@ import {
   squaredEuclidean,
 } from './math';
 import { Swatch } from './swatch';
-import { Theme, ThemeStrategy, defaultThemeStrategy, getThemeStrategy } from './theme';
+import {
+  BasicThemeStrategy,
+  DarkThemeStrategy,
+  LightThemeStrategy,
+  MutedThemeStrategy,
+  Theme,
+  ThemeStrategy,
+  VividThemeStrategy,
+  visit,
+} from './theme';
 import { assert, assertPositiveInteger } from './utils';
 
 /**
@@ -118,24 +127,17 @@ export class Palette {
    * Find the best swatches from the palette.
    *
    * @param n The number of swatches to find.
-   * @param theme The theme of the swatches.
+   * @param theme The theme of the swatches. Default is basic.
    * @return The best swatches. If the palette is empty, an empty array is returned.
    * @throws {TypeError} If the number of swatches to find is not an integer or less than 0.
    */
-  findSwatches(n: number, theme?: Theme): Swatch[] {
+  findSwatches(n: number, theme: Theme = 'basic'): Swatch[] {
     assertPositiveInteger(n, `The number of swatches to find must be a positive integer: ${n}`);
     if (n >= this.swatches.length) {
       return [...this.swatches];
     }
 
-    let themeStrategy: ThemeStrategy;
-    if (theme) {
-      themeStrategy = getThemeStrategy(theme);
-    } else {
-      // The swatch at the first index is the dominant swatch and has the largest population.
-      themeStrategy = defaultThemeStrategy(this.swatches[0].population);
-    }
-
+    const themeStrategy = this.createThemeStrategy(theme);
     const candidates = this.swatches.filter((swatch: Swatch) => themeStrategy.filter(swatch));
     if (candidates.length === 0) {
       return [];
@@ -152,6 +154,31 @@ export class Palette {
     return sampledColors.map((color: Point3): Swatch => {
       return Palette.findOptimalSwatch(candidates, color, neighborSearch, coefficients, themeStrategy);
     });
+  }
+
+  private createThemeStrategy(theme: Theme): ThemeStrategy {
+    return visit<Swatch, ThemeStrategy>(
+      theme,
+      {
+        visitBasic(swatch: Swatch): ThemeStrategy {
+          // The swatch at the first index is the dominant swatch and has the largest population.
+          return new BasicThemeStrategy(swatch.population);
+        },
+        visitVivid(_swatch: Swatch): ThemeStrategy {
+          return new VividThemeStrategy();
+        },
+        visitMuted(_swatch: Swatch): ThemeStrategy {
+          return new MutedThemeStrategy();
+        },
+        visitLight(_swatch: Swatch): ThemeStrategy {
+          return new LightThemeStrategy();
+        },
+        visitDark(_swatch: Swatch): ThemeStrategy {
+          return new DarkThemeStrategy();
+        },
+      },
+      this.swatches[0],
+    );
   }
 
   private static findOptimalSwatch(

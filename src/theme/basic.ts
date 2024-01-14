@@ -4,19 +4,26 @@ import { Swatch } from '../swatch';
 import { assertPositiveInteger } from '../utils';
 import { ThemeStrategy } from './strategy';
 
+// The `MIN_LIGHTNESS` and `MAX_LIGHTNESS` values are derived from the following paper:
+// "Colorgorical: Creating discriminable and preferable color palettes for information visualization"
+// The paper can be found at the following URL:
+// http://vrl.cs.brown.edu/color/pdf/colorgorical.pdf?v=5dd92af6d1e6c5584236275adc769e82
+const MIN_LIGHTNESS = 25;
+const MAX_LIGHTNESS = 85;
+
 const WEIGHT_CHROMA = 0.25;
 const WEIGHT_LIGHTNESS = 0.25;
 const WEIGHT_POPULATION = 0.5;
 
 /**
- * The default theme strategy.
+ * The ThemeStrategy implementation for the basic theme.
  */
-export class DefaultThemeStrategy implements ThemeStrategy {
+export class BasicThemeStrategy implements ThemeStrategy {
   /**
    * Create a new DefaultThemeStrategy instance.
    *
    * @param maxPopulation - The maximum population of the palette.
-   * @throws {TypeError} If the maximum population is not a positive integer.
+   * @throws {AssertionError} If the maxPopulation is not a positive integer.
    */
   constructor(private readonly maxPopulation: number) {
     assertPositiveInteger(maxPopulation, `The maximum population must be a positive integer: ${maxPopulation}`);
@@ -25,8 +32,9 @@ export class DefaultThemeStrategy implements ThemeStrategy {
   /**
    * {@inheritDoc ThemeStrategy.filter}
    */
-  filter(_swatch: Swatch): boolean {
-    return true;
+  filter(swatch: Swatch): boolean {
+    const lightness = swatch.color.lightness();
+    return lightness >= MIN_LIGHTNESS && lightness <= MAX_LIGHTNESS;
   }
 
   /**

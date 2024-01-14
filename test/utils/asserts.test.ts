@@ -5,6 +5,7 @@ import {
   assertFiniteNumber,
   assertInteger,
   assertPositiveInteger,
+  assertRange,
 } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
@@ -147,6 +148,32 @@ describe('asserts', () => {
       expect(() => {
         // Act
         assertPositiveInteger(1, 'The value is a positive integer');
+      }).not.toThrowError();
+    });
+  });
+
+  describe('assertRange', () => {
+    it('should throw an AssertionError if the value is not a number', () => {
+      // Assert
+      expect(() => {
+        // Act
+        assertRange('1', 0, 10, 'The value is not a number');
+      }).toThrowError(new AssertionError('The value is not a number'));
+    });
+
+    it('should throw an AssertionError if the value is not in the range', () => {
+      // Assert
+      expect(() => {
+        // Act
+        assertRange(11, 0, 10, 'The value is not in the range');
+      }).toThrowError(new AssertionError('The value is not in the range'));
+    });
+
+    it('should not throw an AssertionError if the value is in the range', () => {
+      // Assert
+      expect(() => {
+        // Act
+        assertRange(1, 0, 10, 'The value is in the range');
       }).not.toThrowError();
     });
   });
