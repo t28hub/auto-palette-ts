@@ -45,7 +45,7 @@ ___
 
 • `Optional` `Readonly` **filters**: [`ColorFilter`](../README.md#colorfilter)[]
 
-The color filter functions. Default is [opacityFilter(), luminanceFilter()].
+The color filter functions. Default is [opacityFilter()].
 
 **`See`**
 

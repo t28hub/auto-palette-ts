@@ -1,5 +1,5 @@
 import { SwatchExtractor } from './extractor';
-import { ColorFilter, luminanceFilter, opacityFilter } from './filter';
+import { ColorFilter, opacityFilter } from './filter';
 import { ImageSource, createImageData } from './image';
 import {
   DBSCAN,
@@ -60,10 +60,9 @@ export interface Options {
   readonly maxSwatches?: number;
 
   /**
-   * The color filter functions. Default is [opacityFilter(), luminanceFilter()].
+   * The color filter functions. Default is [opacityFilter()].
    *
    * @see {@link opacityFilter}
-   * @see {@link luminanceFilter}
    */
   readonly filters?: ColorFilter[];
 }
@@ -81,7 +80,7 @@ const DEFAULT_OPTIONS: Required<Options> = {
   algorithm: 'dbscan',
   samplingRate: 1.0,
   maxSwatches: 256,
-  filters: [opacityFilter(), luminanceFilter()],
+  filters: [opacityFilter()],
 };
 
 /**

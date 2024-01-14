@@ -103,7 +103,7 @@ interface Options {
   samplingRate?: number;
   // The maximum number of swatches to extract. Default is 256.
   maxSwatches?: number;
-  // The color filters to apply. Default is [opacityFilter(), luminanceFilter()].
+  // The color filters to apply. Default is [opacityFilter()].
   filters?: ColorFilter[];
 }
 ```

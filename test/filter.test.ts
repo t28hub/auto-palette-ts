@@ -38,13 +38,13 @@ describe('filter', () => {
     );
 
     it.each([-1, 1.1])(
-      'should throw a RangeError if the threshold(%d) is not within the range [0.0, 1.0]',
+      'should throw an AssertionError if the threshold(%d) is not within the range [0.0, 1.0]',
       (threshold) => {
         // Assert
         expect(() => {
           // Act
           opacityFilter(threshold);
-        }).toThrowError(RangeError);
+        }).toThrowError(AssertionError);
       },
     );
   });
@@ -93,13 +93,13 @@ describe('filter', () => {
       { minThreshold: 1.1, maxThreshold: 1.0 },
       { minThreshold: 0.0, maxThreshold: 1.1 },
     ])(
-      'should throw a RangeError if the minThreshold(%d) or maxThreshold(%d) is not within the range [0.0, 1.0]',
+      'should throw an AssertionError if the minThreshold(%d) or maxThreshold(%d) is not within the range [0.0, 1.0]',
       ({ minThreshold, maxThreshold }) => {
         // Assert
         expect(() => {
           // Act
           luminanceFilter(minThreshold, maxThreshold);
-        }).toThrowError(RangeError);
+        }).toThrowError(AssertionError);
       },
     );
 
