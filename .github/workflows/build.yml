@@ -49,14 +49,14 @@ jobs:
         run: pnpm build
 
       - name: Upload the built module files
-        if: matrix.matrix.node == '20.x'
+        if: matrix.node == '20.x'
         uses: actions/upload-artifact@v4
         with:
           name: modules
           path: dist/
 
       - name: Upload the coverage reports to Codecov
-        if: matrix.matrix.node == '20.x'
+        if: matrix.node == '20.x'
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
