@@ -10,7 +10,7 @@ devDependencies:
     version: 1.4.1
   '@codspeed/vitest-plugin':
     specifier: ^2.3.1
-    version: 2.3.1(vite@5.0.10)(vitest@1.2.0)
+    version: 2.3.1(vite@5.0.11)(vitest@1.2.0)
   '@commitlint/cli':
     specifier: ^18.4.3
     version: 18.4.4(@types/node@20.11.0)(typescript@5.3.3)
@@ -88,10 +88,10 @@ devDependencies:
     version: 5.3.3
   vite:
     specifier: ^5.0.10
-    version: 5.0.10(@types/node@20.11.0)
+    version: 5.0.11(@types/node@20.11.0)
   vite-plugin-dts:
     specifier: ^3.7.0
-    version: 3.7.1(@types/node@20.11.0)(typescript@5.3.3)(vite@5.0.10)
+    version: 3.7.1(@types/node@20.11.0)(typescript@5.3.3)(vite@5.0.11)
   vitest:
     specifier: ^1.1.0
     version: 1.2.0(@types/node@20.11.0)(@vitest/ui@1.2.0)(jsdom@23.2.0)
@@ -237,14 +237,14 @@ packages:
       node-gyp-build: 4.7.1
     dev: true
 
-  /@codspeed/vitest-plugin@2.3.1(vite@5.0.10)(vitest@1.2.0):
+  /@codspeed/vitest-plugin@2.3.1(vite@5.0.11)(vitest@1.2.0):
     resolution: {integrity: sha512-/e4G2B/onX/hG/EjUU/NpDxnIryeTDamVRTBeWfgQDoex3g7GDzTwoQktaU5l/Asw3ZjEErQg+oQVToQ6jYZlA==}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
       vitest: '>=1.0.0-beta.4 || >=1'
     dependencies:
       '@codspeed/core': 2.3.1
-      vite: 5.0.10(@types/node@20.11.0)
+      vite: 5.0.11(@types/node@20.11.0)
       vitest: 1.2.0(@types/node@20.11.0)(@vitest/ui@1.2.0)(jsdom@23.2.0)
     dev: true
 
@@ -5519,7 +5519,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.10(@types/node@20.11.0)
+      vite: 5.0.11(@types/node@20.11.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -5531,7 +5531,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-dts@3.7.1(@types/node@20.11.0)(typescript@5.3.3)(vite@5.0.10):
+  /vite-plugin-dts@3.7.1(@types/node@20.11.0)(typescript@5.3.3)(vite@5.0.11):
     resolution: {integrity: sha512-VZJckNFpVfRAkmOxhGT5OgTUVWVXxkNQqLpBUuiNGAr9HbtvmvsPLo2JB3Xhn+o/Z9+CT6YZfYa4bX9SGR5hNw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -5547,7 +5547,7 @@ packages:
       debug: 4.3.4
       kolorist: 1.8.0
       typescript: 5.3.3
-      vite: 5.0.10(@types/node@20.11.0)
+      vite: 5.0.11(@types/node@20.11.0)
       vue-tsc: 1.8.26(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
@@ -5555,8 +5555,8 @@ packages:
       - supports-color
     dev: true
 
-  /vite@5.0.10(@types/node@20.11.0):
-    resolution: {integrity: sha512-2P8J7WWgmc355HUMlFrwofacvr98DAjoE52BfdbwQtyLH06XKwaL/FMnmKM2crF0iX4MpmMKoDlNCB1ok7zHCw==}
+  /vite@5.0.11(@types/node@20.11.0):
+    resolution: {integrity: sha512-XBMnDjZcNAw/G1gEiskiM1v6yzM4GE5aMGvhWTlHAYYhxb7S3/V1s3m2LDHa8Vh6yIWYYB0iJwsEaS523c4oYA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5637,7 +5637,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.8.1
-      vite: 5.0.10(@types/node@20.11.0)
+      vite: 5.0.11(@types/node@20.11.0)
       vite-node: 1.2.0(@types/node@20.11.0)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
