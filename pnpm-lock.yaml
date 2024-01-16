@@ -43,7 +43,7 @@ devDependencies:
     version: 20.11.0
   '@vitest/coverage-v8':
     specifier: ^1.1.0
-    version: 1.1.0(vitest@1.2.0)
+    version: 1.2.0(vitest@1.2.0)
   '@vitest/ui':
     specifier: ^1.1.0
     version: 1.2.0(vitest@1.2.0)
@@ -1519,8 +1519,8 @@ packages:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
 
-  /@vitest/coverage-v8@1.1.0(vitest@1.2.0):
-    resolution: {integrity: sha512-kHQRk70vTdXAyQY2C0vKOHPyQD/R6IUzcGdO4vCuyr4alE5Yg1+Sk2jSdjlIrTTXdcNEs+ReWVM09mmSFJpzyQ==}
+  /@vitest/coverage-v8@1.2.0(vitest@1.2.0):
+    resolution: {integrity: sha512-YvX8ULTUm1+zkvkl14IqXYGxE1h13OXKPoDsxazARKlp4YLrP28hHEBdplaU7ZTN/Yn6zy6Z3JadWNRJwcmyrQ==}
     peerDependencies:
       vitest: ^1.0.0
     dependencies:
