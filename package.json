@@ -63,7 +63,7 @@
     "release:check": "pnpx semantic-release --dry-run --no-ci"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.1",
+    "@biomejs/biome": "1.5.2",
     "@codspeed/vitest-plugin": "^2.3.1",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
