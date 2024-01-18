@@ -10,7 +10,7 @@ import { MAX_RGB, clampValue } from './rgb';
  * @see {@link MAX_X}
  * @see {@link clampX}
  */
-export const MIN_X = 0.0;
+const MIN_X = 0.0;
 
 /**
  * The maximum value of the 'x' component.
@@ -18,7 +18,7 @@ export const MIN_X = 0.0;
  * @see {@link MIN_X}
  * @see {@link clampX}
  */
-export const MAX_X = 0.950456;
+const MAX_X = 0.950456;
 
 /**
  * The minimum value of the 'y' component.
@@ -26,7 +26,7 @@ export const MAX_X = 0.950456;
  * @see {@link MAX_Y}
  * @see {@link clampY}
  */
-export const MIN_Y = 0.0;
+const MIN_Y = 0.0;
 
 /**
  * The maximum value of the 'y' component.
@@ -34,7 +34,7 @@ export const MIN_Y = 0.0;
  * @see {@link MIN_Y}
  * @see {@link clampY}
  */
-export const MAX_Y = 1.0;
+const MAX_Y = 1.0;
 
 /**
  * The minimum value of the 'z' component.
@@ -42,7 +42,7 @@ export const MAX_Y = 1.0;
  * @see {@link MAX_Z}
  * @see {@link clampZ}
  */
-export const MIN_Z = 0.0;
+const MIN_Z = 0.0;
 
 /**
  * The maximum value of the 'z' component.
@@ -50,7 +50,7 @@ export const MIN_Z = 0.0;
  * @see {@link MIN_Z}
  * @see {@link clampZ}
  */
-export const MAX_Z = 1.088644;
+const MAX_Z = 1.088644;
 
 /**
  * Clamp the 'x' component of the color.

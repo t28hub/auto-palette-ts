@@ -10,7 +10,7 @@ import { MAX_RGB, clampValue } from './rgb';
  * @see {@link MAX_HUE}
  * @see {@link normalizeHue}
  */
-export const MIN_HUE = 0.0;
+const MIN_HUE = 0.0;
 
 /**
  * The maximum value of the 'hue' component.
@@ -18,7 +18,7 @@ export const MIN_HUE = 0.0;
  * @see {@link MIN_HUE}
  * @see {@link normalizeHue}
  */
-export const MAX_HUE = 360.0;
+const MAX_HUE = 360.0;
 
 /**
  * The minimum value of the 'saturation' component.
@@ -26,7 +26,7 @@ export const MAX_HUE = 360.0;
  * @see {@link MAX_SATURATION}
  * @see {@link clampSaturation}
  */
-export const MIN_SATURATION = 0.0;
+const MIN_SATURATION = 0.0;
 
 /**
  * The maximum value of the 'saturation' component.
@@ -34,7 +34,7 @@ export const MIN_SATURATION = 0.0;
  * @see {@link MIN_SATURATION}
  * @see {@link clampSaturation}
  */
-export const MAX_SATURATION = 1.0;
+const MAX_SATURATION = 1.0;
 
 /**
  * The minimum value of the 'lightness' component.
@@ -42,7 +42,7 @@ export const MAX_SATURATION = 1.0;
  * @see {@link MAX_LIGHTNESS}
  * @see {@link clampLightness}
  */
-export const MIN_LIGHTNESS = 0.0;
+const MIN_LIGHTNESS = 0.0;
 
 /**
  * The maximum value of the 'lightness' component.
@@ -50,7 +50,7 @@ export const MIN_LIGHTNESS = 0.0;
  * @see {@link MIN_LIGHTNESS}
  * @see {@link clampLightness}
  */
-export const MAX_LIGHTNESS = 1.0;
+const MAX_LIGHTNESS = 1.0;
 
 /**
  * Normalize the hue component of the color.

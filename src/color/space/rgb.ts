@@ -4,11 +4,17 @@ import { RGB } from '../types';
 
 /**
  * The minimum value of the RGB component.
+ *
+ * @see {@link MAX_RGB}
+ * @see {@link clampValue}
  */
-export const MIN_RGB = 0x00;
+const MIN_RGB = 0x00;
 
 /**
  * The maximum value of the RGB component.
+ *
+ * @see {@link MIN_RGB}
+ * @see {@link clampValue}
  */
 export const MAX_RGB = 0xff;
 

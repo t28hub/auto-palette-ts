@@ -7,6 +7,7 @@ import { D65, clampX, clampY, clampZ } from './xyz';
 /**
  * The minimum value of the 'l' component.
  *
+ * @public
  * @see {@link MAX_L}
  * @see {@link clampL}
  */
@@ -15,6 +16,7 @@ export const MIN_L = 0;
 /**
  * The maximum value of the 'l' component.
  *
+ * @public
  * @see {@link MIN_L}
  * @see {@link clampL}
  */
@@ -23,6 +25,7 @@ export const MAX_L = 100;
 /**
  * The minimum value of the 'a' component.
  *
+ * @public
  * @see {@link MAX_A}
  * @see {@link clampA}
  */
@@ -31,6 +34,7 @@ export const MIN_A = -128;
 /**
  * The maximum value of the 'a' component.
  *
+ * @public
  * @see {@link MIN_A}
  * @see {@link clampA}
  */
@@ -39,6 +43,7 @@ export const MAX_A = 128;
 /**
  * The minimum value of the 'b' component.
  *
+ * @public
  * @see {@link MAX_B}
  * @see {@link clampB}
  */
@@ -47,6 +52,7 @@ export const MIN_B = -128;
 /**
  * The maximum value of the 'b' component.
  *
+ * @public
  * @see {@link MIN_B}
  * @see {@link clampB}
  */

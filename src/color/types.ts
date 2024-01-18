@@ -86,7 +86,7 @@ export type ColorType = RGB | HSL | LAB | XYZ;
 /**
  * AlphaChannel type represents a color with alpha channel.
  */
-export type AlphaChannel<T> = T & {
+type AlphaChannel<T> = T & {
   /**
    * The alpha value in [0, 255].
    */
