@@ -1,37 +1,44 @@
-import { Color, Options, Palette, Swatch, Theme, luminanceFilter, opacityFilter } from 'auto-palette';
+import { Color, Options, Palette, Theme, luminanceFilter, opacityFilter } from 'auto-palette';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { NamedSwatch } from '@internal/swatch';
 import { AssertionError } from '@internal/utils';
 import fixtures from './fixtures';
 import { loadImageData } from './utils';
 
-const swatches: Swatch[] = [
+const swatches: NamedSwatch[] = [
   {
+    name: 'red',
     color: Color.fromString('#F42222'),
     population: 3529,
     position: { x: 107, y: 15 },
   },
   {
+    name: 'white',
     color: Color.fromString('#FFFFFF'),
     population: 1781,
     position: { x: 89, y: 29 },
   },
   {
+    name: 'seagreen',
     color: Color.fromString('#007944'),
     population: 5147,
     position: { x: 65, y: 53 },
   },
   {
+    name: 'navy',
     color: Color.fromString('#00158F'),
     population: 3528,
     position: { x: 107, y: 90 },
   },
   {
+    name: 'orange',
     color: Color.fromString('#FFB400'),
     population: 799,
     position: { x: 27, y: 53 },
   },
   {
+    name: 'black',
     color: Color.fromString('#000000'),
     population: 1481,
     position: { x: 15, y: 52 },
@@ -132,6 +139,7 @@ describe('Palette', () => {
 
       for (const swatch of swatches) {
         console.info({
+          name: swatch.name,
           color: swatch.color.toString(),
           population: swatch.population,
           coordinate: swatch.position,
@@ -160,6 +168,7 @@ describe('Palette', () => {
 
         for (const swatch of swatches) {
           console.info({
+            name: swatch.name,
             color: swatch.color.toString(),
             population: swatch.population,
             coordinate: swatch.position,

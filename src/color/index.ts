@@ -6,6 +6,7 @@ import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
 import { HSL, LAB, RGB } from './types';
 
 export * from './difference';
+export * from './name';
 export * from './space';
 export * from './types';
 

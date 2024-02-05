@@ -17,7 +17,7 @@
 > Photo by Pixabay from Pexels: https://www.pexels.com/photo/yellow-pink-and-violet-tulips-52508/
 
 ❯ Automatically extracts color palette from image<br>
-❯ Provides detailed color information color, position and population<br>
+❯ Provides detailed color information color, name, position and population<br>
 ❯ Supports multiple color extraction algorithms (`dbscan`, `kmeans` )<br>
 ❯ Supports multiple image sources (`HTMLImageElement`, `HTMLCanvasElement`, `ImageData`)<br>
 ❯ Supports both Browser and Node.js<br>
@@ -56,6 +56,7 @@ const palette = Palette.extract(image);
 const swatches = palette.findSwatches(8, 'vivid');
 for (const swatch of swatches) {
   console.log({
+    name: swatch.name,              // The similar color name of the swatch
     color: swatch.color.toString(), // The color of the swatch
     position: swatch.position,      // The position of the swatch in the image
     population: swatch.population,  // The pixel count of the swatch

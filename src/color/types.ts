@@ -1,3 +1,5 @@
+import { Named } from '../utils';
+
 /**
  * HSL type represents a color in HSL color space.
  */
@@ -82,6 +84,16 @@ export type XYZ = {
  * Color type represents a color in any color space.
  */
 export type ColorType = RGB | HSL | LAB | XYZ;
+
+/**
+ * NamedColor type represents a color with a name.
+ */
+export type NamedColor<T extends ColorType> = Named<{
+  /**
+   * The color value.
+   */
+  readonly color: T;
+}>;
 
 /**
  * AlphaChannel type represents a color with alpha channel.

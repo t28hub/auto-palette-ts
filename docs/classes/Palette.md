@@ -77,7 +77,7 @@ ___
 
 ### findSwatches
 
-▸ **findSwatches**(`n`, `theme?`): [`Swatch`](../interfaces/Swatch.md)[]
+▸ **findSwatches**(`n`, `theme?`): `NamedSwatch`[]
 
 Find the best swatches from the palette.
 
@@ -90,7 +90,7 @@ Find the best swatches from the palette.
 
 #### Returns
 
-[`Swatch`](../interfaces/Swatch.md)[]
+`NamedSwatch`[]
 
 The best swatches. If the palette is empty, an empty array is returned.
 

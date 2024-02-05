@@ -43,6 +43,8 @@ ___
 
 Ƭ **ColorDeltaMeasure**\<`T`\>: (`color1`: `T`, `color2`: `T`) => [`ColorDelta`](README.md#colordelta)
 
+ColorDeltaMeasure calculates the color difference between two colors.
+
 #### Type parameters
 
 | Name | Type | Description |
@@ -52,8 +54,6 @@ ___
 #### Type declaration
 
 ▸ (`color1`, `color2`): [`ColorDelta`](README.md#colordelta)
-
-ColorDeltaMeasure calculates the color difference between two colors.
 
 ##### Parameters
 
@@ -66,19 +66,17 @@ ColorDeltaMeasure calculates the color difference between two colors.
 
 [`ColorDelta`](README.md#colordelta)
 
-The color difference between the two colors.
-
 ___
 
 ### ColorFilter
 
 Ƭ **ColorFilter**: (`color`: `RGBA`) => `boolean`
 
+Color filter function that filters colors.
+
 #### Type declaration
 
 ▸ (`color`): `boolean`
-
-Color filter function that filters colors.
 
 ##### Parameters
 
@@ -89,8 +87,6 @@ Color filter function that filters colors.
 ##### Returns
 
 `boolean`
-
-True if the color passes the filter, false otherwise.
 
 ___
 

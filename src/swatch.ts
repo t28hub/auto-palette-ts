@@ -1,4 +1,5 @@
 import { Color } from './color';
+import { Named } from './utils';
 
 /**
  * Swatch interface represents a color swatch.
@@ -29,3 +30,8 @@ export interface Swatch {
    */
   readonly population: number;
 }
+
+/**
+ * NamedSwatch type represents a swatch with a name.
+ */
+export type NamedSwatch = Named<Swatch>;

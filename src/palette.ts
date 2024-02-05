@@ -1,3 +1,4 @@
+import { Color, retrieveColorNameFinder } from './color';
 import { SwatchExtractor } from './extractor';
 import { ColorFilter, opacityFilter } from './filter';
 import { ImageSource, createImageData } from './image';
@@ -15,7 +16,7 @@ import {
   euclidean,
   squaredEuclidean,
 } from './math';
-import { Swatch } from './swatch';
+import { NamedSwatch, Swatch } from './swatch';
 import {
   BasicThemeStrategy,
   DarkThemeStrategy,
@@ -88,7 +89,6 @@ const DEFAULT_OPTIONS: Required<Options> = {
  */
 export class Palette {
   private readonly swatches: Swatch[];
-
   private readonly samplingStrategy: SamplingStrategy<Point3>;
 
   /**
@@ -130,10 +130,13 @@ export class Palette {
    * @return The best swatches. If the palette is empty, an empty array is returned.
    * @throws {TypeError} If the number of swatches to find is not an integer or less than 0.
    */
-  findSwatches(n: number, theme: Theme = 'basic'): Swatch[] {
+  findSwatches(n: number, theme: Theme = 'basic'): NamedSwatch[] {
     assertPositiveInteger(n, `The number of swatches to find must be a positive integer: ${n}`);
     if (n >= this.swatches.length) {
-      return [...this.swatches];
+      return this.swatches.map((swatch: Swatch): NamedSwatch => {
+        const name = Palette.findColorName(swatch.color);
+        return { name, ...swatch };
+      });
     }
 
     const themeStrategy = this.createThemeStrategy(theme);
@@ -150,8 +153,10 @@ export class Palette {
     const neighborSearch = KDTreeSearch.build(colors, euclidean);
     const coefficients = new Array<number>(colors.length).fill(MAX_SCORE_COEFFICIENT);
     const sampledColors = this.samplingStrategy.sample(colors, n);
-    return sampledColors.map((color: Point3): Swatch => {
-      return Palette.findOptimalSwatch(candidates, color, neighborSearch, coefficients, themeStrategy);
+    return sampledColors.map((color: Point3): NamedSwatch => {
+      const swatch = Palette.findOptimalSwatch(candidates, color, neighborSearch, coefficients, themeStrategy);
+      const name = Palette.findColorName(swatch.color);
+      return { name, ...swatch };
     });
   }
 
@@ -252,5 +257,16 @@ export class Palette {
     }
     const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
     return new SwatchExtractor(dbscan, [...filters]);
+  }
+
+  /**
+   * Find the most similar color name to the given color.
+   *
+   * @param color - The color to find.
+   * @returns The most similar color name.
+   */
+  private static findColorName(color: Color): string {
+    const lab = color.toLAB();
+    return retrieveColorNameFinder().find(lab);
   }
 }
