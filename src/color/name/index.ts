@@ -1,16 +1,19 @@
+import { LFUCache } from '../../utils';
 import { COLORS } from './colors';
-import { ColorNameFinder } from './finder';
+import { ColorNames } from './names';
 
-let colorNameFinder: ColorNameFinder | null = null;
+const CACHE_CAPACITY = 64;
+
+let colorNameFinder: ColorNames | null = null;
 
 /**
- * Retrieve the color name finder instance.
+ * Retrieve the ColorNames instance.
  *
- * @returns The color name finder instance.
+ * @returns The ColorNames instance.
  */
-export function retrieveColorNameFinder(): ColorNameFinder {
+export function retrieveColorNames(): ColorNames {
   if (!colorNameFinder) {
-    colorNameFinder = ColorNameFinder.build(COLORS);
+    colorNameFinder = new ColorNames(COLORS, new LFUCache(CACHE_CAPACITY));
   }
   return colorNameFinder;
 }

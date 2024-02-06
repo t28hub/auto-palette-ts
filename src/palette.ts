@@ -1,4 +1,4 @@
-import { Color, retrieveColorNameFinder } from './color';
+import { Color, retrieveColorNames } from './color';
 import { SwatchExtractor } from './extractor';
 import { ColorFilter, opacityFilter } from './filter';
 import { ImageSource, createImageData } from './image';
@@ -267,6 +267,6 @@ export class Palette {
    */
   private static findColorName(color: Color): string {
     const lab = color.toLAB();
-    return retrieveColorNameFinder().find(lab);
+    return retrieveColorNames().find(lab);
   }
 }

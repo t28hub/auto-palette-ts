@@ -1,20 +1,20 @@
-import { retrieveColorNameFinder } from '@internal/color/name';
+import { retrieveColorNames } from '@internal/color/name';
 import { describe, expect, it } from 'vitest';
 
 describe('name', () => {
-  describe('retrieveColorNameFinder', () => {
-    it('should retrieve the color name finder instance', () => {
+  describe('retrieveColorNames', () => {
+    it('should retrieve the ColorNames instance', () => {
       // Act
-      const actual = retrieveColorNameFinder();
+      const actual = retrieveColorNames();
 
       // Assert
       expect(actual).toBeDefined();
     });
 
-    it('should retrieve the same color name finder instance', () => {
+    it('should retrieve the same ColorNames instance', () => {
       // Act
-      const actual1 = retrieveColorNameFinder();
-      const actual2 = retrieveColorNameFinder();
+      const actual1 = retrieveColorNames();
+      const actual2 = retrieveColorNames();
 
       // Assert
       expect(actual1).toBe(actual2);
