@@ -23,7 +23,6 @@ describe('ColorNameFinder', () => {
       // Act
       const parsed = Color.fromString(color);
       const actual = colorNameFinder.find(parsed.toLAB());
-      console.info(actual, expected, parsed.toLAB());
 
       // Assert
       expect(actual).toBe(expected);
