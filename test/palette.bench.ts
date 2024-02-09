@@ -7,7 +7,7 @@ import { loadImageData } from './utils';
 describe('Palette', () => {
   bench('extract colors from image using DBSCAN', async () => {
     // Arrange
-    const image = await loadImageData(fixtures.photos.kingfisher);
+    const image = await loadImageData(fixtures.photos.tulips);
 
     // Act
     const options: Options = {
@@ -19,7 +19,7 @@ describe('Palette', () => {
 
   bench('extract colors from image using K-means', async () => {
     // Arrange
-    const image = await loadImageData(fixtures.photos.kingfisher);
+    const image = await loadImageData(fixtures.photos.tulips);
 
     // Act
     const options: Options = {

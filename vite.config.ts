@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 
-import codspeedPlugin from '@codspeed/vitest-plugin';
 import dts from 'vite-plugin-dts';
 import { defineConfig } from 'vitest/config';
 
@@ -28,7 +27,6 @@ export default defineConfig({
       rollupTypes: true,
       copyDtsFiles: false,
     }),
-    codspeedPlugin(),
   ],
   test: {
     globals: true,
