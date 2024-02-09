@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/t28hub/auto-palette-ts/compare/v1.3.0...v1.3.1) (2024-02-09)
+
+
+### Bug Fixes
+
+* export NamedSwatch to allow it to be used from outside of library ([d4f65f2](https://github.com/t28hub/auto-palette-ts/commit/d4f65f205389546fde0efd6122e58b1e7c8a2974))
+
 ## [1.3.0](https://github.com/t28hub/auto-palette-ts/compare/v1.2.0...v1.3.0) (2024-02-09)
 
 
