@@ -11,6 +11,19 @@
 
 * integrate LFUCache for faster color name lookup ([d80abff](https://github.com/t28hub/auto-palette-ts/commit/d80abff96cee5bc7cfe3e20c84ad919bae4d7a4b))
 
+## [1.3.0](https://github.com/t28hub/auto-palette-ts/compare/v1.2.0...v1.3.0) (2024-02-09)
+
+
+### Features
+
+* add most similar color name to extracted swatches ([afaf1e3](https://github.com/t28hub/auto-palette-ts/commit/afaf1e3584d9bb39cee77dc86a42f1f8008d4b45))
+* implement Cache using Least Frequently Used (LFU) cache algorithm ([c243efa](https://github.com/t28hub/auto-palette-ts/commit/c243efaa4b57109d721fae27dd72a6c6b092c285))
+
+
+### Performance Improvements
+
+* integrate LFUCache for faster color name lookup ([d80abff](https://github.com/t28hub/auto-palette-ts/commit/d80abff96cee5bc7cfe3e20c84ad919bae4d7a4b))
+
 ## [1.2.0](https://github.com/t28hub/auto-palette-ts/compare/v1.1.0...v1.2.0) (2024-01-14)
 
 
