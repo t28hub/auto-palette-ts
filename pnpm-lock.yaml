@@ -9,8 +9,8 @@ devDependencies:
     specifier: 1.5.2
     version: 1.5.2
   '@codspeed/vitest-plugin':
-    specifier: ^2.3.1
-    version: 2.3.1(vite@5.0.12)(vitest@1.2.2)
+    specifier: ^3.1.0
+    version: 3.1.0(vite@5.0.12)(vitest@1.2.2)
   '@commitlint/cli':
     specifier: ^18.4.3
     version: 18.4.4(@types/node@20.11.0)(typescript@5.3.3)
@@ -242,22 +242,28 @@ packages:
     dev: true
     optional: true
 
-  /@codspeed/core@2.3.1:
-    resolution: {integrity: sha512-7KRwBX4iXK33gEQwh8jPWBF9srGIjewm3oc+A/66caiG/aOyHmxJCapjAZxT2f2vIVYqR7CghzqlxY2ik0DNBg==}
+  /@codspeed/core@3.1.0:
+    resolution: {integrity: sha512-oYd7X46QhnRkgRbZkqAoX9i3Fwm17FpunK4Ee5RdrvRYR0Xr93ewH8/O5g6uyTPDOOqDEv1v2KRYtWhVgN+2VQ==}
     dependencies:
+      axios: 1.6.7
       find-up: 6.3.0
+      form-data: 4.0.0
       node-gyp-build: 4.7.1
+    transitivePeerDependencies:
+      - debug
     dev: true
 
-  /@codspeed/vitest-plugin@2.3.1(vite@5.0.12)(vitest@1.2.2):
-    resolution: {integrity: sha512-/e4G2B/onX/hG/EjUU/NpDxnIryeTDamVRTBeWfgQDoex3g7GDzTwoQktaU5l/Asw3ZjEErQg+oQVToQ6jYZlA==}
+  /@codspeed/vitest-plugin@3.1.0(vite@5.0.12)(vitest@1.2.2):
+    resolution: {integrity: sha512-ms11tUytiQTgB+idxZRUuCUQfgz4LaKTDJCLYm5VTSpOCUU7D5+QWvJnA8X8B9glPfR5siIK8RxrnZP4yuysKQ==}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
-      vitest: '>=1.0.0-beta.4 || >=1'
+      vitest: '>=1.2.2'
     dependencies:
-      '@codspeed/core': 2.3.1
+      '@codspeed/core': 3.1.0
       vite: 5.0.12(@types/node@20.11.0)
       vitest: 1.2.2(@types/node@20.11.0)(@vitest/ui@1.2.1)(jsdom@24.0.0)
+    transitivePeerDependencies:
+      - debug
     dev: true
 
   /@colors/colors@1.5.0:
@@ -1891,6 +1897,16 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: true
 
+  /axios@1.6.7:
+    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+    dependencies:
+      follow-redirects: 1.15.5
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /babylon@6.18.0:
     resolution: {integrity: sha512-q/UEjfGJ2Cm3oKV71DJz9d25TPnq5rhBVL2Q4fA5wcC3jcrdn7+SssEybFIxwAvvP+YCsCYNKughoF33GxgycQ==}
     hasBin: true
@@ -2707,6 +2723,16 @@ packages:
 
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
+    dev: true
+
+  /follow-redirects@1.15.5:
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     dev: true
 
   /foreground-child@3.1.1:
@@ -4569,6 +4595,10 @@ packages:
 
   /proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
+    dev: true
+
+  /proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: true
 
   /psl@1.9.0:
