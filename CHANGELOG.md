@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/t28hub/auto-palette-ts/compare/v1.3.1...v1.3.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* resolve error when using WebWorker in Next.js app ([33ad204](https://github.com/t28hub/auto-palette-ts/commit/33ad2044f0e52673b6a918f18d0512596a8785f1))
+
 ## [1.3.1](https://github.com/t28hub/auto-palette-ts/compare/v1.3.0...v1.3.1) (2024-02-09)
 
 
