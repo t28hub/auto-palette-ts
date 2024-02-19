@@ -1,5 +1,5 @@
 import { assertDefined } from './utils';
-import { isBrowser } from './utils/browser';
+import { isBrowser, isWebWorker } from './utils/browser';
 
 /**
  * Image source represents the source of a supported image.
@@ -13,7 +13,7 @@ export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
  * @return True if the value is a canvas element, false otherwise.
  */
 export function isCanvasElement(value: ImageSource): value is HTMLCanvasElement {
-  return isBrowser() && value instanceof HTMLCanvasElement;
+  return isBrowser() && !isWebWorker() && value instanceof HTMLCanvasElement;
 }
 
 /**
@@ -23,7 +23,7 @@ export function isCanvasElement(value: ImageSource): value is HTMLCanvasElement 
  * @return True if the value is an image element, false otherwise.
  */
 export function isImageElement(value: ImageSource): value is HTMLImageElement {
-  return isBrowser() && value instanceof HTMLImageElement;
+  return isBrowser() && !isWebWorker() && value instanceof HTMLImageElement;
 }
 
 /**
