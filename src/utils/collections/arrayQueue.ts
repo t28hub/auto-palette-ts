@@ -18,17 +18,17 @@ export class ArrayQueue<E> implements Queue<E> {
   }
 
   /**
-   * Whether this queue is empty.
-   */
-  get isEmpty(): boolean {
-    return this.elements.length === 0;
-  }
-
-  /**
    * The size of this queue.
    */
   get size(): number {
     return this.elements.length;
+  }
+
+  /**
+   * {@inheritDoc Queue.isEmpty}
+   */
+  isEmpty(): boolean {
+    return this.elements.length === 0;
   }
 
   /**

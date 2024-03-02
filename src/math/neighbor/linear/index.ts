@@ -1,4 +1,4 @@
-import { assert, Mutable, Ordering, PriorityQueue, Queue } from '../../../utils';
+import { assert, Mutable, PriorityQueue, Queue } from '../../../utils';
 import { DistanceMeasure } from '../../distance';
 import { Point } from '../../point';
 import { Neighbor, NeighborSearch } from '../search';
@@ -31,14 +31,8 @@ export class LinearSearch<P extends Point> implements NeighborSearch<P> {
    */
   search(query: P, k: number): Neighbor[] {
     assert(k >= 1, `The number of neighbors to be searched(${k}) must be greater than or equal to 1`);
-    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
-      if (neighbor1.distance < neighbor2.distance) {
-        return 1;
-      }
-      if (neighbor1.distance > neighbor2.distance) {
-        return -1;
-      }
-      return 0;
+    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): number => {
+      return neighbor2.distance - neighbor1.distance;
     });
 
     for (let i = 0; i < this.points.length; i++) {

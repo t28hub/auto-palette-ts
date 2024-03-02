@@ -90,7 +90,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     const centroid = new Vector(points[0]).setZero();
     const cluster = new Cluster<P>(centroid);
     const queue = new ArrayQueue(...neighbors);
-    while (!queue.isEmpty) {
+    while (!queue.isEmpty()) {
       const neighbor = queue.pop();
       if (!neighbor) {
         continue;

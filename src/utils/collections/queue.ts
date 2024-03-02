@@ -5,14 +5,16 @@
  */
 export interface Queue<E> {
   /**
-   * Whether this queue is empty.
-   */
-  readonly isEmpty: boolean;
-
-  /**
    * The size of this queue (number of elements).
    */
   readonly size: number;
+
+  /**
+   * Whether this queue is empty.
+   *
+   * @return True if this queue is empty, false otherwise.
+   */
+  isEmpty(): boolean;
 
   /**
    * Push an element to the tail of this queue.

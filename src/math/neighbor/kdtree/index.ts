@@ -1,4 +1,4 @@
-import { assert, Mutable, Ordering, PriorityQueue, Queue, assertDefined } from '../../../utils';
+import { assert, Mutable, PriorityQueue, Queue, assertDefined } from '../../../utils';
 import { DistanceMeasure, euclidean } from '../../distance';
 import { Point } from '../../point';
 import { Neighbor, NeighborSearch } from '../search';
@@ -36,14 +36,8 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    */
   search(query: P, k: number): Neighbor[] {
     assert(k >= 1, `The number of neighbors to be searched(${k}) must be greater than or equal to 1`);
-    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): Ordering => {
-      if (neighbor1.distance < neighbor2.distance) {
-        return -1;
-      }
-      if (neighbor1.distance > neighbor2.distance) {
-        return 1;
-      }
-      return 0;
+    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): number => {
+      return neighbor1.distance - neighbor2.distance;
     });
     this.searchRecursively(this.root, query, k, queue);
     return this.extractNeighbors(queue, k).sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {

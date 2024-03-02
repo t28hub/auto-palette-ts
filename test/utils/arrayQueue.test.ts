@@ -8,10 +8,8 @@ describe('ArrayQueue', () => {
       const actual = new ArrayQueue<string>();
 
       // Assert
-      expect(actual).toMatchObject({
-        size: 0,
-        isEmpty: true,
-      });
+      expect(actual.size).toEqual(0);
+      expect(actual.isEmpty()).toBeTruthy();
       expect(actual.toArray()).toBeEmpty();
     });
 
@@ -20,10 +18,8 @@ describe('ArrayQueue', () => {
       const actual = new ArrayQueue<string>('Alice', 'Bob', 'Charlie');
 
       // Assert
-      expect(actual).toMatchObject({
-        size: 3,
-        isEmpty: false,
-      });
+      expect(actual.size).toEqual(3);
+      expect(actual.isEmpty()).toBeFalsy();
       expect(actual.toArray()).toEqual(['Alice', 'Bob', 'Charlie']);
     });
   });
@@ -38,10 +34,8 @@ describe('ArrayQueue', () => {
       queue.push('Dave');
 
       // Assert
-      expect(queue).toMatchObject({
-        size: 4,
-        isEmpty: false,
-      });
+      expect(queue.size).toEqual(4);
+      expect(queue.isEmpty()).toBeFalsy();
       expect(queue.toArray()).toEqual(['Alice', 'Bob', 'Charlie', 'Dave']);
     });
   });
@@ -57,10 +51,8 @@ describe('ArrayQueue', () => {
 
       // Assert
       expect(actual).toBe('Alice');
-      expect(queue).toMatchObject({
-        size: 2,
-        isEmpty: false,
-      });
+      expect(queue.size).toEqual(2);
+      expect(queue.isEmpty()).toBeFalsy();
       expect(queue.toArray()).toEqual(['Bob', 'Charlie']);
     });
 
@@ -71,10 +63,8 @@ describe('ArrayQueue', () => {
 
       // Assert
       expect(actual).toBeUndefined();
-      expect(queue).toMatchObject({
-        size: 0,
-        isEmpty: true,
-      });
+      expect(queue.size).toEqual(0);
+      expect(queue.isEmpty()).toBeTruthy();
       expect(queue.toArray()).toBeEmpty();
     });
   });

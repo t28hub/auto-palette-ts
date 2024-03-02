@@ -1,16 +1,10 @@
-import { Comparator, Ordering, PriorityQueue } from '@internal/utils';
+import { Comparator, PriorityQueue } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const names = ['Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank'];
 
-const stringComparator: Comparator<string> = (value1: string, value2: string): Ordering => {
-  if (value1.length < value2.length) {
-    return 1;
-  }
-  if (value1.length > value2.length) {
-    return -1;
-  }
-  return 0;
+const stringComparator: Comparator<string> = (value1: string, value2: string): number => {
+  return value2.length - value1.length;
 };
 
 describe('PriorityQueue', () => {
@@ -20,10 +14,8 @@ describe('PriorityQueue', () => {
       const actual = new PriorityQueue<string>(stringComparator);
 
       // Assert
-      expect(actual).toMatchObject({
-        size: 0,
-        isEmpty: true,
-      });
+      expect(actual.size).toEqual(0);
+      expect(actual.isEmpty()).toBeTruthy();
       expect(actual.toArray()).toBeEmpty();
     });
   });
@@ -38,7 +30,7 @@ describe('PriorityQueue', () => {
 
       // Assert
       expect(queue.size).toEqual(6);
-      expect(queue.isEmpty).toBeFalse();
+      expect(queue.isEmpty()).toBeFalsy();
       expect(queue.toArray()).toEqual(['Charlie', 'Ellen', 'Alice', 'Bob', 'Dave', 'Frank']);
     });
   });
@@ -61,7 +53,7 @@ describe('PriorityQueue', () => {
       expect(queue.pop()).toBeUndefined();
 
       expect(queue.size).toEqual(0);
-      expect(queue.isEmpty).toBeTrue();
+      expect(queue.isEmpty()).toBeTruthy();
       expect(queue.toArray()).toBeEmpty();
     });
   });
