@@ -36,11 +36,11 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
    */
   search(query: P, k: number): Neighbor[] {
     assert(k >= 1, `The number of neighbors to be searched(${k}) must be greater than or equal to 1`);
-    const queue = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): number => {
-      return neighbor1.distance - neighbor2.distance;
+    const neighbors = new PriorityQueue((neighbor1: Neighbor, neighbor2: Neighbor): number => {
+      return neighbor2.distance - neighbor1.distance;
     });
-    this.searchRecursively(this.root, query, k, queue);
-    return this.extractNeighbors(queue, k).sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
+    this.searchRecursively(this.root, query, k, neighbors);
+    return neighbors.toArray().sort((neighbor1: Neighbor, neighbor2: Neighbor): number => {
       return neighbor1.distance - neighbor2.distance;
     });
   }
@@ -123,7 +123,16 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     const index = node.index;
     const point = this.points[index];
     const distance = this.distanceMeasure(query, point);
-    neighbors.push({ index, distance });
+
+    const maxDistance = neighbors.peek()?.distance || Number.MAX_VALUE;
+    if (neighbors.size < k || distance < maxDistance) {
+      neighbors.push({ index, distance });
+      // Keep the size of the priority queue to k
+      if (neighbors.size > k) {
+        neighbors.pop();
+      }
+    }
+
     if (node.isLeaf) {
       return;
     }
@@ -169,26 +178,6 @@ export class KDTreeSearch<P extends Point> implements NeighborSearch<P> {
     } else {
       this.rangeRecursively(node.right, query, radius, neighbors);
     }
-  }
-
-  /**
-   * Extract neighbors from the given queue.
-   *
-   * @private
-   * @param queue The queue of neighbors.
-   * @param k The number of neighbors to be extracted.
-   * @return The extracted neighbors.
-   */
-  private extractNeighbors(queue: Queue<Neighbor>, k: number): Neighbor[] {
-    const neighbors = new Array<Neighbor>();
-    while (neighbors.length < k) {
-      const neighbor = queue.pop();
-      if (!neighbor) {
-        break;
-      }
-      neighbors.unshift(neighbor);
-    }
-    return neighbors;
   }
 
   /**

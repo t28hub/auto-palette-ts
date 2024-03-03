@@ -45,14 +45,16 @@ describe('KDTree', () => {
       const kdtreeSearch = KDTreeSearch.build(points, euclidean);
       const actual = kdtreeSearch.search([2, 5, 6], 3);
 
+      console.info(actual);
+
       // Assert
       expect(actual).toHaveLength(3);
       expect(actual[0]).toMatchObject({
-        index: 13,
+        index: 12,
         distance: 2.8284271247461903,
       });
       expect(actual[1]).toMatchObject({
-        index: 12,
+        index: 13,
         distance: 2.8284271247461903,
       });
       expect(actual[2]).toMatchObject({
