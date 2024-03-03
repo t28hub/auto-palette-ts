@@ -44,7 +44,7 @@ export class DBSCAN<P extends Point> implements ClusteringAlgorithm<P> {
     let label: Label = 0;
     const labels = new Array<Label>(points.length).fill(UNDEFINED);
     const clusters = new Array<Cluster<P>>();
-    const neighborSearch = KDTreeSearch.build(points, this.distanceMeasure);
+    const neighborSearch = KDTreeSearch.build(points, 16, this.distanceMeasure);
     for (let i = 0; i < points.length; i++) {
       // Skip if the point has already been visited.
       if (labels[i] !== UNDEFINED) {

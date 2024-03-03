@@ -98,7 +98,7 @@ export class Kmeans<P extends Point> implements ClusteringAlgorithm<P> {
    * @param points - The points to assign.
    */
   private assignPoints(clusters: Cluster<P>[], centroids: P[], points: P[]): void {
-    const neighborSearch = KDTreeSearch.build(centroids, this.distanceMeasure);
+    const neighborSearch = KDTreeSearch.build(centroids, 16, this.distanceMeasure);
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
       const neighbor = neighborSearch.searchNearest(point);

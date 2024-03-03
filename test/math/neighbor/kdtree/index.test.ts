@@ -1,4 +1,4 @@
-import { KDTreeSearch, Point3, euclidean } from '@internal/math';
+import { KDTreeSearch, Point3, euclidean, squaredEuclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
@@ -24,7 +24,15 @@ describe('KDTree', () => {
   describe('build', () => {
     it('should build a KDTree from the provided points', () => {
       // Act
-      const actual = KDTreeSearch.build(points, euclidean);
+      const actual = KDTreeSearch.build(points);
+
+      // Assert
+      expect(actual).toBeDefined();
+    });
+
+    it('should build a KDTree from the provided points with the specified leaf size and distance function', () => {
+      // Act
+      const actual = KDTreeSearch.build(points, 3, squaredEuclidean);
 
       // Assert
       expect(actual).toBeDefined();
@@ -34,15 +42,23 @@ describe('KDTree', () => {
       // Assert
       expect(() => {
         // Act
-        KDTreeSearch.build([], euclidean);
+        KDTreeSearch.build([], 1, euclidean);
       }).toThrowError(AssertionError);
+    });
+
+    it('should throw an AssertionError if the specified leaf size is less than 1', () => {
+      // Assert
+      expect(() => {
+        // Act
+        KDTreeSearch.build(points, 0, euclidean);
+      });
     });
   });
 
   describe('search', () => {
     it('should return the k nearest neighbors to the given point', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.search([2, 5, 6], 3);
 
       console.info(actual);
@@ -65,7 +81,7 @@ describe('KDTree', () => {
 
     it('should return all neighbors if the specified k is greater than or equal to the total number of points', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.search([3, 5, 7], points.length + 1);
 
       // Assert
@@ -78,7 +94,7 @@ describe('KDTree', () => {
 
     it('should throw an AssertionError if the specified k is not a positive integer', () => {
       // Arrange
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
 
       // Assert
       expect(() => {
@@ -91,7 +107,7 @@ describe('KDTree', () => {
   describe('searchNearest', () => {
     it('should return the nearest neighbors to the given point', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.searchNearest([9, 3, 4]);
 
       // Assert
@@ -103,7 +119,7 @@ describe('KDTree', () => {
 
     it('should return the nearest neighbor even if the given point exists in the points array', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.searchNearest([5, 0, 0]);
 
       // Assert
@@ -117,7 +133,7 @@ describe('KDTree', () => {
   describe('searchRadius', () => {
     it('should return the neighbors within the specified radius from the given point', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.searchRadius([2, 5, 6], 3.0);
 
       // Assert
@@ -134,7 +150,7 @@ describe('KDTree', () => {
 
     it('should return an empty array if no neighbors are within the specified radius', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.searchRadius([2, 5, 6], 2.0);
 
       // Assert
@@ -143,7 +159,7 @@ describe('KDTree', () => {
 
     it('should return the all neighbors if all points are within the specified radius', () => {
       // Act
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
       const actual = kdtreeSearch.searchRadius([2, 5, 6], 100.0);
 
       // Assert
@@ -152,7 +168,7 @@ describe('KDTree', () => {
 
     it('should throw an AssertionError if the specified radius is not a positive number', () => {
       // Arrange
-      const kdtreeSearch = KDTreeSearch.build(points, euclidean);
+      const kdtreeSearch = KDTreeSearch.build(points, 1, euclidean);
 
       // Assert
       expect(() => {

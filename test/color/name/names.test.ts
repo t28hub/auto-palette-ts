@@ -15,7 +15,7 @@ describe('ColorNames', () => {
         { name: 'Green', color: { l: 46.228, a: -51.699, b: 49.897 } },
         { name: 'Blue', color: { l: 32.303, a: 79.196, b: -107.864 } },
         { name: 'Yellow', color: { l: 97.139, a: -21.562, b: 94.477 } },
-        { name: 'Cyan', color: { l: 91.115, a: -48.081, b: -14.143 } },
+        { name: 'Aqua', color: { l: 91.115, a: -48.081, b: -14.143 } },
         { name: 'Magenta', color: { l: 60.323, a: 98.236, b: -60.842 } },
       ];
 
@@ -37,7 +37,7 @@ describe('ColorNames', () => {
       { color: '#000000', expected: 'Black' },
       { color: '#fafafa', expected: 'White' },
       { color: '#ff0000', expected: 'Red' },
-      { color: '#00ffff', expected: 'Cyan' },
+      { color: '#00ffff', expected: 'Aqua' },
       { color: '#4648fd', expected: 'BlueViolet' },
       { color: '#fd8d46', expected: 'Coral' },
       { color: '#46fd68', expected: 'SpringGreen' },

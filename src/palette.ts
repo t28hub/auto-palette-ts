@@ -150,7 +150,7 @@ export class Palette {
       return [l, a, b];
     });
 
-    const neighborSearch = KDTreeSearch.build(colors, euclidean);
+    const neighborSearch = KDTreeSearch.build(colors, 4, euclidean);
     const coefficients = new Array<number>(colors.length).fill(MAX_SCORE_COEFFICIENT);
     const sampledColors = this.samplingStrategy.sample(colors, n);
     return sampledColors.map((color: Point3): NamedSwatch => {

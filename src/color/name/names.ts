@@ -24,7 +24,7 @@ export class ColorNames {
       const color = named.color;
       return [color.l, color.a, color.b];
     });
-    this.neighborSearch = KDTreeSearch.build(points);
+    this.neighborSearch = KDTreeSearch.build(points, 4);
   }
 
   /**
