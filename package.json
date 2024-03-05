@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
-    "@commitlint/cli": "^18.6.1",
+    "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^18.6.2",
     "@napi-rs/canvas": "^0.1.46",
     "@semantic-release/changelog": "^6.0.3",
