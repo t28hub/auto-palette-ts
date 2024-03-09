@@ -72,15 +72,15 @@ describe('CIELab', () => {
     });
 
     it.each([
-      { x: NaN, y: 0, z: 0 },
-      { x: Infinity, y: 0, z: 0 },
-      { x: -Infinity, y: 0, z: 0 },
-      { x: 0, y: NaN, z: 0 },
-      { x: 0, y: Infinity, z: 0 },
-      { x: 0, y: -Infinity, z: 0 },
-      { x: 0, y: 0, z: NaN },
-      { x: 0, y: 0, z: Infinity },
-      { x: 0, y: 0, z: -Infinity },
+      { x: Number.NaN, y: 0, z: 0 },
+      { x: Number.POSITIVE_INFINITY, y: 0, z: 0 },
+      { x: Number.NEGATIVE_INFINITY, y: 0, z: 0 },
+      { x: 0, y: Number.NaN, z: 0 },
+      { x: 0, y: Number.POSITIVE_INFINITY, z: 0 },
+      { x: 0, y: Number.NEGATIVE_INFINITY, z: 0 },
+      { x: 0, y: 0, z: Number.NaN },
+      { x: 0, y: 0, z: Number.POSITIVE_INFINITY },
+      { x: 0, y: 0, z: Number.NEGATIVE_INFINITY },
     ])('should throw an AssertionError if the x, y, or z component(%o) is not a finite number', (xyz) => {
       // Assert
       expect(() => {
@@ -111,15 +111,15 @@ describe('CIELab', () => {
     });
 
     it.each([
-      { l: NaN, a: 0, b: 0 },
-      { l: Infinity, a: 0, b: 0 },
-      { l: -Infinity, a: 0, b: 0 },
-      { l: 0, a: NaN, b: 0 },
-      { l: 0, a: Infinity, b: 0 },
-      { l: 0, a: -Infinity, b: 0 },
-      { l: 0, a: 0, b: NaN },
-      { l: 0, a: 0, b: Infinity },
-      { l: 0, a: 0, b: -Infinity },
+      { l: Number.NaN, a: 0, b: 0 },
+      { l: Number.POSITIVE_INFINITY, a: 0, b: 0 },
+      { l: Number.NEGATIVE_INFINITY, a: 0, b: 0 },
+      { l: 0, a: Number.NaN, b: 0 },
+      { l: 0, a: Number.POSITIVE_INFINITY, b: 0 },
+      { l: 0, a: Number.NEGATIVE_INFINITY, b: 0 },
+      { l: 0, a: 0, b: Number.NaN },
+      { l: 0, a: 0, b: Number.POSITIVE_INFINITY },
+      { l: 0, a: 0, b: Number.NEGATIVE_INFINITY },
     ])('should throw an AssertionError if the l, a, or b component(%o) is not a finite number', (lab) => {
       // Assert
       expect(() => {

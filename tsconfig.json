@@ -9,11 +9,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "lib": [
-      "ESNext",
-      "DOM",
-      "WebWorker"
-    ],
+    "lib": ["ESNext", "DOM", "WebWorker"],
     "useDefineForClassFields": true,
     "noEmit": true,
     "noUnusedLocals": true,

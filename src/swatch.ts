@@ -1,5 +1,5 @@
-import { Color } from './color';
-import { Named } from './utils';
+import type { Color } from './color';
+import type { Named } from './utils';
 
 /**
  * Swatch interface represents a color swatch.

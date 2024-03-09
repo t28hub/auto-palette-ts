@@ -76,15 +76,15 @@ describe('RGB', () => {
     });
 
     it.each([
-      { r: NaN, g: 0, b: 0 },
-      { r: Infinity, g: 0, b: 0 },
-      { r: -Infinity, g: 0, b: 0 },
-      { r: 0, g: NaN, b: 0 },
-      { r: 0, g: Infinity, b: 0 },
-      { r: 0, g: -Infinity, b: 0 },
-      { r: 0, g: 0, b: NaN },
-      { r: 0, g: 0, b: Infinity },
-      { r: 0, g: 0, b: -Infinity },
+      { r: Number.NaN, g: 0, b: 0 },
+      { r: Number.POSITIVE_INFINITY, g: 0, b: 0 },
+      { r: Number.NEGATIVE_INFINITY, g: 0, b: 0 },
+      { r: 0, g: Number.NaN, b: 0 },
+      { r: 0, g: Number.POSITIVE_INFINITY, b: 0 },
+      { r: 0, g: Number.NEGATIVE_INFINITY, b: 0 },
+      { r: 0, g: 0, b: Number.NaN },
+      { r: 0, g: 0, b: Number.POSITIVE_INFINITY },
+      { r: 0, g: 0, b: Number.NEGATIVE_INFINITY },
     ])('should throw an AssertionError when the color is ($r, $g, $b)', ({ r, g, b }) => {
       // Assert
       expect(() => {

@@ -1,7 +1,7 @@
-import { Color, Options, Palette, Theme, luminanceFilter, opacityFilter } from 'auto-palette';
+import { Color, type Options, Palette, type Theme, luminanceFilter, opacityFilter } from 'auto-palette';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { NamedSwatch } from '@internal/swatch';
+import type { NamedSwatch } from '@internal/swatch';
 import { AssertionError } from '@internal/utils';
 import fixtures from './fixtures';
 import { loadImageData } from './utils';
@@ -105,7 +105,7 @@ describe('Palette', () => {
       expect(actual).toContainAllValues(swatches);
     });
 
-    it.each([Infinity, NaN, -1, 0])(
+    it.each([Number.POSITIVE_INFINITY, Number.NaN, -1, 0])(
       'should throw an AssertionError if the specified number(%d) is not an integer or less than 0',
       (n) => {
         // Arrange
@@ -181,12 +181,12 @@ describe('Palette', () => {
     it.each([
       { samplingRate: 0.0 },
       { samplingRate: 1.1 },
-      { samplingRate: NaN },
-      { samplingRate: Infinity },
+      { samplingRate: Number.NaN },
+      { samplingRate: Number.POSITIVE_INFINITY },
       { maxSwatches: -1 },
       { maxSwatches: 0 },
-      { maxSwatches: NaN },
-      { maxSwatches: Infinity },
+      { maxSwatches: Number.NaN },
+      { maxSwatches: Number.POSITIVE_INFINITY },
     ])('should throw an AssertionError if the options(%o) are invalid', (options) => {
       // Assert
       expect(() => {

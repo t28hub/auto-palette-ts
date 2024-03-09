@@ -1,29 +1,29 @@
-import { Color, retrieveColorNames } from './color';
+import { type Color, retrieveColorNames } from './color';
 import { SwatchExtractor } from './extractor';
-import { ColorFilter, opacityFilter } from './filter';
-import { ImageSource, createImageData } from './image';
+import { type ColorFilter, opacityFilter } from './filter';
+import { type ImageSource, createImageData } from './image';
 import {
   DBSCAN,
   FarthestPointSampling,
   KDTreeSearch,
   Kmeans,
   KmeansPlusPlusInitializer,
-  Neighbor,
-  NeighborSearch,
-  Point3,
-  Point5,
-  SamplingStrategy,
+  type Neighbor,
+  type NeighborSearch,
+  type Point3,
+  type Point5,
+  type SamplingStrategy,
   euclidean,
   squaredEuclidean,
 } from './math';
-import { NamedSwatch, Swatch } from './swatch';
+import type { NamedSwatch, Swatch } from './swatch';
 import {
   BasicThemeStrategy,
   DarkThemeStrategy,
   LightThemeStrategy,
   MutedThemeStrategy,
-  Theme,
-  ThemeStrategy,
+  type Theme,
+  type ThemeStrategy,
   VividThemeStrategy,
   visit,
 } from './theme';

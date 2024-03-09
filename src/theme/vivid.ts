@@ -1,8 +1,8 @@
 import { Color } from '../color';
 import { normalize } from '../math';
-import { Swatch } from '../swatch';
+import type { Swatch } from '../swatch';
 import { assertRange } from '../utils';
-import { ThemeStrategy } from './strategy';
+import type { ThemeStrategy } from './strategy';
 
 const DEFAULT_MIN_CHROMA = 60;
 

@@ -8,5 +8,5 @@
   "project": ["**/*.ts"],
   "ignore": ["**/*.d.ts"],
   "ignoreBinaries": ["only-allow"],
-  "ignoreDependencies": ["@commitlint/cli", "conventional-changelog-conventionalcommits"]
+  "ignoreDependencies": ["conventional-changelog-conventionalcommits"]
 }

@@ -1,5 +1,5 @@
 import { clamp } from '../../math';
-import { LAB, XYZ } from '../types';
+import type { LAB, XYZ } from '../types';
 
 import { assertFiniteNumber } from '../../utils';
 import { D65, clampX, clampY, clampZ } from './xyz';

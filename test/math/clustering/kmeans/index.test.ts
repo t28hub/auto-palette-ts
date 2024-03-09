@@ -1,4 +1,4 @@
-import { Kmeans, KmeansPlusPlusInitializer, Point3, squaredEuclidean } from '@internal/math';
+import { Kmeans, KmeansPlusPlusInitializer, type Point3, squaredEuclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
@@ -25,11 +25,11 @@ describe('Kmeans', () => {
     });
 
     it.each([
-      { k: NaN, maxIterations: 10, tolerance: 0.01 },
+      { k: Number.NaN, maxIterations: 10, tolerance: 0.01 },
       { k: 0, maxIterations: 10, tolerance: 0.01 },
-      { k: 10, maxIterations: NaN, tolerance: 0.01 },
+      { k: 10, maxIterations: Number.NaN, tolerance: 0.01 },
       { k: 10, maxIterations: 0, tolerance: 0.01 },
-      { k: 10, maxIterations: 10, tolerance: NaN },
+      { k: 10, maxIterations: 10, tolerance: Number.NaN },
       { k: 10, maxIterations: 10, tolerance: -1.0 },
     ])('should throw an AssertionError if constructor parameters are invalid %p', ({ k, maxIterations, tolerance }) => {
       // Assert

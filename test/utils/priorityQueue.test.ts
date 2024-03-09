@@ -1,4 +1,4 @@
-import { Comparator, PriorityQueue } from '@internal/utils';
+import { type Comparator, PriorityQueue } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 const names = ['Alice', 'Bob', 'Charlie', 'Dave', 'Ellen', 'Frank'];

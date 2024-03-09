@@ -1,7 +1,7 @@
 import { degreeToRadian, radianToDegree } from '../../math';
-import { LAB } from '../types';
+import type { LAB } from '../types';
 
-import { ColorDelta, ColorDeltaMeasure } from './function';
+import type { ColorDelta, ColorDeltaMeasure } from './function';
 
 // Constants for the CIEDE2000 color difference formula.
 // kL, kC and kH are usually both unity.

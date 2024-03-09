@@ -1,4 +1,4 @@
-import { Options, Palette, luminanceFilter } from 'auto-palette';
+import { type Options, Palette, luminanceFilter } from 'auto-palette';
 import { bench, describe } from 'vitest';
 
 import fixtures from './fixtures';

@@ -26,7 +26,7 @@ describe('filter', () => {
       expect(actual({ r: 0, g: 0, b: 0, a: 255 })).toBeTruthy();
     });
 
-    it.each([NaN, Infinity])(
+    it.each([Number.NaN, Number.POSITIVE_INFINITY])(
       'should throw an AssertionError if the threshold(%d) is not a finite number',
       (threshold) => {
         // Assert
@@ -72,10 +72,10 @@ describe('filter', () => {
     });
 
     it.each([
-      { minThreshold: NaN, maxThreshold: 1.0 },
-      { minThreshold: 0.0, maxThreshold: NaN },
-      { minThreshold: Infinity, maxThreshold: 1.0 },
-      { minThreshold: 0.0, maxThreshold: Infinity },
+      { minThreshold: Number.NaN, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: Number.NaN },
+      { minThreshold: Number.POSITIVE_INFINITY, maxThreshold: 1.0 },
+      { minThreshold: 0.0, maxThreshold: Number.POSITIVE_INFINITY },
     ])(
       'should throw an AssertionError if the minThreshold(%d) or maxThreshold(%d) is not a finite number',
       ({ minThreshold, maxThreshold }) => {

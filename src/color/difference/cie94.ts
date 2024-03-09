@@ -1,6 +1,6 @@
-import { LAB } from '../types';
+import type { LAB } from '../types';
 
-import { ColorDelta, ColorDeltaMeasure } from './function';
+import type { ColorDelta, ColorDeltaMeasure } from './function';
 
 // kL, K1 and K2 are constants. The values are taken from the wikipedia page:
 // https://en.wikipedia.org/wiki/Color_difference#CIE94

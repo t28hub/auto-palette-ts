@@ -17,7 +17,7 @@ describe('euclidean', () => {
         // Assert
         expect(() => {
           // Act
-          euclidean([0, 0], [1, NaN]);
+          euclidean([0, 0], [1, Number.NaN]);
         }).toThrowError(AssertionError);
       });
     });
@@ -37,7 +37,7 @@ describe('euclidean', () => {
         // Assert
         expect(() => {
           // Act
-          squaredEuclidean([NaN, 0], [1, 2]);
+          squaredEuclidean([Number.NaN, 0], [1, 2]);
         }).toThrowError(AssertionError);
       });
     });

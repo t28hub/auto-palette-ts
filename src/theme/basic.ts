@@ -1,8 +1,8 @@
 import { Color } from '../color';
 import { normalize } from '../math';
-import { Swatch } from '../swatch';
+import type { Swatch } from '../swatch';
 import { assertPositiveInteger } from '../utils';
-import { ThemeStrategy } from './strategy';
+import type { ThemeStrategy } from './strategy';
 
 // The `MIN_LIGHTNESS` and `MAX_LIGHTNESS` values are derived from the following paper:
 // "Colorgorical: Creating discriminable and preferable color palettes for information visualization"

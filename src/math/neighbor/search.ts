@@ -1,5 +1,5 @@
-import { Distance } from '../distance';
-import { Point } from '../point';
+import type { Distance } from '../distance';
+import type { Point } from '../point';
 
 /**
  * Type representing the result of a nearest neighbor search.

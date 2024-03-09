@@ -1,6 +1,6 @@
 import { assert, assertFiniteNumber } from '../utils';
-import { Distance, DistanceMeasure, euclidean } from './distance';
-import { Point } from './point';
+import { type Distance, type DistanceMeasure, euclidean } from './distance';
+import type { Point } from './point';
 
 const NO_INDEX = -1;
 

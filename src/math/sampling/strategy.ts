@@ -1,4 +1,4 @@
-import { Point } from '../point';
+import type { Point } from '../point';
 
 /**
  * SamplingStrategy interface represents a strategy for sampling a set of data points.

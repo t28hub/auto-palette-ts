@@ -1,4 +1,4 @@
-import { LinearSearch, Point2, squaredEuclidean } from '@internal/math';
+import { LinearSearch, type Point2, squaredEuclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 

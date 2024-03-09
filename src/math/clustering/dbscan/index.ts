@@ -1,9 +1,9 @@
 import { assert, ArrayQueue } from '../../../utils';
-import { DistanceMeasure } from '../../distance';
-import { KDTreeSearch, Neighbor, NeighborSearch } from '../../neighbor';
-import { Point } from '../../point';
+import type { DistanceMeasure } from '../../distance';
+import { KDTreeSearch, type Neighbor, type NeighborSearch } from '../../neighbor';
+import type { Point } from '../../point';
 import { Vector } from '../../vector';
-import { ClusteringAlgorithm } from '../algorithm';
+import type { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
 type Label = number;

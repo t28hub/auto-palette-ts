@@ -1,4 +1,4 @@
-import { Cluster, Point2, Vector } from '@internal/math';
+import { Cluster, type Point2, Vector } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 

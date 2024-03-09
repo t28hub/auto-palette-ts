@@ -1,4 +1,4 @@
-import { Swatch } from '../swatch';
+import type { Swatch } from '../swatch';
 
 /**
  * ThemeStrategy is a strategy to find the best swatch for a theme.

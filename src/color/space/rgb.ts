@@ -1,6 +1,6 @@
 import { clamp } from '../../math';
 import { assert, assertInteger } from '../../utils';
-import { RGB } from '../types';
+import type { RGB } from '../types';
 
 /**
  * The minimum value of the RGB component.
@@ -36,9 +36,9 @@ export function clampValue(value: number): number {
 export function fromHexString(value: string): RGB {
   assert(value.startsWith('#'), `The value(${value}) is not a valid hexadecimal color string`);
 
-  let r = NaN;
-  let g = NaN;
-  let b = NaN;
+  let r = Number.NaN;
+  let g = Number.NaN;
+  let b = Number.NaN;
 
   if (value.length === 4) {
     // #rgb

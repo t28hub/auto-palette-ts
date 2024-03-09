@@ -1,4 +1,4 @@
-import { Point } from '../point';
+import type { Point } from '../point';
 
 declare const validDistance: unique symbol;
 

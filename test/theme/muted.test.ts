@@ -21,7 +21,7 @@ describe('MutedThemeStrategy', () => {
       expect(actual).toBeDefined();
     });
 
-    it.each([-1, 181, NaN, Infinity, -Infinity])(
+    it.each([-1, 181, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
       'should throw an AssertionError if the maximum chroma(%d) is not in the range [0, 180]',
       (chroma) => {
         // Assert

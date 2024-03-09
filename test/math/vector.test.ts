@@ -1,4 +1,4 @@
-import { Point, Vector, squaredEuclidean } from '@internal/math';
+import { type Point, Vector, squaredEuclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
@@ -15,15 +15,16 @@ describe('Vector', () => {
       });
     });
 
-    it.each([{ point: [NaN, 0] }, { point: [1, Infinity] }, { point: [NaN, Infinity] }])(
-      'should throw an AssertionError if the source point($point) contains infinite number',
-      ({ point }) => {
-        // Assert
-        expect(() => {
-          new Vector(point as Point);
-        }).toThrowError(AssertionError);
-      },
-    );
+    it.each([
+      { point: [Number.NaN, 0] },
+      { point: [1, Number.POSITIVE_INFINITY] },
+      { point: [Number.NaN, Number.POSITIVE_INFINITY] },
+    ])('should throw an AssertionError if the source point($point) contains infinite number', ({ point }) => {
+      // Assert
+      expect(() => {
+        new Vector(point as Point);
+      }).toThrowError(AssertionError);
+    });
   });
 
   describe('toString', () => {
@@ -106,7 +107,7 @@ describe('Vector', () => {
       // Assert
       expect(() => {
         // Act
-        vector.add([4, 5, NaN]);
+        vector.add([4, 5, Number.NaN]);
       }).toThrowError(AssertionError);
     });
   });
@@ -132,7 +133,7 @@ describe('Vector', () => {
       });
     });
 
-    it.each([{ scalar: NaN }, { scalar: Infinity }])(
+    it.each([{ scalar: Number.NaN }, { scalar: Number.POSITIVE_INFINITY }])(
       'should throw an AssertionError if the given scalar($scalar) is not a finite number',
       ({ scalar }) => {
         const vector = new Vector([1, 2, 3]);

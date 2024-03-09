@@ -1,4 +1,4 @@
-import { ImageSource, createImageData, isCanvasElement, isImageData, isImageElement } from '@internal/image';
+import { type ImageSource, createImageData, isCanvasElement, isImageData, isImageElement } from '@internal/image';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('image', () => {

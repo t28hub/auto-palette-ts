@@ -1,6 +1,6 @@
-import { Point } from '../point';
+import type { Point } from '../point';
 
-import { Cluster } from './cluster';
+import type { Cluster } from './cluster';
 
 /**
  * Interface representing clustering algorithm.

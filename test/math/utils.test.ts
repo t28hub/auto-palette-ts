@@ -23,9 +23,9 @@ describe('utils', () => {
     });
 
     it.each([
-      { value: NaN, min: 0, max: 100 },
-      { value: 50, min: NaN, max: 100 },
-      { value: 50, min: 0, max: NaN },
+      { value: Number.NaN, min: 0, max: 100 },
+      { value: 50, min: Number.NaN, max: 100 },
+      { value: 50, min: 0, max: Number.NaN },
     ])('should throw an AssertionError if value($value), min($min) or max($max) is invalid', ({ value, min, max }) => {
       // Assert
       expect(() => {
@@ -51,9 +51,9 @@ describe('utils', () => {
     });
 
     it.each([
-      { value: NaN, min: 0, max: 100 },
-      { value: 50, min: NaN, max: 100 },
-      { value: 50, min: 0, max: NaN },
+      { value: Number.NaN, min: 0, max: 100 },
+      { value: 50, min: Number.NaN, max: 100 },
+      { value: 50, min: 0, max: Number.NaN },
     ])(
       'should throw an AssertionError if the value($value), min($min) or max($max) is invalid',
       ({ value, min, max }) => {
@@ -93,9 +93,9 @@ describe('utils', () => {
     });
 
     it.each([
-      { value: NaN, min: 0, max: 100 },
-      { value: 0.5, min: NaN, max: 100 },
-      { value: 0.5, min: 0, max: NaN },
+      { value: Number.NaN, min: 0, max: 100 },
+      { value: 0.5, min: Number.NaN, max: 100 },
+      { value: 0.5, min: 0, max: Number.NaN },
     ])(
       'should throw an AssertionError if the value($value), min($min) or max($max) is invalid',
       ({ value, min, max }) => {
@@ -124,7 +124,7 @@ describe('utils', () => {
       { degree: 0, radian: 0 },
       { degree: 30, radian: 0.5236 },
       { degree: 90, radian: 1.5708 },
-      { degree: 180, radian: 3.1415 },
+      { degree: 180, radian: Math.PI },
       { degree: 330, radian: 5.7596 },
       { degree: 360, radian: 6.2832 },
     ])('should convert from degree($degree) to radian($radian)', ({ degree, radian }) => {
@@ -141,7 +141,7 @@ describe('utils', () => {
       { degree: 0, radian: 0 },
       { degree: 30, radian: 0.5236 },
       { degree: 90, radian: 1.5708 },
-      { degree: 180, radian: 3.1415 },
+      { degree: 180, radian: Math.PI },
       { degree: 330, radian: 5.7596 },
       { degree: 360, radian: 6.2832 },
     ])('should convert from radian($radian) to degree($degree)', ({ degree, radian }) => {

@@ -1,4 +1,4 @@
-import { KDTreeSearch, Point3, euclidean, squaredEuclidean } from '@internal/math';
+import { KDTreeSearch, type Point3, euclidean, squaredEuclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 

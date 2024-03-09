@@ -1,4 +1,4 @@
-import { ThemeVisitor, visit } from '@internal/theme';
+import { type ThemeVisitor, visit } from '@internal/theme';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Theme', () => {

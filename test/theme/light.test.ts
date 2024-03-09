@@ -21,7 +21,7 @@ describe('LightThemeStrategy', () => {
       expect(actual).toBeDefined();
     });
 
-    it.each([-1, 101, NaN, Infinity, -Infinity])(
+    it.each([-1, 101, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
       'should throw an AssertionError if the minimum lightness(%d) is not in the range [0, 100]',
       (lightness) => {
         // Assert

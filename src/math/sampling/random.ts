@@ -1,7 +1,7 @@
-import { Point } from '../point';
+import type { Point } from '../point';
 
 import { assert } from '../../utils';
-import { SamplingStrategy } from './strategy';
+import type { SamplingStrategy } from './strategy';
 
 /**
  * RandomSampling implements the random sampling strategy.

@@ -72,15 +72,15 @@ describe('HSL', () => {
     });
 
     it.each([
-      { h: NaN, s: 0, l: 0 },
-      { h: Infinity, s: 0, l: 0 },
-      { h: -Infinity, s: 0, l: 0 },
-      { h: 0, s: NaN, l: 0 },
-      { h: 0, s: Infinity, l: 0 },
-      { h: 0, s: -Infinity, l: 0 },
-      { h: 0, s: 0, l: NaN },
-      { h: 0, s: 0, l: Infinity },
-      { h: 0, s: 0, l: -Infinity },
+      { h: Number.NaN, s: 0, l: 0 },
+      { h: Number.POSITIVE_INFINITY, s: 0, l: 0 },
+      { h: Number.NEGATIVE_INFINITY, s: 0, l: 0 },
+      { h: 0, s: Number.NaN, l: 0 },
+      { h: 0, s: Number.POSITIVE_INFINITY, l: 0 },
+      { h: 0, s: Number.NEGATIVE_INFINITY, l: 0 },
+      { h: 0, s: 0, l: Number.NaN },
+      { h: 0, s: 0, l: Number.POSITIVE_INFINITY },
+      { h: 0, s: 0, l: Number.NEGATIVE_INFINITY },
     ])('should throw an AssertionError if the h, s, or l component(%o) is not a finite number', (hsl) => {
       // Assert
       expect(() => {
@@ -109,15 +109,15 @@ describe('HSL', () => {
     });
 
     it.each([
-      { r: NaN, g: 0, b: 0 },
-      { r: Infinity, g: 0, b: 0 },
-      { r: -Infinity, g: 0, b: 0 },
-      { r: 0, g: NaN, b: 0 },
-      { r: 0, g: Infinity, b: 0 },
-      { r: 0, g: -Infinity, b: 0 },
-      { r: 0, g: 0, b: NaN },
-      { r: 0, g: 0, b: Infinity },
-      { r: 0, g: 0, b: -Infinity },
+      { r: Number.NaN, g: 0, b: 0 },
+      { r: Number.POSITIVE_INFINITY, g: 0, b: 0 },
+      { r: Number.NEGATIVE_INFINITY, g: 0, b: 0 },
+      { r: 0, g: Number.NaN, b: 0 },
+      { r: 0, g: Number.POSITIVE_INFINITY, b: 0 },
+      { r: 0, g: Number.NEGATIVE_INFINITY, b: 0 },
+      { r: 0, g: 0, b: Number.NaN },
+      { r: 0, g: 0, b: Number.POSITIVE_INFINITY },
+      { r: 0, g: 0, b: Number.NEGATIVE_INFINITY },
     ])('should throw an AssertionError if the r, g, or b component(%o) is not a finite number', (rgb) => {
       // Assert
       expect(() => {

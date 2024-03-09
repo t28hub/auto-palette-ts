@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 
 const flags = {
   ae: resolve(__dirname, 'flag_ae.png'),

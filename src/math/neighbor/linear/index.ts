@@ -1,7 +1,7 @@
-import { assert, Mutable, PriorityQueue, Queue } from '../../../utils';
-import { DistanceMeasure } from '../../distance';
-import { Point } from '../../point';
-import { Neighbor, NeighborSearch } from '../search';
+import { assert, type Mutable, PriorityQueue, type Queue } from '../../../utils';
+import type { DistanceMeasure } from '../../distance';
+import type { Point } from '../../point';
+import type { Neighbor, NeighborSearch } from '../search';
 
 /**
  * Implementation of nearest neighbor search using linear search.

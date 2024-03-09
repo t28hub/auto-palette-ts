@@ -1,9 +1,9 @@
 import { radianToDegree } from '../math';
 
 import { assert, assertFiniteNumber } from '../utils';
-import { ColorDelta, ColorDeltaMeasure, ciede2000 } from './difference';
+import { type ColorDelta, type ColorDeltaMeasure, ciede2000 } from './difference';
 import { CIELabSpace, HSLSpace, RGBSpace, XYZSpace } from './space';
-import { HSL, LAB, RGB } from './types';
+import type { HSL, LAB, RGB } from './types';
 
 export * from './difference';
 export * from './name';

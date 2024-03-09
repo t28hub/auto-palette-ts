@@ -79,7 +79,7 @@ describe('asserts', () => {
       // Assert
       expect(() => {
         // Act
-        assertFiniteNumber(Infinity, 'The value is not finite');
+        assertFiniteNumber(Number.POSITIVE_INFINITY, 'The value is not finite');
       }).toThrowError(new AssertionError('The value is not finite'));
     });
 

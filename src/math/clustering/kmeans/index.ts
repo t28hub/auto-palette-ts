@@ -1,11 +1,11 @@
-import { DistanceMeasure } from '../../distance';
+import type { DistanceMeasure } from '../../distance';
 import { KDTreeSearch } from '../../neighbor';
-import { Point } from '../../point';
-import { ClusteringAlgorithm } from '../algorithm';
+import type { Point } from '../../point';
+import type { ClusteringAlgorithm } from '../algorithm';
 import { Cluster } from '../cluster';
 
 import { assert, assertPositiveInteger } from '../../../utils';
-import { InitializationStrategy } from './strategy';
+import type { InitializationStrategy } from './strategy';
 
 export { KmeansPlusPlusInitializer } from './strategy';
 

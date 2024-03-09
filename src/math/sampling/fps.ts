@@ -1,8 +1,8 @@
-import { DistanceMeasure } from '../distance';
-import { Point } from '../point';
+import type { DistanceMeasure } from '../distance';
+import type { Point } from '../point';
 
 import { assert } from '../../utils';
-import { SamplingStrategy } from './strategy';
+import type { SamplingStrategy } from './strategy';
 
 /**
  * FarthestPointSampling implements the farthest point sampling strategy.

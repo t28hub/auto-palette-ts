@@ -1,5 +1,5 @@
-import { Comparator } from './comparator';
-import { Queue } from './queue';
+import type { Comparator } from './comparator';
+import type { Queue } from './queue';
 
 /**
  * Binary heap based priority queue implementation.

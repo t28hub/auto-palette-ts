@@ -1,7 +1,16 @@
-import { CIELabSpace, Color, RGBA, RGBSpace, XYZSpace } from './color';
-import { ColorFilter, composeFilters } from './filter';
-import { Cluster, ClusteringAlgorithm, DBSCAN, Point3, Point5, denormalize, euclidean, normalize } from './math';
-import { Swatch } from './swatch';
+import { CIELabSpace, Color, type RGBA, RGBSpace, XYZSpace } from './color';
+import { type ColorFilter, composeFilters } from './filter';
+import {
+  type Cluster,
+  type ClusteringAlgorithm,
+  DBSCAN,
+  type Point3,
+  type Point5,
+  denormalize,
+  euclidean,
+  normalize,
+} from './math';
+import type { Swatch } from './swatch';
 
 /**
  * The color similarity threshold to deduplicate colors.

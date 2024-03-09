@@ -1,6 +1,6 @@
 import { SwatchExtractor } from '@internal/extractor';
-import { DBSCAN, Kmeans, KmeansPlusPlusInitializer, Point5, euclidean, squaredEuclidean } from '@internal/math';
-import { Color, Swatch, ciede2000, opacityFilter } from 'auto-palette';
+import { DBSCAN, Kmeans, KmeansPlusPlusInitializer, type Point5, euclidean, squaredEuclidean } from '@internal/math';
+import { Color, type Swatch, ciede2000, opacityFilter } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
 import fixtures from './fixtures';

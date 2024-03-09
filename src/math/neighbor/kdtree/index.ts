@@ -1,7 +1,7 @@
-import { assert, Mutable, PriorityQueue, Queue, assertDefined, assertPositiveInteger } from '../../../utils';
-import { DistanceMeasure, euclidean } from '../../distance';
-import { Point } from '../../point';
-import { Neighbor, NeighborSearch } from '../search';
+import { assert, type Mutable, PriorityQueue, type Queue, assertDefined, assertPositiveInteger } from '../../../utils';
+import { type DistanceMeasure, euclidean } from '../../distance';
+import type { Point } from '../../point';
+import type { Neighbor, NeighborSearch } from '../search';
 
 import { Node } from './node';
 

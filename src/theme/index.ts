@@ -1,5 +1,5 @@
-import { ThemeStrategy } from './strategy';
-import { ThemeVisitor } from './visitor';
+import type { ThemeStrategy } from './strategy';
+import type { ThemeVisitor } from './visitor';
 
 /**
  * Theme type represents a color theme.

@@ -1,4 +1,4 @@
-import { LAB, NamedColor } from '../types';
+import type { LAB, NamedColor } from '../types';
 
 /**
  * A list of named colors from the CSS3 specification.

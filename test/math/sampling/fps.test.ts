@@ -1,4 +1,4 @@
-import { FarthestPointSampling, Point2, euclidean } from '@internal/math';
+import { FarthestPointSampling, type Point2, euclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 

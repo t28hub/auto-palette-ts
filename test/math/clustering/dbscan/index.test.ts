@@ -1,4 +1,4 @@
-import { DBSCAN, Point2, Vector, euclidean } from '@internal/math';
+import { DBSCAN, type Point2, Vector, euclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 

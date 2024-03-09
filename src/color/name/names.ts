@@ -1,8 +1,8 @@
-import { KDTreeSearch, NeighborSearch, Point3 } from '../../math';
-import { Cache } from '../../utils';
+import { KDTreeSearch, type NeighborSearch, type Point3 } from '../../math';
+import type { Cache } from '../../utils';
 import { toXYZ as labToXYZ } from '../space/lab';
 import { toRGB as xyzToRGB } from '../space/xyz';
-import { LAB, NamedColor } from '../types';
+import type { LAB, NamedColor } from '../types';
 
 /**
  * ColorNames class is used to find the name of a color.

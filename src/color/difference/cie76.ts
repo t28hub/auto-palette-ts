@@ -1,6 +1,6 @@
-import { LAB } from '../types';
+import type { LAB } from '../types';
 
-import { ColorDelta, ColorDeltaMeasure } from './function';
+import type { ColorDelta, ColorDeltaMeasure } from './function';
 
 /**
  * Calculate the color difference between two colors using the CIE76 formula.

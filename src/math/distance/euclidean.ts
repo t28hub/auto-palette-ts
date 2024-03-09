@@ -1,7 +1,7 @@
-import { Point } from '../point';
+import type { Point } from '../point';
 
 import { assertFiniteNumber } from '../../utils';
-import { Distance, DistanceMeasure } from './function';
+import type { Distance, DistanceMeasure } from './function';
 
 /**
  * Calculate the Euclidean distance between two points.

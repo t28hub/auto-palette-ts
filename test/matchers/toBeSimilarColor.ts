@@ -10,7 +10,7 @@ import {
 
 import { Color, ciede2000 } from '../../src';
 
-import { MatcherResult } from './types';
+import type { MatcherResult } from './types';
 
 /**
  * Parse the received value as a color.
@@ -52,20 +52,20 @@ export function toBeSimilarColor(received: Color, expected: unknown, threshold =
   const pass = difference < threshold;
 
   const passMessage = `${matcherHint('.not.toBeSimilarColor', 'received', 'expected')}
-    
+
     Expected color to not be similar:
       Expected: ${printExpected(expectedColor.toString())}
       Received: ${printReceived(received.toString())}
-      
+
       Expected difference: > ${printExpected(threshold)}
       Received difference:   ${printReceived(difference)}`;
 
   const failMessage = `${matcherHint('.toBeSimilarColor', 'received', 'expected')}
-    
+
     Expected color to be similar:
       Expected: ${printExpected(expectedColor.toString())}
       Received: ${printReceived(received.toString())}
-      
+
       Expected difference: < ${printExpected(threshold)}
       Received difference:   ${printReceived(difference)}`;
 

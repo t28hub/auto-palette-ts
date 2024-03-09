@@ -1,4 +1,4 @@
-import { RGBA, RGBSpace } from './color';
+import { type RGBA, RGBSpace } from './color';
 import { assertRange } from './utils';
 
 /**

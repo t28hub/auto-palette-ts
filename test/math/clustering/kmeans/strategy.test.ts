@@ -1,4 +1,4 @@
-import { KmeansPlusPlusInitializer, Point2, euclidean } from '@internal/math';
+import { KmeansPlusPlusInitializer, type Point2, euclidean } from '@internal/math';
 import { AssertionError } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
@@ -28,7 +28,7 @@ describe('KmeansPlusPlusInitializer', () => {
     expect(actual).toIncludeAnyMembers(points);
   });
 
-  it.each([{ k: -1 }, { k: 0 }, { k: NaN }])('should throw an AssertionError if k($k) is invalid', ({ k }) => {
+  it.each([{ k: -1 }, { k: 0 }, { k: Number.NaN }])('should throw an AssertionError if k($k) is invalid', ({ k }) => {
     // Arrange
     const initializer = new KmeansPlusPlusInitializer(euclidean);
 

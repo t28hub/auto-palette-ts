@@ -1,5 +1,5 @@
 import { clamp } from '../../math';
-import { HSL, RGB } from '../types';
+import type { HSL, RGB } from '../types';
 
 import { assertFiniteNumber, assertInteger } from '../../utils';
 import { MAX_RGB, clampValue } from './rgb';

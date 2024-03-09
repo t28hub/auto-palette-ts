@@ -1,4 +1,4 @@
-import { Named } from '../utils';
+import type { Named } from '../utils';
 
 /**
  * HSL type represents a color in HSL color space.

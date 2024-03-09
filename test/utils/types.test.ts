@@ -1,4 +1,4 @@
-import { Mutable } from '@internal/utils';
+import type { Mutable } from '@internal/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('types', () => {

@@ -1,6 +1,6 @@
 import { assertDefined, assertPositiveInteger } from '../asserts';
-import { DoubleLinkedList, DoubleLinkedListNode } from '../collections';
-import { Cache } from './cache';
+import { DoubleLinkedList, type DoubleLinkedListNode } from '../collections';
+import type { Cache } from './cache';
 
 /**
  * Entry interface for LFU cache.

@@ -1,5 +1,5 @@
 import { assertPositiveInteger } from '../../../utils';
-import { Distance, DistanceMeasure, Point } from '../../index';
+import type { Distance, DistanceMeasure, Point } from '../../index';
 
 /**
  * Interface for initializing center points for Kmeans algorithm.

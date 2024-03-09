@@ -1,5 +1,5 @@
 import { assert } from '../../utils';
-import { Point } from '../point';
+import type { Point } from '../point';
 import { Vector } from '../vector';
 
 /**

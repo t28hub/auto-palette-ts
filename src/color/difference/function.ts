@@ -1,4 +1,4 @@
-import { ColorType } from '../types';
+import type { ColorType } from '../types';
 
 declare const validDifference: unique symbol;
 
