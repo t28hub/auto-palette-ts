@@ -64,7 +64,7 @@ devDependencies:
     version: 24.0.0(canvas@2.11.2)
   knip:
     specifier: ^5.0.1
-    version: 5.0.3(@types/node@20.12.2)(typescript@5.3.3)
+    version: 5.9.4(@types/node@20.12.2)(typescript@5.3.3)
   lint-staged:
     specifier: ^15.2.2
     version: 15.2.2
@@ -3375,8 +3375,8 @@ packages:
     engines: {'0': node >= 0.2.0}
     dev: true
 
-  /knip@5.0.3(@types/node@20.12.2)(typescript@5.3.3):
-    resolution: {integrity: sha512-U4bCIkf4aZ3zZSrBaNE8xIdqX1QVhIHXpwUoAW7odx7oajMwa76hUDd9KjlFlb6qAPjdUuTGHjDszIgpfg+Ndg==}
+  /knip@5.9.4(@types/node@20.12.2)(typescript@5.3.3):
+    resolution: {integrity: sha512-33TM8bSHxMMoj+wP9lzjUkIIEfpXaZsLWMYRCoHdbmYnl2HKPMNijcYTxwi1omRROobXrR/VJyH2ZsYOKM1jtg==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
@@ -3401,13 +3401,13 @@ packages:
       picocolors: 1.0.0
       picomatch: 4.0.1
       pretty-ms: 9.0.0
-      semver: 7.6.0
+      resolve: 1.22.8
       smol-toml: 1.1.4
       strip-json-comments: 5.0.1
       summary: 2.1.0
       typescript: 5.3.3
       zod: 3.22.4
-      zod-validation-error: 3.0.2(zod@3.22.4)
+      zod-validation-error: 3.1.0(zod@3.22.4)
     transitivePeerDependencies:
       - bluebird
       - domexception
@@ -5763,8 +5763,8 @@ packages:
       commander: 9.5.0
     dev: true
 
-  /zod-validation-error@3.0.2(zod@3.22.4):
-    resolution: {integrity: sha512-21xGaDmnU7lJZ4J63n5GXWqi+rTzGy3gDHbuZ1jP6xrK/DEQGyOqs/xW7eH96tIfCOYm+ecCuT0bfajBRKEVUw==}
+  /zod-validation-error@3.1.0(zod@3.22.4):
+    resolution: {integrity: sha512-zujS6HqJjMZCsvjfbnRs7WI3PXN39ovTcY1n8a+KTm4kOH0ZXYsNiJkH1odZf4xZKMkBDL7M2rmQ913FCS1p9w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.18.0
