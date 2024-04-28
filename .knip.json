@@ -1,12 +1,15 @@
 {
-  "$schema": "https://unpkg.com/knip@2/schema.json",
-  "entry": ["src/index.ts", "**/*.test.ts", "**/*.bench.ts"],
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/index.ts"],
   "paths": {
     "auto-palette": ["src/index.ts"],
-    "@internal/*": ["./src/*"]
+    "@internal/*": ["src/*"]
   },
   "project": ["**/*.ts"],
   "ignore": ["**/*.d.ts"],
   "ignoreBinaries": ["only-allow"],
-  "ignoreDependencies": ["conventional-changelog-conventionalcommits"]
+  "ignoreDependencies": ["conventional-changelog-conventionalcommits"],
+  "vite": {
+    "config": ["vite.config.ts"]
+  }
 }
