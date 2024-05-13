@@ -64,7 +64,7 @@ devDependencies:
     version: 24.0.0(canvas@2.11.2)
   knip:
     specifier: ^5.11.0
-    version: 5.11.0(@types/node@20.12.7)(typescript@5.4.5)
+    version: 5.15.1(@types/node@20.12.7)(typescript@5.4.5)
   lint-staged:
     specifier: ^15.2.2
     version: 15.2.2
@@ -3494,8 +3494,8 @@ packages:
       json-buffer: 3.0.1
     dev: true
 
-  /knip@5.11.0(@types/node@20.12.7)(typescript@5.4.5):
-    resolution: {integrity: sha512-7TBBpLYYAqZI+FM+qHsmT0jfYNOwwZAMBvuJXq3gFJCCpDvGrYcLMu2j6yvURJNh1UlpQ4jaNgPoHw7ylGDWMA==}
+  /knip@5.15.1(@types/node@20.12.7)(typescript@5.4.5):
+    resolution: {integrity: sha512-v6/Bf2qUmZ7pMJb2GjTficHyEjhP2ysIifjM1wgJr2psFbK6Vbxw2/DpeDAcgK9d99kTGh1PUQwoiFd6LHtI6A==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
