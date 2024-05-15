@@ -77,7 +77,7 @@
     "rimraf": "^5.0.5",
     "semantic-release": "^23.0.8",
     "typedoc": "^0.25.13",
-    "typedoc-plugin-markdown": "^3.17.1",
+    "typedoc-plugin-markdown": "^4.0.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.10",
     "vite-plugin-dts": "^3.9.0",
