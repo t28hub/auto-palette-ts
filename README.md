@@ -99,7 +99,7 @@ The `Options` can include properties such as `algorithm`, `samplingRate`, `maxSw
 ```ts
 interface Options {
   // The color extraction algorithm to use. Default is 'dbscan'.
-  algotithm?: 'dbscan' | 'kmeans';
+  algorithm?: 'dbscan' | 'kmeans';
   // The sampling rate of the image. Default is 1.0.
   samplingRate?: number;
   // The maximum number of swatches to extract. Default is 256.
