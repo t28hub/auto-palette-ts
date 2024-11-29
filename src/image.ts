@@ -97,6 +97,6 @@ function fromImageElement(image: HTMLImageElement): ImageData {
   canvasElement.width = image.width;
   canvasElement.height = image.height;
   const context = ensureContext2D(canvasElement);
-  context.drawImage(image, 0, 0);
+  context.drawImage(image, 0, 0, canvasElement.width, canvasElement.height);
   return context.getImageData(0, 0, canvasElement.width, canvasElement.height);
 }
