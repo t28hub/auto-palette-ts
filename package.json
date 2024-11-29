@@ -80,7 +80,7 @@
     "typedoc-plugin-markdown": "^4.0.2",
     "typescript": "^5.4.5",
     "vite": "^6.0.1",
-    "vite-plugin-dts": "^3.9.0",
+    "vite-plugin-dts": "^4.3.0",
     "vitest": "^1.5.2"
   },
   "lint-staged": {
