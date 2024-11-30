@@ -1,0 +1,73 @@
+name: Bug report
+description: Create a report to help us improve
+title: '[BUG] '
+labels: ['bug']
+assignees:
+  - t28hub
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting a bug! Please fill in as much of the template below as you can.
+
+  - type: checkboxes
+    attributes:
+      label: Bug report checklist
+      options:
+        - label: I have searched the issues of this repository and believe that this is not a duplicate
+          required: true
+        - label: I have checked the README, CONTRIBUTING, and other documents for common solutions
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: I was trying to [...] and then [...], but [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Describe the 1st step
+        2. Describe the 2nd step
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please complete the following information:
+        - OS: [e.g. macOS]
+        - Browser: [e.g. Chrome]
+        - Version [e.g. 1.3.0]
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: |
+        Add any other context about the problem here.
+        - Screenshots
+        - Stack traces
+        - Logs
+        - etc.
+    validations:
+      required: false
