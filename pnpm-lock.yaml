@@ -79,7 +79,7 @@ devDependencies:
     version: 0.25.13(typescript@5.4.5)
   typedoc-plugin-markdown:
     specifier: ^4.0.2
-    version: 4.0.2(typedoc@0.25.13)
+    version: 4.0.3(typedoc@0.25.13)
   typescript:
     specifier: ^5.4.5
     version: 5.4.5
@@ -5883,8 +5883,8 @@ packages:
       typed-array-byte-offset: 1.0.2
     dev: true
 
-  /typedoc-plugin-markdown@4.0.2(typedoc@0.25.13):
-    resolution: {integrity: sha512-4MV3M+0lsmIaXuDBzeqLYemZqwTQDWQow+o8zdT9hC7KFu06GaFo2uUEbkjE6pgZA9hnkOTtzRVd0R9YJWcH8A==}
+  /typedoc-plugin-markdown@4.0.3(typedoc@0.25.13):
+    resolution: {integrity: sha512-0tZbeVGGCd4+lpoIX+yHWgUfyaLZCQCgJOpuVdTtOtD3+jKaedJ4sl/tkNaYBPeWVKiyDkSHfGuHkq53jlzIFg==}
     peerDependencies:
       typedoc: 0.25.x
     dependencies:
