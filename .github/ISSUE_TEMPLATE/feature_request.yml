@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest an idea for this project
+title: '[Feature] '
+labels: [ 'enhancement' ]
+assignees:
+  - t28hub
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for interest in this project! Please fill in as much of the template below as you can.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      description: A clear and concise description of what the feature is.
+      placeholder: I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested solution
+      description: A clear and concise description of what you want to happen.
+      placeholder: I'd like to see [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Alternative solutions
+      description: Clear and concise description of any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
