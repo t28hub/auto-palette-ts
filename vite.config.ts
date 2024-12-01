@@ -30,24 +30,11 @@ export default defineConfig({
   ],
   test: {
     globals: true,
-    // The 'pool' option needs to be set to 'forks' when the project depends on a library written in a native language.
-    // In this project, we are using the 'canvas' library, which is written in a native language.
-    // Reference: https://vitest.dev/config/#threads
-    pool: 'forks',
     dir: 'test',
-    include: ['**/*.test.{ts,tsx}'],
     alias: {
       'auto-palette': resolve(__dirname, 'src/index.ts'),
       '@internal': resolve(__dirname, 'src'),
     },
-    environment: 'jsdom',
-    environmentOptions: {
-      jsdom: {
-        resources: 'usable',
-      },
-    },
-    setupFiles: ['./test/setup.ts'],
-    testTimeout: 1000,
     coverage: {
       all: false,
       provider: 'v8',

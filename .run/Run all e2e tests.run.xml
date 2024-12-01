@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run all unit tests" type="JavaScriptTestRunnerVitest">
+  <configuration default="false" name="Run all e2e tests" type="JavaScriptTestRunnerVitest">
     <config value="$PROJECT_DIR$/vite.config.ts" />
     <node-interpreter value="project" />
     <vitest-package value="$PROJECT_DIR$/node_modules/vitest" />
     <working-dir value="$PROJECT_DIR$" />
-    <vitest-options value="--run --project unit" />
+    <vitest-options value="--run --project e2e:*" />
     <envs />
     <scope-kind value="ALL" />
     <method v="2" />

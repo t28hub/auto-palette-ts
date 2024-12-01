@@ -42,8 +42,8 @@ jobs:
       - name: Check the syntax of the code
         run: pnpm lint
 
-      - name: Run the unit tests
-        run: pnpm test
+      - name: Run the unit and e2e tests
+        run: pnpm test:e2e:install && pnpm test
 
       - name: Build the project
         run: pnpm build

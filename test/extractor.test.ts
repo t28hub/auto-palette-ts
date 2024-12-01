@@ -4,7 +4,7 @@ import { Color, type Swatch, ciede2000, opacityFilter } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
 import fixtures from './fixtures';
-import { loadImageData } from './utils';
+import { loadImageData } from './utils.node';
 
 describe('SwatchExtractor', () => {
   describe('constructor', () => {

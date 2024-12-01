@@ -1,10 +1,18 @@
 import { assertDefined } from './utils';
-import { isBrowser, isWebWorker } from './utils/browser';
+import { isBrowser, isWebWorker } from './utils/env';
 
 /**
  * Image source represents the source of a supported image.
  */
-export type ImageSource = HTMLCanvasElement | HTMLImageElement | ImageData;
+export type ImageSource =
+  | HTMLCanvasElement
+  | HTMLImageElement
+  | ImageData
+  | {
+      readonly data: Uint8ClampedArray;
+      readonly width: number;
+      readonly height: number;
+    };
 
 /**
  * Check if the given value is a canvas element.
