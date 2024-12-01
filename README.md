@@ -119,15 +119,9 @@ The theme can be `basic`, `vivid`, `muted`, `light` or `dark`. Default is `basic
 const swatches = palette.findSwatches(5, 'light');
 ```
 
-## Development
+## Contributing
 
-Follow these steps to get started with development:
-
-1. Fork and clone this repository
-2. Install the latest LTS version of [Node.js](https://nodejs.org/en)
-3. Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
-4. Install dependencies using `pnpm install`
-5. Run unit tests and watch for changes using `pnpm dev`
+Contributions are welcome! For detailed information on how to contribute, please refer to the [CONTRIBUTING](https://github.com/t28hub/auto-palette-ts/blob/main/CONTRIBUTING.md) guidelines.
 
 ## License
 
