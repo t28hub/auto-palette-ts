@@ -5,11 +5,15 @@ export default defineWorkspace([
     extends: './vite.config.ts',
     test: {
       name: 'unit',
+      environment: 'jsdom',
       include: ['**/*.test.ts'],
       exclude: ['**/*.browser.test.ts', '**/*.node.test.ts'],
       setupFiles: ['./test/setup.ts'],
-      environment: 'jsdom',
+      benchmark: {
+        include: [],
+      },
       testTimeout: 1_000,
+      retry: 1,
     },
   },
   {
@@ -25,19 +29,25 @@ export default defineWorkspace([
         name: 'chromium',
         screenshotFailures: false,
       },
-      retry: 3,
+      benchmark: {
+        include: [],
+      },
       testTimeout: 10_000,
+      retry: 3,
     },
   },
   {
     extends: './vite.config.ts',
     test: {
       name: 'e2e:node',
+      environment: 'node',
       include: ['**/*.node.test.ts'],
       setupFiles: ['./test/setup.node.ts'],
-      environment: 'node',
-      retry: 3,
+      benchmark: {
+        include: ['**/*.bench.ts'],
+      },
       testTimeout: 10_000,
+      retry: 3,
     },
   },
 ]);
