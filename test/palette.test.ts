@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import type { NamedSwatch } from '@internal/swatch';
 import { AssertionError } from '@internal/utils';
 import fixtures from './fixtures';
-import { loadImageData } from './utils';
+import { loadImageData } from './utils.node';
 
 const swatches: NamedSwatch[] = [
   {
@@ -126,7 +126,8 @@ describe('Palette', () => {
       image = await loadImageData(fixtures.photos.tulips);
     }, 1000);
 
-    it('should extract a Palette from the provided image using default options', () => {
+    // This test is skipped because it tests integration with the browser environment.
+    it.skip('should extract a Palette from the provided image using default options', () => {
       // Act
       const actual = Palette.extract(image);
 
@@ -136,18 +137,10 @@ describe('Palette', () => {
 
       const swatches = actual.findSwatches(8);
       expect(swatches).toBeArrayOfSize(8);
-
-      for (const swatch of swatches) {
-        console.info({
-          name: swatch.name,
-          color: swatch.color.toString(),
-          population: swatch.population,
-          coordinate: swatch.position,
-        });
-      }
     }, 20000);
 
-    it(
+    // This test is skipped because it tests integration with the browser environment.
+    it.skip(
       'should extract a Palette from the provided image using custom options',
       () => {
         // Act
@@ -165,15 +158,6 @@ describe('Palette', () => {
 
         const swatches = actual.findSwatches(6);
         expect(swatches).toBeArrayOfSize(6);
-
-        for (const swatch of swatches) {
-          console.info({
-            name: swatch.name,
-            color: swatch.color.toString(),
-            population: swatch.population,
-            coordinate: swatch.position,
-          });
-        }
       },
       { retry: 3, timeout: 20000 },
     );

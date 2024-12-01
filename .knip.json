@@ -8,7 +8,7 @@
   "project": ["**/*.ts"],
   "ignore": ["**/*.d.ts"],
   "ignoreBinaries": ["only-allow"],
-  "ignoreDependencies": ["conventional-changelog-conventionalcommits"],
+  "ignoreDependencies": ["conventional-changelog-conventionalcommits", "playwright"],
   "vite": {
     "config": ["vite.config.ts"]
   }

@@ -1,8 +1,7 @@
-import { isBrowser, isWebWorker } from '@internal/utils/browser';
+import { isBrowser, isWebWorker } from '@internal/utils/env';
 import { describe, expect, it } from 'vitest';
 
-// @vitest-environment node
-describe('browser', () => {
+describe('e2e:node/env', () => {
   describe('isBrowser', () => {
     it('should return false when the current environment is not a browser', () => {
       const actual = isBrowser();

@@ -1,7 +1,8 @@
 import { type ImageSource, createImageData, isCanvasElement, isImageData, isImageElement } from '@internal/image';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { loadImage } from './utils.browser';
 
-describe('image', () => {
+describe('e2e:browser/image', () => {
   describe('isCanvasElement', () => {
     it('should return true if the value is a canvas element', () => {
       // Act
@@ -65,38 +66,35 @@ describe('image', () => {
   });
 
   describe('createImageData', () => {
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
     it('should create a image from HTMLCanvasElement', () => {
-      // Act
+      // Arrange
       const canvasElement = document.createElement('canvas');
+      canvasElement.width = 160;
+      canvasElement.height = 90;
+
+      // Act
       const actual = createImageData(canvasElement);
 
       // Assert
       expect(actual).toBeInstanceOf(ImageData);
     });
 
-    it(
-      'should create a image from HTMLImageElement',
-      () =>
-        new Promise<void>((done, reject) => {
-          // Arrange
-          const imageElement = document.createElement('img');
-          imageElement.src = 'https://picsum.photos/64/64';
-          imageElement.crossOrigin = 'Anonymous';
+    it('should create a image from HTMLImageElement', async () => {
+      // Arrange
+      const imageElement = await loadImage('https://picsum.photos/320/180');
 
-          imageElement.onload = () => {
-            // Act
-            const actual = createImageData(imageElement);
-            // Assert
-            expect(actual).toBeInstanceOf(ImageData);
-            done();
-          };
+      // Act
+      const actual = createImageData(imageElement);
 
-          imageElement.onerror = () => {
-            reject(new Error('Failed to load image'));
-          };
-        }),
-      10000,
-    );
+      // Assert
+      expect(actual).toBeInstanceOf(ImageData);
+      expect(actual.width).toBe(320);
+      expect(actual.height).toBe(180);
+    });
 
     it('should create a image from ImageData', () => {
       // Act
@@ -106,6 +104,8 @@ describe('image', () => {
       // Assert
       expect(actual).toBeInstanceOf(ImageData);
       expect(actual).toBe(imageData);
+      expect(actual.width).toBe(4);
+      expect(actual.height).toBe(4);
     });
 
     it('should throw an Error if the 2D context is not supported', () => {

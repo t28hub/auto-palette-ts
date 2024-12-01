@@ -1,8 +1,7 @@
-import { isBrowser, isWebWorker } from '@internal/utils/browser';
+import { isBrowser, isWebWorker } from '@internal/utils/env';
 import { describe, expect, it } from 'vitest';
 
-// @vitest-environment jsdom
-describe('browser', () => {
+describe('e2e:browser/env', () => {
   describe('isBrowser', () => {
     it('should return true when the current environment is a browser', () => {
       const actual = isBrowser();

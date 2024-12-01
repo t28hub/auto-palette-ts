@@ -2,7 +2,7 @@ import { type Options, Palette, luminanceFilter } from 'auto-palette';
 import { bench, describe } from 'vitest';
 
 import fixtures from './fixtures';
-import { loadImageData } from './utils';
+import { loadImageData } from './utils.node';
 
 describe('Palette', () => {
   bench('extract colors from image using DBSCAN', async () => {
