@@ -1,5 +1,5 @@
 import { type ImageSource, createImageData, isCanvasElement, isImageData, isImageElement } from '@internal/image';
-import { ImageData } from 'canvas';
+import { ImageData } from '@napi-rs/canvas';
 import { describe, expect, it } from 'vitest';
 
 describe('e2e:node/image', () => {

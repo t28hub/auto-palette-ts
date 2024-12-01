@@ -1,5 +1,5 @@
+import { ImageData } from '@napi-rs/canvas';
 import { type Options, Palette, luminanceFilter, opacityFilter } from 'auto-palette';
-import { ImageData } from 'canvas';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import fixtures from './fixtures';
 import { loadImageData } from './utils.node';
