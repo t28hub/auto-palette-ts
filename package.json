@@ -31,7 +31,7 @@
   },
   "keywords": ["color", "palette", "canvas", "image", "imagedata", "jpg", "png"],
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
+    "preinstall": "pnpm dlx only-allow pnpm",
     "prepare": "husky install",
     "prebuild": "pnpm clean",
     "build": "tsc && vite build",
@@ -52,8 +52,8 @@
     "test:e2e:install": "pnpm dlx playwright install chromium --with-deps",
     "test:bench": "vitest bench --run",
     "test:ui": "vitest run --coverage --ui",
-    "release": "pnpx semantic-release",
-    "release:check": "pnpx semantic-release --dry-run --no-ci"
+    "release": "pnpm dlx semantic-release",
+    "release:check": "pnpm dlx semantic-release --dry-run --no-ci"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
@@ -91,5 +91,5 @@
     "*.{js,ts}": ["pnpm run lint:biome:fix", "pnpm run format"],
     "*.{json,yml,md}": ["pnpm run format"]
   },
-  "packageManager": "pnpm@8.15.4"
+  "packageManager": "pnpm@9.14.4"
 }
