@@ -31,8 +31,8 @@ jobs:
       - name: Check the syntax of the code
         run: pnpm run lint
 
-      - name: Run the unit
-        run: pnpm run test
+      - name: Run the unit and e2e tests
+        run: pnpm run test:e2e:install && pnpm run test
 
   release:
     runs-on: ubuntu-latest
