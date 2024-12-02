@@ -1,3 +1,16 @@
+## [1.3.3](https://github.com/t28hub/auto-palette-ts/compare/v1.3.2...v1.3.3) (2024-12-02)
+
+### Bug Fixes
+
+* configure benchmarks to run only in Node.js environment ([#371](https://github.com/t28hub/auto-palette-ts/issues/371)) ([e48ecf3](https://github.com/t28hub/auto-palette-ts/commit/e48ecf38d86fac5511b055a71b3d32473b2b0bfe))
+* the issue that canvas cannot draw the same size of image in img element ([#362](https://github.com/t28hub/auto-palette-ts/issues/362)) ([a098710](https://github.com/t28hub/auto-palette-ts/commit/a098710bc7d1dcfa4b8890f63eb683a76d707f85))
+* update biome to 1.6.0 and correct reported errors ([11b1b5d](https://github.com/t28hub/auto-palette-ts/commit/11b1b5d7dbcd446c2baf786987e1d7e6edffb357))
+
+### Performance Improvements
+
+* improve tree construction performance by specifying leafSize in KDTree ([f4fd7ff](https://github.com/t28hub/auto-palette-ts/commit/f4fd7ff7e77678cc81e458685c1a2fd387e4e92a))
+* optimize distance comparison in k-nearest neighbors search using KDTree ([c210d02](https://github.com/t28hub/auto-palette-ts/commit/c210d026d60b396d87bb39bc475e70078bd6f43e))
+
 ## [1.3.2](https://github.com/t28hub/auto-palette-ts/compare/v1.3.1...v1.3.2) (2024-02-19)
 
 
