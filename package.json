@@ -80,7 +80,7 @@
     "playwright": "^1.49.0",
     "rimraf": "^6.0.1",
     "semantic-release": "^23.0.8",
-    "typedoc": "^0.25.13",
+    "typedoc": "^0.27.2",
     "typedoc-plugin-markdown": "^4.0.2",
     "typescript": "^5.4.5",
     "vite": "^6.0.1",
