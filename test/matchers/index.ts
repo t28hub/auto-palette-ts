@@ -28,10 +28,8 @@ interface AutoPaletteMatchers<R = unknown> {
 
 // Extend the built-in matchers with the custom matchers.
 declare module 'vitest' {
-  // biome-ignore lint/suspicious/noEmptyInterface: This declaration is suggested by the Vitest documentation.
   interface Assertion extends AutoPaletteMatchers {}
 
-  // biome-ignore lint/suspicious/noEmptyInterface: This declaration is suggested by the Vitest documentation.
   interface AsymmetricMatchersContaining extends AutoPaletteMatchers {}
 }
 
