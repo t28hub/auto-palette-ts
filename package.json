@@ -5,16 +5,20 @@
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.mjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.dts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "repository": {
@@ -32,12 +36,12 @@
   "keywords": ["color", "palette", "canvas", "image", "imagedata", "jpg", "png"],
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prebuild": "pnpm clean",
-    "build": "tsc && vite build",
+    "build": "tsup",
     "clean": "rimraf dist",
     "docs": "typedoc",
-    "dev": "vitest dev",
+    "dev": "tsup --watch ",
     "format": "biome format --write .",
     "lint": "pnpm lint:biome && pnpm lint:knip",
     "lint:biome": "biome lint .",
@@ -80,16 +84,15 @@
     "playwright": "^1.49.0",
     "rimraf": "^6.0.1",
     "semantic-release": "^23.0.8",
+    "tsup": "^8.3.5",
     "typedoc": "^0.27.2",
-    "typedoc-plugin-markdown": "^4.0.2",
+    "typedoc-plugin-markdown": "^4.3.3",
     "typescript": "^5.4.5",
-    "vite": "^6.0.1",
-    "vite-plugin-dts": "^4.3.0",
     "vitest": "^2.1.6"
   },
   "lint-staged": {
     "*.{js,ts}": ["pnpm run lint:biome:fix", "pnpm run format"],
     "*.{json,yml,md}": ["pnpm run format"]
   },
-  "packageManager": "pnpm@9.14.4"
+  "packageManager": "pnpm@9.15.1"
 }

@@ -2,7 +2,7 @@ import { defineWorkspace } from 'vitest/config';
 
 export default defineWorkspace([
   {
-    extends: './vite.config.ts',
+    extends: './vitest.config.ts',
     test: {
       name: 'unit',
       environment: 'jsdom',
@@ -17,7 +17,7 @@ export default defineWorkspace([
     },
   },
   {
-    extends: './vite.config.ts',
+    extends: './vitest.config.ts',
     test: {
       name: 'e2e:browser',
       include: ['**/*.browser.test.ts'],
@@ -37,7 +37,7 @@ export default defineWorkspace([
     },
   },
   {
-    extends: './vite.config.ts',
+    extends: './vitest.config.ts',
     test: {
       name: 'e2e:node',
       environment: 'node',
