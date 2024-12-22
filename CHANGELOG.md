@@ -1,3 +1,5 @@
+## [1.3.4](https://github.com/t28hub/auto-palette-ts/compare/v1.3.3...v1.3.4) (2024-12-22)
+
 ## [1.3.3](https://github.com/t28hub/auto-palette-ts/compare/v1.3.2...v1.3.3) (2024-12-02)
 
 ### Bug Fixes
