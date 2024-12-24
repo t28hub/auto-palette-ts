@@ -18,7 +18,7 @@
 
 ❯ Automatically extracts color palette from image<br>
 ❯ Provides detailed color information color, name, position and population<br>
-❯ Supports multiple color extraction algorithms (`dbscan`, `kmeans` )<br>
+❯ Supports multiple color extraction algorithms (`dbscan`, `dbscan++`, `kmeans` )<br>
 ❯ Supports multiple image sources (`HTMLImageElement`, `HTMLCanvasElement`, `ImageData`)<br>
 ❯ Supports both Browser and Node.js<br>
 ❯ Zero dependencies<br>
@@ -99,7 +99,7 @@ The `Options` can include properties such as `algorithm`, `samplingRate`, `maxSw
 ```ts
 interface Options {
   // The color extraction algorithm to use. Default is 'dbscan'.
-  algorithm?: 'dbscan' | 'kmeans';
+  algorithm?: 'dbscan' | 'dbscan++' | 'kmeans';
   // The sampling rate of the image. Default is 1.0.
   samplingRate?: number;
   // The maximum number of swatches to extract. Default is 256.

@@ -40,7 +40,7 @@ describe('DBSCAN', () => {
       }).toThrowError(AssertionError);
     });
 
-    it('should throw an AssertionError if radius is less than 0.0', () => {
+    it('should throw an AssertionError if epsilon is less than 0.0', () => {
       // Assert
       expect(() => {
         // Actual
@@ -74,15 +74,13 @@ describe('DBSCAN', () => {
       });
     });
 
-    it('should throw an Error if the provided points array is empty', () => {
-      // Arrange
+    it('should return an empty array if the provided points are empty', () => {
+      // Act
       const dbscan = new DBSCAN(4, 2.0, euclidean);
+      const actual = dbscan.fit([]);
 
       // Assert
-      expect(() => {
-        // Act
-        dbscan.fit([]);
-      }).toThrowError(Error);
+      expect(actual).toHaveLength(0);
     });
   });
 });

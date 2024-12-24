@@ -4,6 +4,7 @@ import { type ColorFilter, opacityFilter } from './filter';
 import { type ImageSource, createImageData } from './image';
 import {
   DBSCAN,
+  DBSCANpp,
   FarthestPointSampling,
   KDTreeSearch,
   Kmeans,
@@ -37,7 +38,7 @@ import { assert, assertPositiveInteger } from './utils';
  * @see [DBSCAN - Wikipedia](https://en.wikipedia.org/wiki/DBSCAN)
  * @see [k-means clustering - Wikipedia](https://en.wikipedia.org/wiki/K-means_clustering)
  */
-export type Algorithm = 'dbscan' | 'kmeans';
+export type Algorithm = 'dbscan' | 'dbscan++' | 'kmeans';
 
 /**
  * Options interface for palette extraction.
@@ -226,7 +227,10 @@ export class Palette {
    * @return A new Palette instance containing the extracted swatches.
    */
   static extract(source: ImageSource, options: Partial<Options> = {}): Palette {
-    const { algorithm, samplingRate, maxSwatches, filters } = { ...DEFAULT_OPTIONS, ...options };
+    const { algorithm, samplingRate, maxSwatches, filters } = {
+      ...DEFAULT_OPTIONS,
+      ...options,
+    };
     assert(
       Number.isFinite(samplingRate) && samplingRate > LOWER_SAMPLING_RATE && samplingRate <= UPPER_SAMPLING_RATE,
       `The sampling rate must be in the range of (${LOWER_SAMPLING_RATE}, ${UPPER_SAMPLING_RATE}]: ${samplingRate}`,
@@ -250,13 +254,19 @@ export class Palette {
    * @return A new SwatchExtractor instance.
    */
   private static createExtractor(algorithm: Algorithm, filters: ColorFilter[]): SwatchExtractor {
-    if (algorithm === 'kmeans') {
-      const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
-      const kmeans = new Kmeans<Point5>(32, 10, 0.0001, squaredEuclidean, strategy);
-      return new SwatchExtractor(kmeans, [...filters]);
+    if (algorithm === 'dbscan') {
+      const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      return new SwatchExtractor(dbscan, [...filters]);
     }
-    const dbscan = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
-    return new SwatchExtractor(dbscan, [...filters]);
+
+    if (algorithm === 'dbscan++') {
+      const dbscan = new DBSCANpp<Point5>(0.1, 16, 0.0016, squaredEuclidean);
+      return new SwatchExtractor(dbscan, [...filters]);
+    }
+
+    const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
+    const kmeans = new Kmeans<Point5>(32, 10, 0.0001, squaredEuclidean, strategy);
+    return new SwatchExtractor(kmeans, [...filters]);
   }
 
   /**

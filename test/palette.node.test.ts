@@ -16,7 +16,7 @@ describe('e2e:node/palette', () => {
   });
 
   describe('extract', () => {
-    it('should extract the palette with the default options', async () => {
+    it('should extract the palette with the default options', () => {
       // Act
       const palette = Palette.extract(image);
       const swatches = palette.findSwatches(5);
@@ -25,7 +25,7 @@ describe('e2e:node/palette', () => {
       // Assert
       expect(palette.isEmpty()).toBeFalsy();
       expect(palette.size()).toBeGreaterThan(64);
-      expect(swatches.length).toBe(5);
+      expect(swatches).toHaveLength(5);
 
       expect(swatches[0].color).toBeSimilarColor('#F55C03');
       expect(swatches[0].population).toBeGreaterThan(1_000);
@@ -43,7 +43,34 @@ describe('e2e:node/palette', () => {
       expect(swatches[4].population).toBeGreaterThanOrEqual(16);
     });
 
-    it('should extract the palette with the custom options', async () => {
+    it('should extract the palette with the DBSCAN++ algorithm', () => {
+      // Act
+      const palette = Palette.extract(image, { algorithm: 'dbscan++' });
+      const swatches = palette.findSwatches(5);
+      swatches.sort((swatch1, swatch2) => swatch2.population - swatch1.population);
+
+      // Assert
+      expect(palette.isEmpty()).toBeFalsy();
+      expect(palette.size()).toBeGreaterThan(64);
+      expect(swatches).toHaveLength(5);
+
+      expect(swatches[0].color).toBeSimilarColor('#1F9027');
+      expect(swatches[0].population).toBeGreaterThan(300);
+
+      expect(swatches[1].color).toBeSimilarColor('#F01B01');
+      expect(swatches[1].population).toBeGreaterThan(300);
+
+      expect(swatches[2].color).toBeSimilarColor('#AF34E0');
+      expect(swatches[2].population).toBeGreaterThan(200);
+
+      expect(swatches[3].color).toBeSimilarColor('#85DDC5');
+      expect(swatches[3].population).toBeGreaterThan(150);
+
+      expect(swatches[4].color).toBeSimilarColor('#FDB51E');
+      expect(swatches[4].population).toBeGreaterThan(100);
+    });
+
+    it('should extract the palette with the custom options', () => {
       // Act
       const options: Options = {
         algorithm: 'kmeans',
@@ -58,7 +85,7 @@ describe('e2e:node/palette', () => {
       // Assert
       expect(palette.isEmpty()).toBeFalsy();
       expect(palette.size()).toBeGreaterThan(5);
-      expect(swatches.length).toBe(3);
+      expect(swatches).toHaveLength(3);
     });
   });
 });

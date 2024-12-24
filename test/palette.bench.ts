@@ -17,6 +17,18 @@ describe('Palette', () => {
     Palette.extract(image, options);
   });
 
+  bench('extract colors from image using DBSCAN++', async () => {
+    // Arrange
+    const image = await loadImageData(fixtures.photos.tulips);
+
+    // Act
+    const options: Options = {
+      algorithm: 'dbscan++',
+      filters: [luminanceFilter()],
+    };
+    Palette.extract(image, options);
+  });
+
   bench('extract colors from image using K-means', async () => {
     // Arrange
     const image = await loadImageData(fixtures.photos.tulips);

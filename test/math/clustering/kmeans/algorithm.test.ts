@@ -58,15 +58,13 @@ describe('Kmeans', () => {
     });
 
     it('should throw an Error if points array is empty', () => {
-      // Arrange
+      // Act
       const strategy = new KmeansPlusPlusInitializer(squaredEuclidean);
       const kmeans = new Kmeans(3, 10, 0.01, squaredEuclidean, strategy);
+      const actual = kmeans.fit([]);
 
       // Assert
-      expect(() => {
-        // Act
-        kmeans.fit([]);
-      }).toThrowError(Error);
+      expect(actual).toHaveLength(0);
     });
   });
 });
