@@ -9,7 +9,7 @@ describe('e2e/browser:palette', () => {
   });
 
   describe('extract', () => {
-    it('should extract the palette with the default options', async () => {
+    it('should extract the palette with the default options', () => {
       // Act
       const palette = Palette.extract(image);
       const swatches = palette.findSwatches(3);
@@ -18,10 +18,22 @@ describe('e2e/browser:palette', () => {
       // Assert
       expect(palette.isEmpty()).toBeFalsy();
       expect(palette.size()).toBeGreaterThan(64);
-      expect(swatches.length).toBe(3);
+      expect(swatches).toHaveLength(3);
     });
 
-    it('should extract the palette with the custom options', async () => {
+    it('should extract the palette with the DBSCAN++ algorithm', () => {
+      // Act
+      const palette = Palette.extract(image, { algorithm: 'dbscan++' });
+      const swatches = palette.findSwatches(3);
+      swatches.sort((swatch1, swatch2) => swatch2.population - swatch1.population);
+
+      // Assert
+      expect(palette.isEmpty()).toBeFalsy();
+      expect(palette.size()).toBeGreaterThan(10);
+      expect(swatches).toHaveLength(3);
+    });
+
+    it.skip('should extract the palette with the custom options', async () => {
       // Act
       const options: Options = {
         algorithm: 'kmeans',

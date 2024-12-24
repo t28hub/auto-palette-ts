@@ -1,5 +1,13 @@
 import { SwatchExtractor } from '@internal/extractor';
-import { DBSCAN, Kmeans, KmeansPlusPlusInitializer, type Point5, euclidean, squaredEuclidean } from '@internal/math';
+import {
+  DBSCAN,
+  DBSCANpp,
+  Kmeans,
+  KmeansPlusPlusInitializer,
+  type Point5,
+  euclidean,
+  squaredEuclidean,
+} from '@internal/math';
 import { Color, type Swatch, ciede2000, opacityFilter } from 'auto-palette';
 import { describe, expect, it } from 'vitest';
 
@@ -80,6 +88,26 @@ describe('SwatchExtractor', () => {
       expect(actual[3].color).toBeSimilarColor('#FFB81C');
       expect(actual[4].color).toBeSimilarColor('#000000');
       expect(actual[5].color).toBeSimilarColor('#001489');
+    });
+
+    it('should extract swatches from the given image using DBSCAN++', async () => {
+      // Arrange
+      const imageData = await loadImageData(fixtures.flags.sc);
+      const algorithm = new DBSCANpp<Point5>(0.25, 16, 0.0016, squaredEuclidean);
+      const extractor = new SwatchExtractor(algorithm, []);
+
+      // Act
+      const actual = extractor.extract(imageData, 1.0);
+      console.log(actual);
+
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual).toHaveLength(5);
+      expect(actual[0].color).toBeSimilarColor('#003F87');
+      expect(actual[1].color).toBeSimilarColor('#FCD856');
+      expect(actual[2].color).toBeSimilarColor('#D62828');
+      expect(actual[3].color).toBeSimilarColor('#FFFFFF');
+      expect(actual[4].color).toBeSimilarColor('#007A3D');
     });
 
     it(
