@@ -98,7 +98,6 @@ describe('SwatchExtractor', () => {
 
       // Act
       const actual = extractor.extract(imageData, 1.0);
-      console.log(actual);
 
       // Assert
       expect(actual).not.toBeEmpty();
