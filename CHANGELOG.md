@@ -1,3 +1,10 @@
+## [1.4.0](https://github.com/t28hub/auto-palette-ts/compare/v1.3.4...v1.4.0) (2024-12-27)
+
+### Features
+
+* add support for DBSCAN++ algorithm to improve processing speed by approximately 20% ([#397](https://github.com/t28hub/auto-palette-ts/issues/397)) ([21aa581](https://github.com/t28hub/auto-palette-ts/commit/21aa5814ee0473b7410a2bd6dc2af13894583813))
+* implement Weighted Farthest Point Sampling for prominent color sampling ([#402](https://github.com/t28hub/auto-palette-ts/issues/402)) ([4d17fce](https://github.com/t28hub/auto-palette-ts/commit/4d17fce58d96f61f4f502516979f6a8b91cd7d4a))
+
 ## [1.3.4](https://github.com/t28hub/auto-palette-ts/compare/v1.3.3...v1.3.4) (2024-12-22)
 
 ## [1.3.3](https://github.com/t28hub/auto-palette-ts/compare/v1.3.2...v1.3.3) (2024-12-02)
