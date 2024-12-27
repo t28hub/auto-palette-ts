@@ -12,17 +12,20 @@ export class RandomSampling<P extends Point> implements SamplingStrategy<P> {
   /**
    * {@inheritDoc SamplingStrategy.sample}
    */
-  sample(points: P[], n: number): P[] {
+  sample(points: P[], n: number): Set<number> {
     assert(n > 0, `The number of data points to downsample(${n}) must be greater than 0`);
     if (n >= points.length) {
-      return [...points];
+      return new Set(points.keys());
     }
 
-    const sampled = new Set<P>();
+    const sampled = new Set<number>();
     while (sampled.size < n) {
       const index = Math.floor(Math.random() * points.length);
-      sampled.add(points[index]);
+      if (sampled.has(index)) {
+        continue;
+      }
+      sampled.add(index);
     }
-    return Array.from(sampled);
+    return sampled;
   }
 }

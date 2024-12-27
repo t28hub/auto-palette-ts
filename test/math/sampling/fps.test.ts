@@ -8,7 +8,7 @@ const points: Point2[] = [
   [0.0, 1.0],
   [1.0, 1.0],
   [2.0, 2.0],
-];
+] as const;
 
 describe('FarthestPointSampling', () => {
   describe('constructor', () => {
@@ -28,11 +28,7 @@ describe('FarthestPointSampling', () => {
       const actual = sampling.sample(points, 2);
 
       // Assert
-      expect(actual).toHaveLength(2);
-      expect(actual).toContainAllValues([
-        [0.0, 0.0],
-        [2.0, 2.0],
-      ]);
+      expect(actual).toMatchObject(new Set([0, 4]));
     });
 
     it('should return all data points when n is greater than or equal to the number of data points', () => {
@@ -41,8 +37,7 @@ describe('FarthestPointSampling', () => {
       const actual = sampling.sample(points, 5);
 
       // Assert
-      expect(actual).toHaveLength(5);
-      expect(actual).toContainAllValues(points);
+      expect(actual).toMatchObject(new Set([0, 1, 2, 3, 4]));
     });
 
     it('should throw an AssertionError when n is less than or equal to 0', () => {

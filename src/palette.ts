@@ -153,12 +153,15 @@ export class Palette {
 
     const neighborSearch = KDTreeSearch.build(colors, 4, euclidean);
     const coefficients = new Array<number>(colors.length).fill(MAX_SCORE_COEFFICIENT);
-    const sampledColors = this.samplingStrategy.sample(colors, n);
-    return sampledColors.map((color: Point3): NamedSwatch => {
+    const sampledIndices = this.samplingStrategy.sample(colors, n);
+    const swatches: NamedSwatch[] = [];
+    for (const index of sampledIndices) {
+      const color = colors[index];
       const swatch = Palette.findOptimalSwatch(candidates, color, neighborSearch, coefficients, themeStrategy);
       const name = Palette.findColorName(swatch.color);
-      return { name, ...swatch };
-    });
+      swatches.push({ name, ...swatch });
+    }
+    return swatches;
   }
 
   private createThemeStrategy(theme: Theme): ThemeStrategy {
