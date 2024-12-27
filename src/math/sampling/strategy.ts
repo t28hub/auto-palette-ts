@@ -7,12 +7,12 @@ import type { Point } from '../point';
  */
 export interface SamplingStrategy<P extends Point> {
   /**
-   * Downsample the data points according to the strategy.
+   * Sample the data points with the given number of data points.
    *
-   * @param points - The set of data points to downsample.
-   * @param n - The number of data points to downsample.
-   * @returns The downsampled data points.
+   * @param points - The data points to sample.
+   * @param n - The number of data points to sample.
+   * @returns The indices of the sampled data points.
    * @throws {RangeError} If the `n` is less than or equal to 0.
    */
-  sample(points: P[], n: number): P[];
+  sample(points: P[], n: number): Set<number>;
 }

@@ -28,8 +28,7 @@ describe('RandomSampling', () => {
       const actual = sampling.sample(points, 3);
 
       // Assert
-      expect(actual.length).toEqual(3);
-      expect(actual).toContainAnyValues(points);
+      expect(actual.size).toEqual(3);
     });
 
     it('should return all data points when n is greater than or equal to the number of data points', () => {
@@ -38,8 +37,8 @@ describe('RandomSampling', () => {
       const actual = sampling.sample(points, 5);
 
       // Assert
-      expect(actual.length).toEqual(5);
-      expect(actual).toContainAllValues(points);
+      expect(actual.size).toEqual(5);
+      expect(actual).toMatchObject(new Set([0, 1, 2, 3, 4]));
     });
 
     it('should throw an AssertionError when n is less than or equal to 0', () => {
