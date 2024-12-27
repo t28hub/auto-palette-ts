@@ -85,10 +85,10 @@ importers:
         version: 8.3.5(@microsoft/api-extractor@7.48.0(@types/node@20.12.12))(jiti@2.4.1)(postcss@8.4.49)(typescript@5.7.2)(yaml@2.6.1)
       typedoc:
         specifier: ^0.27.2
-        version: 0.27.2(typescript@5.7.2)
+        version: 0.27.6(typescript@5.7.2)
       typedoc-plugin-markdown:
         specifier: ^4.3.3
-        version: 4.3.3(typedoc@0.27.2(typescript@5.7.2))
+        version: 4.3.3(typedoc@0.27.6(typescript@5.7.2))
       typescript:
         specifier: ^5.4.5
         version: 5.7.2
@@ -3150,8 +3150,8 @@ packages:
     peerDependencies:
       typedoc: 0.27.x
 
-  typedoc@0.27.2:
-    resolution: {integrity: sha512-C2ima5TZJHU3ecnRIz50lKd1BsYck5LhYQIy7MRPmjuSEJreUEAt+uAVcZgY7wZsSORzEI7xW8miZIdxv/cbmw==}
+  typedoc@0.27.6:
+    resolution: {integrity: sha512-oBFRoh2Px6jFx366db0lLlihcalq/JzyCVp7Vaq1yphL/tbgx2e+bkpkCgJPunaPvPwoTOXSwasfklWHm7GfAw==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -6579,11 +6579,11 @@ snapshots:
       typed-array-buffer: 1.0.2
       typed-array-byte-offset: 1.0.2
 
-  typedoc-plugin-markdown@4.3.3(typedoc@0.27.2(typescript@5.7.2)):
+  typedoc-plugin-markdown@4.3.3(typedoc@0.27.6(typescript@5.7.2)):
     dependencies:
-      typedoc: 0.27.2(typescript@5.7.2)
+      typedoc: 0.27.6(typescript@5.7.2)
 
-  typedoc@0.27.2(typescript@5.7.2):
+  typedoc@0.27.6(typescript@5.7.2):
     dependencies:
       '@gerrit0/mini-shiki': 1.24.1
       lunr: 2.3.9
