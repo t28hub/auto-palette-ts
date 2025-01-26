@@ -8,5 +8,11 @@
   "project": ["**/*.ts"],
   "ignore": ["**/*.d.ts"],
   "ignoreBinaries": [],
-  "ignoreDependencies": ["conventional-changelog-conventionalcommits", "playwright"]
+  "ignoreDependencies": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/github",
+    "@semantic-release/npm",
+    "@semantic-release/release-notes-generator",
+    "conventional-changelog-conventionalcommits"
+  ]
 }
