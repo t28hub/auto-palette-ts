@@ -65,7 +65,7 @@
     "@commitlint/config-conventional": "^19.2.2",
     "@napi-rs/canvas": "^0.1.52",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.1",
     "@semantic-release/npm": "^12.0.0",
