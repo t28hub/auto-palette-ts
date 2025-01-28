@@ -43,7 +43,7 @@ importers:
         version: 22.10.6
       '@vitest/browser':
         specifier: ^2.1.6
-        version: 2.1.6(@types/node@22.10.6)(playwright@1.49.1)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
+        version: 2.1.6(@types/node@22.10.6)(playwright@1.50.0)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
       '@vitest/coverage-v8':
         specifier: ^2.1.6
         version: 2.1.6(@vitest/browser@2.1.6)(vitest@2.1.6)
@@ -73,7 +73,7 @@ importers:
         version: 15.4.1
       playwright:
         specifier: ^1.49.0
-        version: 1.49.1
+        version: 1.50.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -2436,13 +2436,13 @@ packages:
     resolution: {integrity: sha512-C+VUP+8jis7EsQZIhDYmS5qlNtjv2yP4SNtjXK9AP1ZcTRlnSfuumaTnRfYZnYgUUYVIKqL0fRvmUGDV2fmp6g==}
     engines: {node: '>=4'}
 
-  playwright-core@1.49.1:
-    resolution: {integrity: sha512-BzmpVcs4kE2CH15rWfzpjzVGhWERJfmnXmniSyKeRZUs9Ws65m+RGIi7mjJK/euCegfn3i7jvqWeWyHe9y3Vgg==}
+  playwright-core@1.50.0:
+    resolution: {integrity: sha512-CXkSSlr4JaZs2tZHI40DsZUN/NIwgaUPsyLuOAaIZp2CyF2sN5MM5NJsyB188lFSSozFxQ5fPT4qM+f0tH/6wQ==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.49.1:
-    resolution: {integrity: sha512-VYL8zLoNTBxVOrJBbDuRgDWa3i+mfQgDTrL8Ah9QXZ7ax4Dsj0MSq5bYgytRnDVVe+njoKnfsYkH3HzqVj5UZA==}
+  playwright@1.50.0:
+    resolution: {integrity: sha512-+GinGfGTrd2IfX1TA4N2gNmeIksSb+IAe589ZH+FlmpV3MYTx6+buChGIuDLQwrGNCw2lWibqV50fU510N7S+w==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4070,7 +4070,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@vitest/browser@2.1.6(@types/node@22.10.6)(playwright@1.49.1)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)':
+  '@vitest/browser@2.1.6(@types/node@22.10.6)(playwright@1.50.0)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)':
     dependencies:
       '@testing-library/dom': 10.4.0
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
@@ -4083,7 +4083,7 @@ snapshots:
       vitest: 2.1.6(@types/node@22.10.6)(@vitest/browser@2.1.6)(@vitest/ui@2.1.6)(jiti@2.4.2)(jsdom@24.0.0)(msw@2.6.6(@types/node@22.10.6)(typescript@5.7.3))(yaml@2.6.1)
       ws: 8.18.0
     optionalDependencies:
-      playwright: 1.49.1
+      playwright: 1.50.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -4107,7 +4107,7 @@ snapshots:
       tinyrainbow: 1.2.0
       vitest: 2.1.6(@types/node@22.10.6)(@vitest/browser@2.1.6)(@vitest/ui@2.1.6)(jiti@2.4.2)(jsdom@24.0.0)(msw@2.6.6(@types/node@22.10.6)(typescript@5.7.3))(yaml@2.6.1)
     optionalDependencies:
-      '@vitest/browser': 2.1.6(@types/node@22.10.6)(playwright@1.49.1)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
+      '@vitest/browser': 2.1.6(@types/node@22.10.6)(playwright@1.50.0)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -5557,11 +5557,11 @@ snapshots:
       find-up: 2.1.0
       load-json-file: 4.0.0
 
-  playwright-core@1.49.1: {}
+  playwright-core@1.50.0: {}
 
-  playwright@1.49.1:
+  playwright@1.50.0:
     dependencies:
-      playwright-core: 1.49.1
+      playwright-core: 1.50.0
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -6199,7 +6199,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.10.6
-      '@vitest/browser': 2.1.6(@types/node@22.10.6)(playwright@1.49.1)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
+      '@vitest/browser': 2.1.6(@types/node@22.10.6)(playwright@1.50.0)(typescript@5.7.3)(vite@6.0.1(@types/node@22.10.6)(jiti@2.4.2)(yaml@2.6.1))(vitest@2.1.6)
       '@vitest/ui': 2.1.6(vitest@2.1.6)
       jsdom: 24.0.0
     transitivePeerDependencies:
