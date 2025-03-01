@@ -94,5 +94,5 @@
     "*.{js,ts}": ["pnpm run lint:biome:fix", "pnpm run format"],
     "*.{json,yml,md}": ["pnpm run format"]
   },
-  "packageManager": "pnpm@9.15.1"
+  "packageManager": "pnpm@10.5.0"
 }
