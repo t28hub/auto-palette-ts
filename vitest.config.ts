@@ -12,7 +12,7 @@ export default defineConfig({
     coverage: {
       all: false,
       provider: 'v8',
-      include: ['src/**/*'],
+      include: ['src/**/*.ts'],
       exclude: ['**/*.test.ts', '**/*.d.ts'],
       reporter: ['lcov', 'html', 'json', 'text'],
       reportsDirectory: 'coverage',

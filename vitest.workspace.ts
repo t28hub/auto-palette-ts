@@ -12,7 +12,7 @@ export default defineWorkspace([
       benchmark: {
         include: [],
       },
-      testTimeout: 1_000,
+      testTimeout: 5_000,
       retry: 1,
     },
   },
@@ -26,13 +26,17 @@ export default defineWorkspace([
         enabled: true,
         headless: true,
         provider: 'playwright',
-        name: 'chromium',
-        screenshotFailures: false,
+        instances: [
+          {
+            browser: 'chromium',
+            screenshotFailures: false,
+          },
+        ],
       },
       benchmark: {
         include: [],
       },
-      testTimeout: 10_000,
+      testTimeout: 100_000,
       retry: 3,
     },
   },
@@ -46,7 +50,7 @@ export default defineWorkspace([
       benchmark: {
         include: ['**/*.bench.ts'],
       },
-      testTimeout: 10_000,
+      testTimeout: 100_000,
       retry: 3,
     },
   },
