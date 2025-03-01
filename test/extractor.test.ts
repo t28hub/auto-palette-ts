@@ -49,96 +49,80 @@ describe('SwatchExtractor', () => {
         filename: fixtures.flags.za,
         expected: ['#E03C31', '#FFFFFF', '#007749', '#001489', '#FFB81C', '#000000'],
       },
-    ])(
-      'should extract swatches from $filename using DBSCAN',
-      async ({ filename, expected }) => {
-        // Arrange
-        const imageData = await loadImageData(filename);
+    ])('should extract swatches from $filename using DBSCAN', { timeout: 10_000 }, async ({ filename, expected }) => {
+      // Arrange
+      const imageData = await loadImageData(filename);
 
-        // Act
-        const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
-        const extractor = new SwatchExtractor(algorithm, []);
-        const actual = extractor.extract(imageData, 1.0);
+      // Act
+      const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      const extractor = new SwatchExtractor(algorithm, []);
+      const actual = extractor.extract(imageData, 1.0);
 
-        // Assert
-        expect(actual).not.toBeEmpty();
-        expect(actual).toSatisfyAny((swatch: Swatch): boolean => {
-          const matches = expected.filter((hexColor) => {
-            const expected = Color.fromString(hexColor);
-            const distance = swatch.color.differenceTo(expected, ciede2000);
-            return distance < 10.0;
-          });
-          return matches.length > 0;
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual).toSatisfyAny((swatch: Swatch): boolean => {
+        const matches = expected.filter((hexColor) => {
+          const expected = Color.fromString(hexColor);
+          const distance = swatch.color.differenceTo(expected, ciede2000);
+          return distance < 10.0;
         });
-      },
-      { timeout: 10_000 },
-    );
+        return matches.length > 0;
+      });
+    });
 
-    it(
-      'should extract swatches when a sampling rate is less than 1.0',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData(fixtures.flags.za);
-        const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
-        const extractor = new SwatchExtractor(algorithm, []);
+    it('should extract swatches when a sampling rate is less than 1.0', { timeout: 10_000 }, async () => {
+      // Arrange
+      const imageData = await loadImageData(fixtures.flags.za);
+      const algorithm = new DBSCAN<Point5>(16, 0.0016, squaredEuclidean);
+      const extractor = new SwatchExtractor(algorithm, []);
 
-        // Act
-        const actual = extractor.extract(imageData, 0.5);
+      // Act
+      const actual = extractor.extract(imageData, 0.5);
 
-        // Assert
-        expect(actual).not.toBeEmpty();
-        expect(actual).toHaveLength(6);
-        expect(actual[0].color).toBeSimilarColor('#007749');
-        expect(actual[1].color).toBeSimilarColor('#FFFFFF');
-        expect(actual[2].color).toBeSimilarColor('#E03C31');
-        expect(actual[3].color).toBeSimilarColor('#FFB81C');
-        expect(actual[4].color).toBeSimilarColor('#000000');
-        expect(actual[5].color).toBeSimilarColor('#001489');
-      },
-      { timeout: 10_000 },
-    );
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual).toHaveLength(6);
+      expect(actual[0].color).toBeSimilarColor('#007749');
+      expect(actual[1].color).toBeSimilarColor('#FFFFFF');
+      expect(actual[2].color).toBeSimilarColor('#E03C31');
+      expect(actual[3].color).toBeSimilarColor('#FFB81C');
+      expect(actual[4].color).toBeSimilarColor('#000000');
+      expect(actual[5].color).toBeSimilarColor('#001489');
+    });
 
-    it(
-      'should extract swatches from the given image using DBSCAN++',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData(fixtures.flags.sc);
-        const algorithm = new DBSCANpp<Point5>(0.25, 16, 0.0016, squaredEuclidean);
-        const extractor = new SwatchExtractor(algorithm, []);
+    it('should extract swatches from the given image using DBSCAN++', { timeout: 10_000 }, async () => {
+      // Arrange
+      const imageData = await loadImageData(fixtures.flags.sc);
+      const algorithm = new DBSCANpp<Point5>(0.25, 16, 0.0016, squaredEuclidean);
+      const extractor = new SwatchExtractor(algorithm, []);
 
-        // Act
-        const actual = extractor.extract(imageData, 1.0);
+      // Act
+      const actual = extractor.extract(imageData, 1.0);
 
-        // Assert
-        expect(actual).not.toBeEmpty();
-        expect(actual).toHaveLength(5);
-        expect(actual[0].color).toBeSimilarColor('#003F87');
-        expect(actual[1].color).toBeSimilarColor('#FCD856');
-        expect(actual[2].color).toBeSimilarColor('#D62828');
-        expect(actual[3].color).toBeSimilarColor('#FFFFFF');
-        expect(actual[4].color).toBeSimilarColor('#007A3D');
-      },
-      { timeout: 10_000 },
-    );
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual).toHaveLength(5);
+      expect(actual[0].color).toBeSimilarColor('#003F87');
+      expect(actual[1].color).toBeSimilarColor('#FCD856');
+      expect(actual[2].color).toBeSimilarColor('#D62828');
+      expect(actual[3].color).toBeSimilarColor('#FFFFFF');
+      expect(actual[4].color).toBeSimilarColor('#007A3D');
+    });
 
-    it(
-      'should extract swatches from the given image data using Kmeans',
-      async () => {
-        // Arrange
-        const imageData = await loadImageData(fixtures.flags.za);
+    it('should extract swatches from the given image data using Kmeans', { timeout: 10_000, retry: 3 }, async () => {
+      // Arrange
+      const imageData = await loadImageData(fixtures.flags.za);
 
-        // Act
-        const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
-        const algorithm = new Kmeans<Point5>(8, 10, 0.0001, squaredEuclidean, strategy);
-        const extractor = new SwatchExtractor(algorithm, []);
-        const actual = extractor.extract(imageData, 1.0);
+      // Act
+      const strategy = new KmeansPlusPlusInitializer<Point5>(squaredEuclidean);
+      const algorithm = new Kmeans<Point5>(8, 10, 0.0001, squaredEuclidean, strategy);
+      const extractor = new SwatchExtractor(algorithm, []);
+      const actual = extractor.extract(imageData, 1.0);
 
-        // Assert
-        expect(actual).not.toBeEmpty();
-        expect(actual.length).toBeGreaterThanOrEqual(6);
-      },
-      { timeout: 10_000, retry: 3 },
-    );
+      // Assert
+      expect(actual).not.toBeEmpty();
+      expect(actual.length).toBeGreaterThanOrEqual(6);
+    });
 
     it('should ignore colors filtered out', () => {
       // Arrange

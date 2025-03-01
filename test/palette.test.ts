@@ -124,10 +124,10 @@ describe('Palette', () => {
     let image: ImageData;
     beforeAll(async () => {
       image = await loadImageData(fixtures.photos.tulips);
-    }, 1000);
+    }, 1_000);
 
     // This test is skipped because it tests integration with the browser environment.
-    it.skip('should extract a Palette from the provided image using default options', () => {
+    it.skip('should extract a Palette from the provided image using default options', { timeout: 20_000 }, () => {
       // Act
       const actual = Palette.extract(image);
 
@@ -137,11 +137,12 @@ describe('Palette', () => {
 
       const swatches = actual.findSwatches(8);
       expect(swatches).toBeArrayOfSize(8);
-    }, 20000);
+    });
 
     // This test is skipped because it tests integration with the browser environment.
     it.skip(
       'should extract a Palette from the provided image using custom options',
+      { retry: 3, timeout: 20000 },
       () => {
         // Act
         const options: Required<Options> = {
@@ -159,7 +160,6 @@ describe('Palette', () => {
         const swatches = actual.findSwatches(6);
         expect(swatches).toBeArrayOfSize(6);
       },
-      { retry: 3, timeout: 20000 },
     );
 
     it.each([
@@ -171,12 +171,12 @@ describe('Palette', () => {
       { maxSwatches: 0 },
       { maxSwatches: Number.NaN },
       { maxSwatches: Number.POSITIVE_INFINITY },
-    ])('should throw an AssertionError if the options(%o) are invalid', (options) => {
+    ])('should throw an AssertionError if the options(%o) are invalid', { timeout: 3_000 }, (options) => {
       // Assert
       expect(() => {
         // Act
         Palette.extract(image, options);
       }).toThrowError(AssertionError);
     });
-  }, 3000);
+  });
 });
