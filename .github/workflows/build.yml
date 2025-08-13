@@ -23,7 +23,7 @@ jobs:
           - 10.5.0
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up pnpm ${{ matrix.pnpm }} version
         uses: pnpm/action-setup@v4
