@@ -50,7 +50,7 @@ jobs:
 
       - name: Upload the built module files
         if: matrix.node == '20.x'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: modules
           path: dist/
