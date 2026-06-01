@@ -87,7 +87,7 @@
     "typedoc": "^0.28.2",
     "typedoc-plugin-markdown": "^4.3.3",
     "typescript": "^5.4.5",
-    "vitest": "^3.0.7"
+    "vitest": "^4.1.0"
   },
   "lint-staged": {
     "*.{js,ts}": ["pnpm run lint:biome:fix", "pnpm run format"],
